@@ -1,73 +1,90 @@
 package frontend;
 
-import java.nio.file.Path;
 import java.util.Scanner;
-
-import javax.swing.JFileChooser;
+import java.util.concurrent.ThreadLocalRandom;
 
 import backend.ActionHandler;
 
 public class ConceptConsoleGui {
 
 	private ActionHandler karaokeOMat;
-	private int menuNumber;
-	private Scanner scan;
+	private Scanner scannerConsoleGui;
+	private boolean guiIsRunning;
+	private boolean firstStart;
+	private String[] menuText;
 
-	public int getMenuNumber() {
-		return menuNumber;
+	public int scanNumber(int underBoundary, int upperBoundary) {
+
+		int returnInt = menuText.length - 1;
+
+		try {
+			do {
+				System.out.println("Input a number between " + underBoundary + " and " + upperBoundary + ":");
+				while (!scannerConsoleGui.hasNextInt()) {
+					System.out.println("Please input a number:");
+					scannerConsoleGui.next();
+				}
+				returnInt = scannerConsoleGui.nextInt();
+			} while (!(returnInt >= underBoundary && upperBoundary >= returnInt));
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("A failure happened while scanning the number");
+		}
+
+		return returnInt;
 	}
 
-	public void setMenuNumber(int menuNumber) {
-		this.menuNumber = menuNumber;
+	public boolean scanYesOrNo() {
+
+		boolean yesOrNo = false;
+		String yesOrNoString = "";
+
+		try {
+			do {
+				System.out.println("Input \"y\" (for yes) and \"n\" (for no):");
+				while (!scannerConsoleGui.hasNext()) {
+					System.out.println("Please input  \"y\" or \"n\":");
+					scannerConsoleGui.next();
+				}
+
+				yesOrNoString = scannerConsoleGui.next();
+			} while (!(yesOrNoString.equalsIgnoreCase("y") || yesOrNoString.equalsIgnoreCase("n")));
+			if (yesOrNoString.equalsIgnoreCase("y")) {
+				yesOrNo = true;
+			} else {
+				yesOrNo = false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("A failure happened while scanning the number");
+		}
+
+		return yesOrNo;
 	}
 
 	public ConceptConsoleGui() {
 		karaokeOMat = new ActionHandler();
-		scan = new Scanner(System.in);
+		scannerConsoleGui = new Scanner(System.in);
+		guiIsRunning = true;
+		firstStart = true;
+		menuText = new String[6];
+		menuText[0] = "1.\tAdd a new music video folder";
+		menuText[1] = "2.\tShow music video list";
+		menuText[2] = "3.\tPlay music video";
+		menuText[3] = "4.\tPlay a random music video";
+		menuText[4] = "5.\tEdit folder paths";
+		menuText[5] = "6.\tClose program\n";
 	}
 
-	private void scanMenu() {
-
-		int a = 0;
-		boolean ok = false;
-
-		do {
-			try {
-				a = scan.nextInt();
-
-				if (a > 0 && a < 7) {
-					ok = true;
-					menuNumber = a;
-				}
-			} catch (Exception f) {
-				f.printStackTrace();
-			}
-
-		} while (ok != true);
-	}
-
-	private int scanMusicVideo() {
-
-		int a = 0;
-		boolean ok = false;
-
-		System.out.println("Please input your song number:");
-
-		do {
-			try {
-				a = scan.nextInt();
-				a++;
-
-				if (karaokeOMat.getMusicVideosList().size() <= a && a > 0) {
-					ok = true;
-					return a;
-				}
-			} catch (Exception f) {
-				f.printStackTrace();
-			}
-
-		} while (ok != true);
-		return 0;
+	private void printMenu() {
+		if (firstStart == true) {
+			System.out.println("Welcome to KaraokeOMat!\nInput through numbers what you want to do:");
+			firstStart = false;
+		}
+		System.out.println("");
+		for (String menu : menuText) {
+			System.out.println(menu);
+		}
 	}
 
 	private void addFolder() {
@@ -83,84 +100,60 @@ public class ConceptConsoleGui {
 		karaokeOMat.printPathList();
 	}
 
-	private void printMenu() {
-		if (menuNumber == 0) {
-			System.out.println("Welcome to KaraokeOMat!\n");
-		}
-		System.out.println("Input through numbers what you want to do:\n" + "1.\tAdd a new music video folder\n"
-				+ "2.\tShow music video list\n" + "3.\tPlay music video\n" + "4.\tPlay a random music video\n"
-				+ "5.\tEdit folder paths\n" + "6.\tClose program\n");
-	}
-
 	private void playMusicVideo() {
-		karaokeOMat.openMusicVideo(scanMusicVideo());
+		karaokeOMat.openMusicVideo(scanNumber(1, karaokeOMat.getMusicVideosList().size()) - 1);
 	}
 
 	private void playRandomMusicVideo() {
-		karaokeOMat.printPathList();
-	}
+		int randomNum = ThreadLocalRandom.current().nextInt(0, karaokeOMat.getMusicVideosList().size() + 1);
+		System.out.println("...Playing " + karaokeOMat.getMusicVideosList().get(randomNum).getName() + " by "
+				+ karaokeOMat.getMusicVideosList().get(randomNum).getArtist() + "\n");
 
-	public Path getDirectory2() {
-
-		System.out.println("hi");
-
-		JFileChooser chooser = new JFileChooser();
-		chooser.setCurrentDirectory(new java.io.File("."));
-		chooser.setDialogTitle("Choose your music video folder");
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		chooser.setAcceptAllFileFilterUsed(false);
-
-		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			// System.out.println("getCurrentDirectory(): " +
-			// chooser.getCurrentDirectory());
-			// System.out.println("getSelectedFile() : " +
-			// chooser.getSelectedFile());
-
-			return chooser.getSelectedFile().toPath();
-
-		} else {
-			System.out.println("No Selection ");
-
-			return null;
+		if (scanYesOrNo()) {
+			karaokeOMat.openMusicVideo(randomNum);
 		}
+
 	}
 
-	private void actionMenu(int abc) {
-		System.out.println("here now: abc = " + abc);
-		switch (abc) {
+	private void actionMenu(int menuNumber) {
+
+		System.out.println(menuText[menuNumber - 1]);
+		switch (menuNumber) {
 		case 1:
+			System.out.println("Just choose your folder and press ok so that this directory gets\n"
+					+ "scanned and the music videos can be added to your music video list");
 			addFolder();
 			break;
 		case 2:
-			System.out.println("Actual scanned music videos:");
 			showMusicVideoList();
 			break;
 		case 3:
+			System.out.println("Just input the number of the music video and press enter to play it");
 			playMusicVideo();
 			break;
 		case 4:
-			System.out.println("Actual scanned music videos:");
 			playRandomMusicVideo();
 			break;
 		case 5:
-			System.out.println("Coming soon\nActual paths:");
+			System.out.println("Coming soon\nBy now only the actual saved music video paths:");
 			showPathList();
 			break;
 		case 6:
-			System.exit(0);
+			guiIsRunning = false;
 			break;
 		}
 	}
 
 	private void runConsoleUi() {
-		System.out.println("Here happens the completemagic");
 
-		while (getMenuNumber() != 6) {
+		while (guiIsRunning == true) {
+			int a = 0;
 			printMenu();
-			scanMenu();
-			actionMenu(getMenuNumber());
-			System.out.println(getMenuNumber());
+			a = scanNumber(1, menuText.length);
+			actionMenu(a);
 		}
+
+		System.out.println("Console GUI was closed");
 
 	}
 
