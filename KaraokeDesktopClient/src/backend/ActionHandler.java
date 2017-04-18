@@ -31,15 +31,12 @@ public class ActionHandler {
 		chooser.setAcceptAllFileFilterUsed(false);
 
 		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			// System.out.println("getCurrentDirectory(): " +
-			// chooser.getCurrentDirectory());
-			// System.out.println("getSelectedFile() : " +
-			// chooser.getSelectedFile());
 
 			return chooser.getSelectedFile().toPath();
 
 		} else {
-			System.out.println("No Selection ");
+
+			System.out.println("No directory was selected.");
 
 			return null;
 		}
@@ -119,7 +116,7 @@ public class ActionHandler {
 
 	public void openMusicVideo(int index) {
 
-		if (musicVideosList.size() > 0 && musicVideosList.size() - 1 > index) {
+		if (musicVideosList.size() > 0 && musicVideosList.size() > index) {
 
 			// get the MusicVideo object and make it a file
 			File file = new File(musicVideosList.get(index).getPath().toString());
@@ -167,7 +164,16 @@ public class ActionHandler {
 	}
 
 	public void addToPathList(Path path) {
-		pathList.add(path);
+		if (path == null) {
+			// nothing
+			System.out.println("No path was added to your path list.");
+		} else if (pathList.contains(path)) {
+			System.out.println("The path \"" + path + "\" was already on your path list.");
+		} else {
+			pathList.add(path);
+			System.out.println("The path \"" + path + "\" was added to your path list.");
+		}
+
 	}
 
 	public void printPathList() {
@@ -177,6 +183,17 @@ public class ActionHandler {
 				System.out.println(c + ".\tPath: \"" + key);
 				c++;
 			}
+		} else {
+			System.out.println("There are no saved music video paths");
+		}
+	}
+
+	public void deletePathFromPathList(int a) {
+		a--;
+		if (pathList.size() > a) {
+			pathList.remove(a);
+		} else {
+			System.out.println("This path does not exist");
 		}
 	}
 
