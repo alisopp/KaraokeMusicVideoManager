@@ -51,7 +51,7 @@ public class MusicVideo {
 	 * 
 	 * @return the title/name of the music video (String)
 	 */
-	public String getName() {
+	public String getTitle() {
 		return name;
 	}
 

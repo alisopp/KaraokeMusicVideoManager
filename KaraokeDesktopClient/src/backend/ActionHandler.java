@@ -1,10 +1,15 @@
 package backend;
 
 import java.awt.Desktop;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.stream.Stream;
@@ -79,8 +84,7 @@ public class ActionHandler {
 							// artistOrTitle);
 
 							// now that we have our artist we want to have
-							// the
-							// title
+							// the title
 							artistNotTitle = false;
 
 						} else {
@@ -99,18 +103,28 @@ public class ActionHandler {
 				}
 			});
 
+			System.out.println("Music video list was updated (+ " + path + ")");
+
 		} catch (IOException e) {
-			// Some error happened by scanning through the
-			// directory/directories
 			e.printStackTrace();
 		}
 	}
 
 	public void scanDirectories() {
 
-		// scan every mapped directory
-		for (Path path : pathList) {
-			scanDirectory(path);
+		if (!pathList.isEmpty()) {
+			System.out.println("Scan all paths for music videos");
+
+			if (!musicVideosList.isEmpty()) {
+				musicVideosList.clear();
+				System.out.println("Music video list was cleared");
+			}
+
+			for (Path path : pathList) {
+				scanDirectory(path);
+			}
+		} else {
+			System.err.println("There are no paths to scan for music videos!");
 		}
 	}
 
@@ -132,6 +146,8 @@ public class ActionHandler {
 					// open it
 					try {
 						desktop.open(file);
+						System.out.println(">> Playing/Open " + musicVideosList.get(index).getTitle() + " by "
+								+ musicVideosList.get(index).getArtist());
 					} catch (IOException e) {
 						// File could not opened
 						e.printStackTrace();
@@ -171,7 +187,7 @@ public class ActionHandler {
 			System.out.println("The path \"" + path + "\" was already on your path list.");
 		} else {
 			pathList.add(path);
-			System.out.println("The path \"" + path + "\" was added to your path list.");
+			System.out.println("The path list was updated (+ " + path + ")");
 		}
 
 	}
@@ -219,10 +235,116 @@ public class ActionHandler {
 		if (musicVideosList.isEmpty() == false) {
 			int c = 1;
 			for (MusicVideo key : musicVideosList) {
-				System.out.println(c + ".\tName: \"" + key.getName() + "\" - Artist: \"" + key.getArtist() + "\" ("
+				System.out.println(c + ".\tName: \"" + key.getTitle() + "\" - Artist: \"" + key.getArtist() + "\" ("
 						+ "Path: \"" + key.getPath() + "\")");
 				c++;
 			}
+		}
+	}
+
+	public Object[][] musicVideoListToTable() {
+		// String[] columnNames = { "Artist", "Title" };
+
+		Object[][] tableData = new Object[musicVideosList.size()][3];
+
+		for (int a = 0; a < musicVideosList.size(); a++) {
+			tableData[a][0] = a + 1;
+			tableData[a][1] = musicVideosList.get(a).getArtist();
+			tableData[a][2] = musicVideosList.get(a).getTitle();
+		}
+
+		System.out.println("Tabledata:");
+		for (int a = 0; a < tableData.length; a++) {
+			System.out.print("#: " + tableData[a][0]);
+			System.out.print("\tArtist: " + tableData[a][1]);
+			System.out.println("\tTitle: " + tableData[a][2]);
+		}
+
+		// for (int a = 0; a < musicVideosList.size(); a++) {
+		// System.out.print("Artist: " + tableData[a][0]);
+		// System.out.println("\tTitle: " + tableData[a][1]);
+		// }
+
+		return tableData;
+
+	}
+
+	public ArrayList<Path> fileReader(File file) {
+
+		System.out.println("Scan for config file: " + file);
+
+		if (file.exists()) {
+
+			ArrayList<Path> pathListForSomeSeconds = new ArrayList<Path>();
+
+			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+				for (String line; (line = br.readLine()) != null;) {
+					Path path = Paths.get(line);
+					pathListForSomeSeconds.add(path);
+				}
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+
+			System.out.println("Configuration file was found - information extracted.");
+
+			return pathListForSomeSeconds;
+
+		} else {
+			System.out.println("No config file was found");
+			return null;
+		}
+	}
+
+	public void fileWriterOfTheConfigFile(File file) {
+
+		if (pathList.isEmpty()) {
+			System.err.println("There is nothing to save!");
+		} else {
+			// creates the file
+			try {
+				file.createNewFile();
+
+				// creates a FileWriter Object
+				FileWriter writer = new FileWriter(file);
+
+				// Writes the content to the file
+				for (Path a : getPathList()) {
+					writer.write(a + "\n");
+				}
+				writer.flush();
+				writer.close();
+
+				System.out.println("Path list was saved to " + file);
+
+			} catch (IOException e) {
+				System.out.println("Path list could not be saved.");
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void fileOverWriter(File file) {
+
+		if (file.exists()) {
+			fileDeleter(file);
+		}
+		fileWriterOfTheConfigFile(file);
+	}
+
+	public void fileDeleter(File file) {
+
+		if (file.exists()) {
+
+			if (file.delete()) {
+				System.out.println(file.getName() + " is deleted!");
+			} else {
+				System.out.println("Delete operation is failed.");
+			}
+		} else {
+			System.out.println(file.getName() + " does not exist and could not be deleted!");
 		}
 	}
 
@@ -239,6 +361,8 @@ public class ActionHandler {
 
 		// print out all recognized music video files
 		testding.printMusicVideoList();
+
+		testding.musicVideoListToTable();
 
 		// open a file through the console
 		Scanner scanInput;

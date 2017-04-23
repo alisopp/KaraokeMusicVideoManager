@@ -85,7 +85,7 @@ public class ConceptConsoleGui {
 
 	private void playRandomMusicVideo() {
 		int randomNum = ThreadLocalRandom.current().nextInt(0, karaokeOMat.getMusicVideosList().size() + 1);
-		System.out.println("...Playing " + karaokeOMat.getMusicVideosList().get(randomNum).getName() + " by "
+		System.out.println("...Playing " + karaokeOMat.getMusicVideosList().get(randomNum).getTitle() + " by "
 				+ karaokeOMat.getMusicVideosList().get(randomNum).getArtist() + "?");
 
 		if (scanYesOrNo("Do you want to open this music file?")) {
