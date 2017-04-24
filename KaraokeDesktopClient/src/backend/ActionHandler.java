@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 import javax.swing.JFileChooser;
@@ -112,19 +113,21 @@ public class ActionHandler {
 
 	public void scanDirectories() {
 
+		if (!musicVideosList.isEmpty()) {
+			musicVideosList.clear();
+			System.out.println("Music video list was cleared");
+		}
+
 		if (!pathList.isEmpty()) {
 			System.out.println("Scan all paths for music videos");
-
-			if (!musicVideosList.isEmpty()) {
-				musicVideosList.clear();
-				System.out.println("Music video list was cleared");
-			}
 
 			for (Path path : pathList) {
 				scanDirectory(path);
 			}
 		} else {
 			System.err.println("There are no paths to scan for music videos!");
+			musicVideosList.clear();
+			System.out.println("Music video list was cleared");
 		}
 	}
 
@@ -269,31 +272,42 @@ public class ActionHandler {
 
 	}
 
+	/**
+	 * Search for a file in the same directory and extract its data. Save each
+	 * line in a path list and return it.
+	 * 
+	 * @param file
+	 *            (filename of configuration file)
+	 * @return ArrayList<Path> (list with all extracted paths)
+	 */
 	public ArrayList<Path> fileReader(File file) {
 
-		System.out.println("Scan for config file: " + file);
-
+		// if the file really exists
 		if (file.exists()) {
-
+			// create a new ArrayList<Path> where we later can save all paths
 			ArrayList<Path> pathListForSomeSeconds = new ArrayList<Path>();
-
+			// try to read the file line for line
 			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 				for (String line; (line = br.readLine()) != null;) {
+					// convert with this a normal String to a path
 					Path path = Paths.get(line);
+					// and save each line in the ArrayList<Path>
 					pathListForSomeSeconds.add(path);
 				}
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 
-			System.out.println("Configuration file was found - information extracted.");
+			System.out.println("Configuration file's \"" + file.getName() + "\" informations were extracted.");
 
+			// return all paths in a ArrayList<Path>
 			return pathListForSomeSeconds;
 
+			// otherwise return nothing/null
 		} else {
-			System.out.println("No config file was found");
+			System.err.println("No config file was found");
 			return null;
 		}
 	}
@@ -346,6 +360,21 @@ public class ActionHandler {
 		} else {
 			System.out.println(file.getName() + " does not exist and could not be deleted!");
 		}
+	}
+
+	public boolean fileExists(File file) {
+
+		if (file.exists()) {
+			System.out.println("Configuration file \"" + file.getName() + "\" was found.");
+			return true;
+		} else {
+			System.err.println("Configuration file \"" + file.getName() + "\" wasn't found.");
+			return false;
+		}
+	}
+
+	public int getRandomNumber(int lowerLimit, int upperBound) {
+		return ThreadLocalRandom.current().nextInt(lowerLimit, upperBound);
 	}
 
 	public static void main(String[] args) {
