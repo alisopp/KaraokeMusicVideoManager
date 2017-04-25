@@ -16,6 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class ActionHandler {
 
@@ -39,6 +40,55 @@ public class ActionHandler {
 		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 
 			return chooser.getSelectedFile().toPath();
+
+		} else {
+
+			System.out.println("No directory was selected.");
+
+			return null;
+		}
+	}
+
+	public File getDirectoryOfAFile() {
+
+		JFileChooser chooser = new JFileChooser();
+		chooser.isFocusOwner();
+		chooser.setCurrentDirectory(new java.io.File("."));
+		chooser.setDialogTitle("Choose a folder with your music videos");
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		chooser.setAcceptAllFileFilterUsed(false);
+		// chooser.setAcceptAllFileFilterUsed(false);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Configuration file", "abc");
+		chooser.addChoosableFileFilter(filter);
+
+		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			return chooser.getSelectedFile();
+		} else {
+			System.out.println("No file was selected!");
+			return null;
+		}
+	}
+
+	public Path[] getDirectories() {
+
+		JFileChooser chooser = new JFileChooser();
+		chooser.isFocusOwner();
+		chooser.setCurrentDirectory(new java.io.File("."));
+		chooser.setDialogTitle("Choose a folder or more with your music videos");
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		chooser.setAcceptAllFileFilterUsed(false);
+		chooser.setMultiSelectionEnabled(true);
+
+		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+			File[] uploadDir = chooser.getSelectedFiles();
+			Path[] pathArray = new Path[uploadDir.length];
+			int iterator = 0;
+			for (File file : uploadDir) {
+				pathArray[iterator] = file.toPath();
+				iterator++;
+			}
+			return pathArray;
 
 		} else {
 
@@ -173,7 +223,9 @@ public class ActionHandler {
 	}
 
 	public void setPathList(ArrayList<Path> pathList) {
-		this.pathList = pathList;
+		if (pathList != null && !pathList.isEmpty()) {
+			this.pathList = pathList;
+		}
 	}
 
 	public void clearPathList() {
@@ -193,6 +245,14 @@ public class ActionHandler {
 			System.out.println("The path list was updated (+ " + path + ")");
 		}
 
+	}
+
+	public void addToPathList(Path[] path) {
+		if (path != null && path.length != 0) {
+			for (Path pathFromPathArray : path) {
+				addToPathList(pathFromPathArray);
+			}
+		}
 	}
 
 	public void printPathList() {
@@ -283,7 +343,7 @@ public class ActionHandler {
 	public ArrayList<Path> fileReader(File file) {
 
 		// if the file really exists
-		if (file.exists()) {
+		if (file != null && file.exists()) {
 			// create a new ArrayList<Path> where we later can save all paths
 			ArrayList<Path> pathListForSomeSeconds = new ArrayList<Path>();
 			// try to read the file line for line
@@ -383,7 +443,7 @@ public class ActionHandler {
 		ActionHandler testding = new ActionHandler();
 
 		// add new path to music video library
-		testding.addToPathList(testding.getDirectory());
+		testding.addToPathList(testding.getDirectories());
 
 		// scan all saved paths after music videos
 		testding.scanDirectories();

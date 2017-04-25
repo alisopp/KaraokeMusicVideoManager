@@ -1,10 +1,12 @@
 package frontend;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Arrays;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
@@ -21,9 +23,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
+import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -48,6 +53,7 @@ public class ConceptJFrameGUI {
 	// a global JTable and DefaultTableModel;
 	private JTable table;
 	private DefaultTableModel model;
+	TableRowSorter<TableModel> rowSorter;
 	// global file (for the configuration file)
 	private File file;
 
@@ -112,15 +118,20 @@ public class ConceptJFrameGUI {
 		subSubMenuAddSourceFolder.setToolTipText("Add a new folder with new music videos to your list");
 		subSubMenuAddSourceFolder.addActionListener((ActionEvent event) -> {
 			System.out.println("Add a new folder with new music videos to your list");
-			System.out.println("Remove a folder with music videos from your list");
-			actionManager.addToPathList(actionManager.getDirectory());
+			actionManager.addToPathList(actionManager.getDirectories());
 			updateTable();
 		});
+
 		// and the sub sub menu "Remove" >>
 		JMenuItem subSubMenuRemoveSourceFolder = new JMenuItem("Remove");
 		subSubMenuRemoveSourceFolder.setToolTipText("Remove a folder with music videos from your list");
 		subSubMenuRemoveSourceFolder.addActionListener((ActionEvent event) -> {
-			pathEditorJFrame();
+			System.out.println("Remove a folder from your path list");
+			if (actionManager.getPathList().isEmpty() == true) {
+				JOptionPane.showMessageDialog(null, "There are no paths to remove!");
+			} else {
+				pathEditorJFrame();
+			}
 		});
 
 		// with the sub menu "More"
@@ -132,33 +143,41 @@ public class ConceptJFrameGUI {
 				.setToolTipText("Saves everything so you can start instantly at the next launch of the program");
 		subSubMenuConfigurationSave.addActionListener((ActionEvent event) -> {
 			System.out.println("Save the actual configuration (of folders)!");
-			actionManager.fileOverWriter(file);
+			configurationFileSaveOrOverwriteDialog();
 		});
 		// and the sub sub menu "Load configuration" >>
 		JMenuItem subSubMenuConfigurationLoad = new JMenuItem("Load configuration");
 		subSubMenuConfigurationLoad.setToolTipText("Load configuration from a configuration file");
 		subSubMenuConfigurationLoad.addActionListener((ActionEvent event) -> {
 			System.out.println("dialog wich says please restart program - notify if a file even exit before this");
+			if (JOptionPane.showConfirmDialog(null,
+					"This will overwrite your old configuration! Do you really want to continue?", "Warning",
+					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+				actionManager.setPathList(actionManager.fileReader(actionManager.getDirectoryOfAFile()));
+				// now scan again all paths for music videos
+				actionManager.scanDirectories();
+				updateTable();
+			} else {
+				System.out.println("\tPlaying was denied by the user.");
+			}
 		});
 		// and the sub sub menu "Export" >>
-		JMenu subSubMenuExport = new JMenu("Export");
+		JMenu subSubMenuExport = new JMenu("Export (coming soon)");
 		subSubMenuExport.setToolTipText("Export your list to the following formats: CSV, HTML (, PDF)");
 		// with the sub sub sub menu "Export to CSV" >>
 		JMenuItem subSubSubMenuExportCSV = new JMenuItem("Export to CSV");
-		subSubSubMenuExportCSV
-				.setToolTipText("Saves everything so you can start instantly at the next launch of the program");
+		subSubSubMenuExportCSV.setToolTipText("Coming soon");
 		subSubSubMenuExportCSV.addActionListener((ActionEvent event) -> {
 		});
 		// with the sub sub sub menu "Export to HTML" >>
 		JMenuItem subSubSubMenuExportHTML = new JMenuItem("Export to HTML");
-		subSubSubMenuExportHTML.setToolTipText("Load configuration from a configuration file");
+		subSubSubMenuExportHTML.setToolTipText("Coming soon");
 		subSubSubMenuExportHTML.addActionListener((ActionEvent event) -> {
-			System.out.println("Coming soon: HTML Export");
 		});
 
 		// add the menu buttons to the menu bar to the JFrame
 		subMenuPath.add(subSubMenuAddSourceFolder);
-		subMenuMore.addSeparator();
+		subMenuPath.addSeparator();
 		subMenuPath.add(subSubMenuRemoveSourceFolder);
 		menuBar.add(subMenuPath);
 		subMenuMore.add(subSubMenuConfigurationSave);
@@ -182,6 +201,15 @@ public class ConceptJFrameGUI {
 		model = new DefaultTableModel(data, columnNames);
 		table = new JTable(model);
 
+		TableColumnModel columnModel = table.getColumnModel();
+		columnModel.getColumn(0).setPreferredWidth(5);
+		columnModel.getColumn(1).setPreferredWidth(150);
+		columnModel.getColumn(2).setPreferredWidth(225);
+
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+		table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+
 		table.setAutoCreateRowSorter(true);
 
 		// Place the JTable object in a JScrollPane for a scrolling table
@@ -194,13 +222,6 @@ public class ConceptJFrameGUI {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				int row = table.getSelectedRow();
-
-				// int col = table.columnAtPoint(evt.getPoint());
-				// int row = rowAtPoint(evt.getPoint());
-				// int row2 = table.getSelectedRow();
-				// int col2 = table.getSelectedColumn();
-				// System.out.println("row: " + row + "\tcol: " + col);
-
 				// System.out.println(karaokeOMat.getMusicVideosList().get(row).getPath());
 				actionManager.openMusicVideo(row);
 			}
@@ -233,6 +254,15 @@ public class ConceptJFrameGUI {
 						// open the music video on this position
 						actionManager.openMusicVideo(a - 1);
 					}
+				} else {
+					// algorithm that finds the top result in the actual table
+					// and gets the number of it
+					int a = (int) table.getValueAt(0, 0);
+					// gets top row number
+					if (a > 0 && a <= actionManager.getMusicVideosList().size()) {
+						// plays the top row music video
+						actionManager.openMusicVideo(a - 1);
+					}
 				}
 			}
 		};
@@ -241,38 +271,27 @@ public class ConceptJFrameGUI {
 		// create a row sorter: But NOT to sort the data in the table manually
 		// later, this is enabled by default! We need the row sorter for our
 		// filter in the search bar
-		TableRowSorter<TableModel> rowSorter = new TableRowSorter<>(table.getModel());
+		rowSorter = new TableRowSorter<>(table.getModel());
 		table.setRowSorter(rowSorter);
 
 		jtfFilter.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				String text = jtfFilter.getText();
-
-				if (text.trim().length() == 0) {
-					rowSorter.setRowFilter(null);
-				} else {
-					rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-				}
+				// update filter if something in text field gets added
+				updateFilter(jtfFilter.getText());
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				String text = jtfFilter.getText();
-
-				if (text.trim().length() == 0) {
-					rowSorter.setRowFilter(null);
-				} else {
-					rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-				}
+				// update filter if something in text field gets removed
+				updateFilter(jtfFilter.getText());
 			}
 
 			@Override
-			public void changedUpdate(DocumentEvent e) {
-				throw new UnsupportedOperationException("Not supported yet.");
+			public void changedUpdate(DocumentEvent arg0) {
+				// needs to be implemented, but we don't need it
 			}
-
 		});
 
 		// play a random music video button
@@ -312,28 +331,16 @@ public class ConceptJFrameGUI {
 				boolean fileExistButPathListIsNotTheSame = actionManager.fileExists(file)
 						&& (!actionManager.fileReader(file).equals(actionManager.getPathList()));
 				boolean fileDoesNotExist = !(actionManager.fileExists(file));
+				boolean noPathsExist = actionManager.getPathList().isEmpty();
 
-				if (fileExistButPathListIsNotTheSame || fileDoesNotExist) {
+				if (!noPathsExist && (fileExistButPathListIsNotTheSame || fileDoesNotExist)) {
 					// ask the user if he wants to close without saving his
 					// actual configuration
 					if (JOptionPane.showConfirmDialog(guiMainFrame,
 							"Are you sure to close the program without saving your music video folder paths to a configuration file?",
 							"Really Closing?", JOptionPane.YES_NO_OPTION,
 							JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {
-						if (fileDoesNotExist) {
-							// simply save a new configuration file when no
-							// configuration exist at this point
-							actionManager.fileWriterOfTheConfigFile(file);
-							// but if a different one exist ask the user if he
-							// really wants to overwrite the old configuration
-							// with new data:
-						} else if (JOptionPane.showConfirmDialog(guiMainFrame,
-								"Do you want to overwrite your previous saved configuration with your actual configuration?",
-								"Overwrite old data?", JOptionPane.YES_NO_OPTION,
-								JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-							// overwrite the actual file
-							actionManager.fileOverWriter(file);
-						}
+						configurationFileSaveOrOverwriteDialog();
 					}
 				}
 			}
@@ -347,36 +354,46 @@ public class ConceptJFrameGUI {
 	 */
 	public void pathEditorJFrame() {
 
-		JFrame pathEditorWindow = new JFrame("Edit the source folder paths:");
+		JFrame pathEditorWindow = new JFrame("Edit the source folder paths:    >>Close to save changes");
 		// set title
 		pathEditorWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		// only close on exit - don't end the whole program
-		pathEditorWindow.setSize(300, 400);
+
 		// size of the window
+
+		boolean[] arrayPathIndex = new boolean[actionManager.getPathList().size()];
+		Arrays.fill(arrayPathIndex, false);
 
 		// create a grid layout for all paths as a visual button list
 		pathEditorWindow.setLayout(new GridLayout(actionManager.getPathList().size(), 1));
 		// for all actual saved paths create one button
 		for (int i = 0; i < actionManager.getPathList().size(); i++) {
 
-			JButton removePathButton = new JButton("<< Click to remove " + actionManager.getPathList().get(i) + " >>");
+			JButton removePathButton = new JButton();
 			removePathButton.setVerticalTextPosition(AbstractButton.CENTER);
 			// removePathButton.setHorizontalTextPosition(AbstractButton.LEADING);
 			removePathButton.setActionCommand("remove path from path list");
+			removePathButton.setPreferredSize(new Dimension(500, 40));
+
+			JLabel label = new JLabel("<< Click to remove " + actionManager.getPathList().get(i) + " >>",
+					SwingConstants.CENTER);
+			removePathButton.add(label);
+
+			String pathTextForLater = actionManager.getPathList().get(i).toString();
 			int indexOfPath = i;
+
 			removePathButton.addActionListener((ActionEvent event) -> {
-				if (JOptionPane.showConfirmDialog(null,
+				if (arrayPathIndex[indexOfPath] == true) {
+					label.setText("<< Click to remove " + pathTextForLater + " >>");
+					arrayPathIndex[indexOfPath] = false;
+				} else if (JOptionPane.showConfirmDialog(null,
 						"Do you really want to delete this path from the path list?\n"
 								+ actionManager.getPathList().get(indexOfPath),
 						"Question", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-					actionManager.deletePathFromPathList(indexOfPath + 1);
-					removePathButton.setEnabled(false);
-					System.out.println(indexOfPath + 1);
-					updateTable();
-				} else {
-					System.out.println("User denied. Path was not deleted from list.");
+					// removePathButton.setEnabled(false);
+					label.setText(pathTextForLater + " was removed - Click to reverse");
+					arrayPathIndex[indexOfPath] = true;
 				}
-
 			});
 			pathEditorWindow.add(removePathButton);
 
@@ -385,32 +402,100 @@ public class ConceptJFrameGUI {
 			// table
 		}
 
-		// no pack all components together for the perfect size
+		// No need, we pack everything instead
+		// pathEditorWindow.setSize(500, 400);
+		// now pack all components together for their perfect size
 		pathEditorWindow.pack();
 		// make it visible for the user
 		pathEditorWindow.setVisible(true);
 		// and let it pop up in the middle of the screen
 		pathEditorWindow.setLocationRelativeTo(null);
+
+		// when the user wants to close the window (do something)
+		pathEditorWindow.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				boolean changeDetected = false;
+
+				for (boolean a : arrayPathIndex) {
+					if (a == true) {
+						changeDetected = true;
+					}
+				}
+
+				if (changeDetected && JOptionPane.showConfirmDialog(null, "Do you really want to save changes?",
+						"Important question", JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+					int regulator = 1;
+					for (int a = 0; a < arrayPathIndex.length; a++) {
+						if (arrayPathIndex[a] == true) {
+							actionManager.deletePathFromPathList(a + regulator);
+							regulator--;
+						}
+					}
+					updateTable();
+				}
+			}
+		});
 	}
 
 	/**
 	 * This method removes all rows of our table and updates them with new rows
-	 * created of a new read of a updated music video list.
+	 * created of a new read of an up to date music video list.
 	 */
 	public void updateTable() {
 
-		// delete all actual rows
-		for (int a = 0; a < actionManager.getMusicVideosList().size(); a++) {
+		// delete all actual rows if there are even any rows!
+		while (model.getRowCount() > 0) {
 			model.removeRow(0);
 		}
 		// scan each path of the path list after music videos and update so the
 		// music video list
 		actionManager.scanDirectories();
+
+		// cache the music video list with all the data, so that it doesn't need
+		// to be loaded more than one time
+		Object[][] cachedTableList = actionManager.musicVideoListToTable();
+
 		// now add for each entry in the new updated music video list a row to
 		// the empty table
 		for (int a = 0; a < actionManager.getMusicVideosList().size(); a++) {
-			model.addRow(new Object[] { actionManager.musicVideoListToTable()[a][0],
-					actionManager.musicVideoListToTable()[a][1], actionManager.musicVideoListToTable()[a][2] });
+			model.addRow(new Object[] { cachedTableList[a][0], cachedTableList[a][1], cachedTableList[a][2] });
+		}
+	}
+
+	/**
+	 * This method updates our TableRowSorter after our filter.
+	 * 
+	 * @param searchString
+	 *            (String | search command from text field)
+	 */
+	public void updateFilter(String searchString) {
+		if (searchString.trim().length() == 0) {
+			rowSorter.setRowFilter(null);
+		} else {
+			rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchString));
+		}
+	}
+
+	/**
+	 * This method overwrites if the user approves the old configuration file.
+	 * It's a method, because it was more than once used in my code.
+	 */
+	public void configurationFileSaveOrOverwriteDialog() {
+		if (actionManager.fileExists(file)) {
+			// simply save a new configuration file when no
+			// configuration exist at this point
+			actionManager.fileWriterOfTheConfigFile(file);
+			// but if a different one exist ask the user if he
+			// really wants to overwrite the old configuration
+			// with new data:
+		} else if (JOptionPane.showConfirmDialog(guiMainFrame,
+				"Do you want to overwrite your previous saved configuration with your actual configuration?",
+				"Overwrite old data?", JOptionPane.YES_NO_OPTION,
+				JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+			// overwrite the actual file
+			actionManager.fileOverWriter(file);
 		}
 	}
 
@@ -421,11 +506,11 @@ public class ConceptJFrameGUI {
 	public static void main(String[] args) {
 
 		// create a new Object of our class
-		ConceptJFrameGUI hi = new ConceptJFrameGUI();
+		ConceptJFrameGUI mainFrame = new ConceptJFrameGUI();
 		// look after configuration file before starting
-		hi.startupConfig();
+		mainFrame.startupConfig();
 		// open/show the window
-		hi.createWindow();
+		mainFrame.createWindow();
 	}
 
 }
