@@ -1,16 +1,20 @@
 package frontend;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,6 +28,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -107,6 +113,17 @@ public class ConceptJFrameGUI {
 		guiMainFrame.setLocationRelativeTo(null);
 		// let it pop up in the middle of the screen
 
+		// Image image =
+		// Toolkit.getDefaultToolkit().getImage(getClass().getResource("res/logo_128x128.png"));
+		// ImageIcon icon = new ImageIcon(image);
+		// guiMainFrame.setIconImage(icon.getImage());
+
+		try {
+			guiMainFrame.setIconImage(ImageIO.read(new File("res/logo.png")));
+		} catch (IOException exc) {
+			exc.printStackTrace();
+		}
+
 		// add a menu bar to the window
 		JMenuBar menuBar = new JMenuBar();
 
@@ -114,7 +131,8 @@ public class ConceptJFrameGUI {
 		JMenu subMenuPath = new JMenu("Source folders");
 		subMenuPath.setToolTipText("Add/Change/Remove the actual folders of your music videos");
 		// and the sub sub menu "Add" >>
-		JMenuItem subSubMenuAddSourceFolder = new JMenuItem("Add");
+		ImageIcon iconAdd = new ImageIcon("res/add_20x20.png");
+		JMenuItem subSubMenuAddSourceFolder = new JMenuItem("Add", iconAdd);
 		subSubMenuAddSourceFolder.setToolTipText("Add a new folder with new music videos to your list");
 		subSubMenuAddSourceFolder.addActionListener((ActionEvent event) -> {
 			System.out.println("Add a new folder with new music videos to your list");
@@ -123,7 +141,8 @@ public class ConceptJFrameGUI {
 		});
 
 		// and the sub sub menu "Remove" >>
-		JMenuItem subSubMenuRemoveSourceFolder = new JMenuItem("Remove");
+		ImageIcon iconRemove = new ImageIcon("res/remove_20x20.png");
+		JMenuItem subSubMenuRemoveSourceFolder = new JMenuItem("Remove", iconRemove);
 		subSubMenuRemoveSourceFolder.setToolTipText("Remove a folder with music videos from your list");
 		subSubMenuRemoveSourceFolder.addActionListener((ActionEvent event) -> {
 			System.out.println("Remove a folder from your path list");
@@ -138,7 +157,8 @@ public class ConceptJFrameGUI {
 		JMenu subMenuMore = new JMenu("More");
 		subMenuMore.setToolTipText("Save your actual source folder paths and more in a config file for later");
 		// and the sub sub menu "Save configuration" >>
-		JMenuItem subSubMenuConfigurationSave = new JMenuItem("Save configuration");
+		ImageIcon iconSave = new ImageIcon("res/save_20x20.png");
+		JMenuItem subSubMenuConfigurationSave = new JMenuItem("Save configuration", iconSave);
 		subSubMenuConfigurationSave
 				.setToolTipText("Saves everything so you can start instantly at the next launch of the program");
 		subSubMenuConfigurationSave.addActionListener((ActionEvent event) -> {
@@ -146,7 +166,8 @@ public class ConceptJFrameGUI {
 			configurationFileSaveOrOverwriteDialog();
 		});
 		// and the sub sub menu "Load configuration" >>
-		JMenuItem subSubMenuConfigurationLoad = new JMenuItem("Load configuration");
+		ImageIcon iconLoad = new ImageIcon("res/load_20x20.png");
+		JMenuItem subSubMenuConfigurationLoad = new JMenuItem("Load configuration", iconLoad);
 		subSubMenuConfigurationLoad.setToolTipText("Load configuration from a configuration file");
 		subSubMenuConfigurationLoad.addActionListener((ActionEvent event) -> {
 			System.out.println("dialog wich says please restart program - notify if a file even exit before this");
@@ -162,17 +183,38 @@ public class ConceptJFrameGUI {
 			}
 		});
 		// and the sub sub menu "Export" >>
-		JMenu subSubMenuExport = new JMenu("Export (coming soon)");
-		subSubMenuExport.setToolTipText("Export your list to the following formats: CSV, HTML (, PDF)");
+		ImageIcon iconExport = new ImageIcon("res/export_20x20.png");
+		JMenu subSubMenuExport = new JMenu("Export");
+		subSubMenuExport.setIcon(iconExport);
+		subSubMenuExport.setToolTipText("Export your list to the following formats: CSV, HTML");
 		// with the sub sub sub menu "Export to CSV" >>
-		JMenuItem subSubSubMenuExportCSV = new JMenuItem("Export to CSV");
-		subSubSubMenuExportCSV.setToolTipText("Coming soon");
+		ImageIcon iconCSV = new ImageIcon("res/csv_20x20.png");
+		JMenuItem subSubSubMenuExportCSV = new JMenuItem("Export to CSV", iconCSV);
+		subSubSubMenuExportCSV.setToolTipText("Export your data to a CSV file (can be imported with Excel)");
+
 		subSubSubMenuExportCSV.addActionListener((ActionEvent event) -> {
+			String[] columnNames = { "#", "Artist", "Title" };
+			actionManager.generateCsvFileAdvanced("musicvideolist.csv", columnNames,
+					actionManager.musicVideoListToTable(), actionManager.getMusicVideosList().size());
 		});
 		// with the sub sub sub menu "Export to HTML" >>
-		JMenuItem subSubSubMenuExportHTML = new JMenuItem("Export to HTML");
-		subSubSubMenuExportHTML.setToolTipText("Coming soon");
+		ImageIcon iconHTML = new ImageIcon("res/html_20x20.png");
+		JMenuItem subSubSubMenuExportHTML = new JMenuItem("Export to HTML", iconHTML);
+		subSubSubMenuExportHTML.setToolTipText("Export your data to a HTML file (web browser)");
 		subSubSubMenuExportHTML.addActionListener((ActionEvent event) -> {
+
+			String[] columnNames = { "#", "Artist", "Title" };
+			actionManager.generateHTMLFileAdvanced("table.html",
+					actionManager
+							.generateHTMLFile(actionManager.generateHTMLTable(actionManager.musicVideoListToTable(),
+									columnNames, actionManager.getMusicVideosList().size())));
+		});
+		// and last but not least the info sub sub menu "About" >>
+		ImageIcon iconAbout = new ImageIcon("res/info_20x20.png");
+		JMenuItem subSubMenuAbout = new JMenuItem("About", iconAbout);
+		subSubMenuAbout.setToolTipText("About this program");
+		subSubMenuAbout.addActionListener((ActionEvent event) -> {
+			aboutJFrame();
 		});
 
 		// add the menu buttons to the menu bar to the JFrame
@@ -188,23 +230,30 @@ public class ConceptJFrameGUI {
 		subSubMenuExport.addSeparator();
 		subSubMenuExport.add(subSubSubMenuExportHTML);
 		subMenuMore.add(subSubMenuExport);
+		subMenuMore.addSeparator();
+		subMenuMore.add(subSubMenuAbout);
 		menuBar.add(subMenuMore);
 		guiMainFrame.setJMenuBar(menuBar);
-
-		// later add icons:
-		// ImageIcon iconExit = new ImageIcon("res/exit.gif");
-		// JMenuItem newMi = new JMenuItem("New", iconNew);
 
 		String[] columnNames = { "#", "Artist", "Title" };
 		Object[][] data = actionManager.musicVideoListToTable();
 
+		for (int a = 0; a < actionManager.getMusicVideosList().size(); a++) {
+			data[a][1] = " " + data[a][1];
+			data[a][2] = " " + data[a][2];
+		}
+
 		model = new DefaultTableModel(data, columnNames);
 		table = new JTable(model);
+
+		table.getTableHeader().setBackground(Color.darkGray);
 
 		TableColumnModel columnModel = table.getColumnModel();
 		columnModel.getColumn(0).setPreferredWidth(5);
 		columnModel.getColumn(1).setPreferredWidth(150);
 		columnModel.getColumn(2).setPreferredWidth(225);
+
+		((DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
 
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -216,13 +265,11 @@ public class ConceptJFrameGUI {
 		JScrollPane tableScrollPane = new JScrollPane(table);
 
 		guiMainFrame.add(tableScrollPane);
-		// guiFrame.setVisible(true);
 
 		table.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				int row = table.getSelectedRow();
-				// System.out.println(karaokeOMat.getMusicVideosList().get(row).getPath());
 				actionManager.openMusicVideo(row);
 			}
 		});
@@ -230,8 +277,15 @@ public class ConceptJFrameGUI {
 		// add a search bar with filter and input option
 		JTextField jtfFilter = new JTextField();
 		JPanel panel = new JPanel(new BorderLayout());
-		panel.add(new JLabel("Search for a music video:  "), BorderLayout.WEST);
+
+		ImageIcon iconSearch = new ImageIcon("res/search.png");
+		JLabel thumb = new JLabel("  Search for a music video:  ");
+		thumb.setIcon(iconSearch);
+		panel.add(thumb);
+
+		panel.add(thumb, BorderLayout.WEST);
 		panel.add(jtfFilter, BorderLayout.CENTER);
+		panel.setPreferredSize(new Dimension(500, 40));
 		guiMainFrame.add(panel, BorderLayout.NORTH);
 
 		// action listener if the enter key was pressed
@@ -295,7 +349,10 @@ public class ConceptJFrameGUI {
 		});
 
 		// play a random music video button
-		JButton randomMusicvideoButton = new JButton("Play a random music video");
+		ImageIcon iconRandom = new ImageIcon("res/random.png");
+		JButton randomMusicvideoButton = new JButton("Play a random music video", iconRandom);
+
+		randomMusicvideoButton.setPreferredSize(new Dimension(500, 40));
 		randomMusicvideoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
@@ -345,6 +402,42 @@ public class ConceptJFrameGUI {
 				}
 			}
 		});
+	}
+
+	/**
+	 */
+	public void aboutJFrame() {
+
+		JFrame aboutJFrameWindow = new JFrame("About Karaoke Desktop Client [Beta]");
+		// set title
+		aboutJFrameWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		// only close on exit - don't end the whole program
+
+		JPanel panel = new JPanel(new BorderLayout());
+
+		ImageIcon iconSearch = new ImageIcon("res/logo.png");
+		JLabel icon = new JLabel();
+		icon.setIcon(iconSearch);
+		JLabel author = new JLabel("   Autor: Niklas M                                   ");
+		JLabel other = new JLabel("   This program is completely open source on Github  ");
+		JLabel date = new JLabel("   \u00a9 April 2017                                     ");
+		JPanel panel2 = new JPanel(new BorderLayout());
+		panel2.setPreferredSize(new Dimension(260, 0));
+		panel2.add(author, BorderLayout.CENTER);
+		panel2.add(other, BorderLayout.NORTH);
+		panel2.add(date, BorderLayout.SOUTH);
+
+		panel.add(icon, BorderLayout.WEST);
+		panel.add(panel2, BorderLayout.EAST);
+		panel.setPreferredSize(new Dimension(428, 128));
+		aboutJFrameWindow.add(panel);
+
+		aboutJFrameWindow.pack();
+		// make it visible for the user
+		aboutJFrameWindow.setVisible(true);
+		// and let it pop up in the middle of the screen
+		aboutJFrameWindow.setLocationRelativeTo(null);
+
 	}
 
 	/**
@@ -460,7 +553,8 @@ public class ConceptJFrameGUI {
 		// now add for each entry in the new updated music video list a row to
 		// the empty table
 		for (int a = 0; a < actionManager.getMusicVideosList().size(); a++) {
-			model.addRow(new Object[] { cachedTableList[a][0], cachedTableList[a][1], cachedTableList[a][2] });
+			model.addRow(
+					new Object[] { cachedTableList[a][0], "  " + cachedTableList[a][1], "  " + cachedTableList[a][2] });
 		}
 	}
 
@@ -483,7 +577,7 @@ public class ConceptJFrameGUI {
 	 * It's a method, because it was more than once used in my code.
 	 */
 	public void configurationFileSaveOrOverwriteDialog() {
-		if (actionManager.fileExists(file)) {
+		if (!actionManager.fileExists(file)) {
 			// simply save a new configuration file when no
 			// configuration exist at this point
 			actionManager.fileWriterOfTheConfigFile(file);
@@ -497,6 +591,31 @@ public class ConceptJFrameGUI {
 			// overwrite the actual file
 			actionManager.fileOverWriter(file);
 		}
+		JOptionPane.showMessageDialog(null, "The configuration was saved");
+	}
+
+	public static void windowsDetected() {
+
+		try {
+			// UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+			// UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+			// UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+			if (System.getProperty("os.name").contains("Windows")) {
+				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -504,7 +623,7 @@ public class ConceptJFrameGUI {
 	 * ConceptJFrameGUI and the constructor does the rest :)
 	 */
 	public static void main(String[] args) {
-
+		windowsDetected();
 		// create a new Object of our class
 		ConceptJFrameGUI mainFrame = new ConceptJFrameGUI();
 		// look after configuration file before starting

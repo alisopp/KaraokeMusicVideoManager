@@ -11,11 +11,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class ActionHandler {
@@ -161,6 +165,15 @@ public class ActionHandler {
 		}
 	}
 
+	public class CustomComparator implements Comparator<MusicVideo> {
+
+		@Override
+		public int compare(MusicVideo o1, MusicVideo o2) {
+			// TODO Auto-generated method stub
+			return o1.getArtist().compareTo(o2.getArtist());
+		}
+	}
+
 	public void scanDirectories() {
 
 		if (!musicVideosList.isEmpty()) {
@@ -174,6 +187,8 @@ public class ActionHandler {
 			for (Path path : pathList) {
 				scanDirectory(path);
 			}
+			// sort the list after the artist
+			Collections.sort(musicVideosList, new CustomComparator());
 		} else {
 			System.err.println("There are no paths to scan for music videos!");
 			musicVideosList.clear();
@@ -437,10 +452,213 @@ public class ActionHandler {
 		return ThreadLocalRandom.current().nextInt(lowerLimit, upperBound);
 	}
 
+	public void generateCsvFile(String fileName, String[] columnNames, Object[][] data, int size) {
+
+		try {
+			FileWriter writer = new FileWriter(fileName);
+
+			for (int a = 0; a < columnNames.length - 1; a++) {
+				writer.append(columnNames[a]);
+				writer.append(',');
+			}
+			writer.append(columnNames[columnNames.length - 1]);
+			writer.append('\n');
+
+			for (int a = 0; a < size; a++) {
+
+				for (int b = 0; b < columnNames.length - 1; b++) {
+					writer.append(data[a][b].toString());
+					writer.append(',');
+				}
+				writer.append(data[a][columnNames.length - 1].toString());
+				writer.append('\n');
+			}
+
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void generateCsvFileAdvanced(String fileName, String[] columnNames, Object[][] data, int size) {
+
+		JFileChooser chooser = new JFileChooser();
+		chooser.isFocusOwner();
+		chooser.setCurrentDirectory(new java.io.File("."));
+		chooser.setDialogTitle("Choose a directory to save the csv file:");
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		chooser.setAcceptAllFileFilterUsed(false);
+
+		String filePath = "";
+		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			filePath += chooser.getSelectedFile().toPath().toString();
+			// chooser.getCurrentDirectory()
+		}
+		filePath += "\\" + fileName;
+		System.out.println(filePath);
+		boolean doIt = true;
+		File file = new File(filePath);
+		if (file.exists()) {
+			if (JOptionPane.showConfirmDialog(null,
+					"This will overwrite your old configuration! Do you really want to continue?", "Warning",
+					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+				fileDeleter(file);
+			} else {
+				doIt = false;
+			}
+		}
+
+		if (doIt == true) {
+			try {
+				FileWriter writer = new FileWriter(filePath);
+
+				for (int a = 0; a < columnNames.length - 1; a++) {
+					writer.append(columnNames[a]);
+					writer.append(',');
+				}
+				writer.append(columnNames[columnNames.length - 1]);
+				writer.append('\n');
+
+				for (int a = 0; a < size; a++) {
+
+					for (int b = 0; b < columnNames.length - 1; b++) {
+						writer.append(data[a][b].toString());
+						writer.append(',');
+					}
+					writer.append(data[a][columnNames.length - 1].toString());
+					writer.append('\n');
+				}
+
+				writer.flush();
+				writer.close();
+
+				JOptionPane.showMessageDialog(null, "File was saved to " + filePath);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "File was not saved!");
+		}
+	}
+
+	public String generateHTMLTable(Object[][] data, String[] header, int rows) {
+		StringBuilder sb = new StringBuilder("<table>");
+		int cols = header.length;
+
+		sb.append("<tr>");
+		for (int a = 0; a < cols; a++) {
+			sb.append("<th>" + header[a] + "</th>");
+		}
+		sb.append("</tr>");
+
+		for (int a = 0; a < rows; a++) {
+			sb.append("<tr>");
+			for (int b = 0; b < cols; b++) {
+				sb.append("<td>" + data[a][b] + "</td>");
+			}
+			sb.append("</tr>");
+		}
+		sb.append("</table>");
+
+		return sb.toString();
+	}
+
+	public String[] fileReader(String filename) {
+
+		String[] arr = null;
+
+		File file = new File(filename);
+		if (file.exists()) {
+			System.out.println("Yes!");
+
+			Scanner sc;
+			try {
+				sc = new Scanner(file);
+
+				List<String> lines = new ArrayList<String>();
+				while (sc.hasNextLine()) {
+					lines.add(sc.nextLine());
+				}
+
+				arr = lines.toArray(new String[0]);
+
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return arr;
+	}
+
+	public String generateHTMLFile(String table) {
+		StringBuilder sb = new StringBuilder();
+
+		for (String a : fileReader("res/htmlBegin.txt")) {
+			sb.append(a);
+		}
+
+		sb.append(table);
+
+		for (String a : fileReader("res/htmlEnd.txt")) {
+			sb.append(a);
+		}
+		return sb.toString();
+	}
+
+	public void generateHTMLFileAdvanced(String fileName, String htmlfile) {
+
+		JFileChooser chooser = new JFileChooser();
+		chooser.isFocusOwner();
+		chooser.setCurrentDirectory(new java.io.File("."));
+		chooser.setDialogTitle("Choose a directory to save the csv file:");
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+		String filePath = "";
+		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			filePath += chooser.getSelectedFile().toPath().toString();
+			// chooser.getCurrentDirectory()
+		}
+		filePath += "\\" + fileName;
+		System.out.println(filePath);
+		boolean doIt = true;
+		File file = new File(filePath);
+		if (file.exists()) {
+			if (JOptionPane.showConfirmDialog(null,
+					"This will overwrite your old configuration! Do you really want to continue?", "Warning",
+					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+				fileDeleter(file);
+			} else {
+				doIt = false;
+			}
+		}
+
+		if (doIt == true) {
+			try {
+				FileWriter writer = new FileWriter(filePath);
+
+				writer.append(htmlfile);
+
+				writer.flush();
+				writer.close();
+
+				JOptionPane.showMessageDialog(null, "File was saved to " + filePath);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "File was not saved!");
+		}
+	}
+
 	public static void main(String[] args) {
 
 		// create new KaraokeOMat
 		ActionHandler testding = new ActionHandler();
+
+		testding.generateHTMLFile("hi");
 
 		// add new path to music video library
 		testding.addToPathList(testding.getDirectories());
