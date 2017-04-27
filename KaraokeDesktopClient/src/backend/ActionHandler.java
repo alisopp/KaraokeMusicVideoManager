@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -154,8 +156,12 @@ public class ActionHandler {
 
 					// finally add the newMusicVideoObject to our
 					// musicVideosList
-					musicVideosList.add(newMusicVideoObject);
+
+					if (!titleIsAlreadyContained(newMusicVideoObject)) {
+						musicVideosList.add(newMusicVideoObject);
+					}
 				}
+
 			});
 
 			System.out.println("Music video list was updated (+ " + path + ")");
@@ -165,12 +171,31 @@ public class ActionHandler {
 		}
 	}
 
+	public boolean titleIsAlreadyContained(MusicVideo object) {
+		String title = object.getTitle();
+		String artist = object.getArtist();
+
+		for (MusicVideo hi : musicVideosList) {
+			if (hi.getTitle().equals(title)) {
+				if (hi.getArtist().equals(artist)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	public class CustomComparator implements Comparator<MusicVideo> {
 
 		@Override
 		public int compare(MusicVideo o1, MusicVideo o2) {
-			// TODO Auto-generated method stub
-			return o1.getArtist().compareTo(o2.getArtist());
+
+			if (o1.getArtist().compareTo(o2.getArtist()) == 0) {
+				return o1.getTitle().compareTo(o2.getTitle());
+			} else {
+				return o1.getArtist().compareTo(o2.getArtist());
+			}
+
 		}
 	}
 
@@ -565,11 +590,10 @@ public class ActionHandler {
 		return sb.toString();
 	}
 
-	public String[] fileReader(String filename) {
+	public String[] htmlFileReader(File file) {
 
 		String[] arr = null;
 
-		File file = new File(filename);
 		if (file.exists()) {
 			System.out.println("Yes!");
 
@@ -593,16 +617,50 @@ public class ActionHandler {
 	}
 
 	public String generateHTMLFile(String table) {
+
 		StringBuilder sb = new StringBuilder();
 
-		for (String a : fileReader("res/htmlBegin.txt")) {
-			sb.append(a);
-		}
+		try {
 
-		sb.append(table);
+			InputStream in = this.getClass().getClassLoader().getResourceAsStream("htmlBegin.txt");
+			BufferedReader r = new BufferedReader(new InputStreamReader(in));
+			String line;
+			while ((line = r.readLine()) != null) {
+				System.out.println(line);
+				sb.append(line);
+			}
+			sb.append(table);
+			InputStream in2 = this.getClass().getClassLoader().getResourceAsStream("htmlEnd.txt");
+			BufferedReader r2 = new BufferedReader(new InputStreamReader(in2));
+			while ((line = r2.readLine()) != null) {
+				System.out.println(line);
+				sb.append(line);
+			}
+			// ClassLoader classLoader = getClass().getClassLoader();
+			// File file11 = new
+			// File(classLoader.getResource("htmlBegin.txt").getFile());
+			// File file22 = new
+			// File(classLoader.getResource("htmlEnd.txt").getFile());
 
-		for (String a : fileReader("res/htmlEnd.txt")) {
-			sb.append(a);
+			// URL url1 = ActionHandler.class.getResource("/htmlBegin.txt");
+			// URL url2 = ActionHandler.class.getResource("/htmlEnd.txt");
+			// File file1 = new File(url1.getPath().toString());
+			// File file2 = new File(url2.getPath().toString());
+			// JOptionPane.showMessageDialog(null, file11.getPath());
+			// JOptionPane.showMessageDialog(null, file22.getPath());
+			// for (String a : htmlFileReader(file11)) {
+			// sb.append(a);
+			// }
+			//
+			// sb.append(table);
+			//
+			// for (String a : htmlFileReader(file22)) {
+			// sb.append(a);
+			// }
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Verdammt, die html Datei konnte nicht exportiert werden!!");
 		}
 		return sb.toString();
 	}
@@ -612,7 +670,7 @@ public class ActionHandler {
 		JFileChooser chooser = new JFileChooser();
 		chooser.isFocusOwner();
 		chooser.setCurrentDirectory(new java.io.File("."));
-		chooser.setDialogTitle("Choose a directory to save the csv file:");
+		chooser.setDialogTitle("Choose a directory to save the html file:");
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
 		String filePath = "";
@@ -626,7 +684,7 @@ public class ActionHandler {
 		File file = new File(filePath);
 		if (file.exists()) {
 			if (JOptionPane.showConfirmDialog(null,
-					"This will overwrite your old configuration! Do you really want to continue?", "Warning",
+					"This will overwrite your old html file/table! Do you really want to continue?", "Warning",
 					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
 				fileDeleter(file);
 			} else {
@@ -653,32 +711,32 @@ public class ActionHandler {
 		}
 	}
 
-	public static void main(String[] args) {
-
-		// create new KaraokeOMat
-		ActionHandler testding = new ActionHandler();
-
-		testding.generateHTMLFile("hi");
-
-		// add new path to music video library
-		testding.addToPathList(testding.getDirectories());
-
-		// scan all saved paths after music videos
-		testding.scanDirectories();
-
-		// print out all recognized music video files
-		testding.printMusicVideoList();
-
-		testding.musicVideoListToTable();
-
-		// open a file through the console
-		Scanner scanInput;
-		try {
-			scanInput = new Scanner(System.in);
-			testding.openMusicVideo(scanInput.nextInt());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
+	// public static void main(String[] args) {
+	//
+	// // create new KaraokeOMat
+	// ActionHandler testding = new ActionHandler();
+	//
+	// testding.generateHTMLFile("hi");
+	//
+	// // add new path to music video library
+	// testding.addToPathList(testding.getDirectories());
+	//
+	// // scan all saved paths after music videos
+	// testding.scanDirectories();
+	//
+	// // print out all recognized music video files
+	// testding.printMusicVideoList();
+	//
+	// testding.musicVideoListToTable();
+	//
+	// // open a file through the console
+	// Scanner scanInput;
+	// try {
+	// scanInput = new Scanner(System.in);
+	// testding.openMusicVideo(scanInput.nextInt());
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// }
 }

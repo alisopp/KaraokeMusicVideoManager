@@ -101,8 +101,10 @@ public class ConceptJFrameGUI {
 	/**
 	 * This method manages the main graphic user interface. Here you can find
 	 * all features.
+	 * 
+	 * @throws IOException
 	 */
-	public void createWindow() {
+	public void createWindow() throws IOException {
 
 		guiMainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// make sure the program exits when the frame closes
@@ -113,13 +115,9 @@ public class ConceptJFrameGUI {
 		guiMainFrame.setLocationRelativeTo(null);
 		// let it pop up in the middle of the screen
 
-		// Image image =
-		// Toolkit.getDefaultToolkit().getImage(getClass().getResource("res/logo_128x128.png"));
-		// ImageIcon icon = new ImageIcon(image);
-		// guiMainFrame.setIconImage(icon.getImage());
-
 		try {
-			guiMainFrame.setIconImage(ImageIO.read(new File("res/logo.png")));
+			// URL url = ConceptJFrameGUI.class.getResource("/logo.png");
+			guiMainFrame.setIconImage(ImageIO.read(ConceptJFrameGUI.class.getResource("/logo.png")));
 		} catch (IOException exc) {
 			exc.printStackTrace();
 		}
@@ -131,7 +129,7 @@ public class ConceptJFrameGUI {
 		JMenu subMenuPath = new JMenu("Source folders");
 		subMenuPath.setToolTipText("Add/Change/Remove the actual folders of your music videos");
 		// and the sub sub menu "Add" >>
-		ImageIcon iconAdd = new ImageIcon("res/add_20x20.png");
+		ImageIcon iconAdd = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/add_20x20.png")));
 		JMenuItem subSubMenuAddSourceFolder = new JMenuItem("Add", iconAdd);
 		subSubMenuAddSourceFolder.setToolTipText("Add a new folder with new music videos to your list");
 		subSubMenuAddSourceFolder.addActionListener((ActionEvent event) -> {
@@ -141,7 +139,7 @@ public class ConceptJFrameGUI {
 		});
 
 		// and the sub sub menu "Remove" >>
-		ImageIcon iconRemove = new ImageIcon("res/remove_20x20.png");
+		ImageIcon iconRemove = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/remove_20x20.png")));
 		JMenuItem subSubMenuRemoveSourceFolder = new JMenuItem("Remove", iconRemove);
 		subSubMenuRemoveSourceFolder.setToolTipText("Remove a folder with music videos from your list");
 		subSubMenuRemoveSourceFolder.addActionListener((ActionEvent event) -> {
@@ -157,7 +155,7 @@ public class ConceptJFrameGUI {
 		JMenu subMenuMore = new JMenu("More");
 		subMenuMore.setToolTipText("Save your actual source folder paths and more in a config file for later");
 		// and the sub sub menu "Save configuration" >>
-		ImageIcon iconSave = new ImageIcon("res/save_20x20.png");
+		ImageIcon iconSave = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/save_20x20.png")));
 		JMenuItem subSubMenuConfigurationSave = new JMenuItem("Save configuration", iconSave);
 		subSubMenuConfigurationSave
 				.setToolTipText("Saves everything so you can start instantly at the next launch of the program");
@@ -166,7 +164,7 @@ public class ConceptJFrameGUI {
 			configurationFileSaveOrOverwriteDialog();
 		});
 		// and the sub sub menu "Load configuration" >>
-		ImageIcon iconLoad = new ImageIcon("res/load_20x20.png");
+		ImageIcon iconLoad = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/load_20x20.png")));
 		JMenuItem subSubMenuConfigurationLoad = new JMenuItem("Load configuration", iconLoad);
 		subSubMenuConfigurationLoad.setToolTipText("Load configuration from a configuration file");
 		subSubMenuConfigurationLoad.addActionListener((ActionEvent event) -> {
@@ -183,12 +181,12 @@ public class ConceptJFrameGUI {
 			}
 		});
 		// and the sub sub menu "Export" >>
-		ImageIcon iconExport = new ImageIcon("res/export_20x20.png");
+		ImageIcon iconExport = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/export_20x20.png")));
 		JMenu subSubMenuExport = new JMenu("Export");
 		subSubMenuExport.setIcon(iconExport);
 		subSubMenuExport.setToolTipText("Export your list to the following formats: CSV, HTML");
 		// with the sub sub sub menu "Export to CSV" >>
-		ImageIcon iconCSV = new ImageIcon("res/csv_20x20.png");
+		ImageIcon iconCSV = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/csv_20x20.png")));
 		JMenuItem subSubSubMenuExportCSV = new JMenuItem("Export to CSV", iconCSV);
 		subSubSubMenuExportCSV.setToolTipText("Export your data to a CSV file (can be imported with Excel)");
 
@@ -198,7 +196,7 @@ public class ConceptJFrameGUI {
 					actionManager.musicVideoListToTable(), actionManager.getMusicVideosList().size());
 		});
 		// with the sub sub sub menu "Export to HTML" >>
-		ImageIcon iconHTML = new ImageIcon("res/html_20x20.png");
+		ImageIcon iconHTML = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/html_20x20.png")));
 		JMenuItem subSubSubMenuExportHTML = new JMenuItem("Export to HTML", iconHTML);
 		subSubSubMenuExportHTML.setToolTipText("Export your data to a HTML file (web browser)");
 		subSubSubMenuExportHTML.addActionListener((ActionEvent event) -> {
@@ -210,7 +208,7 @@ public class ConceptJFrameGUI {
 									columnNames, actionManager.getMusicVideosList().size())));
 		});
 		// and last but not least the info sub sub menu "About" >>
-		ImageIcon iconAbout = new ImageIcon("res/info_20x20.png");
+		ImageIcon iconAbout = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/info_20x20.png")));
 		JMenuItem subSubMenuAbout = new JMenuItem("About", iconAbout);
 		subSubMenuAbout.setToolTipText("About this program");
 		subSubMenuAbout.addActionListener((ActionEvent event) -> {
@@ -278,7 +276,7 @@ public class ConceptJFrameGUI {
 		JTextField jtfFilter = new JTextField();
 		JPanel panel = new JPanel(new BorderLayout());
 
-		ImageIcon iconSearch = new ImageIcon("res/search.png");
+		ImageIcon iconSearch = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/search.png")));
 		JLabel thumb = new JLabel("  Search for a music video:  ");
 		thumb.setIcon(iconSearch);
 		panel.add(thumb);
@@ -349,7 +347,7 @@ public class ConceptJFrameGUI {
 		});
 
 		// play a random music video button
-		ImageIcon iconRandom = new ImageIcon("res/random.png");
+		ImageIcon iconRandom = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/random.png")));
 		JButton randomMusicvideoButton = new JButton("Play a random music video", iconRandom);
 
 		randomMusicvideoButton.setPreferredSize(new Dimension(500, 40));
@@ -415,9 +413,16 @@ public class ConceptJFrameGUI {
 
 		JPanel panel = new JPanel(new BorderLayout());
 
-		ImageIcon iconSearch = new ImageIcon("res/logo.png");
+		ImageIcon iconLogo;
 		JLabel icon = new JLabel();
-		icon.setIcon(iconSearch);
+		try {
+			iconLogo = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/logo.png")));
+			icon.setIcon(iconLogo);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		JLabel author = new JLabel("   Autor: Niklas M                                   ");
 		JLabel other = new JLabel("   This program is completely open source on Github  ");
 		JLabel date = new JLabel("   \u00a9 April 2017                                     ");
@@ -468,8 +473,17 @@ public class ConceptJFrameGUI {
 			removePathButton.setActionCommand("remove path from path list");
 			removePathButton.setPreferredSize(new Dimension(500, 40));
 
+			ImageIcon iconRemove;
 			JLabel label = new JLabel("<< Click to remove " + actionManager.getPathList().get(i) + " >>",
 					SwingConstants.CENTER);
+			try {
+				iconRemove = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/remove_20x20.png")));
+				label.setIcon(iconRemove);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			removePathButton.add(label);
 
 			String pathTextForLater = actionManager.getPathList().get(i).toString();
@@ -479,13 +493,29 @@ public class ConceptJFrameGUI {
 				if (arrayPathIndex[indexOfPath] == true) {
 					label.setText("<< Click to remove " + pathTextForLater + " >>");
 					arrayPathIndex[indexOfPath] = false;
-				} else if (JOptionPane.showConfirmDialog(null,
-						"Do you really want to delete this path from the path list?\n"
-								+ actionManager.getPathList().get(indexOfPath),
-						"Question", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+
+					ImageIcon iconRemove2;
+					try {
+						iconRemove2 = new ImageIcon(
+								ImageIO.read(ConceptJFrameGUI.class.getResource("/remove_20x20.png")));
+						label.setIcon(iconRemove2);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
 					// removePathButton.setEnabled(false);
 					label.setText(pathTextForLater + " was removed - Click to reverse");
 					arrayPathIndex[indexOfPath] = true;
+
+					ImageIcon iconReAdd;
+					try {
+						iconReAdd = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/undo_20x20.png")));
+						label.setIcon(iconReAdd);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			});
 			pathEditorWindow.add(removePathButton);
@@ -629,7 +659,12 @@ public class ConceptJFrameGUI {
 		// look after configuration file before starting
 		mainFrame.startupConfig();
 		// open/show the window
-		mainFrame.createWindow();
+		try {
+			mainFrame.createWindow();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

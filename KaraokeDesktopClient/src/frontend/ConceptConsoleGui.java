@@ -266,6 +266,7 @@ public class ConceptConsoleGui {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void runConsoleUi() {
 
 		configFileStartupImportManager();
@@ -279,11 +280,11 @@ public class ConceptConsoleGui {
 
 	}
 
-	public static void main(String[] args) {
-
-		ConceptConsoleGui gui = new ConceptConsoleGui();
-		gui.runConsoleUi();
-
-	}
+	// public static void main(String[] args) {
+	//
+	// ConceptConsoleGui gui = new ConceptConsoleGui();
+	// gui.runConsoleUi();
+	//
+	// }
 
 }
