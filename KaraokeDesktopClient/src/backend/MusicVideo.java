@@ -5,7 +5,8 @@ import java.nio.file.Path;
 /**
  * The properties of every music video ([karaoke] file)
  * 
- * @author niklas m.
+ * @author Niklas | https://github.com/AnonymerNiklasistanonym
+ * @version 0.3 (beta)
  *
  */
 public class MusicVideo {
@@ -27,7 +28,7 @@ public class MusicVideo {
 	 * normal constructor: nothing happens
 	 */
 	public MusicVideo() {
-
+		// empty constructor
 	}
 
 	/**
@@ -61,7 +62,7 @@ public class MusicVideo {
 	 * @param name
 	 *            (String | name/title of the music video)
 	 */
-	public void setName(String name) {
+	public void setTitle(String name) {
 		this.name = name;
 	}
 

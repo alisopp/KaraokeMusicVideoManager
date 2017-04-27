@@ -14,6 +14,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import backend.ActionHandler;
 
+/**
+ * Beta test of this program in a TUI
+ * 
+ * @author Niklas | https://github.com/AnonymerNiklasistanonym
+ * @version 1.0
+ *
+ */
 public class ConceptConsoleGui {
 
 	private ActionHandler karaokeOMat;
@@ -49,9 +56,9 @@ public class ConceptConsoleGui {
 
 	private void addFolder() {
 		try {
-			karaokeOMat.addToPathList(karaokeOMat.getDirectory());
+			karaokeOMat.addToPathList(karaokeOMat.getPathOfDirectory());
 			karaokeOMat.clearMusicVideosList();
-			karaokeOMat.scanDirectories();
+			karaokeOMat.updateMusicVideoList();
 		} catch (Exception f) {
 			System.out.println("The process was shutted down.");
 		}
@@ -257,7 +264,7 @@ public class ConceptConsoleGui {
 				karaokeOMat.setPathList(configFileReader());
 				System.out.print("saved music video paths were added... ");
 				karaokeOMat.clearMusicVideosList();
-				karaokeOMat.scanDirectories();
+				karaokeOMat.updateMusicVideoList();
 				System.out.println("music video list was updated.\n\n");
 			} catch (Exception e) {
 				System.err.println("\nProblem detected. Import was not successfull.\n\n");

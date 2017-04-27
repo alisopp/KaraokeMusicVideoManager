@@ -45,8 +45,8 @@ import backend.ActionHandler;
  * back end code with a user friendly and feature rich graphical java swing
  * interface.
  * 
- * @author Niklas
- * @version 0.2
+ * @author Niklas | https://github.com/AnonymerNiklasistanonym
+ * @version 0.3 (beta)
  *
  */
 public class ConceptJFrameGUI {
@@ -93,7 +93,7 @@ public class ConceptJFrameGUI {
 				// content as your new path list
 				actionManager.setPathList(actionManager.fileReader(file));
 				// now scan again all paths for music videos
-				actionManager.scanDirectories();
+				actionManager.updateMusicVideoList();
 			}
 		}
 	}
@@ -116,7 +116,6 @@ public class ConceptJFrameGUI {
 		// let it pop up in the middle of the screen
 
 		try {
-			// URL url = ConceptJFrameGUI.class.getResource("/logo.png");
 			guiMainFrame.setIconImage(ImageIO.read(ConceptJFrameGUI.class.getResource("/logo.png")));
 		} catch (IOException exc) {
 			exc.printStackTrace();
@@ -134,7 +133,7 @@ public class ConceptJFrameGUI {
 		subSubMenuAddSourceFolder.setToolTipText("Add a new folder with new music videos to your list");
 		subSubMenuAddSourceFolder.addActionListener((ActionEvent event) -> {
 			System.out.println("Add a new folder with new music videos to your list");
-			actionManager.addToPathList(actionManager.getDirectories());
+			actionManager.addToPathList(actionManager.getPathOfDirectories());
 			updateTable();
 		});
 
@@ -172,9 +171,9 @@ public class ConceptJFrameGUI {
 			if (JOptionPane.showConfirmDialog(null,
 					"This will overwrite your old configuration! Do you really want to continue?", "Warning",
 					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-				actionManager.setPathList(actionManager.fileReader(actionManager.getDirectoryOfAFile()));
+				actionManager.setPathList(actionManager.fileReader(actionManager.getFileThroughFilemanager()));
 				// now scan again all paths for music videos
-				actionManager.scanDirectories();
+				actionManager.updateMusicVideoList();
 				updateTable();
 			} else {
 				System.out.println("\tPlaying was denied by the user.");
@@ -191,8 +190,7 @@ public class ConceptJFrameGUI {
 		subSubSubMenuExportCSV.setToolTipText("Export your data to a CSV file (can be imported with Excel)");
 
 		subSubSubMenuExportCSV.addActionListener((ActionEvent event) -> {
-			String[] columnNames = { "#", "Artist", "Title" };
-			actionManager.generateCsvFileAdvanced("musicvideolist.csv", columnNames,
+			actionManager.generateCsvFile("musicvideolist.csv", actionManager.getColumnNames(),
 					actionManager.musicVideoListToTable(), actionManager.getMusicVideosList().size());
 		});
 		// with the sub sub sub menu "Export to HTML" >>
@@ -201,11 +199,10 @@ public class ConceptJFrameGUI {
 		subSubSubMenuExportHTML.setToolTipText("Export your data to a HTML file (web browser)");
 		subSubSubMenuExportHTML.addActionListener((ActionEvent event) -> {
 
-			String[] columnNames = { "#", "Artist", "Title" };
 			actionManager.generateHTMLFileAdvanced("table.html",
 					actionManager
 							.generateHTMLFile(actionManager.generateHTMLTable(actionManager.musicVideoListToTable(),
-									columnNames, actionManager.getMusicVideosList().size())));
+									actionManager.getColumnNames(), actionManager.getMusicVideosList().size())));
 		});
 		// and last but not least the info sub sub menu "About" >>
 		ImageIcon iconAbout = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/info_20x20.png")));
@@ -233,7 +230,6 @@ public class ConceptJFrameGUI {
 		menuBar.add(subMenuMore);
 		guiMainFrame.setJMenuBar(menuBar);
 
-		String[] columnNames = { "#", "Artist", "Title" };
 		Object[][] data = actionManager.musicVideoListToTable();
 
 		for (int a = 0; a < actionManager.getMusicVideosList().size(); a++) {
@@ -241,7 +237,7 @@ public class ConceptJFrameGUI {
 			data[a][2] = " " + data[a][2];
 		}
 
-		model = new DefaultTableModel(data, columnNames);
+		model = new DefaultTableModel(data, actionManager.getColumnNames());
 		table = new JTable(model);
 
 		table.getTableHeader().setBackground(Color.darkGray);
@@ -299,21 +295,15 @@ public class ConceptJFrameGUI {
 
 				// check if it is a number (a String only containing digits)
 				if (scannedText.matches("[-+]?\\d*\\.?\\d+")) {
-					// if yes parse the String to an Integer
-					int a = Integer.parseInt(scannedText);
-					// and if the Integer is a number of the list
-					if (a > 0 && a <= actionManager.getMusicVideosList().size()) {
-						// open the music video on this position
-						actionManager.openMusicVideo(a - 1);
-					}
+					// if yes parse the String to an Integer and
+					// open the music video on this position
+					actionManager.openMusicVideo(Integer.parseInt(scannedText) - 1);
 				} else {
-					// algorithm that finds the top result in the actual table
-					// and gets the number of it
-					int a = (int) table.getValueAt(0, 0);
-					// gets top row number
-					if (a > 0 && a <= actionManager.getMusicVideosList().size()) {
-						// plays the top row music video
-						actionManager.openMusicVideo(a - 1);
+					// when at least on row exists
+					if (table.getRowCount() > 0) {
+						// algorithm that finds the top result in the actual
+						// table and gets the number of it
+						actionManager.openMusicVideo((int) table.getValueAt(0, 0) - 1);
 					}
 				}
 			}
@@ -419,7 +409,6 @@ public class ConceptJFrameGUI {
 			iconLogo = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/logo.png")));
 			icon.setIcon(iconLogo);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -457,8 +446,6 @@ public class ConceptJFrameGUI {
 		pathEditorWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		// only close on exit - don't end the whole program
 
-		// size of the window
-
 		boolean[] arrayPathIndex = new boolean[actionManager.getPathList().size()];
 		Arrays.fill(arrayPathIndex, false);
 
@@ -480,7 +467,6 @@ public class ConceptJFrameGUI {
 				iconRemove = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/remove_20x20.png")));
 				label.setIcon(iconRemove);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -500,11 +486,9 @@ public class ConceptJFrameGUI {
 								ImageIO.read(ConceptJFrameGUI.class.getResource("/remove_20x20.png")));
 						label.setIcon(iconRemove2);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				} else {
-					// removePathButton.setEnabled(false);
 					label.setText(pathTextForLater + " was removed - Click to reverse");
 					arrayPathIndex[indexOfPath] = true;
 
@@ -513,7 +497,6 @@ public class ConceptJFrameGUI {
 						iconReAdd = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/undo_20x20.png")));
 						label.setIcon(iconReAdd);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -525,8 +508,6 @@ public class ConceptJFrameGUI {
 			// table
 		}
 
-		// No need, we pack everything instead
-		// pathEditorWindow.setSize(500, 400);
 		// now pack all components together for their perfect size
 		pathEditorWindow.pack();
 		// make it visible for the user
@@ -549,7 +530,7 @@ public class ConceptJFrameGUI {
 				if (changeDetected && JOptionPane.showConfirmDialog(null, "Do you really want to save changes?",
 						"Important question", JOptionPane.YES_NO_OPTION,
 						JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-					int regulator = 1;
+					int regulator = 0;
 					for (int a = 0; a < arrayPathIndex.length; a++) {
 						if (arrayPathIndex[a] == true) {
 							actionManager.deletePathFromPathList(a + regulator);
@@ -574,7 +555,7 @@ public class ConceptJFrameGUI {
 		}
 		// scan each path of the path list after music videos and update so the
 		// music video list
-		actionManager.scanDirectories();
+		actionManager.updateMusicVideoList();
 
 		// cache the music video list with all the data, so that it doesn't need
 		// to be loaded more than one time
@@ -619,7 +600,7 @@ public class ConceptJFrameGUI {
 				"Overwrite old data?", JOptionPane.YES_NO_OPTION,
 				JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
 			// overwrite the actual file
-			actionManager.fileOverWriter(file);
+			actionManager.fileOverWriterConfig(file);
 		}
 		JOptionPane.showMessageDialog(null, "The configuration was saved");
 	}
@@ -634,16 +615,12 @@ public class ConceptJFrameGUI {
 				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			}
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -662,9 +639,7 @@ public class ConceptJFrameGUI {
 		try {
 			mainFrame.createWindow();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
 }
