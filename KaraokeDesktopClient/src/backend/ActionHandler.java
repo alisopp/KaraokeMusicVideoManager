@@ -3,9 +3,6 @@ package backend;
 import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,14 +12,16 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import backend.libraries.FileReaderManager;
+import backend.libraries.FileWriterManager;
+import backend.libraries.JFileChooserManager;
+import backend.objects.MusicVideo;
 
 /**
  * In this class are all the behind the scenes algorithms that have nothing to
@@ -39,6 +38,7 @@ public class ActionHandler {
 	 * video files
 	 */
 	private ArrayList<Path> pathList;
+
 	/**
 	 * This ArrayList<MusicVideo> contains all the MusicVideo objects and each
 	 * object is a music video file with information about title, artist and
@@ -56,12 +56,15 @@ public class ActionHandler {
 	 * MusicVideo objects
 	 */
 	public ActionHandler() {
+
 		pathList = new ArrayList<Path>();
 		musicVideoList = new ArrayList<MusicVideo>();
+
 		columnNames = new String[3];
 		columnNames[0] = "#";
 		columnNames[1] = "Artist";
 		columnNames[2] = "Title";
+
 		if (!Desktop.isDesktopSupported()) {
 			System.err.println("Desktop is not supported - this program will not run on your Computer!");
 		}
@@ -82,18 +85,7 @@ public class ActionHandler {
 	 */
 	public Path getPathOfDirectory() {
 
-		JFileChooser chooser = new JFileChooser();
-		chooser.setCurrentDirectory(new java.io.File("."));
-		chooser.setDialogTitle("Choose a folder with your music videos");
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			// if enter was pressed get selected file
-			return chooser.getSelectedFile().toPath();
-		} else {
-			System.err.println("No directory was selected - User closed dialog!");
-			return null;
-		}
+		return JFileChooserManager.chooseDirectoryGetPath("Choose a folder with your music videos");
 	}
 
 	/**
@@ -104,30 +96,7 @@ public class ActionHandler {
 	 */
 	public Path[] getPathOfDirectories() {
 
-		Path[] pathArray = null;
-
-		JFileChooser chooser = new JFileChooser();
-		chooser.setCurrentDirectory(new java.io.File("."));
-		chooser.setDialogTitle("Choose a folder or more with your music videos");
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		chooser.setMultiSelectionEnabled(true);
-
-		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			// if enter was pressed get selected file(s)
-			File[] uploadDir = chooser.getSelectedFiles();
-			pathArray = new Path[uploadDir.length];
-			// transfer for every file the path to the path array
-			for (int i = 0; i < uploadDir.length; i++) {
-				pathArray[i] = uploadDir[i].toPath();
-			}
-			// return the saved paths
-			return pathArray;
-
-		} else {
-			// if the user denied the dialog
-			System.err.println("No directory was selected - User closed dialog!");
-			return null;
-		}
+		return JFileChooserManager.chooseDirectoriesGetPaths("Choose a folder or more with your music videos");
 	}
 
 	/*
@@ -135,30 +104,18 @@ public class ActionHandler {
 	 */
 
 	/**
-	 * Get a file (type File) through the JFile Chooser
+	 * Get a configuration file (type File) through the JFileChooser
 	 * 
 	 * @return file (File | null -> if user aborts dialog)
 	 */
-	public File getFileThroughFilemanager() {
+	public File getConfigurationFileOnComputer() {
 
-		JFileChooser chooser = new JFileChooser();
-		chooser.setCurrentDirectory(new java.io.File("."));
-		chooser.setDialogTitle("Choose a folder with your music videos");
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
-		// needs to be false, so that only configuration files and
-		// directories/folders can be seen
-		chooser.setAcceptAllFileFilterUsed(false);
+		// add filter to the JFileChooser that only configuration files will be
+		// seen by the user
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Configuration file", "abc");
-		chooser.addChoosableFileFilter(filter);
 
-		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			System.out.println("Configuration file \"" + chooser.getSelectedFile().toString() + "\" was selected");
-			return chooser.getSelectedFile();
-		} else {
-			System.err.println("No file was selected!");
-			return null;
-		}
+		// return the configuration file
+		return JFileChooserManager.chooseFile("Choose a folder with your music videos", filter);
 	}
 
 	/**
@@ -242,6 +199,7 @@ public class ActionHandler {
 	 * @return pathList (ArrayList<Path>)
 	 */
 	public ArrayList<Path> getPathList() {
+
 		return pathList;
 	}
 
@@ -251,6 +209,7 @@ public class ActionHandler {
 	 * @param pathList
 	 */
 	public void setPathList(ArrayList<Path> pathList) {
+
 		if (pathList == null) {
 			System.err.println("The handed over ArrayList<Path> was null!");
 		} else if (pathList.isEmpty()) {
@@ -267,6 +226,7 @@ public class ActionHandler {
 	 * Clear all paths from the path list
 	 */
 	public void clearPathList() {
+
 		// only clear the list if it's not empty
 		if (pathList.isEmpty() == false) {
 			pathList.clear();
@@ -283,6 +243,7 @@ public class ActionHandler {
 	 *            (Path)
 	 */
 	public void addToPathList(Path path) {
+
 		if (path == null) {
 			System.err.println("The path was null - no path was added to your path list!");
 		} else if (pathList.contains(path)) {
@@ -304,6 +265,7 @@ public class ActionHandler {
 	 *            (Path[])
 	 */
 	public void addToPathList(Path[] pathArray) {
+
 		if (pathArray == null || pathArray.length == 0) {
 			System.err.println("The path Array was null - no paths were added to your path list!");
 		} else {
@@ -322,6 +284,7 @@ public class ActionHandler {
 	 *            (Index of Path to delete in pathList)
 	 */
 	public void deletePathFromPathList(int index) {
+
 		if (index >= pathList.size() || index < 0) {
 			System.err.println("The index \"" + index + "\" does not exist!");
 		} else {
@@ -335,6 +298,7 @@ public class ActionHandler {
 	 * Print the path list to the console
 	 */
 	public void printPathList() {
+
 		if (pathList == null) {
 			System.err.println("There are no music video paths - path list is null!");
 		} else if (pathList.isEmpty()) {
@@ -375,6 +339,7 @@ public class ActionHandler {
 	 * Clear the music video list
 	 */
 	public void clearMusicVideosList() {
+
 		// only clear the list if it's not empty
 		if (musicVideoList.isEmpty() == false) {
 			musicVideoList.clear();
@@ -423,6 +388,7 @@ public class ActionHandler {
 	 *            (MusicVideo)
 	 */
 	public void addMusicVideoToMusicvideoList(MusicVideo musicVideo) {
+
 		if (musicVideo == null) {
 			System.err.println("The music video object was not added because it is null!");
 		} else if (musicVideocontainedInMusicVideoList(musicVideo)) {
@@ -442,6 +408,7 @@ public class ActionHandler {
 	 * @return true if it is contained, otherwise false
 	 */
 	public boolean musicVideocontainedInMusicVideoList(MusicVideo musicVideo) {
+
 		if (musicVideo != null) {
 			String title = musicVideo.getTitle();
 			String artist = musicVideo.getArtist();
@@ -466,6 +433,7 @@ public class ActionHandler {
 	 * Print the music video list to the console
 	 */
 	public void printMusicVideoList() {
+
 		if (musicVideoList == null) {
 			System.err.println("There are no music videos - music video list is null!");
 		} else if (musicVideoList.isEmpty() == false) {
@@ -493,6 +461,7 @@ public class ActionHandler {
 	 *            (index of the MusicVideo object in the music video list)
 	 */
 	public void openMusicVideo(int index) {
+
 		if (musicVideoList == null) {
 			System.err.println("The music videos list is null!");
 		} else if (musicVideoList.size() <= index && 0 < index) {
@@ -550,6 +519,19 @@ public class ActionHandler {
 		return tableData;
 	}
 
+	public Object[][] musicVideoListToTable(String margin) {
+
+		Object[][] tableData = musicVideoListToTable();
+
+		for (int a = 0; a < musicVideoList.size(); a++) {
+			// set data to Object[][]
+			tableData[a][1] = margin + tableData[a][1] + margin;
+			tableData[a][2] = margin + tableData[a][2] + margin;
+		}
+
+		return tableData;
+	}
+
 	/**
 	 * Search for a file in the same directory and extract its data. Save each
 	 * line in a path list and return it.
@@ -558,35 +540,57 @@ public class ActionHandler {
 	 *            (filename of configuration file)
 	 * @return ArrayList<Path> (list with all extracted paths)
 	 */
-	public ArrayList<Path> fileReader(File file) {
+	public void configFileReader(File file) {
+
+		String[] contentOfFile = FileReaderManager.fileReader(file);
 
 		// if the file really exists
-		if (file != null && file.exists()) {
-			// create a new ArrayList<Path> where we later can save all paths
-			ArrayList<Path> pathListForSomeSeconds = new ArrayList<Path>();
-			// try to read the file line for line
-			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-				for (String line; (line = br.readLine()) != null;) {
-					// convert with this a normal String to a path
-					Path path = Paths.get(line);
-					// and save each line in the ArrayList<Path>
-					pathListForSomeSeconds.add(path);
-				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if (contentOfFile == null || contentOfFile.length == 0) {
 
-			System.out.println("Configuration file's \"" + file.getName() + "\" informations were extracted.");
+			System.err.println("No content could be extracted!");
 
-			// return all paths in a ArrayList<Path>
-			return pathListForSomeSeconds;
-
-			// otherwise return nothing/null
 		} else {
-			System.err.println("No config file was found");
+
+			pathList.clear();
+
+			// try to read the file line for line
+			for (String line : contentOfFile) {
+
+				Path path = Paths.get(line);
+				pathList.add(path);
+				System.out.println("Path list was updated (+ " + path + ")");
+			}
+		}
+	}
+
+	/**
+	 * Search for a file in the same directory and extract its data. Save each
+	 * line in a path list and return it.
+	 * 
+	 * @param file
+	 *            (filename of configuration file)
+	 * @return ArrayList<Path> (list with all extracted paths)
+	 */
+	public ArrayList<Path> configFilePathExtracter(File file) {
+
+		String[] contentOfFile = FileReaderManager.fileReader(file);
+
+		// if the file really exists
+		if (contentOfFile == null || contentOfFile.length == 0) {
+
+			System.err.println("No content could be extracted!");
 			return null;
+
+		} else {
+
+			ArrayList<Path> forComparison = new ArrayList<Path>();
+
+			// try to read the file line for line
+			for (String line : contentOfFile) {
+
+				forComparison.add(Paths.get(line));
+			}
+			return forComparison;
 		}
 	}
 
@@ -607,45 +611,7 @@ public class ActionHandler {
 				content[i] = getPathList().get(i).toString();
 			}
 
-			fileWriter(file, content);
-		}
-	}
-
-	/**
-	 * Creates a file and writes the content into it
-	 * 
-	 * @param file
-	 *            (File | filename + path to save)
-	 * @param content
-	 *            (String[] | content that should be saved into it)
-	 */
-	public void fileWriter(File file, String[] content) {
-
-		if (content == null || content.length == 0) {
-			System.err.println("There is nothing to save!");
-		} else {
-			// creates the file
-			try {
-				file.createNewFile();
-
-				// creates a FileWriter Object
-				FileWriter writer = new FileWriter(file);
-
-				// Writes the content to the file
-				for (int i = 0; i < content.length - 1; i++) {
-					writer.write(content[i] + "\n");
-				}
-				writer.write(content[content.length - 1]);
-
-				writer.flush();
-				writer.close();
-
-				System.out.println("File was saved to " + file.getAbsolutePath());
-
-			} catch (IOException e) {
-				System.err.println("File could not be saved!");
-				e.printStackTrace();
-			}
+			FileWriterManager.writeFile(file, content);
 		}
 	}
 
@@ -656,20 +622,6 @@ public class ActionHandler {
 	 * @param file
 	 */
 	public void fileOverWriterConfig(File file) {
-
-		if (file.exists()) {
-			fileDeleter(file);
-		}
-		fileWriterOfTheConfigFile(file);
-	}
-
-	/**
-	 * Check if the file already exists and deletes it so that it can be written
-	 * again
-	 * 
-	 * @param file
-	 */
-	public void fileOverWriter2(File file) {
 
 		if (file.exists()) {
 			fileDeleter(file);
@@ -704,6 +656,7 @@ public class ActionHandler {
 	 * @return true if it exists, false if not
 	 */
 	public boolean fileExists(File file) {
+
 		if (file.exists()) {
 			System.out.println("Configuration file \"" + file.getName() + "\" was found.");
 			return true;
@@ -723,86 +676,67 @@ public class ActionHandler {
 	 * @return random Integer number between lowerLimit and upperBound
 	 */
 	public int getRandomNumber(int lowerLimit, int upperBound) {
+
 		return ThreadLocalRandom.current().nextInt(lowerLimit, upperBound);
 	}
 
-	public void generateCsvFile(String fileName, String[] columnNames, Object[][] data, int size) {
+	public void exportCsvFile(String fileName) {
 
-		JFileChooser chooser = new JFileChooser();
-		chooser.isFocusOwner();
-		chooser.setCurrentDirectory(new java.io.File("."));
-		chooser.setDialogTitle("Choose a directory to save the csv file:");
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		chooser.setAcceptAllFileFilterUsed(false);
+		exportDialog("Choose a directory to save the csv file:", fileName, generateCsvContent());
 
-		String filePath = "";
-		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			filePath += chooser.getSelectedFile().toPath().toString();
-		}
-		filePath += "\\" + fileName;
-		System.out.println(filePath);
-		boolean doIt = true;
-		File file = new File(filePath);
-		if (file.exists()) {
-			if (JOptionPane.showConfirmDialog(null,
-					"This will overwrite your old configuration! Do you really want to continue?", "Warning",
-					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-				fileDeleter(file);
-			} else {
-				doIt = false;
-			}
-		}
-
-		if (doIt == true) {
-
-			ArrayList<String> cache = new ArrayList<String>();
-
-			String line = "";
-
-			for (int a = 0; a < columnNames.length - 1; a++) {
-				line += columnNames[a];
-				line += ",";
-			}
-			line += columnNames[columnNames.length - 1];
-			cache.add(line);
-
-			for (int a = 0; a < size; a++) {
-				line = "";
-
-				for (int b = 0; b < columnNames.length - 1; b++) {
-
-					line += data[a][b].toString() + ",";
-				}
-				line += data[a][columnNames.length - 1].toString();
-				cache.add(line);
-			}
-
-			String[] content = new String[cache.size()];
-
-			for (int a = 0; a < cache.size(); a++) {
-				content[a] = cache.get(a);
-			}
-
-			fileWriter(file, content);
-
-		} else {
-			JOptionPane.showMessageDialog(null, "File was not saved!");
-		}
 	}
 
-	public String generateHTMLTable(Object[][] data, String[] header, int rows) {
+	public String[] generateCsvContent() {
+
+		ArrayList<String> cache = new ArrayList<String>();
+		Object[][] data = musicVideoListToTable();
+		int columnNumber = columnNames.length;
+		int rowNumber = data.length;
+
+		String line = "";
+
+		for (int a = 0; a < columnNumber - 1; a++) {
+			line += columnNames[a];
+			line += ",";
+		}
+		line += columnNames[columnNumber - 1];
+		cache.add(line);
+
+		for (int a = 0; a < rowNumber; a++) {
+			line = "";
+
+			for (int b = 0; b < columnNumber - 1; b++) {
+
+				line += data[a][b].toString() + ",";
+			}
+			line += data[a][columnNumber - 1].toString();
+			cache.add(line);
+		}
+
+		String[] content = new String[cache.size()];
+
+		for (int a = 0; a < cache.size(); a++) {
+			content[a] = cache.get(a);
+		}
+
+		return content;
+	}
+
+	public String generateHtmlTable(Object[][] data) {
+
 		StringBuilder sb = new StringBuilder("<table>");
-		int cols = header.length;
+		int columnNumber = columnNames.length;
+		int rowNumber = data.length;
 
 		sb.append("<tr>");
-		for (int a = 0; a < cols; a++) {
-			sb.append("<th>" + header[a] + "</th>");
+		for (int a = 0; a < columnNumber; a++) {
+			sb.append("<th>" + columnNames[a] + "</th>");
 		}
 		sb.append("</tr>");
 
-		for (int a = 0; a < rows; a++) {
+		for (int a = 0; a < rowNumber; a++) {
 			sb.append("<tr>");
-			for (int b = 0; b < cols; b++) {
+			for (int b = 0; b < columnNumber; b++) {
 				sb.append("<td>" + data[a][b] + "</td>");
 			}
 			sb.append("</tr>");
@@ -812,32 +746,7 @@ public class ActionHandler {
 		return sb.toString();
 	}
 
-	public String[] htmlFileReader(File file) {
-
-		String[] arr = null;
-
-		if (file.exists()) {
-			System.out.println("Yes!");
-
-			Scanner sc;
-			try {
-				sc = new Scanner(file);
-
-				List<String> lines = new ArrayList<String>();
-				while (sc.hasNextLine()) {
-					lines.add(sc.nextLine());
-				}
-
-				arr = lines.toArray(new String[0]);
-
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-		return arr;
-	}
-
-	public String[] generateHTMLFile(String table) {
+	public String[] generateHtmlContent(String table) {
 
 		ArrayList<String> cache = new ArrayList<String>();
 		String[] content = null;
@@ -870,67 +779,29 @@ public class ActionHandler {
 		return content;
 	}
 
-	public void generateHTMLFileAdvanced(String fileName, String[] htmlfile) {
+	public void exportHtmlFile(String fileName) {
 
-		JFileChooser chooser = new JFileChooser();
-		chooser.isFocusOwner();
-		chooser.setCurrentDirectory(new java.io.File("."));
-		chooser.setDialogTitle("Choose a directory to save the html file:");
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		String[] htmlFileContent = generateHtmlContent(generateHtmlTable(musicVideoListToTable()));
 
-		String filePath = "";
-		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			filePath += chooser.getSelectedFile().toPath().toString();
-		}
-		filePath += "\\" + fileName;
-		System.out.println(filePath);
-		boolean doIt = true;
-		File file = new File(filePath);
-		if (file.exists()) {
-			if (JOptionPane.showConfirmDialog(null,
-					"This will overwrite your old html file/table! Do you really want to continue?", "Warning",
-					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-				fileDeleter(file);
-			} else {
-				doIt = false;
-			}
-		}
+		exportDialog("Choose a directory to save the html file:", fileName, htmlFileContent);
 
-		if (doIt == true) {
-
-			fileWriter(file, htmlfile);
-
-		} else {
-			JOptionPane.showMessageDialog(null, "File was not saved!");
-		}
 	}
 
-	// public static void main(String[] args) {
-	//
-	// // create new KaraokeOMat
-	// ActionHandler testding = new ActionHandler();
-	//
-	// testding.generateHTMLFile("hi");
-	//
-	// // add new path to music video library
-	// testding.addToPathList(testding.getDirectories());
-	//
-	// // scan all saved paths after music videos
-	// testding.scanDirectories();
-	//
-	// // print out all recognized music video files
-	// testding.printMusicVideoList();
-	//
-	// testding.musicVideoListToTable();
-	//
-	// // open a file through the console
-	// Scanner scanInput;
-	// try {
-	// scanInput = new Scanner(System.in);
-	// testding.openMusicVideo(scanInput.nextInt());
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	//
-	// }
+	public void exportDialog(String titleJFileChooser, String fileName, String[] content) {
+		String filePath = JFileChooserManager.chooseDirectoryGetPath(titleJFileChooser).toString();
+
+		if (filePath == null) {
+			System.out.println("No Directory was selected!");
+		} else {
+
+			// add filename to filepath
+			filePath += "\\" + fileName;
+
+			// create file through new path
+			File file = new File(filePath);
+
+			// overwrite or just write the file with a dialog
+			FileWriterManager.overWriteFileDialog(file, content);
+		}
+	}
 }

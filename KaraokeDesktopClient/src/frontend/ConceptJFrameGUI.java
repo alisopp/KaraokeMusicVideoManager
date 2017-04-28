@@ -2,12 +2,17 @@ package frontend;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.Arrays;
 
 import javax.imageio.ImageIO;
@@ -91,7 +96,7 @@ public class ConceptJFrameGUI {
 					"Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 				// if he accepts to load the data read the file and set the
 				// content as your new path list
-				actionManager.setPathList(actionManager.fileReader(file));
+				actionManager.configFileReader(file);
 				// now scan again all paths for music videos
 				actionManager.updateMusicVideoList();
 			}
@@ -171,7 +176,7 @@ public class ConceptJFrameGUI {
 			if (JOptionPane.showConfirmDialog(null,
 					"This will overwrite your old configuration! Do you really want to continue?", "Warning",
 					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-				actionManager.setPathList(actionManager.fileReader(actionManager.getFileThroughFilemanager()));
+				actionManager.configFileReader(actionManager.getConfigurationFileOnComputer());
 				// now scan again all paths for music videos
 				actionManager.updateMusicVideoList();
 				updateTable();
@@ -190,8 +195,8 @@ public class ConceptJFrameGUI {
 		subSubSubMenuExportCSV.setToolTipText("Export your data to a CSV file (can be imported with Excel)");
 
 		subSubSubMenuExportCSV.addActionListener((ActionEvent event) -> {
-			actionManager.generateCsvFile("musicvideolist.csv", actionManager.getColumnNames(),
-					actionManager.musicVideoListToTable(), actionManager.getMusicVideosList().size());
+
+			actionManager.exportCsvFile("musicvideolist.csv");
 		});
 		// with the sub sub sub menu "Export to HTML" >>
 		ImageIcon iconHTML = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/html_20x20.png")));
@@ -199,10 +204,7 @@ public class ConceptJFrameGUI {
 		subSubSubMenuExportHTML.setToolTipText("Export your data to a HTML file (web browser)");
 		subSubSubMenuExportHTML.addActionListener((ActionEvent event) -> {
 
-			actionManager.generateHTMLFileAdvanced("table.html",
-					actionManager
-							.generateHTMLFile(actionManager.generateHTMLTable(actionManager.musicVideoListToTable(),
-									actionManager.getColumnNames(), actionManager.getMusicVideosList().size())));
+			actionManager.exportHtmlFile("table.html");
 		});
 		// and last but not least the info sub sub menu "About" >>
 		ImageIcon iconAbout = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/info_20x20.png")));
@@ -230,14 +232,7 @@ public class ConceptJFrameGUI {
 		menuBar.add(subMenuMore);
 		guiMainFrame.setJMenuBar(menuBar);
 
-		Object[][] data = actionManager.musicVideoListToTable();
-
-		for (int a = 0; a < actionManager.getMusicVideosList().size(); a++) {
-			data[a][1] = " " + data[a][1];
-			data[a][2] = " " + data[a][2];
-		}
-
-		model = new DefaultTableModel(data, actionManager.getColumnNames());
+		model = new DefaultTableModel(actionManager.musicVideoListToTable("  "), actionManager.getColumnNames());
 		table = new JTable(model);
 
 		table.getTableHeader().setBackground(Color.darkGray);
@@ -277,7 +272,47 @@ public class ConceptJFrameGUI {
 		thumb.setIcon(iconSearch);
 		panel.add(thumb);
 
+		ImageIcon icon = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/youtube.png")));
+
+		JButton button234 = new JButton(icon);
+
+		button234.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				String scannedText = jtfFilter.getText();
+
+				String url = "https://www.youtube.com";
+				try {
+					url = "https://www.youtube.com/results?search_query=" + URLEncoder.encode(scannedText, "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// inspired by http://stackoverflow.com/a/4898607
+
+				if (Desktop.isDesktopSupported()) {
+					// Windows
+					try {
+						Desktop.getDesktop().browse(new URI(url));
+					} catch (IOException | URISyntaxException e1) {
+						e1.printStackTrace();
+					}
+				} else {
+					// Linux
+					Runtime runtime = Runtime.getRuntime();
+					try {
+						runtime.exec("xdg-open " + url);
+						// runtime.exec("/usr/bin/firefox -new-window " + url);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+
 		panel.add(thumb, BorderLayout.WEST);
+		panel.add(button234, BorderLayout.EAST);
 		panel.add(jtfFilter, BorderLayout.CENTER);
 		panel.setPreferredSize(new Dimension(500, 40));
 		guiMainFrame.add(panel, BorderLayout.NORTH);
@@ -374,7 +409,7 @@ public class ConceptJFrameGUI {
 				// configuration at all
 
 				boolean fileExistButPathListIsNotTheSame = actionManager.fileExists(file)
-						&& (!actionManager.fileReader(file).equals(actionManager.getPathList()));
+						&& (!actionManager.configFilePathExtracter(file).equals(actionManager.getPathList()));
 				boolean fileDoesNotExist = !(actionManager.fileExists(file));
 				boolean noPathsExist = actionManager.getPathList().isEmpty();
 
@@ -553,19 +588,15 @@ public class ConceptJFrameGUI {
 		while (model.getRowCount() > 0) {
 			model.removeRow(0);
 		}
+
 		// scan each path of the path list after music videos and update so the
 		// music video list
 		actionManager.updateMusicVideoList();
 
-		// cache the music video list with all the data, so that it doesn't need
-		// to be loaded more than one time
-		Object[][] cachedTableList = actionManager.musicVideoListToTable();
-
 		// now add for each entry in the new updated music video list a row to
 		// the empty table
-		for (int a = 0; a < actionManager.getMusicVideosList().size(); a++) {
-			model.addRow(
-					new Object[] { cachedTableList[a][0], "  " + cachedTableList[a][1], "  " + cachedTableList[a][2] });
+		for (Object[] a : actionManager.musicVideoListToTable("  ")) {
+			model.addRow(a);
 		}
 	}
 
