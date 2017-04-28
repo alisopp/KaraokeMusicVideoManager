@@ -103,4 +103,5 @@ public class MusicVideo {
 	public void setPath(Path path) {
 		this.path = path;
 	}
+
 }

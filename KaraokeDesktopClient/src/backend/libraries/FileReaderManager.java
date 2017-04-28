@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * These library contains static methods to read a file
+ * Static methods to read a file
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
  * @version 0.3 (beta)
@@ -63,6 +63,24 @@ public class FileReaderManager {
 
 			// return the content of the file
 			return contentOfFile;
+		}
+	}
+
+	/**
+	 * Check if a file exists
+	 * 
+	 * @param file
+	 *            (File | file that gets checked if it exists)
+	 * @return true if it exists, false if not
+	 */
+	public static boolean fileExists(File file) {
+
+		if (file.exists()) {
+			System.out.println("The file \"" + file.getName() + "\" was found.");
+			return true;
+		} else {
+			System.err.println("The file \"" + file.getName() + "\" wasn't found.");
+			return false;
 		}
 	}
 

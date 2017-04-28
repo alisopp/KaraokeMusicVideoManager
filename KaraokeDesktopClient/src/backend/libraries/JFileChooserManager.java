@@ -6,6 +6,13 @@ import java.nio.file.Path;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+/**
+ * Static methods to use the JFileChooser
+ * 
+ * @author Niklas | https://github.com/AnonymerNiklasistanonym
+ * @version 0.3 (beta)
+ *
+ */
 public class JFileChooserManager {
 
 	/**

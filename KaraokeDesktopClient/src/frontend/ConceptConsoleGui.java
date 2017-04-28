@@ -284,14 +284,6 @@ public class ConceptConsoleGui {
 		}
 
 		System.out.println("Console GUI was closed. Karaoke Desktop Client was terminated.");
-
 	}
-
-	// public static void main(String[] args) {
-	//
-	// ConceptConsoleGui gui = new ConceptConsoleGui();
-	// gui.runConsoleUi();
-	//
-	// }
 
 }

@@ -52,24 +52,60 @@ public class ActionHandler {
 	private String[] columnNames;
 
 	/**
+	 * The accepted file extensions for music video files
+	 */
+	private String[] acceptedExtensions;
+
+	/**
+	 * This is how the configuration file should be named like
+	 */
+	private String[] fileNameConfiguration;
+
+	/**
 	 * The constructor creates the two essential ArrayList's for the paths and
 	 * MusicVideo objects
 	 */
-	public ActionHandler() {
+	public ActionHandler(String[] columnNames, String[] fileNameConfiguration) {
 
 		pathList = new ArrayList<Path>();
+
 		musicVideoList = new ArrayList<MusicVideo>();
 
-		columnNames = new String[3];
-		columnNames[0] = "#";
-		columnNames[1] = "Artist";
-		columnNames[2] = "Title";
+		this.columnNames = columnNames;
+
+		acceptedExtensions = new String[] { "avi", "mp4", "mkv", "wmv", "mov" };
+
+		this.fileNameConfiguration = fileNameConfiguration;
 
 		if (!Desktop.isDesktopSupported()) {
 			System.err.println("Desktop is not supported - this program will not run on your Computer!");
 		}
 	}
 
+	/**
+	 * Simple method that just returns the configuration file name and extension
+	 * name in a String array
+	 * 
+	 * @return configurationFileName (String[])
+	 */
+	public String[] getConfigurationFileName() {
+		return fileNameConfiguration;
+	}
+
+	/**
+	 * Simple method that just returns the configuration file
+	 * 
+	 * @return configurationFile (File)
+	 */
+	public File getConfigurationFile() {
+		return new File(getConfigurationFileName()[0] + "." + getConfigurationFileName()[1]);
+	}
+
+	/**
+	 * Simple method that just returns the column names in a String array
+	 * 
+	 * @return columnNames (String[])
+	 */
 	public String[] getColumnNames() {
 		return columnNames;
 	}
@@ -112,7 +148,7 @@ public class ActionHandler {
 
 		// add filter to the JFileChooser that only configuration files will be
 		// seen by the user
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Configuration file", "abc");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Configuration file", fileNameConfiguration[1]);
 
 		// return the configuration file
 		return JFileChooserManager.chooseFile("Choose a folder with your music videos", filter);
@@ -130,40 +166,45 @@ public class ActionHandler {
 		try (Stream<Path> paths = Files.walk(path)) {
 			paths.forEach(filePath -> {
 
-				// if file is a normal file and a movie file we create a new
-				// MusicVideo object
-				if (Files.isRegularFile(filePath)
-						&& ((filePath.toString().contains(".avi") || filePath.toString().contains(".mp4"))
-								|| (filePath.toString().contains(".mkv") || filePath.toString().contains(".mov")))) {
+				// file is a "normal" readable file
+				if (Files.isRegularFile(filePath)) {
 
-					MusicVideo newMusicVideoObject = new MusicVideo();
+					String extension = null, justFileName = null, pathOfFile = filePath.getFileName().toString();
+					String[] artistAndTitle = null;
 
-					// set (file) path of the music video
-					newMusicVideoObject.setPath(filePath);
-					// System.out.println("path: " + filePath);
+					int lastIndexOfPoint = pathOfFile.lastIndexOf('.');
 
-					/* Set name/title and artist/s name of the music video: */
-
-					// first lets remove the file type
-					String noFileType = filePath.getFileName().toString();
-					if (noFileType.indexOf(".") > 0) {
-						noFileType = noFileType.substring(0, noFileType.lastIndexOf("."));
+					if (lastIndexOfPoint > 0) {
+						extension = pathOfFile.substring(lastIndexOfPoint + 1);
+						// get everything after the point
+						justFileName = pathOfFile.substring(0, lastIndexOfPoint);
+						// get everything before the point
+						artistAndTitle = justFileName.split("\\s-\\s");
+						// split String at " - "
 					}
-					// second split the new substring at " - "
-					String[] artistAndTitle = noFileType.split("\\s-\\s");
-					// >> set artist/s of the music video
-					newMusicVideoObject.setArtist(artistAndTitle[0]);
-					// >> set title/name of the music video
-					newMusicVideoObject.setTitle(artistAndTitle[1]);
 
-					// finally add the newMusicVideoObject to our
-					// musicVideosList
-					musicVideoList.add(newMusicVideoObject);
+					boolean fileIsAMusicVideo = false;
+
+					// now we compare it to our allowed extension array
+					for (String a : acceptedExtensions) {
+						if (a.equalsIgnoreCase(extension)) {
+							// if we get a hit we set the variable true
+							fileIsAMusicVideo = true;
+						}
+					}
+
+					// if the extension was accepted let's move on
+					if (fileIsAMusicVideo) {
+
+						// finally add the newMusicVideoObject to our
+						// musicVideosList
+						addMusicVideoToMusicvideoList(new MusicVideo(filePath, artistAndTitle[1], artistAndTitle[0]));
+					}
 				}
 			});
 			System.out.println("Music video list was updated (+ " + path + ")");
 		} catch (IOException e) {
-			System.out.println("Failure while scanning the directory \"" + path + "\"");
+			System.err.println("Failure while scanning the directory \"" + path + "\"");
 		}
 	}
 
@@ -181,6 +222,7 @@ public class ActionHandler {
 		} else {
 			System.out.println("Scan all paths for music videos:");
 			for (Path path : pathList) {
+
 				scanDirectory(path);
 			}
 		}
@@ -199,7 +241,6 @@ public class ActionHandler {
 	 * @return pathList (ArrayList<Path>)
 	 */
 	public ArrayList<Path> getPathList() {
-
 		return pathList;
 	}
 
@@ -395,7 +436,7 @@ public class ActionHandler {
 			System.err.println("The music video list already contains this music video object!");
 		} else {
 			System.out.println(
-					musicVideo.getTitle() + " by " + musicVideo.getArtist() + "was added to the music video list");
+					musicVideo.getTitle() + " by " + musicVideo.getArtist() + " was added to the music video list");
 			musicVideoList.add(musicVideo);
 		}
 	}
@@ -415,9 +456,9 @@ public class ActionHandler {
 			Path path = musicVideo.getPath();
 
 			for (int a = 0; a < musicVideoList.size(); a++) {
-				if (title == musicVideoList.get(a).getTitle()) {
-					if (artist == musicVideoList.get(a).getArtist()) {
-						if (path == musicVideoList.get(a).getPath()) {
+				if (title.equals(musicVideoList.get(a).getTitle())) {
+					if (artist.equals(musicVideoList.get(a).getArtist())) {
+						if (path.compareTo(musicVideoList.get(a).getPath()) == 0) {
 							System.err.println(
 									"The song " + title + " by " + artist + " was already in the music video list");
 							return true;
@@ -519,6 +560,14 @@ public class ActionHandler {
 		return tableData;
 	}
 
+	/**
+	 * Convert all the data of the musicVideoList to a Object[][] for the JTable
+	 * and add a margin two the second and third row
+	 * 
+	 * @param margin
+	 *            (String)
+	 * @return Object[][] ([][#, artist, title])
+	 */
 	public Object[][] musicVideoListToTable(String margin) {
 
 		Object[][] tableData = musicVideoListToTable();
@@ -533,14 +582,19 @@ public class ActionHandler {
 	}
 
 	/**
-	 * Search for a file in the same directory and extract its data. Save each
-	 * line in a path list and return it.
+	 * Load the contents of a configuration file in the actual directory
+	 */
+	public void configFileReader() {
+		loadConfigData(getConfigurationFile());
+	}
+
+	/**
+	 * Load the contents of a configuration file
 	 * 
 	 * @param file
-	 *            (filename of configuration file)
-	 * @return ArrayList<Path> (list with all extracted paths)
+	 *            (File)
 	 */
-	public void configFileReader(File file) {
+	public void loadConfigData(File file) {
 
 		String[] contentOfFile = FileReaderManager.fileReader(file);
 
@@ -557,7 +611,7 @@ public class ActionHandler {
 			for (String line : contentOfFile) {
 
 				Path path = Paths.get(line);
-				pathList.add(path);
+				addToPathList(path);
 				System.out.println("Path list was updated (+ " + path + ")");
 			}
 		}
@@ -571,9 +625,11 @@ public class ActionHandler {
 	 *            (filename of configuration file)
 	 * @return ArrayList<Path> (list with all extracted paths)
 	 */
-	public ArrayList<Path> configFilePathExtracter(File file) {
+	public ArrayList<Path> configFilePathExtracter() {
 
-		String[] contentOfFile = FileReaderManager.fileReader(file);
+		File configurationFile = new File(getConfigurationFileName()[0] + "." + getConfigurationFileName()[1]);
+
+		String[] contentOfFile = FileReaderManager.fileReader(configurationFile);
 
 		// if the file really exists
 		if (contentOfFile == null || contentOfFile.length == 0) {
@@ -599,34 +655,27 @@ public class ActionHandler {
 	 * 
 	 * @param file
 	 */
-	public void fileWriterOfTheConfigFile(File file) {
+	public String[] generateConfigContent() {
 
 		if (pathList.isEmpty()) {
 			System.err.println("There is nothing to save!");
-		} else {
-
-			String[] content = new String[getPathList().size()];
-
-			for (int i = 0; i < getPathList().size(); i++) {
-				content[i] = getPathList().get(i).toString();
-			}
-
-			FileWriterManager.writeFile(file, content);
 		}
+
+		String[] content = new String[getPathList().size()];
+
+		for (int i = 0; i < getPathList().size(); i++) {
+			content[i] = getPathList().get(i).toString();
+		}
+
+		return content;
 	}
 
 	/**
-	 * Check if the file already exists and deletes it so that it can be written
-	 * again
-	 * 
-	 * @param file
+	 * Simply creates a file and saves everything from the configuration in it,
+	 * also asks if the file really should be overwritten
 	 */
-	public void fileOverWriterConfig(File file) {
-
-		if (file.exists()) {
-			fileDeleter(file);
-		}
-		fileWriterOfTheConfigFile(file);
+	public void fileOverWriterConfig() {
+		FileWriterManager.overWriteFileDialog(getConfigurationFile(), generateConfigContent());
 	}
 
 	/**
@@ -635,17 +684,8 @@ public class ActionHandler {
 	 * @param file
 	 *            (File | this file gets deleted)
 	 */
-	public void fileDeleter(File file) {
-
-		if (file.exists()) {
-			if (file.delete()) {
-				System.out.println(file.getName() + " is deleted");
-			} else {
-				System.err.println("Delete operation is failed!");
-			}
-		} else {
-			System.err.println(file.getName() + " does not exist and could not be deleted!");
-		}
+	public boolean fileDeleter(File file) {
+		return FileWriterManager.fileDeleter(file);
 	}
 
 	/**
@@ -656,14 +696,7 @@ public class ActionHandler {
 	 * @return true if it exists, false if not
 	 */
 	public boolean fileExists(File file) {
-
-		if (file.exists()) {
-			System.out.println("Configuration file \"" + file.getName() + "\" was found.");
-			return true;
-		} else {
-			System.err.println("Configuration file \"" + file.getName() + "\" wasn't found.");
-			return false;
-		}
+		return FileReaderManager.fileExists(file);
 	}
 
 	/**
@@ -680,12 +713,21 @@ public class ActionHandler {
 		return ThreadLocalRandom.current().nextInt(lowerLimit, upperBound);
 	}
 
+	/**
+	 * Export a CSV file of the table of scanned music videos
+	 * 
+	 * @param fileName
+	 *            (String | name of the new file)
+	 */
 	public void exportCsvFile(String fileName) {
-
 		exportDialog("Choose a directory to save the csv file:", fileName, generateCsvContent());
-
 	}
 
+	/**
+	 * Generate CSV table content
+	 * 
+	 * @return content (String[])
+	 */
 	public String[] generateCsvContent() {
 
 		ArrayList<String> cache = new ArrayList<String>();
@@ -722,7 +764,14 @@ public class ActionHandler {
 		return content;
 	}
 
-	public String generateHtmlTable(Object[][] data) {
+	/**
+	 * Generate the table for the HTML file
+	 * 
+	 * @return table (String)
+	 */
+	public String generateHtmlTable() {
+
+		Object[][] data = musicVideoListToTable();
 
 		StringBuilder sb = new StringBuilder("<table>");
 		int columnNumber = columnNames.length;
@@ -746,6 +795,11 @@ public class ActionHandler {
 		return sb.toString();
 	}
 
+	/**
+	 * Generate the whole HTML file document content
+	 * 
+	 * @return content (String[])
+	 */
 	public String[] generateHtmlContent(String table) {
 
 		ArrayList<String> cache = new ArrayList<String>();
@@ -779,15 +833,31 @@ public class ActionHandler {
 		return content;
 	}
 
+	/**
+	 * Export dialog of the HTML file
+	 * 
+	 * @param fileName
+	 *            (String | name of the new HTML file)
+	 */
 	public void exportHtmlFile(String fileName) {
 
-		String[] htmlFileContent = generateHtmlContent(generateHtmlTable(musicVideoListToTable()));
+		String[] htmlFileContent = generateHtmlContent(generateHtmlTable());
 
 		exportDialog("Choose a directory to save the html file:", fileName, htmlFileContent);
 
 	}
 
-	public void exportDialog(String titleJFileChooser, String fileName, String[] content) {
+	/**
+	 * Export dialog for every possible file and every possible content
+	 * 
+	 * @param titleJFileChooser
+	 *            (String | title of the window of the JFileChooser)
+	 * @param fileName
+	 *            (String | name of the new HTML file)
+	 * @param content
+	 *            (String[] | content of the new file)
+	 */
+	private void exportDialog(String titleJFileChooser, String fileName, String[] content) {
 		String filePath = JFileChooserManager.chooseDirectoryGetPath(titleJFileChooser).toString();
 
 		if (filePath == null) {

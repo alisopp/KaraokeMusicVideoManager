@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -56,17 +55,20 @@ import backend.ActionHandler;
  */
 public class ConceptJFrameGUI {
 
-	// All the management of the list and data already written
+	/**
+	 * All the management of the list and data already written
+	 */
 	private ActionHandler actionManager;
 
-	// global window where the main things will happen
+	/**
+	 * global window where the main things will happen
+	 */
 	private JFrame guiMainFrame;
+
 	// a global JTable and DefaultTableModel;
 	private JTable table;
 	private DefaultTableModel model;
 	TableRowSorter<TableModel> rowSorter;
-	// global file (for the configuration file)
-	private File file;
 
 	/**
 	 * Constructor: When an object of ConceptJFrameGUI gets produced this
@@ -74,12 +76,13 @@ public class ConceptJFrameGUI {
 	 */
 	public ConceptJFrameGUI() {
 
+		String[] columnNames = new String[] { "#", "Artist", "Title" };
+		String[] fileNameConfiguration = new String[] { "configurationKaraokeDesktop", "karaoke" };
+
 		// start a new window/JFrame
 		guiMainFrame = new JFrame();
 		// start a ActionHandler for all the under the surface commands
-		actionManager = new ActionHandler();
-		// create a global filename for the configuration file
-		file = new File("karaoke_desktop_config.abc");
+		actionManager = new ActionHandler(columnNames, fileNameConfiguration);
 	}
 
 	/**
@@ -90,13 +93,13 @@ public class ConceptJFrameGUI {
 	public void startupConfig() {
 
 		// if a configuration file exists
-		if (actionManager.fileExists(file)) {
+		if (actionManager.fileExists(actionManager.getConfigurationFile())) {
 			// ask the user if he also wants to load saved data
 			if (JOptionPane.showConfirmDialog(null, "Would you like to load your previous saved configuration? ",
 					"Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 				// if he accepts to load the data read the file and set the
 				// content as your new path list
-				actionManager.configFileReader(file);
+				actionManager.configFileReader();
 				// now scan again all paths for music videos
 				actionManager.updateMusicVideoList();
 			}
@@ -165,7 +168,7 @@ public class ConceptJFrameGUI {
 				.setToolTipText("Saves everything so you can start instantly at the next launch of the program");
 		subSubMenuConfigurationSave.addActionListener((ActionEvent event) -> {
 			System.out.println("Save the actual configuration (of folders)!");
-			configurationFileSaveOrOverwriteDialog();
+			actionManager.fileOverWriterConfig();
 		});
 		// and the sub sub menu "Load configuration" >>
 		ImageIcon iconLoad = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/load_20x20.png")));
@@ -176,7 +179,7 @@ public class ConceptJFrameGUI {
 			if (JOptionPane.showConfirmDialog(null,
 					"This will overwrite your old configuration! Do you really want to continue?", "Warning",
 					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-				actionManager.configFileReader(actionManager.getConfigurationFileOnComputer());
+				actionManager.loadConfigData(actionManager.getConfigurationFileOnComputer());
 				// now scan again all paths for music videos
 				actionManager.updateMusicVideoList();
 				updateTable();
@@ -285,7 +288,6 @@ public class ConceptJFrameGUI {
 				try {
 					url = "https://www.youtube.com/results?search_query=" + URLEncoder.encode(scannedText, "UTF-8");
 				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -408,9 +410,10 @@ public class ConceptJFrameGUI {
 				// different from the actual configuration or if there exist no
 				// configuration at all
 
-				boolean fileExistButPathListIsNotTheSame = actionManager.fileExists(file)
-						&& (!actionManager.configFilePathExtracter(file).equals(actionManager.getPathList()));
-				boolean fileDoesNotExist = !(actionManager.fileExists(file));
+				boolean fileExistButPathListIsNotTheSame = actionManager
+						.fileExists(actionManager.getConfigurationFile())
+						&& (!actionManager.configFilePathExtracter().equals(actionManager.getPathList()));
+				boolean fileDoesNotExist = !(actionManager.fileExists(actionManager.getConfigurationFile()));
 				boolean noPathsExist = actionManager.getPathList().isEmpty();
 
 				if (!noPathsExist && (fileExistButPathListIsNotTheSame || fileDoesNotExist)) {
@@ -420,7 +423,7 @@ public class ConceptJFrameGUI {
 							"Are you sure to close the program without saving your music video folder paths to a configuration file?",
 							"Really Closing?", JOptionPane.YES_NO_OPTION,
 							JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {
-						configurationFileSaveOrOverwriteDialog();
+						actionManager.fileOverWriterConfig();
 					}
 				}
 			}
@@ -615,27 +618,8 @@ public class ConceptJFrameGUI {
 	}
 
 	/**
-	 * This method overwrites if the user approves the old configuration file.
-	 * It's a method, because it was more than once used in my code.
+	 * Change the optic if the system OS is Windows
 	 */
-	public void configurationFileSaveOrOverwriteDialog() {
-		if (!actionManager.fileExists(file)) {
-			// simply save a new configuration file when no
-			// configuration exist at this point
-			actionManager.fileWriterOfTheConfigFile(file);
-			// but if a different one exist ask the user if he
-			// really wants to overwrite the old configuration
-			// with new data:
-		} else if (JOptionPane.showConfirmDialog(guiMainFrame,
-				"Do you want to overwrite your previous saved configuration with your actual configuration?",
-				"Overwrite old data?", JOptionPane.YES_NO_OPTION,
-				JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-			// overwrite the actual file
-			actionManager.fileOverWriterConfig(file);
-		}
-		JOptionPane.showMessageDialog(null, "The configuration was saved");
-	}
-
 	public static void windowsDetected() {
 
 		try {
@@ -673,4 +657,5 @@ public class ConceptJFrameGUI {
 			e.printStackTrace();
 		}
 	}
+
 }
