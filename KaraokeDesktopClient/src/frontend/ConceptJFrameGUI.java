@@ -465,7 +465,7 @@ public class ConceptJFrameGUI {
 
 		panel2.add(new JLabel("This program is completely open source on Github"));
 		panel2.add(author);
-		panel2.add(new JLabel("\u00a9 April 2017"));
+		panel2.add(new JLabel("\u00a9 April 2017 >> v0.3"));
 
 		panel.add(icon, BorderLayout.WEST);
 		panel.add(panel2, BorderLayout.EAST);
@@ -479,7 +479,6 @@ public class ConceptJFrameGUI {
 		aboutJFrameWindow.setLocationRelativeTo(null);
 		// let nobody change the size of it
 		aboutJFrameWindow.setResizable(false);
-
 	}
 
 	/**
