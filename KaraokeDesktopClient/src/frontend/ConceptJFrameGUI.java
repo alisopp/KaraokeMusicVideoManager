@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -18,6 +20,7 @@ import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -77,7 +80,7 @@ public class ConceptJFrameGUI {
 	public ConceptJFrameGUI() {
 
 		String[] columnNames = new String[] { "#", "Artist", "Title" };
-		String[] fileNameConfiguration = new String[] { "configurationKaraokeDesktop", "karaoke" };
+		String[] fileNameConfiguration = new String[] { "karaokeConfig", "cfg" };
 
 		// start a new window/JFrame
 		guiMainFrame = new JFrame();
@@ -238,7 +241,7 @@ public class ConceptJFrameGUI {
 		model = new DefaultTableModel(actionManager.musicVideoListToTable("  "), actionManager.getColumnNames());
 		table = new JTable(model);
 
-		table.getTableHeader().setBackground(Color.darkGray);
+		table.getTableHeader().setBackground(Color.LIGHT_GRAY);
 
 		TableColumnModel columnModel = table.getColumnModel();
 		columnModel.getColumn(0).setPreferredWidth(5);
@@ -273,11 +276,14 @@ public class ConceptJFrameGUI {
 		ImageIcon iconSearch = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/search.png")));
 		JLabel thumb = new JLabel("  Search for a music video:  ");
 		thumb.setIcon(iconSearch);
+		thumb.setToolTipText("Type in the field to instantly find your music video");
 		panel.add(thumb);
 
 		ImageIcon icon = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/youtube.png")));
 
 		JButton button234 = new JButton(icon);
+		button234
+				.setToolTipText("Click the button to start a video search on YouTube with the input of the text field");
 
 		button234.addActionListener(new ActionListener() {
 			@Override
@@ -440,6 +446,7 @@ public class ConceptJFrameGUI {
 		// only close on exit - don't end the whole program
 
 		JPanel panel = new JPanel(new BorderLayout());
+		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		ImageIcon iconLogo;
 		JLabel icon = new JLabel();
@@ -450,26 +457,64 @@ public class ConceptJFrameGUI {
 			e.printStackTrace();
 		}
 
-		JLabel author = new JLabel("   Autor: Niklas M                                   ");
-		JLabel other = new JLabel("   This program is completely open source on Github  ");
-		JLabel date = new JLabel("   \u00a9 April 2017                                     ");
-		JPanel panel2 = new JPanel(new BorderLayout());
-		panel2.setPreferredSize(new Dimension(260, 0));
-		panel2.add(author, BorderLayout.CENTER);
-		panel2.add(other, BorderLayout.NORTH);
-		panel2.add(date, BorderLayout.SOUTH);
+		JLabel author = new JLabel("Autor: Niklas | https://github.com/AnonymerNiklasistanonym ");
+		author.addMouseListener((MouseListener) new OpenUrlAction());
+
+		JPanel panel2 = new JPanel(new GridLayout(3, 1));
+		panel2.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 0));
+
+		panel2.add(new JLabel("This program is completely open source on Github"));
+		panel2.add(author);
+		panel2.add(new JLabel("\u00a9 April 2017"));
 
 		panel.add(icon, BorderLayout.WEST);
 		panel.add(panel2, BorderLayout.EAST);
-		panel.setPreferredSize(new Dimension(428, 128));
 		aboutJFrameWindow.add(panel);
 
+		// make everything fitting perfect
 		aboutJFrameWindow.pack();
 		// make it visible for the user
 		aboutJFrameWindow.setVisible(true);
 		// and let it pop up in the middle of the screen
 		aboutJFrameWindow.setLocationRelativeTo(null);
+		// let nobody change the size of it
+		aboutJFrameWindow.setResizable(false);
 
+	}
+
+	/**
+	 * Open URL to GitHub profile listener
+	 */
+	class OpenUrlAction implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			URI uri = null;
+			try {
+				uri = new URI("https://github.com/AnonymerNiklasistanonym");
+			} catch (URISyntaxException e1) {
+			}
+
+			if (Desktop.isDesktopSupported()) {
+				try {
+					Desktop.getDesktop().browse(uri);
+				} catch (IOException e) {
+				}
+			}
+
+		}
+
+		public void mouseEntered(MouseEvent e) {
+		}
+
+		public void mouseExited(MouseEvent e) {
+		}
+
+		public void mousePressed(MouseEvent e) {
+		}
+
+		public void mouseReleased(MouseEvent e) {
+		}
 	}
 
 	/**

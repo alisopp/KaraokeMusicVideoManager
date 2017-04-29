@@ -32,7 +32,7 @@ public class ConceptConsoleGui {
 	private File file;
 
 	public ConceptConsoleGui() {
-		karaokeOMat = new ActionHandler();
+		karaokeOMat = new ActionHandler(null, null);
 		scannerConsoleGui = new Scanner(System.in);
 		guiIsRunning = true;
 		firstStart = true;
