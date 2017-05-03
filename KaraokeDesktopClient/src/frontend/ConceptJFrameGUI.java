@@ -2,19 +2,21 @@ package frontend;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
@@ -33,10 +35,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -46,6 +47,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import backend.ActionHandler;
+import backend.libraries.AboutWindow;
 
 /**
  * The graphical user interface of this program. It combines the already written
@@ -53,7 +55,7 @@ import backend.ActionHandler;
  * interface.
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.3 (beta)
+ * @version 0.4 (beta)
  *
  */
 public class ConceptJFrameGUI {
@@ -73,13 +75,37 @@ public class ConceptJFrameGUI {
 	private DefaultTableModel model;
 	TableRowSorter<TableModel> rowSorter;
 
+	private AboutWindow newAboutWindow;
+
+	private String version;
+	private String releaseDate;
+
+	// test
+	private ResourceBundle rb;
+
 	/**
 	 * Constructor: When an object of ConceptJFrameGUI gets produced this
 	 * automatically will happen:
 	 */
 	public ConceptJFrameGUI() {
 
-		String[] columnNames = new String[] { "#", "Artist", "Title" };
+		// resourceBundle = ResourceBundle.getBundle("SystemMessages",
+		// Locale.FRANCE);
+		// resourceBundle = ResourceBundle.getBundle("SystemMessages",
+		// Locale.GERMAN);
+		rb = ResourceBundle.getBundle("SystemMessages", Locale.getDefault());
+		// Enumeration<String> keys = rb.getKeys();
+		// while (keys.hasMoreElements()) {
+		// String key = keys.nextElement();
+		// String value = rb.getString(key);
+		// System.out.println(key + ": " + value);
+		// JOptionPane.showMessageDialog(null, key + ": " + value);
+		// }
+
+		version = "0.4 (beta)";
+		releaseDate = rb.getString("May") + " 2017";
+
+		String[] columnNames = new String[] { "#", rb.getString("Artist"), rb.getString("Title") };
 		String[] fileNameConfiguration = new String[] { "karaokeConfig", "cfg" };
 
 		// start a new window/JFrame
@@ -98,8 +124,10 @@ public class ConceptJFrameGUI {
 		// if a configuration file exists
 		if (actionManager.fileExists(actionManager.getConfigurationFile())) {
 			// ask the user if he also wants to load saved data
-			if (JOptionPane.showConfirmDialog(null, "Would you like to load your previous saved configuration? ",
-					"Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+			if (JOptionPane.showConfirmDialog(null,
+					rb.getString("Would you like to load your previous saved configuration") + "?",
+					rb.getString("Question"), JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 				// if he accepts to load the data read the file and set the
 				// content as your new path list
 				actionManager.configFileReader();
@@ -115,7 +143,7 @@ public class ConceptJFrameGUI {
 	 * 
 	 * @throws IOException
 	 */
-	public void createWindow() throws IOException {
+	public void createWindow() {
 
 		guiMainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// make sure the program exits when the frame closes
@@ -136,12 +164,17 @@ public class ConceptJFrameGUI {
 		JMenuBar menuBar = new JMenuBar();
 
 		// with the sub menu "Source folders"
-		JMenu subMenuPath = new JMenu("Source folders");
-		subMenuPath.setToolTipText("Add/Change/Remove the actual folders of your music videos");
+		JMenu subMenuPath = new JMenu(rb.getString("Source folders"));
+		subMenuPath.setToolTipText(rb.getString("Add/Change/Remove the actual folders of your music videos"));
 		// and the sub sub menu "Add" >>
-		ImageIcon iconAdd = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/add_20x20.png")));
-		JMenuItem subSubMenuAddSourceFolder = new JMenuItem("Add", iconAdd);
-		subSubMenuAddSourceFolder.setToolTipText("Add a new folder with new music videos to your list");
+		ImageIcon iconAdd = null;
+		try {
+			iconAdd = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/add_20x20.png")));
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		JMenuItem subSubMenuAddSourceFolder = new JMenuItem(rb.getString("Add"), iconAdd);
+		subSubMenuAddSourceFolder.setToolTipText(rb.getString("Add a new folder with new music videos to your list"));
 		subSubMenuAddSourceFolder.addActionListener((ActionEvent event) -> {
 			System.out.println("Add a new folder with new music videos to your list");
 			actionManager.addToPathList(actionManager.getPathOfDirectories());
@@ -149,33 +182,48 @@ public class ConceptJFrameGUI {
 		});
 
 		// and the sub sub menu "Remove" >>
-		ImageIcon iconRemove = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/remove_20x20.png")));
-		JMenuItem subSubMenuRemoveSourceFolder = new JMenuItem("Remove", iconRemove);
-		subSubMenuRemoveSourceFolder.setToolTipText("Remove a folder with music videos from your list");
+		ImageIcon iconRemove = null;
+		try {
+			iconRemove = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/remove_20x20.png")));
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		JMenuItem subSubMenuRemoveSourceFolder = new JMenuItem(rb.getString("Remove"), iconRemove);
+		subSubMenuRemoveSourceFolder.setToolTipText(rb.getString("Remove a folder with music videos from your list"));
 		subSubMenuRemoveSourceFolder.addActionListener((ActionEvent event) -> {
 			System.out.println("Remove a folder from your path list");
 			if (actionManager.getPathList().isEmpty() == true) {
-				JOptionPane.showMessageDialog(null, "There are no paths to remove!");
+				JOptionPane.showMessageDialog(null, rb.getString("There are no paths to remove") + "!");
 			} else {
 				pathEditorJFrame();
 			}
 		});
 
 		// with the sub menu "More"
-		JMenu subMenuMore = new JMenu("More");
-		subMenuMore.setToolTipText("Save your actual source folder paths and more in a config file for later");
+		JMenu subMenuMore = new JMenu(rb.getString("More"));
+		subMenuMore.setToolTipText(rb.getString("Save your actual source folder paths and export your data"));
 		// and the sub sub menu "Save configuration" >>
-		ImageIcon iconSave = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/save_20x20.png")));
-		JMenuItem subSubMenuConfigurationSave = new JMenuItem("Save configuration", iconSave);
-		subSubMenuConfigurationSave
-				.setToolTipText("Saves everything so you can start instantly at the next launch of the program");
+		ImageIcon iconSave = null;
+		try {
+			iconSave = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/save_20x20.png")));
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		JMenuItem subSubMenuConfigurationSave = new JMenuItem(rb.getString("Save configuration"), iconSave);
+		subSubMenuConfigurationSave.setToolTipText(
+				rb.getString("Saves everything so you can start instantly at the next launch of the program"));
 		subSubMenuConfigurationSave.addActionListener((ActionEvent event) -> {
 			System.out.println("Save the actual configuration (of folders)!");
 			actionManager.fileOverWriterConfig();
 		});
 		// and the sub sub menu "Load configuration" >>
-		ImageIcon iconLoad = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/load_20x20.png")));
-		JMenuItem subSubMenuConfigurationLoad = new JMenuItem("Load configuration", iconLoad);
+		ImageIcon iconLoad = null;
+		try {
+			iconLoad = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/load_20x20.png")));
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		JMenuItem subSubMenuConfigurationLoad = new JMenuItem(rb.getString("Load configuration"), iconLoad);
 		subSubMenuConfigurationLoad.setToolTipText("Load configuration from a configuration file");
 		subSubMenuConfigurationLoad.addActionListener((ActionEvent event) -> {
 			System.out.println("dialog wich says please restart program - notify if a file even exit before this");
@@ -191,12 +239,22 @@ public class ConceptJFrameGUI {
 			}
 		});
 		// and the sub sub menu "Export" >>
-		ImageIcon iconExport = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/export_20x20.png")));
-		JMenu subSubMenuExport = new JMenu("Export");
+		ImageIcon iconExport = null;
+		try {
+			iconExport = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/export_20x20.png")));
+		} catch (IOException e5) {
+			e5.printStackTrace();
+		}
+		JMenu subSubMenuExport = new JMenu(rb.getString("Export"));
 		subSubMenuExport.setIcon(iconExport);
-		subSubMenuExport.setToolTipText("Export your list to the following formats: CSV, HTML");
+		subSubMenuExport.setToolTipText(rb.getString("Export your list to the following formats") + ": CSV, HTML");
 		// with the sub sub sub menu "Export to CSV" >>
-		ImageIcon iconCSV = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/csv_20x20.png")));
+		ImageIcon iconCSV = null;
+		try {
+			iconCSV = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/csv_20x20.png")));
+		} catch (IOException e4) {
+			e4.printStackTrace();
+		}
 		JMenuItem subSubSubMenuExportCSV = new JMenuItem("Export to CSV", iconCSV);
 		subSubSubMenuExportCSV.setToolTipText("Export your data to a CSV file (can be imported with Excel)");
 
@@ -205,7 +263,12 @@ public class ConceptJFrameGUI {
 			actionManager.exportCsvFile("musicvideolist.csv");
 		});
 		// with the sub sub sub menu "Export to HTML" >>
-		ImageIcon iconHTML = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/html_20x20.png")));
+		ImageIcon iconHTML = null;
+		try {
+			iconHTML = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/html_20x20.png")));
+		} catch (IOException e3) {
+			e3.printStackTrace();
+		}
 		JMenuItem subSubSubMenuExportHTML = new JMenuItem("Export to HTML", iconHTML);
 		subSubSubMenuExportHTML.setToolTipText("Export your data to a HTML file (web browser)");
 		subSubSubMenuExportHTML.addActionListener((ActionEvent event) -> {
@@ -213,11 +276,21 @@ public class ConceptJFrameGUI {
 			actionManager.exportHtmlFile("table.html");
 		});
 		// and last but not least the info sub sub menu "About" >>
-		ImageIcon iconAbout = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/info_20x20.png")));
-		JMenuItem subSubMenuAbout = new JMenuItem("About", iconAbout);
+		ImageIcon iconAbout = null;
+		try {
+			iconAbout = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/info_20x20.png")));
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		JMenuItem subSubMenuAbout = new JMenuItem(rb.getString("About"), iconAbout);
 		subSubMenuAbout.setToolTipText("About this program");
 		subSubMenuAbout.addActionListener((ActionEvent event) -> {
-			aboutJFrame();
+
+			if (newAboutWindow != null) {
+				// if there was already an open about windows close it
+				newAboutWindow.closeIt();
+			}
+			newAboutWindow = new AboutWindow(version, releaseDate);
 		});
 
 		// add the menu buttons to the menu bar to the JFrame
@@ -241,7 +314,17 @@ public class ConceptJFrameGUI {
 		model = new DefaultTableModel(actionManager.musicVideoListToTable("  "), actionManager.getColumnNames());
 		table = new JTable(model);
 
-		table.getTableHeader().setBackground(Color.LIGHT_GRAY);
+		table.getTableHeader().setBackground(Color.BLACK);
+
+		// Color color = UIManager.getColor("Table.gridColor");
+		// MatteBorder border = new MatteBorder(1, 1, 0, 0, Color.BLACK);
+		// table.setBorder(border);
+		// http://stackoverflow.com/a/12846591
+
+		// if you select a cell the whole row will be selected
+		table.setRowSelectionAllowed(true);
+		// only one row can be selected
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		TableColumnModel columnModel = table.getColumnModel();
 		columnModel.getColumn(0).setPreferredWidth(5);
@@ -266,6 +349,15 @@ public class ConceptJFrameGUI {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				int row = table.getSelectedRow();
 				actionManager.openMusicVideo(row);
+
+			}
+
+			public void mouseEntered(MouseEvent e) {
+				guiMainFrame.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			public void mouseExited(MouseEvent e) {
+				guiMainFrame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 		});
 
@@ -273,26 +365,38 @@ public class ConceptJFrameGUI {
 		JTextField jtfFilter = new JTextField();
 		JPanel panel = new JPanel(new BorderLayout());
 
-		ImageIcon iconSearch = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/search.png")));
-		JLabel thumb = new JLabel("  Search for a music video:  ");
+		ImageIcon iconSearch = null;
+		try {
+			iconSearch = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/search.png")));
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		JLabel thumb = new JLabel(rb.getString("Search for a music video") + ":  ");
 		thumb.setIcon(iconSearch);
 		thumb.setToolTipText("Type in the field to instantly find your music video");
 		panel.add(thumb);
 
-		ImageIcon icon = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/youtube.png")));
+		ImageIcon icon = null;
+		try {
+			icon = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/youtube.png")));
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
 
 		JButton button234 = new JButton(icon);
-		button234
-				.setToolTipText("Click the button to start a video search on YouTube with the input of the text field");
-
-		button234.addActionListener(new ActionListener() {
+		button234.setBackground(new Color(224, 47, 47));
+		button234.setContentAreaFilled(false);
+		button234.setOpaque(true);
+		button234.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
-			public void actionPerformed(ActionEvent event) {
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				String scannedText = jtfFilter.getText();
 
 				String url = "https://www.youtube.com";
 				try {
-					url = "https://www.youtube.com/results?search_query=" + URLEncoder.encode(scannedText, "UTF-8");
+					if (scannedText != null && scannedText.length() > 0) {
+						url = "https://www.youtube.com/results?search_query=" + URLEncoder.encode(scannedText, "UTF-8");
+					}
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
@@ -317,12 +421,23 @@ public class ConceptJFrameGUI {
 					}
 				}
 			}
+
+			public void mouseEntered(MouseEvent e) {
+				guiMainFrame.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			public void mouseExited(MouseEvent e) {
+				guiMainFrame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
 		});
+		button234
+				.setToolTipText("Click the button to start a video search on YouTube with the input of the text field");
 
 		panel.add(thumb, BorderLayout.WEST);
 		panel.add(button234, BorderLayout.EAST);
 		panel.add(jtfFilter, BorderLayout.CENTER);
-		panel.setPreferredSize(new Dimension(500, 40));
+		panel.setPreferredSize(new Dimension(500, 55));
+		panel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 		guiMainFrame.add(panel, BorderLayout.NORTH);
 
 		// action listener if the enter key was pressed
@@ -365,23 +480,36 @@ public class ConceptJFrameGUI {
 			public void insertUpdate(DocumentEvent e) {
 				// update filter if something in text field gets added
 				updateFilter(jtfFilter.getText());
+				if (table.getSelectedRow() != 0) {
+					table.changeSelection(0, 0, true, false);
+				}
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
 				// update filter if something in text field gets removed
 				updateFilter(jtfFilter.getText());
+				if (table.getSelectedRow() != 0) {
+					table.changeSelection(0, 0, true, false);
+				}
+
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent arg0) {
 				// needs to be implemented, but we don't need it
+
 			}
 		});
 
 		// play a random music video button
-		ImageIcon iconRandom = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/random.png")));
-		JButton randomMusicvideoButton = new JButton("Play a random music video", iconRandom);
+		ImageIcon iconRandom = null;
+		try {
+			iconRandom = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/random.png")));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		JButton randomMusicvideoButton = new JButton(rb.getString("Play a random music video"), iconRandom);
 
 		randomMusicvideoButton.setPreferredSize(new Dimension(500, 40));
 		randomMusicvideoButton.addActionListener(new ActionListener() {
@@ -389,12 +517,13 @@ public class ConceptJFrameGUI {
 			public void actionPerformed(ActionEvent event) {
 
 				int randomNum = actionManager.getRandomNumber(0, actionManager.getMusicVideosList().size());
-				String randomSong = actionManager.getMusicVideosList().get(randomNum).getTitle() + " by "
-						+ actionManager.getMusicVideosList().get(randomNum).getArtist() + "?";
+				String randomSong = actionManager.getMusicVideosList().get(randomNum).getTitle() + " "
+						+ rb.getString("by") + " " + actionManager.getMusicVideosList().get(randomNum).getArtist()
+						+ "?";
 				System.out.println("Random music video: ...Playing " + randomSong);
 
-				if (JOptionPane.showConfirmDialog(null, "Would you like to play " + randomSong, "Info",
-						JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				if (JOptionPane.showConfirmDialog(null, rb.getString("Would you like to play") + " " + randomSong,
+						"Info", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					actionManager.openMusicVideo(randomNum);
 				} else {
 					System.out.println("\tPlaying was denied by the user.");
@@ -426,7 +555,8 @@ public class ConceptJFrameGUI {
 					// ask the user if he wants to close without saving his
 					// actual configuration
 					if (JOptionPane.showConfirmDialog(guiMainFrame,
-							"Are you sure to close the program without saving your music video folder paths to a configuration file?",
+							rb.getString(
+									"Are you sure to close the program without saving your music video folder paths to a configuration file?"),
 							"Really Closing?", JOptionPane.YES_NO_OPTION,
 							JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {
 						actionManager.fileOverWriterConfig();
@@ -434,86 +564,6 @@ public class ConceptJFrameGUI {
 				}
 			}
 		});
-	}
-
-	/**
-	 */
-	public void aboutJFrame() {
-
-		JFrame aboutJFrameWindow = new JFrame("About Karaoke Desktop Client [Beta]");
-		// set title
-		aboutJFrameWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		// only close on exit - don't end the whole program
-
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-		ImageIcon iconLogo;
-		JLabel icon = new JLabel();
-		try {
-			iconLogo = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/logo.png")));
-			icon.setIcon(iconLogo);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		JLabel author = new JLabel("Autor: Niklas | https://github.com/AnonymerNiklasistanonym ");
-		author.addMouseListener((MouseListener) new OpenUrlAction());
-
-		JPanel panel2 = new JPanel(new GridLayout(3, 1));
-		panel2.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 0));
-
-		panel2.add(new JLabel("This program is completely open source on Github"));
-		panel2.add(author);
-		panel2.add(new JLabel("\u00a9 April 2017 >> v0.3"));
-
-		panel.add(icon, BorderLayout.WEST);
-		panel.add(panel2, BorderLayout.EAST);
-		aboutJFrameWindow.add(panel);
-
-		// make everything fitting perfect
-		aboutJFrameWindow.pack();
-		// make it visible for the user
-		aboutJFrameWindow.setVisible(true);
-		// and let it pop up in the middle of the screen
-		aboutJFrameWindow.setLocationRelativeTo(null);
-		// let nobody change the size of it
-		aboutJFrameWindow.setResizable(false);
-	}
-
-	/**
-	 * Open URL to GitHub profile listener
-	 */
-	class OpenUrlAction implements MouseListener {
-
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			URI uri = null;
-			try {
-				uri = new URI("https://github.com/AnonymerNiklasistanonym");
-			} catch (URISyntaxException e1) {
-			}
-
-			if (Desktop.isDesktopSupported()) {
-				try {
-					Desktop.getDesktop().browse(uri);
-				} catch (IOException e) {
-				}
-			}
-
-		}
-
-		public void mouseEntered(MouseEvent e) {
-		}
-
-		public void mouseExited(MouseEvent e) {
-		}
-
-		public void mousePressed(MouseEvent e) {
-		}
-
-		public void mouseReleased(MouseEvent e) {
-		}
 	}
 
 	/**
@@ -662,44 +712,22 @@ public class ConceptJFrameGUI {
 	}
 
 	/**
-	 * Change the optic if the system OS is Windows
-	 */
-	public static void windowsDetected() {
-
-		try {
-			// UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-			// UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-			// UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-			if (System.getProperty("os.name").contains("Windows")) {
-				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * This happens when the program gets executed: We create a new
 	 * ConceptJFrameGUI and the constructor does the rest :)
 	 */
 	public static void main(String[] args) {
-		windowsDetected();
+
+		// get the Windows look on all windows systems
+		ActionHandler.windowsLookActivator();
+
 		// create a new Object of our class
 		ConceptJFrameGUI mainFrame = new ConceptJFrameGUI();
+
 		// look after configuration file before starting
 		mainFrame.startupConfig();
+
 		// open/show the window
-		try {
-			mainFrame.createWindow();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		mainFrame.createWindow();
 	}
 
 }

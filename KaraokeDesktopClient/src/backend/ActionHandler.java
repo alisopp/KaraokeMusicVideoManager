@@ -16,11 +16,14 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import backend.libraries.FileReaderManager;
 import backend.libraries.FileWriterManager;
 import backend.libraries.JFileChooserManager;
+import backend.libraries.JProgressBarWindow;
 import backend.objects.MusicVideo;
 
 /**
@@ -213,12 +216,53 @@ public class ActionHandler {
 	 */
 	public void updateMusicVideoList() {
 
+		JProgressBarWindow progress = new JProgressBarWindow("Searching for music video files...");
+		progress.setProgressBar(0);
+		progress.setLabelText("Clear music video list...");
+
+		// delete old entries
+		clearMusicVideosList();
+
+		progress.setProgressBar(5);
+		progress.setLabelText("Scan all added directories for music video files...");
+
+		// if there are paths scan them all to update the music video list
+		if (pathList.isEmpty()) {
+			System.err.println("There are no paths to scan for music videos!");
+
+			progress.setProgressBar(90);
+
+		} else {
+			System.out.println("Scan all paths for music videos:");
+
+			int progressInt = 85 / pathList.size();
+			for (Path path : pathList) {
+
+				progress.setLabelText("Scan " + path.toString());
+				scanDirectory(path);
+				progress.addProgressToProgressBar(progressInt);
+			}
+		}
+
+		// sort the music video at last
+		progress.setLabelText("Sort all music videos alphabetical...");
+		sortMusicVideoList();
+		progress.setProgressBar(100);
+		progress.closeJFrame();
+	}
+
+	/**
+	 * This method simply updates the whole music video List
+	 */
+	public void updateMusicVideoListOld() {
+
 		// delete old entries
 		clearMusicVideosList();
 
 		// if there are paths scan them all to update the music video list
 		if (pathList.isEmpty()) {
 			System.err.println("There are no paths to scan for music videos!");
+
 		} else {
 			System.out.println("Scan all paths for music videos:");
 			for (Path path : pathList) {
@@ -874,4 +918,28 @@ public class ActionHandler {
 			FileWriterManager.overWriteFileDialog(file, content);
 		}
 	}
+
+	/**
+	 * Change the optic if the system OS is Windows
+	 */
+	public static void windowsLookActivator() {
+
+		try {
+			// UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+			// UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+			// UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+			if (System.getProperty("os.name").contains("Windows")) {
+				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

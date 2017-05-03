@@ -6,7 +6,7 @@ import java.nio.file.Path;
  * The properties of every music video ([karaoke] file)
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.3 (beta)
+ * @version 0.4 (beta)
  *
  */
 public class MusicVideo {

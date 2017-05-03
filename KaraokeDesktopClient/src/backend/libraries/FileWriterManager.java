@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
  * Static methods to write files
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.3 (beta)
+ * @version 0.4 (beta)
  *
  */
 public class FileWriterManager {
