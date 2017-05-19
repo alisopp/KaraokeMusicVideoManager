@@ -15,6 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -80,6 +81,8 @@ public class ConceptJFrameGUI {
 	private String version;
 	private String releaseDate;
 
+	private Locale currentLanguage = Locale.getDefault();
+
 	// test
 	private ResourceBundle rb;
 
@@ -93,25 +96,48 @@ public class ConceptJFrameGUI {
 		// Locale.FRANCE);
 		// resourceBundle = ResourceBundle.getBundle("SystemMessages",
 		// Locale.GERMAN);
-		rb = ResourceBundle.getBundle("SystemMessages", Locale.getDefault());
+
+		rb = ResourceBundle.getBundle("SystemMessages", currentLanguage);
 		// Enumeration<String> keys = rb.getKeys();
 		// while (keys.hasMoreElements()) {
 		// String key = keys.nextElement();
-		// String value = rb.getString(key);
+		// String value = getTranslation(key);
 		// System.out.println(key + ": " + value);
-		// JOptionPane.showMessageDialog(null, key + ": " + value);
+		// // JOptionPane.showMessageDialog(null, key + ": " + value);
 		// }
 
 		version = "0.4 (beta)";
-		releaseDate = rb.getString("May") + " 2017";
+		releaseDate = getTranslation("May") + " 2017";
 
-		String[] columnNames = new String[] { "#", rb.getString("Artist"), rb.getString("Title") };
+		String[] columnNames = new String[] { "#", getTranslation("Artist"), getTranslation("Title") };
 		String[] fileNameConfiguration = new String[] { "karaokeConfig", "cfg" };
 
 		// start a new window/JFrame
 		guiMainFrame = new JFrame();
 		// start a ActionHandler for all the under the surface commands
 		actionManager = new ActionHandler(columnNames, fileNameConfiguration);
+	}
+
+	public String getTranslation(String a) {
+
+		boolean good = false;
+
+		Enumeration<String> keys = rb.getKeys();
+		while (keys.hasMoreElements()) {
+			String key = keys.nextElement();
+
+			if (key.equals(a)) {
+				good = true;
+			}
+		}
+
+		if (good) {
+			return rb.getString(a);
+		} else {
+			System.err.println("Error at: " + "\"" + a + "\"");
+			return a;
+		}
+
 	}
 
 	/**
@@ -125,8 +151,8 @@ public class ConceptJFrameGUI {
 		if (actionManager.fileExists(actionManager.getConfigurationFile())) {
 			// ask the user if he also wants to load saved data
 			if (JOptionPane.showConfirmDialog(null,
-					rb.getString("Would you like to load your previous saved configuration") + "?",
-					rb.getString("Question"), JOptionPane.YES_NO_OPTION,
+					getTranslation("Would you like to load your previous saved configuration") + "?",
+					getTranslation("Question"), JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 				// if he accepts to load the data read the file and set the
 				// content as your new path list
@@ -147,7 +173,7 @@ public class ConceptJFrameGUI {
 
 		guiMainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// make sure the program exits when the frame closes
-		guiMainFrame.setTitle("Karaoke Desktop Client [Beta]");
+		guiMainFrame.setTitle(getTranslation("Karaoke Desktop Client [Beta]"));
 		// title of the window
 		guiMainFrame.setSize(500, 620);
 		// size of the window at the start
@@ -164,8 +190,8 @@ public class ConceptJFrameGUI {
 		JMenuBar menuBar = new JMenuBar();
 
 		// with the sub menu "Source folders"
-		JMenu subMenuPath = new JMenu(rb.getString("Source folders"));
-		subMenuPath.setToolTipText(rb.getString("Add/Change/Remove the actual folders of your music videos"));
+		JMenu subMenuPath = new JMenu(getTranslation("Source folders"));
+		subMenuPath.setToolTipText(getTranslation("Add/Change/Remove the actual folders of your music videos"));
 		// and the sub sub menu "Add" >>
 		ImageIcon iconAdd = null;
 		try {
@@ -173,11 +199,12 @@ public class ConceptJFrameGUI {
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		}
-		JMenuItem subSubMenuAddSourceFolder = new JMenuItem(rb.getString("Add"), iconAdd);
-		subSubMenuAddSourceFolder.setToolTipText(rb.getString("Add a new folder with new music videos to your list"));
+		JMenuItem subSubMenuAddSourceFolder = new JMenuItem(getTranslation("Add"), iconAdd);
+		subSubMenuAddSourceFolder.setToolTipText(getTranslation("Add a new folder with new music videos to your list"));
 		subSubMenuAddSourceFolder.addActionListener((ActionEvent event) -> {
 			System.out.println("Add a new folder with new music videos to your list");
-			actionManager.addToPathList(actionManager.getPathOfDirectories());
+			actionManager.addToPathList(actionManager
+					.getPathOfDirectories(getTranslation("Choose a folder or more with your music videos")));
 			updateTable();
 		});
 
@@ -188,20 +215,20 @@ public class ConceptJFrameGUI {
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		}
-		JMenuItem subSubMenuRemoveSourceFolder = new JMenuItem(rb.getString("Remove"), iconRemove);
-		subSubMenuRemoveSourceFolder.setToolTipText(rb.getString("Remove a folder with music videos from your list"));
+		JMenuItem subSubMenuRemoveSourceFolder = new JMenuItem(getTranslation("Remove"), iconRemove);
+		subSubMenuRemoveSourceFolder.setToolTipText(getTranslation("Remove a folder with music videos from your list"));
 		subSubMenuRemoveSourceFolder.addActionListener((ActionEvent event) -> {
 			System.out.println("Remove a folder from your path list");
 			if (actionManager.getPathList().isEmpty() == true) {
-				JOptionPane.showMessageDialog(null, rb.getString("There are no paths to remove") + "!");
+				JOptionPane.showMessageDialog(null, getTranslation("There are no paths to remove") + "!");
 			} else {
 				pathEditorJFrame();
 			}
 		});
 
 		// with the sub menu "More"
-		JMenu subMenuMore = new JMenu(rb.getString("More"));
-		subMenuMore.setToolTipText(rb.getString("Save your actual source folder paths and export your data"));
+		JMenu subMenuMore = new JMenu(getTranslation("More"));
+		subMenuMore.setToolTipText(getTranslation("Save your actual source folder paths and export your data"));
 		// and the sub sub menu "Save configuration" >>
 		ImageIcon iconSave = null;
 		try {
@@ -209,12 +236,13 @@ public class ConceptJFrameGUI {
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		}
-		JMenuItem subSubMenuConfigurationSave = new JMenuItem(rb.getString("Save configuration"), iconSave);
+		JMenuItem subSubMenuConfigurationSave = new JMenuItem(getTranslation("Save configuration"), iconSave);
 		subSubMenuConfigurationSave.setToolTipText(
-				rb.getString("Saves everything so you can start instantly at the next launch of the program"));
+				getTranslation("Saves everything so you can start instantly at the next launch of the program"));
 		subSubMenuConfigurationSave.addActionListener((ActionEvent event) -> {
 			System.out.println("Save the actual configuration (of folders)!");
-			actionManager.fileOverWriterConfig();
+			actionManager.fileOverWriterConfig(getTranslation("This will overwrite your old"),
+					getTranslation("file! Do you really want to continue?"), getTranslation("Warning"));
 		});
 		// and the sub sub menu "Load configuration" >>
 		ImageIcon iconLoad = null;
@@ -223,13 +251,13 @@ public class ConceptJFrameGUI {
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		}
-		JMenuItem subSubMenuConfigurationLoad = new JMenuItem(rb.getString("Load configuration"), iconLoad);
-		subSubMenuConfigurationLoad.setToolTipText("Load configuration from a configuration file");
+		JMenuItem subSubMenuConfigurationLoad = new JMenuItem(getTranslation("Load configuration"), iconLoad);
+		subSubMenuConfigurationLoad.setToolTipText(getTranslation("Load configuration from a configuration file"));
 		subSubMenuConfigurationLoad.addActionListener((ActionEvent event) -> {
 			System.out.println("dialog wich says please restart program - notify if a file even exit before this");
 			if (JOptionPane.showConfirmDialog(null,
-					"This will overwrite your old configuration! Do you really want to continue?", "Warning",
-					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+					getTranslation("This will overwrite your old configuration! Do you really want to continue?"),
+					"Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
 				actionManager.loadConfigData(actionManager.getConfigurationFileOnComputer());
 				// now scan again all paths for music videos
 				actionManager.updateMusicVideoList();
@@ -245,9 +273,9 @@ public class ConceptJFrameGUI {
 		} catch (IOException e5) {
 			e5.printStackTrace();
 		}
-		JMenu subSubMenuExport = new JMenu(rb.getString("Export"));
+		JMenu subSubMenuExport = new JMenu(getTranslation("Export"));
 		subSubMenuExport.setIcon(iconExport);
-		subSubMenuExport.setToolTipText(rb.getString("Export your list to the following formats") + ": CSV, HTML");
+		subSubMenuExport.setToolTipText(getTranslation("Export your list to the following formats") + ": CSV, HTML");
 		// with the sub sub sub menu "Export to CSV" >>
 		ImageIcon iconCSV = null;
 		try {
@@ -255,12 +283,16 @@ public class ConceptJFrameGUI {
 		} catch (IOException e4) {
 			e4.printStackTrace();
 		}
-		JMenuItem subSubSubMenuExportCSV = new JMenuItem("Export to CSV", iconCSV);
-		subSubSubMenuExportCSV.setToolTipText("Export your data to a CSV file (can be imported with Excel)");
+		JMenuItem subSubSubMenuExportCSV = new JMenuItem(getTranslation("Export to") + " CSV", iconCSV);
+		subSubSubMenuExportCSV
+				.setToolTipText(getTranslation("Export your data to a CSV file (can be imported with Excel)"));
 
 		subSubSubMenuExportCSV.addActionListener((ActionEvent event) -> {
 
-			actionManager.exportCsvFile("musicvideolist.csv");
+			actionManager.exportCsvFile("musicvideolist.csv",
+					getTranslation("Choose a directory to save the csv file") + ":",
+					getTranslation("This will overwrite your old"),
+					getTranslation("file! Do you really want to continue?"), getTranslation("Warning"));
 		});
 		// with the sub sub sub menu "Export to HTML" >>
 		ImageIcon iconHTML = null;
@@ -269,11 +301,13 @@ public class ConceptJFrameGUI {
 		} catch (IOException e3) {
 			e3.printStackTrace();
 		}
-		JMenuItem subSubSubMenuExportHTML = new JMenuItem("Export to HTML", iconHTML);
-		subSubSubMenuExportHTML.setToolTipText("Export your data to a HTML file (web browser)");
+		JMenuItem subSubSubMenuExportHTML = new JMenuItem(getTranslation("Export to") + " HTML", iconHTML);
+		subSubSubMenuExportHTML.setToolTipText(getTranslation("Export your data to a HTML file (web browser)"));
 		subSubSubMenuExportHTML.addActionListener((ActionEvent event) -> {
 
-			actionManager.exportHtmlFile("table.html");
+			actionManager.exportHtmlFile("table.html", getTranslation("Choose a directory to save the html file") + ":",
+					getTranslation("This will overwrite your old"),
+					getTranslation("file! Do you really want to continue?"), getTranslation("Warning"));
 		});
 		// and last but not least the info sub sub menu "About" >>
 		ImageIcon iconAbout = null;
@@ -282,16 +316,47 @@ public class ConceptJFrameGUI {
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		}
-		JMenuItem subSubMenuAbout = new JMenuItem(rb.getString("About"), iconAbout);
-		subSubMenuAbout.setToolTipText("About this program");
+		JMenuItem subSubMenuAbout = new JMenuItem(getTranslation("About"), iconAbout);
+		subSubMenuAbout.setToolTipText(getTranslation("About this program"));
 		subSubMenuAbout.addActionListener((ActionEvent event) -> {
 
 			if (newAboutWindow != null) {
 				// if there was already an open about windows close it
 				newAboutWindow.closeIt();
 			}
-			newAboutWindow = new AboutWindow(version, releaseDate);
+			newAboutWindow = new AboutWindow(version, releaseDate,
+					getTranslation("About Karaoke Desktop Client [Beta]"), getTranslation("Author"),
+					getTranslation("This program is completely open source on Github"));
 		});
+
+		/*
+		 * Change language JMenu subMenuLanguage = new
+		 * JMenu(getTranslation("Language")); subMenuLanguage.setToolTipText(
+		 * getTranslation("Change the language of the program")); // and the sub
+		 * sub menu "Add" >> ImageIcon iconLanguageDe = null; try {
+		 * iconLanguageDe = new
+		 * ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource(
+		 * "/de_30x20.png"))); } catch (IOException e2) { e2.printStackTrace();
+		 * } JMenuItem subSubMenuGerman = new
+		 * JMenuItem(getTranslation("German"), iconLanguageDe);
+		 * subSubMenuGerman.setToolTipText(
+		 * getTranslation("Change the language of the program") + " " +
+		 * getTranslation("to") + " " + getTranslation("German"));
+		 * subSubMenuGerman.addActionListener((ActionEvent event) -> {
+		 * System.out.println("Change GUI language to German");
+		 * changeLanguage("de"); }); ImageIcon iconLanguageEng = null; try {
+		 * iconLanguageEng = new
+		 * ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource(
+		 * "/eng_30x20.png"))); } catch (IOException e2) { e2.printStackTrace();
+		 * } JMenuItem subSubMenuEnglish = new
+		 * JMenuItem(getTranslation("English"), iconLanguageEng);
+		 * subSubMenuEnglish.setToolTipText(
+		 * getTranslation("Change the language of the program") + " " +
+		 * getTranslation("to") + " " + getTranslation("English"));
+		 * subSubMenuEnglish.addActionListener((ActionEvent event) -> {
+		 * System.out.println("Change GUI language to English");
+		 * changeLanguage("eng"); });
+		 */
 
 		// add the menu buttons to the menu bar to the JFrame
 		subMenuPath.add(subSubMenuAddSourceFolder);
@@ -309,6 +374,10 @@ public class ConceptJFrameGUI {
 		subMenuMore.addSeparator();
 		subMenuMore.add(subSubMenuAbout);
 		menuBar.add(subMenuMore);
+		/*
+		 * subMenuLanguage.add(subSubMenuGerman);
+		 * subMenuLanguage.add(subSubMenuEnglish); menuBar.add(subMenuLanguage);
+		 */
 		guiMainFrame.setJMenuBar(menuBar);
 
 		model = new DefaultTableModel(actionManager.musicVideoListToTable("  "), actionManager.getColumnNames());
@@ -371,9 +440,9 @@ public class ConceptJFrameGUI {
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		}
-		JLabel thumb = new JLabel(rb.getString("Search for a music video") + ":  ");
+		JLabel thumb = new JLabel(getTranslation("Search for a music video") + ":  ");
 		thumb.setIcon(iconSearch);
-		thumb.setToolTipText("Type in the field to instantly find your music video");
+		thumb.setToolTipText(getTranslation("Type in the field to instantly find your music video"));
 		panel.add(thumb);
 
 		ImageIcon icon = null;
@@ -430,8 +499,8 @@ public class ConceptJFrameGUI {
 				guiMainFrame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 		});
-		button234
-				.setToolTipText("Click the button to start a video search on YouTube with the input of the text field");
+		button234.setToolTipText(
+				getTranslation("Click the button to start a video search on YouTube with the input of the text field"));
 
 		panel.add(thumb, BorderLayout.WEST);
 		panel.add(button234, BorderLayout.EAST);
@@ -509,7 +578,7 @@ public class ConceptJFrameGUI {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		JButton randomMusicvideoButton = new JButton(rb.getString("Play a random music video"), iconRandom);
+		JButton randomMusicvideoButton = new JButton(getTranslation("Play a random music video"), iconRandom);
 
 		randomMusicvideoButton.setPreferredSize(new Dimension(500, 40));
 		randomMusicvideoButton.addActionListener(new ActionListener() {
@@ -518,11 +587,11 @@ public class ConceptJFrameGUI {
 
 				int randomNum = actionManager.getRandomNumber(0, actionManager.getMusicVideosList().size());
 				String randomSong = actionManager.getMusicVideosList().get(randomNum).getTitle() + " "
-						+ rb.getString("by") + " " + actionManager.getMusicVideosList().get(randomNum).getArtist()
+						+ getTranslation("by") + " " + actionManager.getMusicVideosList().get(randomNum).getArtist()
 						+ "?";
 				System.out.println("Random music video: ...Playing " + randomSong);
 
-				if (JOptionPane.showConfirmDialog(null, rb.getString("Would you like to play") + " " + randomSong,
+				if (JOptionPane.showConfirmDialog(null, getTranslation("Would you like to play") + " " + randomSong,
 						"Info", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					actionManager.openMusicVideo(randomNum);
 				} else {
@@ -555,11 +624,12 @@ public class ConceptJFrameGUI {
 					// ask the user if he wants to close without saving his
 					// actual configuration
 					if (JOptionPane.showConfirmDialog(guiMainFrame,
-							rb.getString(
+							getTranslation(
 									"Are you sure to close the program without saving your music video folder paths to a configuration file?"),
 							"Really Closing?", JOptionPane.YES_NO_OPTION,
 							JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {
-						actionManager.fileOverWriterConfig();
+						actionManager.fileOverWriterConfig(getTranslation("This will overwrite your old"),
+								getTranslation("file! Do you really want to continue?"), getTranslation("Warning"));
 					}
 				}
 			}
@@ -573,7 +643,8 @@ public class ConceptJFrameGUI {
 	 */
 	public void pathEditorJFrame() {
 
-		JFrame pathEditorWindow = new JFrame("Edit the source folder paths:    >>Close to save changes");
+		JFrame pathEditorWindow = new JFrame(
+				getTranslation("Edit the source folder paths") + ":    >> " + getTranslation("Close to save changes"));
 		// set title
 		pathEditorWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		// only close on exit - don't end the whole program
@@ -593,7 +664,8 @@ public class ConceptJFrameGUI {
 			removePathButton.setPreferredSize(new Dimension(500, 40));
 
 			ImageIcon iconRemove;
-			JLabel label = new JLabel("<< Click to remove " + actionManager.getPathList().get(i) + " >>",
+			JLabel label = new JLabel(
+					"<< " + getTranslation("Click to remove") + " " + actionManager.getPathList().get(i) + " >>",
 					SwingConstants.CENTER);
 			try {
 				iconRemove = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/remove_20x20.png")));
@@ -609,7 +681,7 @@ public class ConceptJFrameGUI {
 
 			removePathButton.addActionListener((ActionEvent event) -> {
 				if (arrayPathIndex[indexOfPath] == true) {
-					label.setText("<< Click to remove " + pathTextForLater + " >>");
+					label.setText("<< " + getTranslation("Click to remove") + " " + pathTextForLater + " >>");
 					arrayPathIndex[indexOfPath] = false;
 
 					ImageIcon iconRemove2;
@@ -621,7 +693,7 @@ public class ConceptJFrameGUI {
 						e.printStackTrace();
 					}
 				} else {
-					label.setText(pathTextForLater + " was removed - Click to reverse");
+					label.setText(pathTextForLater + " " + getTranslation("was removed - Click to reverse"));
 					arrayPathIndex[indexOfPath] = true;
 
 					ImageIcon iconReAdd;
@@ -659,9 +731,9 @@ public class ConceptJFrameGUI {
 					}
 				}
 
-				if (changeDetected && JOptionPane.showConfirmDialog(null, "Do you really want to save changes?",
-						"Important question", JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+				if (changeDetected && JOptionPane.showConfirmDialog(null,
+						getTranslation("Do you really want to save changes?"), getTranslation("Important question"),
+						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
 					int regulator = 0;
 					for (int a = 0; a < arrayPathIndex.length; a++) {
 						if (arrayPathIndex[a] == true) {
@@ -708,6 +780,32 @@ public class ConceptJFrameGUI {
 			rowSorter.setRowFilter(null);
 		} else {
 			rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchString));
+		}
+	}
+
+	public void changeLanguage(String languageIdentifier) {
+		if (languageIdentifier.equals("de")) {
+
+			currentLanguage = Locale.GERMAN;
+			rb = ResourceBundle.getBundle("SystemMessages", currentLanguage);
+			System.out.println("Language is GERMAN!");
+
+		} else if (languageIdentifier.equals("eng")) {
+
+			currentLanguage = Locale.ENGLISH;
+			rb = ResourceBundle.getBundle("SystemMessages", currentLanguage);
+			System.out.println("Language is ENGLISH!");
+
+		} else {
+			System.err.println("Language Identifier is unknown!");
+		}
+
+		Enumeration<String> keys = rb.getKeys();
+		while (keys.hasMoreElements()) {
+			String key = keys.nextElement();
+			String value = getTranslation(key);
+			System.out.println(key + ": " + value);
+			// JOptionPane.showMessageDialog(null, key + ": " + value);
 		}
 	}
 

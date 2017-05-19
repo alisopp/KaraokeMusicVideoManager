@@ -112,7 +112,7 @@ public class JProgressBarWindow extends JFrame {
 		// hallo.setProgressBar(4);
 		try {
 			for (int i = 0; i < 100; i++) {
-				a.sleep(100);
+				Thread.sleep(100);
 				hallo.setProgressBar(i);
 				hallo.setLabelText(i + " percent");
 			}

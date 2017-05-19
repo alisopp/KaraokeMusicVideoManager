@@ -16,7 +16,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -34,19 +33,9 @@ public class AboutWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * JProgressBar (global because of get and set)
-	 */
-	private JProgressBar progressBar;
-
-	/**
-	 * JLabel (global because of get and set)
-	 */
-	private JLabel label;
-
-	/**
 	 * Create a JFrame with a JProgressBar
 	 */
-	public AboutWindow(String versionNumber, String releaseDate) {
+	public AboutWindow(String versionNumber, String releaseDate, String title, String authorText, String text) {
 
 		// Get the Windows look on Windows computers
 		try {
@@ -66,7 +55,8 @@ public class AboutWindow extends JFrame {
 			e.printStackTrace();
 		}
 
-		this.setTitle("About Karaoke Desktop Client [Beta]");
+		this.setTitle(title);
+		// "About Karaoke Desktop Client [Beta]"
 		// set title
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		// only close on exit - don't end the whole program
@@ -83,13 +73,14 @@ public class AboutWindow extends JFrame {
 			e.printStackTrace();
 		}
 
-		JLabel author = new JLabel("Autor: Niklas | https://github.com/AnonymerNiklasistanonym ");
+		JLabel author = new JLabel(authorText + ": Niklas | https://github.com/AnonymerNiklasistanonym ");
 		author.addMouseListener((MouseListener) new OpenUrlAction());
 
 		JPanel panel2 = new JPanel(new GridLayout(3, 1));
 		panel2.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 0));
 
-		panel2.add(new JLabel("This program is completely open source on Github"));
+		panel2.add(new JLabel(text));
+		// "This program is completely open source on Github"
 		panel2.add(author);
 		panel2.add(new JLabel("\u00a9 " + releaseDate + " >> v" + versionNumber));
 
@@ -174,9 +165,5 @@ public class AboutWindow extends JFrame {
 
 	public void closeIt() {
 		dispose();
-	}
-
-	public static void main(String[] args) {
-		AboutWindow hallo = new AboutWindow("1.0", "May 2017");
 	}
 }

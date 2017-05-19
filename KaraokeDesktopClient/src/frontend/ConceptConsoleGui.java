@@ -56,7 +56,7 @@ public class ConceptConsoleGui {
 
 	private void addFolder() {
 		try {
-			karaokeOMat.addToPathList(karaokeOMat.getPathOfDirectory());
+			karaokeOMat.addToPathList(karaokeOMat.getPathOfDirectory(""));
 			karaokeOMat.clearMusicVideosList();
 			karaokeOMat.updateMusicVideoList();
 		} catch (Exception f) {

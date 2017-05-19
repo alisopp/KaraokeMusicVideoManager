@@ -77,15 +77,15 @@ public class FileWriterManager {
 	 * @param content
 	 *            (String[] | content that should be saved into it)
 	 */
-	private static void overWriteFileDialog(File file, String[] content, boolean noDialogs) {
+	private static void overWriteFileDialog(File file, String[] content, boolean noDialogs, String text01,
+			String text02, String text03) {
 
 		// if the file exist
 		if (file.exists()) {
 
 			// ask the user if he really wants to overwrite the old file
-			if (noDialogs || JOptionPane.showConfirmDialog(null,
-					"This will overwrite your old \"" + file.getName() + "\" file! Do you really want to continue?",
-					"Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+			if (noDialogs || JOptionPane.showConfirmDialog(null, text01 + " \"" + file.getName() + "\" " + text02,
+					text03, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
 
 				// because of the user approved we try to delete the file
 				if (file.delete()) {
@@ -118,9 +118,9 @@ public class FileWriterManager {
 	 * @param content
 	 *            (String[] | content that should be saved into it)
 	 */
-	public static void overWriteFileDialog(File file, String[] content) {
+	public static void overWriteFileDialog(File file, String[] content, String text01, String text02, String text03) {
 
-		overWriteFileDialog(file, content, false);
+		overWriteFileDialog(file, content, false, text01, text02, text03);
 	}
 
 	/**
@@ -132,9 +132,9 @@ public class FileWriterManager {
 	 * @param content
 	 *            (String[] | content that should be saved into it)
 	 */
-	public static void overWriteFile(File file, String[] content) {
+	public static void overWriteFile(File file, String[] content, String text01, String text02, String text03) {
 
-		overWriteFileDialog(file, content, true);
+		overWriteFileDialog(file, content, true, text01, text02, text03);
 	}
 
 	/**

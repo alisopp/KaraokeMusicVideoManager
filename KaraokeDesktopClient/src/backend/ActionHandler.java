@@ -122,9 +122,9 @@ public class ActionHandler {
 	 * 
 	 * @return path of directory (Path | -> null if dialog aborted)
 	 */
-	public Path getPathOfDirectory() {
-
-		return JFileChooserManager.chooseDirectoryGetPath("Choose a folder with your music videos");
+	public Path getPathOfDirectory(String text) {
+		// "Choose a folder with your music videos"
+		return JFileChooserManager.chooseDirectoryGetPath(text);
 	}
 
 	/**
@@ -133,9 +133,9 @@ public class ActionHandler {
 	 * 
 	 * @return paths of directory (Path[] | -> null if dialog aborted)
 	 */
-	public Path[] getPathOfDirectories() {
-
-		return JFileChooserManager.chooseDirectoriesGetPaths("Choose a folder or more with your music videos");
+	public Path[] getPathOfDirectories(String text) {
+		// "Choose a folder or more with your music videos"
+		return JFileChooserManager.chooseDirectoriesGetPaths(text);
 	}
 
 	/*
@@ -166,7 +166,7 @@ public class ActionHandler {
 	public void scanDirectory(Path path) {
 
 		// "walk" through all files in the actual directory
-		try (Stream<Path> paths = Files.walk(path)) {
+		try (Stream<Path> paths = Files.walk(path).filter(Files::isRegularFile)) {
 			paths.forEach(filePath -> {
 
 				// file is a "normal" readable file
@@ -208,6 +208,7 @@ public class ActionHandler {
 			System.out.println("Music video list was updated (+ " + path + ")");
 		} catch (IOException e) {
 			System.err.println("Failure while scanning the directory \"" + path + "\"");
+			return;
 		}
 	}
 
@@ -718,8 +719,8 @@ public class ActionHandler {
 	 * Simply creates a file and saves everything from the configuration in it,
 	 * also asks if the file really should be overwritten
 	 */
-	public void fileOverWriterConfig() {
-		FileWriterManager.overWriteFileDialog(getConfigurationFile(), generateConfigContent());
+	public void fileOverWriterConfig(String text01, String text02, String text03) {
+		FileWriterManager.overWriteFileDialog(getConfigurationFile(), generateConfigContent(), text01, text02, text03);
 	}
 
 	/**
@@ -763,8 +764,8 @@ public class ActionHandler {
 	 * @param fileName
 	 *            (String | name of the new file)
 	 */
-	public void exportCsvFile(String fileName) {
-		exportDialog("Choose a directory to save the csv file:", fileName, generateCsvContent());
+	public void exportCsvFile(String fileName, String text, String text01, String text02, String text03) {
+		exportDialog(text, fileName, generateCsvContent(), text01, text02, text03);
 	}
 
 	/**
@@ -883,11 +884,11 @@ public class ActionHandler {
 	 * @param fileName
 	 *            (String | name of the new HTML file)
 	 */
-	public void exportHtmlFile(String fileName) {
+	public void exportHtmlFile(String fileName, String text, String text01, String text02, String text03) {
 
 		String[] htmlFileContent = generateHtmlContent(generateHtmlTable());
 
-		exportDialog("Choose a directory to save the html file:", fileName, htmlFileContent);
+		exportDialog(text, fileName, htmlFileContent, text01, text02, text03);
 
 	}
 
@@ -901,7 +902,8 @@ public class ActionHandler {
 	 * @param content
 	 *            (String[] | content of the new file)
 	 */
-	private void exportDialog(String titleJFileChooser, String fileName, String[] content) {
+	private void exportDialog(String titleJFileChooser, String fileName, String[] content, String text01, String text02,
+			String text03) {
 		String filePath = JFileChooserManager.chooseDirectoryGetPath(titleJFileChooser).toString();
 
 		if (filePath == null) {
@@ -915,7 +917,7 @@ public class ActionHandler {
 			File file = new File(filePath);
 
 			// overwrite or just write the file with a dialog
-			FileWriterManager.overWriteFileDialog(file, content);
+			FileWriterManager.overWriteFileDialog(file, content, text01, text02, text03);
 		}
 	}
 
