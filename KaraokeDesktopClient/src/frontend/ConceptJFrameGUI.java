@@ -165,8 +165,7 @@ public class ConceptJFrameGUI {
 				LanguageController.getTranslation("Add a new folder with new music videos to your list"));
 		subSubMenuAddSourceFolder.addActionListener((ActionEvent event) -> {
 			System.out.println("Add a new folder with new music videos to your list");
-			actionManager.addToPathList(actionManager.getPathOfDirectories(
-					LanguageController.getTranslation("Choose a folder or more with your music videos")));
+			this.actionManager.addToPathList(this.actionManager.getPathOfDirectories());
 			updateTable();
 		});
 
@@ -775,6 +774,7 @@ public class ConceptJFrameGUI {
 		guiMainFrame.getContentPane().repaint();
 
 		table.repaint();
+		updateTable();
 	}
 
 	/**

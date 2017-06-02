@@ -134,8 +134,9 @@ public class ActionHandler {
 	 * 
 	 * @return paths of directory (Path[] | -> null if dialog aborted)
 	 */
-	public Path[] getPathOfDirectories(String text) {
+	public Path[] getPathOfDirectories() {
 		// "Choose a folder or more with your music videos"
+		String text = LanguageController.getTranslation("Choose a folder or more with your music videos");
 		return JFileChooserManager.chooseDirectoriesGetPaths(text);
 	}
 
