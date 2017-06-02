@@ -10,6 +10,8 @@ import javax.swing.JProgressBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import backend.language.LanguageController;
+
 /**
  * Editable window with a JLabel and a JProgressbar
  * 
@@ -105,7 +107,7 @@ public class JProgressBarWindow extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		JProgressBarWindow hallo = new JProgressBarWindow("Processing...");
+		JProgressBarWindow hallo = new JProgressBarWindow(LanguageController.getTranslation("Processing") + "...");
 
 		Thread a = new Thread();
 		a.start();
@@ -114,7 +116,7 @@ public class JProgressBarWindow extends JFrame {
 			for (int i = 0; i < 100; i++) {
 				Thread.sleep(100);
 				hallo.setProgressBar(i);
-				hallo.setLabelText(i + " percent");
+				hallo.setLabelText(i + " " + LanguageController.getTranslation("percent"));
 			}
 		} catch (InterruptedException e) {
 

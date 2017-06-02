@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import backend.language.LanguageController;
 import frontend.ConceptJFrameGUI;
 
 /**
@@ -35,7 +36,7 @@ public class AboutWindow extends JFrame {
 	/**
 	 * Create a JFrame with a JProgressBar
 	 */
-	public AboutWindow(String versionNumber, String releaseDate, String title, String authorText, String text) {
+	public AboutWindow(String versionNumber, String releaseDate) {
 
 		// Get the Windows look on Windows computers
 		try {
@@ -55,7 +56,7 @@ public class AboutWindow extends JFrame {
 			e.printStackTrace();
 		}
 
-		this.setTitle(title);
+		this.setTitle(LanguageController.getTranslation("About Karaoke Desktop Client [Beta]"));
 		// "About Karaoke Desktop Client [Beta]"
 		// set title
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -73,13 +74,14 @@ public class AboutWindow extends JFrame {
 			e.printStackTrace();
 		}
 
-		JLabel author = new JLabel(authorText + ": Niklas | https://github.com/AnonymerNiklasistanonym ");
+		JLabel author = new JLabel(
+				LanguageController.getTranslation("Author") + ": Niklas | https://github.com/AnonymerNiklasistanonym ");
 		author.addMouseListener((MouseListener) new OpenUrlAction());
 
 		JPanel panel2 = new JPanel(new GridLayout(3, 1));
 		panel2.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 0));
 
-		panel2.add(new JLabel(text));
+		panel2.add(new JLabel(LanguageController.getTranslation("This program is completely open source on Github")));
 		// "This program is completely open source on Github"
 		panel2.add(author);
 		panel2.add(new JLabel("\u00a9 " + releaseDate + " >> v" + versionNumber));

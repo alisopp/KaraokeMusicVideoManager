@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
+import backend.language.LanguageController;
+
 /**
  * Static methods to write files
  * 
@@ -77,15 +79,17 @@ public class FileWriterManager {
 	 * @param content
 	 *            (String[] | content that should be saved into it)
 	 */
-	private static void overWriteFileDialog(File file, String[] content, boolean noDialogs, String text01,
-			String text02, String text03) {
+	private static void overWriteFileDialog(File file, String[] content, boolean noDialogs) {
 
 		// if the file exist
 		if (file.exists()) {
 
 			// ask the user if he really wants to overwrite the old file
-			if (noDialogs || JOptionPane.showConfirmDialog(null, text01 + " \"" + file.getName() + "\" " + text02,
-					text03, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+			if (noDialogs || JOptionPane.showConfirmDialog(null,
+					LanguageController.getTranslation("This will overwrite your old") + " \"" + file.getName() + "\" "
+							+ LanguageController.getTranslation("file! Do you really want to continue?"),
+					LanguageController.getTranslation("Warning"), JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
 
 				// because of the user approved we try to delete the file
 				if (file.delete()) {
@@ -118,9 +122,9 @@ public class FileWriterManager {
 	 * @param content
 	 *            (String[] | content that should be saved into it)
 	 */
-	public static void overWriteFileDialog(File file, String[] content, String text01, String text02, String text03) {
+	public static void overWriteFileDialog(File file, String[] content) {
 
-		overWriteFileDialog(file, content, false, text01, text02, text03);
+		overWriteFileDialog(file, content, false);
 	}
 
 	/**
@@ -132,9 +136,9 @@ public class FileWriterManager {
 	 * @param content
 	 *            (String[] | content that should be saved into it)
 	 */
-	public static void overWriteFile(File file, String[] content, String text01, String text02, String text03) {
+	public static void overWriteFile(File file, String[] content) {
 
-		overWriteFileDialog(file, content, true, text01, text02, text03);
+		overWriteFileDialog(file, content, true);
 	}
 
 	/**

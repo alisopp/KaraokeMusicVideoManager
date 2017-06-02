@@ -20,6 +20,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import backend.language.LanguageController;
 import backend.libraries.FileReaderManager;
 import backend.libraries.FileWriterManager;
 import backend.libraries.JFileChooserManager;
@@ -217,7 +218,8 @@ public class ActionHandler {
 	 */
 	public void updateMusicVideoList() {
 
-		JProgressBarWindow progress = new JProgressBarWindow("Searching for music video files...");
+		JProgressBarWindow progress = new JProgressBarWindow(
+				LanguageController.getTranslation("Searching for music video files") + "...");
 		progress.setProgressBar(0);
 		progress.setLabelText("Clear music video list...");
 
@@ -719,8 +721,8 @@ public class ActionHandler {
 	 * Simply creates a file and saves everything from the configuration in it,
 	 * also asks if the file really should be overwritten
 	 */
-	public void fileOverWriterConfig(String text01, String text02, String text03) {
-		FileWriterManager.overWriteFileDialog(getConfigurationFile(), generateConfigContent(), text01, text02, text03);
+	public void fileOverWriterConfig() {
+		FileWriterManager.overWriteFileDialog(getConfigurationFile(), generateConfigContent());
 	}
 
 	/**
@@ -764,8 +766,11 @@ public class ActionHandler {
 	 * @param fileName
 	 *            (String | name of the new file)
 	 */
-	public void exportCsvFile(String fileName, String text, String text01, String text02, String text03) {
-		exportDialog(text, fileName, generateCsvContent(), text01, text02, text03);
+	public void exportCsvFile(String fileName) {
+
+		String text = LanguageController.getTranslation("Choose a directory to save the csv file");
+
+		exportDialog(text, fileName, generateCsvContent());
 	}
 
 	/**
@@ -884,11 +889,13 @@ public class ActionHandler {
 	 * @param fileName
 	 *            (String | name of the new HTML file)
 	 */
-	public void exportHtmlFile(String fileName, String text, String text01, String text02, String text03) {
+	public void exportHtmlFile(String fileName) {
 
 		String[] htmlFileContent = generateHtmlContent(generateHtmlTable());
 
-		exportDialog(text, fileName, htmlFileContent, text01, text02, text03);
+		String text = LanguageController.getTranslation("Choose a directory to save the html file");
+
+		exportDialog(text, fileName, htmlFileContent);
 
 	}
 
@@ -902,8 +909,7 @@ public class ActionHandler {
 	 * @param content
 	 *            (String[] | content of the new file)
 	 */
-	private void exportDialog(String titleJFileChooser, String fileName, String[] content, String text01, String text02,
-			String text03) {
+	private void exportDialog(String titleJFileChooser, String fileName, String[] content) {
 		String filePath = JFileChooserManager.chooseDirectoryGetPath(titleJFileChooser).toString();
 
 		if (filePath == null) {
@@ -917,7 +923,7 @@ public class ActionHandler {
 			File file = new File(filePath);
 
 			// overwrite or just write the file with a dialog
-			FileWriterManager.overWriteFileDialog(file, content, text01, text02, text03);
+			FileWriterManager.overWriteFileDialog(file, content);
 		}
 	}
 
