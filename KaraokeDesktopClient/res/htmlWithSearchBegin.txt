@@ -1,0 +1,101 @@
+<html>
+
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            word-wrap: break-word;
+        }
+        
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            vertical-align: top;
+        }
+        
+        .number {
+            width: 40;
+        }
+        
+        .artist {
+            width: 200;
+        }
+        
+        .title {
+            width: 200;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        
+        body {
+            width: 100%;
+            margin: 0;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @media (max-width: 40em) {
+            /* Kompaktes Layout */
+            section {
+                margin-left: 0px;
+                margin-right: 0px;
+            }
+        }
+        
+        @media (min-width: 40em) {
+            /* Kompaktes Layout */
+            section {
+                margin-left: 20px;
+                margin-right: 20px;
+            }
+        }
+        
+        html {
+            text-align: center;
+        }
+        
+        .sw {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            background: #ffffff;
+            padding: 1rem;
+            align-items: center;
+            box-shadow: 0 2px 0 0px rgba(#000, .1);
+            position: relative;
+        }
+        
+        .search {
+            display: inline-flex;
+            width: 90%;
+            max-width: 1000px;
+            border-radius: 20px;
+            margin: auto;
+            border-width: 2px;
+            border-color: black;
+            background: #fff;
+            padding: 10px;
+            height: 100%;
+        }
+        
+        input:focus {
+            outline-width: 0;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <section>
+
+        <div class="sw">
+            <input type="search" class="search light-table-filter" data-table="order-table"

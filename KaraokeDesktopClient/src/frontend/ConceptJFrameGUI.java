@@ -281,6 +281,24 @@ public class ConceptJFrameGUI {
 
 			actionManager.exportHtmlFile("table.html");
 		});
+
+		// with the sub sub sub menu "Export to HTML with Search" >>
+		ImageIcon iconHTMLSearch = null;
+		try {
+			iconHTMLSearch = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/htmlSearch_20x20.png")));
+		} catch (IOException e3) {
+			e3.printStackTrace();
+		}
+		JMenuItem subSubSubMenuExportHTMLSearch = new JMenuItem(LanguageController.getTranslation("Export to")
+				+ " HTML " + LanguageController.getTranslation("with Search"), iconHTMLSearch);
+		subSubSubMenuExportHTMLSearch
+				.setToolTipText(LanguageController.getTranslation("Export your data to a HTML file (web browser)")
+						+ " (" + LanguageController.getTranslation("with Search") + ")");
+		subSubSubMenuExportHTMLSearch.addActionListener((ActionEvent event) -> {
+
+			actionManager.exportHtmlFileWithSearch("tableWithSearch.html");
+		});
+
 		// and last but not least the info sub sub menu "About" >>
 		ImageIcon iconAbout = null;
 		try {
@@ -346,6 +364,8 @@ public class ConceptJFrameGUI {
 		subSubMenuExport.add(subSubSubMenuExportCSV);
 		subSubMenuExport.addSeparator();
 		subSubMenuExport.add(subSubSubMenuExportHTML);
+		subSubMenuExport.addSeparator();
+		subSubMenuExport.add(subSubSubMenuExportHTMLSearch);
 		subMenuMore.add(subSubMenuExport);
 		subMenuMore.addSeparator();
 		subMenuMore.add(subSubMenuAbout);

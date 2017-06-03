@@ -941,11 +941,11 @@ public class ActionHandler {
 		int columnNumber = columnNames.length;
 		int rowNumber = data.length;
 
-		sb.append("<tr>");
+		sb.append("<thead><tr>");
 		for (int a = 0; a < columnNumber; a++) {
 			sb.append("<th>" + columnNames[a] + "</th>");
 		}
-		sb.append("</tr>");
+		sb.append("</tr></thead><tbody>");
 
 		for (int a = 0; a < rowNumber; a++) {
 			sb.append("<tr>");
@@ -954,7 +954,40 @@ public class ActionHandler {
 			}
 			sb.append("</tr>");
 		}
-		sb.append("</table>");
+		sb.append("</tbody></table>");
+
+		return sb.toString();
+	}
+
+	/**
+	 * Generate the table for the HTML file with a search
+	 * 
+	 * @return table (String)
+	 */
+	public String generateHtmlTableWithSearch() {
+
+		Object[][] data = musicVideoListToTable();
+
+		StringBuilder sb = new StringBuilder("<table class=\"order-table table\">");
+		int columnNumber = columnNames.length;
+		int rowNumber = data.length;
+
+		sb.append("placeholder=\""
+				+ LanguageController.getTranslation("Input your search query to find your music videos")
+				+ "...\"/></div>");
+
+		sb.append("<thead><tr>" + "<th class=\"number\">#</th>" + "<th class=\"artist\">"
+				+ LanguageController.getTranslation("Artist") + "</th>" + "<th class=\"title\">"
+				+ LanguageController.getTranslation("Title") + "</th>" + "</tr></thead><tbody>");
+
+		for (int a = 0; a < rowNumber; a++) {
+			sb.append("<tr>");
+			for (int b = 0; b < columnNumber; b++) {
+				sb.append("<td>" + data[a][b] + "</td>");
+			}
+			sb.append("</tr>");
+		}
+		sb.append("</tbody></table>");
 
 		return sb.toString();
 	}
@@ -998,6 +1031,44 @@ public class ActionHandler {
 	}
 
 	/**
+	 * Generate the whole HTML file with Search bar document content
+	 * 
+	 * @return content (String[])
+	 */
+	public String[] generateHtmlWithSearchContent(String table) {
+
+		ArrayList<String> cache = new ArrayList<String>();
+		String[] content = null;
+
+		try {
+
+			InputStream in = this.getClass().getClassLoader().getResourceAsStream("htmlWithSearchBegin.txt");
+			BufferedReader r = new BufferedReader(new InputStreamReader(in));
+			String line;
+			while ((line = r.readLine()) != null) {
+				cache.add(line);
+			}
+			cache.add(table);
+			InputStream in2 = this.getClass().getClassLoader().getResourceAsStream("htmlWithSearchEnd.txt");
+			BufferedReader r2 = new BufferedReader(new InputStreamReader(in2));
+			while ((line = r2.readLine()) != null) {
+				cache.add(line);
+			}
+
+			content = new String[cache.size()];
+
+			for (int a = 0; a < cache.size(); a++) {
+				content[a] = cache.get(a);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Error - No Export??? But why... :( sry");
+		}
+		return content;
+	}
+
+	/**
 	 * Export dialog of the HTML file
 	 * 
 	 * @param fileName
@@ -1006,6 +1077,22 @@ public class ActionHandler {
 	public void exportHtmlFile(String fileName) {
 
 		String[] htmlFileContent = generateHtmlContent(generateHtmlTable());
+
+		String text = LanguageController.getTranslation("Choose a directory to save the html file");
+
+		exportDialog(text, fileName, htmlFileContent);
+
+	}
+
+	/**
+	 * Export dialog of the HTML file with Search
+	 * 
+	 * @param fileName
+	 *            (String | name of the new HTML file)
+	 */
+	public void exportHtmlFileWithSearch(String fileName) {
+
+		String[] htmlFileContent = generateHtmlWithSearchContent(generateHtmlTableWithSearch());
 
 		String text = LanguageController.getTranslation("Choose a directory to save the html file");
 
