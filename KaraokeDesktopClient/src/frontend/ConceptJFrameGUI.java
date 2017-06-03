@@ -55,7 +55,7 @@ import backend.libraries.AboutWindow;
  * interface.
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.5 (beta)
+ * @version 0.6 (beta)
  *
  */
 public class ConceptJFrameGUI {
@@ -88,7 +88,7 @@ public class ConceptJFrameGUI {
 
 		LanguageController.setDefaultLanguage();
 
-		version = "0.5 (beta)";
+		version = "0.6 (beta)";
 		releaseDate = LanguageController.getTranslation("June") + " 2017";
 
 		String[] columnNames = new String[] { "#", LanguageController.getTranslation("Artist"),

@@ -35,7 +35,7 @@ import backend.objects.MusicVideo;
  * do with a console TUI or a graphical GUI. It's the core of the project.
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.5 (beta)
+ * @version 0.6 (beta)
  *
  */
 public class ActionHandler {

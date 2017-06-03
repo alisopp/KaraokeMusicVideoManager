@@ -16,7 +16,7 @@ import backend.language.LanguageController;
  * Editable window with a JLabel and a JProgressbar
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.5 (beta)
+ * @version 0.6 (beta)
  */
 public class JProgressBarWindow extends JFrame {
 

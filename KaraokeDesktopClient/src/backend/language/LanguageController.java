@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
  * the user wanted language
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.5 (beta)
+ * @version 0.6 (beta)
  *
  */
 public class LanguageController {
