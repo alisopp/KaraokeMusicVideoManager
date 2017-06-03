@@ -15,6 +15,6 @@ Have a good day :)
 * * *
 ## Important Information:
 Music video file name format (because I didn't program anything editable yet):
-<html><table><tr><td>Artist</td><td>" "</td><td>Title</td><td>" "</td><td>.avi/.mp4/.mkv/.wmv/.mov</td></tr></table></html>
+<html><table><tr><td>Artist</td><td>" - "</td><td>Title</td><td>.avi/.mp4/.mkv/.wmv/.mov</td></tr></table></html>
 
 > If your files are not named like this contact me and I give the customizer a higher priority!
