@@ -6,3 +6,10 @@ This program doesn't reinvent the wheel, it is aimed to be a reliable, stable an
 The operation manual is really simple - there aren't many buttons and everywhere are tooltips and icons. The main thing is that under "Source folders" you can simply add directories or remove them and with the text field you can search the table. If you press enter the first-row video will be played with your default video player. But you can also press a row with the mouse and the music video of this row will be opened in the default video player too. If you see that there is now video, you can now also directly open in your default browser YouTube with the search query of the text field. With the button at the button the computer randomly opens one of the mapped videos if you approve the dialog.
 ## That's it?
 Yes, for now. I will continue to add features and make my code better and understandable. Simply create issues or requests if you have good ideas. You can use this software without being sued too - but it would be nice that if you like it to recommend it to others :)
+## Important Information:
+Music video file name format (because I didn't program anything editable yet):
+<table><tr><td>Artist</td><td>" "</td><td>Title</td><td>" "</td><td>.avi/.mp4/.mkv/.wmv/.mov</td></tr></table>
+> If your files are not named like this contact me and I give the customizer a higher priority!
+## Please help me
+Because this is my first program and I am not a professional I would be very happy if you could send me feedback about the program or my code!
+Have a good day :)
