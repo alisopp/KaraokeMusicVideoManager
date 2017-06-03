@@ -42,7 +42,6 @@
         }
         
         @media (max-width: 40em) {
-            /* Kompaktes Layout */
             section {
                 margin-left: 0px;
                 margin-right: 0px;
@@ -50,7 +49,6 @@
         }
         
         @media (min-width: 40em) {
-            /* Kompaktes Layout */
             section {
                 margin-left: 20px;
                 margin-right: 20px;
@@ -66,15 +64,16 @@
             height: 50px;
             display: flex;
             background: #ffffff;
-            padding: 1rem;
+            padding-top: 1rem;
+			padding-bottom: 1rem;
             align-items: center;
-            box-shadow: 0 2px 0 0px rgba(#000, .1);
             position: relative;
+            margin: auto;
         }
         
         .search {
             display: inline-flex;
-            width: 90%;
+            width: 80%;
             max-width: 1000px;
             border-radius: 20px;
             margin: auto;

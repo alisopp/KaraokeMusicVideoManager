@@ -195,6 +195,104 @@ public class ConceptJFrameGUI {
 			}
 		});
 
+		// with the sub menu "Export"
+		JMenu subMenuExport = new JMenu(LanguageController.getTranslation("Export"));
+		subMenuExport.setToolTipText(
+				LanguageController.getTranslation("Export your list to the following formats") + ": CSV, HTML");
+		// and the sub sub menu "Export" >>
+		// ImageIcon iconExport = null;
+		// try {
+		// iconExport = new
+		// ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/export_20x20.png")));
+		// } catch (IOException e5) {
+		// e5.printStackTrace();
+		// }
+		// JMenu subSubMenuExport = new
+		// JMenu(LanguageController.getTranslation("Export"));
+		// subSubMenuExport.setIcon(iconExport);
+		// with the sub sub sub menu "Export to CSV" >>
+		ImageIcon iconCSV = null;
+		try {
+			iconCSV = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/csv_20x20.png")));
+		} catch (IOException e4) {
+			e4.printStackTrace();
+		}
+		JMenuItem subSubMenuExportCSV = new JMenuItem(LanguageController.getTranslation("Export to") + " CSV", iconCSV);
+		subSubMenuExportCSV.setToolTipText(
+				LanguageController.getTranslation("Export your data to a CSV file (can be imported with Excel)"));
+
+		subSubMenuExportCSV.addActionListener((ActionEvent event) -> {
+
+			actionManager.exportCsvFile("musicvideolist.csv");
+		});
+		// with the sub sub sub menu "Export to HTML" >>
+		ImageIcon iconHTML = null;
+		try {
+			iconHTML = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/html_20x20.png")));
+		} catch (IOException e3) {
+			e3.printStackTrace();
+		}
+		JMenuItem subSubMenuExportHTML = new JMenuItem(LanguageController.getTranslation("Export to") + " HTML",
+				iconHTML);
+		subSubMenuExportHTML
+				.setToolTipText(LanguageController.getTranslation("Export your data to a HTML file (web browser)"));
+		subSubMenuExportHTML.addActionListener((ActionEvent event) -> {
+
+			actionManager.exportHtmlFile("table.html");
+		});
+
+		// with the sub sub sub menu "Export to HTML with Search" >>
+		ImageIcon iconHTMLSearch = null;
+		try {
+			iconHTMLSearch = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/htmlSearch_20x20.png")));
+		} catch (IOException e3) {
+			e3.printStackTrace();
+		}
+		JMenuItem subSubMenuExportHTMLSearch = new JMenuItem(LanguageController.getTranslation("Export to") + " HTML "
+				+ LanguageController.getTranslation("with Search"), iconHTMLSearch);
+		subSubMenuExportHTMLSearch
+				.setToolTipText(LanguageController.getTranslation("Export your data to a HTML file (web browser)")
+						+ " (" + LanguageController.getTranslation("with Search") + ")");
+		subSubMenuExportHTMLSearch.addActionListener((ActionEvent event) -> {
+
+			actionManager.exportHtmlFileWithSearch("tableWithSearch.html");
+		});
+
+		// with the sub menu "Language" - Change language
+		JMenu subMenuLanguage = new JMenu(LanguageController.getTranslation("Language"));
+		subMenuLanguage.setToolTipText(LanguageController.getTranslation("Change the language of the program"));
+		// and the sub sub menu "Add" >>
+		ImageIcon iconLanguageDe = null;
+		try {
+			iconLanguageDe = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/de_30x20.png")));
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		JMenuItem subSubMenuGerman = new JMenuItem(LanguageController.getTranslation("German"), iconLanguageDe);
+		subSubMenuGerman.setToolTipText(LanguageController.getTranslation("Change the language of the program") + " "
+				+ LanguageController.getTranslation("to") + " " + LanguageController.getTranslation("German"));
+		subSubMenuGerman.addActionListener((ActionEvent event) -> {
+			System.out.println("Change GUI language to German");
+			if (LanguageController.changeLanguageRestart(Locale.GERMAN)) {
+				actionManager.fileOverWriterConfig();
+			}
+		});
+		ImageIcon iconLanguageEng = null;
+		try {
+			iconLanguageEng = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/eng_30x20.png")));
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		JMenuItem subSubMenuEnglish = new JMenuItem(LanguageController.getTranslation("English"), iconLanguageEng);
+		subSubMenuEnglish.setToolTipText(LanguageController.getTranslation("Change the language of the program") + " "
+				+ LanguageController.getTranslation("to") + " " + LanguageController.getTranslation("English"));
+		subSubMenuEnglish.addActionListener((ActionEvent event) -> {
+			System.out.println("Change GUI language to English");
+			if (LanguageController.changeLanguageRestart(Locale.ENGLISH)) {
+				actionManager.fileOverWriterConfig();
+			}
+		});
+
 		// with the sub menu "More"
 		JMenu subMenuMore = new JMenu(LanguageController.getTranslation("More"));
 		subMenuMore.setToolTipText(
@@ -239,65 +337,6 @@ public class ConceptJFrameGUI {
 				System.out.println("\tPlaying was denied by the user.");
 			}
 		});
-		// and the sub sub menu "Export" >>
-		ImageIcon iconExport = null;
-		try {
-			iconExport = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/export_20x20.png")));
-		} catch (IOException e5) {
-			e5.printStackTrace();
-		}
-		JMenu subSubMenuExport = new JMenu(LanguageController.getTranslation("Export"));
-		subSubMenuExport.setIcon(iconExport);
-		subSubMenuExport.setToolTipText(
-				LanguageController.getTranslation("Export your list to the following formats") + ": CSV, HTML");
-		// with the sub sub sub menu "Export to CSV" >>
-		ImageIcon iconCSV = null;
-		try {
-			iconCSV = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/csv_20x20.png")));
-		} catch (IOException e4) {
-			e4.printStackTrace();
-		}
-		JMenuItem subSubSubMenuExportCSV = new JMenuItem(LanguageController.getTranslation("Export to") + " CSV",
-				iconCSV);
-		subSubSubMenuExportCSV.setToolTipText(
-				LanguageController.getTranslation("Export your data to a CSV file (can be imported with Excel)"));
-
-		subSubSubMenuExportCSV.addActionListener((ActionEvent event) -> {
-
-			actionManager.exportCsvFile("musicvideolist.csv");
-		});
-		// with the sub sub sub menu "Export to HTML" >>
-		ImageIcon iconHTML = null;
-		try {
-			iconHTML = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/html_20x20.png")));
-		} catch (IOException e3) {
-			e3.printStackTrace();
-		}
-		JMenuItem subSubSubMenuExportHTML = new JMenuItem(LanguageController.getTranslation("Export to") + " HTML",
-				iconHTML);
-		subSubSubMenuExportHTML
-				.setToolTipText(LanguageController.getTranslation("Export your data to a HTML file (web browser)"));
-		subSubSubMenuExportHTML.addActionListener((ActionEvent event) -> {
-
-			actionManager.exportHtmlFile("table.html");
-		});
-
-		// with the sub sub sub menu "Export to HTML with Search" >>
-		ImageIcon iconHTMLSearch = null;
-		try {
-			iconHTMLSearch = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/htmlSearch_20x20.png")));
-		} catch (IOException e3) {
-			e3.printStackTrace();
-		}
-		JMenuItem subSubSubMenuExportHTMLSearch = new JMenuItem(LanguageController.getTranslation("Export to")
-				+ " HTML " + LanguageController.getTranslation("with Search"), iconHTMLSearch);
-		subSubSubMenuExportHTMLSearch
-				.setToolTipText(LanguageController.getTranslation("Export your data to a HTML file (web browser)")
-						+ " (" + LanguageController.getTranslation("with Search") + ")");
-		subSubSubMenuExportHTMLSearch.addActionListener((ActionEvent event) -> {
-
-			actionManager.exportHtmlFileWithSearch("tableWithSearch.html");
-		});
 
 		// and last but not least the info sub sub menu "About" >>
 		ImageIcon iconAbout = null;
@@ -317,63 +356,26 @@ public class ConceptJFrameGUI {
 			newAboutWindow = new AboutWindow(version, releaseDate);
 		});
 
-		// Change language
-		JMenu subMenuLanguage = new JMenu(LanguageController.getTranslation("Language"));
-		subMenuLanguage.setToolTipText(LanguageController.getTranslation("Change the language of the program"));
-		// and the sub sub menu "Add" >>
-		ImageIcon iconLanguageDe = null;
-		try {
-			iconLanguageDe = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/de_30x20.png")));
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
-		JMenuItem subSubMenuGerman = new JMenuItem(LanguageController.getTranslation("German"), iconLanguageDe);
-		subSubMenuGerman.setToolTipText(LanguageController.getTranslation("Change the language of the program") + " "
-				+ LanguageController.getTranslation("to") + " " + LanguageController.getTranslation("German"));
-		subSubMenuGerman.addActionListener((ActionEvent event) -> {
-			System.out.println("Change GUI language to German");
-			if (LanguageController.changeLanguageRestart(Locale.GERMAN)) {
-				actionManager.fileOverWriterConfig();
-			}
-		});
-		ImageIcon iconLanguageEng = null;
-		try {
-			iconLanguageEng = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/eng_30x20.png")));
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
-		JMenuItem subSubMenuEnglish = new JMenuItem(LanguageController.getTranslation("English"), iconLanguageEng);
-		subSubMenuEnglish.setToolTipText(LanguageController.getTranslation("Change the language of the program") + " "
-				+ LanguageController.getTranslation("to") + " " + LanguageController.getTranslation("English"));
-		subSubMenuEnglish.addActionListener((ActionEvent event) -> {
-			System.out.println("Change GUI language to English");
-			if (LanguageController.changeLanguageRestart(Locale.ENGLISH)) {
-				actionManager.fileOverWriterConfig();
-			}
-		});
-
 		// add the menu buttons to the menu bar to the JFrame
 		subMenuPath.add(subSubMenuAddSourceFolder);
 		subMenuPath.addSeparator();
 		subMenuPath.add(subSubMenuRemoveSourceFolder);
 		menuBar.add(subMenuPath);
+		subMenuExport.add(subSubMenuExportCSV);
+		subMenuExport.addSeparator();
+		subMenuExport.add(subSubMenuExportHTML);
+		subMenuExport.addSeparator();
+		subMenuExport.add(subSubMenuExportHTMLSearch);
+		menuBar.add(subMenuExport);
+		subMenuLanguage.add(subSubMenuGerman);
+		subMenuLanguage.add(subSubMenuEnglish);
+		menuBar.add(subMenuLanguage);
 		subMenuMore.add(subSubMenuConfigurationSave);
 		subMenuMore.addSeparator();
 		subMenuMore.add(subSubMenuConfigurationLoad);
 		subMenuMore.addSeparator();
-		subSubMenuExport.add(subSubSubMenuExportCSV);
-		subSubMenuExport.addSeparator();
-		subSubMenuExport.add(subSubSubMenuExportHTML);
-		subSubMenuExport.addSeparator();
-		subSubMenuExport.add(subSubSubMenuExportHTMLSearch);
-		subMenuMore.add(subSubMenuExport);
-		subMenuMore.addSeparator();
 		subMenuMore.add(subSubMenuAbout);
 		menuBar.add(subMenuMore);
-
-		subMenuLanguage.add(subSubMenuGerman);
-		subMenuLanguage.add(subSubMenuEnglish);
-		menuBar.add(subMenuLanguage);
 
 		guiMainFrame.setJMenuBar(menuBar);
 

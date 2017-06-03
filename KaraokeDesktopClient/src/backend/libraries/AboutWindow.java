@@ -76,14 +76,27 @@ public class AboutWindow extends JFrame {
 
 		JLabel author = new JLabel(
 				LanguageController.getTranslation("Author") + ": Niklas | https://github.com/AnonymerNiklasistanonym ");
-		author.addMouseListener((MouseListener) new OpenUrlAction());
+		URI aha = null;
+		try {
+			aha = new URI("https://github.com/AnonymerNiklasistanonym");
+		} catch (URISyntaxException e1) {
+		}
+		author.addMouseListener((MouseListener) new OpenUrlAction(aha));
+		JLabel project = new JLabel("Code: https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager ");
+		URI aha2 = null;
+		try {
+			aha2 = new URI("https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager");
+		} catch (URISyntaxException e1) {
+		}
+		project.addMouseListener((MouseListener) new OpenUrlAction(aha2));
 
-		JPanel panel2 = new JPanel(new GridLayout(3, 1));
+		JPanel panel2 = new JPanel(new GridLayout(4, 1));
 		panel2.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 0));
 
 		panel2.add(new JLabel(LanguageController.getTranslation("This program is completely open source on Github")));
 		// "This program is completely open source on Github"
 		panel2.add(author);
+		panel2.add(project);
 		panel2.add(new JLabel("\u00a9 " + releaseDate + " >> v" + versionNumber));
 
 		panel.add(icon, BorderLayout.WEST);
@@ -132,17 +145,18 @@ public class AboutWindow extends JFrame {
 	 */
 	class OpenUrlAction implements MouseListener {
 
+		private URI aha;
+
+		public OpenUrlAction(URI a) {
+			aha = a;
+		}
+
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			URI uri = null;
-			try {
-				uri = new URI("https://github.com/AnonymerNiklasistanonym");
-			} catch (URISyntaxException e1) {
-			}
 
 			if (Desktop.isDesktopSupported()) {
 				try {
-					Desktop.getDesktop().browse(uri);
+					Desktop.getDesktop().browse(aha);
 				} catch (IOException e) {
 				}
 			}

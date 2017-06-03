@@ -968,13 +968,14 @@ public class ActionHandler {
 
 		Object[][] data = musicVideoListToTable();
 
-		StringBuilder sb = new StringBuilder("<table class=\"order-table table\">");
+		StringBuilder sb = new StringBuilder("placeholder");
 		int columnNumber = columnNames.length;
 		int rowNumber = data.length;
 
-		sb.append("placeholder=\""
-				+ LanguageController.getTranslation("Input your search query to find your music videos")
+		sb.append("=\"" + LanguageController.getTranslation("Input your search query to find your music videos")
 				+ "...\"/></div>");
+
+		sb.append("<table class=\"order-table table\">");
 
 		sb.append("<thead><tr>" + "<th class=\"number\">#</th>" + "<th class=\"artist\">"
 				+ LanguageController.getTranslation("Artist") + "</th>" + "<th class=\"title\">"
