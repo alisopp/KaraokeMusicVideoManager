@@ -6,12 +6,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
@@ -32,7 +35,7 @@ import backend.objects.MusicVideo;
  * do with a console TUI or a graphical GUI. It's the core of the project.
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.3 (beta)
+ * @version 0.5 (beta)
  *
  */
 public class ActionHandler {
@@ -114,6 +117,15 @@ public class ActionHandler {
 		return columnNames;
 	}
 
+	/**
+	 * Simple method that just returns the column names in a String array
+	 * 
+	 * @return columnNames (String[])
+	 */
+	public void setColumnNames(String[] newColumnNames) {
+		columnNames = newColumnNames;
+	}
+
 	/*
 	 * (Get) Directory methods:
 	 */
@@ -166,10 +178,69 @@ public class ActionHandler {
 	 *            (Path | path of the directory)
 	 */
 	public void scanDirectory(Path path) {
+		Collection<Path> all = new ArrayList<Path>();
+		try (DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
+			for (Path child : ds) {
+				all.add(child);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		for (Path a : all) {
+			System.out.println("Path: " + a);
+			// file is a "normal" readable file
+			if (Files.isRegularFile(a)) {
+
+				String extension = null, justFileName = null, pathOfFile = a.getFileName().toString();
+				String[] artistAndTitle = null;
+
+				int lastIndexOfPoint = pathOfFile.lastIndexOf('.');
+
+				if (lastIndexOfPoint > 0) {
+					extension = pathOfFile.substring(lastIndexOfPoint + 1);
+					// get everything after the point
+					justFileName = pathOfFile.substring(0, lastIndexOfPoint);
+					// get everything before the point
+					artistAndTitle = justFileName.split("\\s-\\s");
+					// split String at " - "
+				}
+
+				boolean fileIsAMusicVideo = false;
+
+				// now we compare it to our allowed extension array
+				for (String ab : acceptedExtensions) {
+					if (ab.equalsIgnoreCase(extension)) {
+						// if we get a hit we set the variable true
+						fileIsAMusicVideo = true;
+					}
+				}
+
+				// if the extension was accepted let's move on
+				if (fileIsAMusicVideo) {
+
+					// finally add the newMusicVideoObject to our
+					// musicVideosList
+					addMusicVideoToMusicvideoList(new MusicVideo(a, artistAndTitle[1], artistAndTitle[0]));
+				}
+			}
+		}
+	}
+
+	/**
+	 * Scan a directory after specific video files and map all music videos old
+	 * - too deep
+	 * 
+	 * @param path
+	 *            (Path | path of the directory)
+	 */
+	public void scanDirectory2(Path path) {
 
 		// "walk" through all files in the actual directory
 		try (Stream<Path> paths = Files.walk(path).filter(Files::isRegularFile)) {
+
 			paths.forEach(filePath -> {
+
+				// System.out.println("filePath: " + filePath);
 
 				// file is a "normal" readable file
 				if (Files.isRegularFile(filePath)) {
@@ -633,7 +704,15 @@ public class ActionHandler {
 	 * Load the contents of a configuration file in the actual directory
 	 */
 	public void configFileReader() {
-		loadConfigData(getConfigurationFile());
+		loadConfigData(getConfigurationFile(), false);
+	}
+
+	/**
+	 * Load the contents of a configuration file at the start in the actual
+	 * directory
+	 */
+	public void configFileReaderOnStart() {
+		loadConfigData(getConfigurationFile(), true);
 	}
 
 	/**
@@ -642,7 +721,7 @@ public class ActionHandler {
 	 * @param file
 	 *            (File)
 	 */
-	public void loadConfigData(File file) {
+	public void loadConfigData(File file, boolean firstStart) {
 
 		String[] contentOfFile = FileReaderManager.fileReader(file);
 
@@ -658,9 +737,27 @@ public class ActionHandler {
 			// try to read the file line for line
 			for (String line : contentOfFile) {
 
-				Path path = Paths.get(line);
-				addToPathList(path);
-				System.out.println("Path list was updated (+ " + path + ")");
+				if (line.equals("en") || line.equals("de_DE") || line.equals("de")) {
+
+					if (firstStart) {
+						if (line.equals("de_DE") || line.equals("de")) {
+							LanguageController.setCurrentLanguageRb(Locale.GERMAN);
+						} else {
+							LanguageController.setCurrentLanguageRb(Locale.ENGLISH);
+						}
+					} else {
+						if (line.equals("de_DE") || line.equals("de")) {
+							LanguageController.setCurrentLanguage(Locale.GERMAN);
+						} else {
+							LanguageController.setCurrentLanguage(Locale.ENGLISH);
+						}
+					}
+
+				} else {
+					Path path = Paths.get(line);
+					addToPathList(path);
+					System.out.println("Path list was updated (+ " + path + ")");
+				}
 			}
 		}
 	}
@@ -687,6 +784,18 @@ public class ActionHandler {
 
 		} else {
 
+			// remove if necessary the language on position 1 to only get the
+			// paths
+			if (contentOfFile[0].equals("de") || contentOfFile[0].equals("en") || contentOfFile[0].equals("de_DE")) {
+				String[] contentOfFile2 = new String[contentOfFile.length - 1];
+
+				for (int i = 0; i < contentOfFile2.length; i++) {
+					contentOfFile2[i] = contentOfFile[i + 1];
+				}
+
+				contentOfFile = contentOfFile2;
+			}
+
 			ArrayList<Path> forComparison = new ArrayList<Path>();
 
 			// try to read the file line for line
@@ -706,13 +815,17 @@ public class ActionHandler {
 	public String[] generateConfigContent() {
 
 		if (pathList.isEmpty()) {
-			System.err.println("There is nothing to save!");
+			System.err.println("There is no path to save!");
+
+			return null;
 		}
 
-		String[] content = new String[getPathList().size()];
+		String[] content = new String[getPathList().size() + 1];
 
-		for (int i = 0; i < getPathList().size(); i++) {
-			content[i] = getPathList().get(i).toString();
+		content[0] = LanguageController.getCurrentLanguage().toString();
+
+		for (int i = 1; i < getPathList().size() + 1; i++) {
+			content[i] = getPathList().get(i - 1).toString();
 		}
 
 		return content;

@@ -12,7 +12,7 @@ import backend.language.LanguageController;
  * Static methods to write files
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.4 (beta)
+ * @version 0.5 (beta)
  *
  */
 public class FileWriterManager {
@@ -87,7 +87,7 @@ public class FileWriterManager {
 			// ask the user if he really wants to overwrite the old file
 			if (noDialogs || JOptionPane.showConfirmDialog(null,
 					LanguageController.getTranslation("This will overwrite your old") + " \"" + file.getName() + "\" "
-							+ LanguageController.getTranslation("file! Do you really want to continue?"),
+							+ LanguageController.getTranslation("file\u0021 Do you really want to continue?"),
 					LanguageController.getTranslation("Warning"), JOptionPane.YES_NO_OPTION,
 					JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
 
@@ -124,7 +124,12 @@ public class FileWriterManager {
 	 */
 	public static void overWriteFileDialog(File file, String[] content) {
 
-		overWriteFileDialog(file, content, false);
+		if (content != null && !content.equals("")) {
+			overWriteFileDialog(file, content, false);
+		} else {
+			JOptionPane.showMessageDialog(null, "Nothing to save, no content found!");
+			System.err.println("Nothing to save, no content found!");
+		}
 	}
 
 	/**
@@ -138,7 +143,12 @@ public class FileWriterManager {
 	 */
 	public static void overWriteFile(File file, String[] content) {
 
-		overWriteFileDialog(file, content, true);
+		if (content != null && !content.equals("")) {
+			overWriteFileDialog(file, content, true);
+		} else {
+			JOptionPane.showMessageDialog(null, "Nothing to save, no content found!");
+			System.err.println("Nothing to save, no content found!");
+		}
 	}
 
 	/**

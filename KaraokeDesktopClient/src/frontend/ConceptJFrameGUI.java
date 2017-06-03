@@ -55,7 +55,7 @@ import backend.libraries.AboutWindow;
  * interface.
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.4 (beta)
+ * @version 0.5 (beta)
  *
  */
 public class ConceptJFrameGUI {
@@ -85,10 +85,11 @@ public class ConceptJFrameGUI {
 	 * automatically will happen:
 	 */
 	public ConceptJFrameGUI() {
-		LanguageController.printWords();
 
-		version = "0.4 (beta)";
-		releaseDate = LanguageController.getTranslation("May") + " 2017";
+		LanguageController.setDefaultLanguage();
+
+		version = "0.5 (beta)";
+		releaseDate = LanguageController.getTranslation("June") + " 2017";
 
 		String[] columnNames = new String[] { "#", LanguageController.getTranslation("Artist"),
 				LanguageController.getTranslation("Title") };
@@ -116,7 +117,7 @@ public class ConceptJFrameGUI {
 					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 				// if he accepts to load the data read the file and set the
 				// content as your new path list
-				actionManager.configFileReader();
+				actionManager.configFileReaderOnStart();
 				// now scan again all paths for music videos
 				actionManager.updateMusicVideoList();
 			}
@@ -139,6 +140,11 @@ public class ConceptJFrameGUI {
 		// size of the window at the start
 		guiMainFrame.setLocationRelativeTo(null);
 		// let it pop up in the middle of the screen
+
+		// update column heads and version date if language change
+		actionManager.setColumnNames(new String[] { "#", LanguageController.getTranslation("Artist"),
+				LanguageController.getTranslation("Title") });
+		releaseDate = LanguageController.getTranslation("June") + " 2017";
 
 		try {
 			guiMainFrame.setIconImage(ImageIO.read(ConceptJFrameGUI.class.getResource("/logo.png")));
@@ -225,7 +231,7 @@ public class ConceptJFrameGUI {
 					LanguageController.getTranslation(
 							"This will overwrite your old configuration! Do you really want to continue?"),
 					"Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-				actionManager.loadConfigData(actionManager.getConfigurationFileOnComputer());
+				actionManager.loadConfigData(actionManager.getConfigurationFileOnComputer(), false);
 				// now scan again all paths for music videos
 				actionManager.updateMusicVideoList();
 				updateTable();
@@ -308,8 +314,9 @@ public class ConceptJFrameGUI {
 				+ LanguageController.getTranslation("to") + " " + LanguageController.getTranslation("German"));
 		subSubMenuGerman.addActionListener((ActionEvent event) -> {
 			System.out.println("Change GUI language to German");
-			LanguageController.setCurrentLanguage(Locale.GERMAN);
-			repaintWindow();
+			if (LanguageController.changeLanguageRestart(Locale.GERMAN)) {
+				actionManager.fileOverWriterConfig();
+			}
 		});
 		ImageIcon iconLanguageEng = null;
 		try {
@@ -322,8 +329,9 @@ public class ConceptJFrameGUI {
 				+ LanguageController.getTranslation("to") + " " + LanguageController.getTranslation("English"));
 		subSubMenuEnglish.addActionListener((ActionEvent event) -> {
 			System.out.println("Change GUI language to English");
-			LanguageController.setCurrentLanguage(Locale.ENGLISH);
-			repaintWindow();
+			if (LanguageController.changeLanguageRestart(Locale.ENGLISH)) {
+				actionManager.fileOverWriterConfig();
+			}
 		});
 
 		// add the menu buttons to the menu bar to the JFrame
@@ -762,19 +770,6 @@ public class ConceptJFrameGUI {
 		} else {
 			rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchString));
 		}
-	}
-
-	public void repaintWindow() {
-		guiMainFrame.invalidate();
-		guiMainFrame.validate();
-		guiMainFrame.repaint();
-
-		guiMainFrame.dispose();
-		createWindow();
-		guiMainFrame.getContentPane().repaint();
-
-		table.repaint();
-		updateTable();
 	}
 
 	/**

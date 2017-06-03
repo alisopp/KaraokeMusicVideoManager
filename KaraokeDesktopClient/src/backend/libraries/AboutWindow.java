@@ -26,7 +26,7 @@ import frontend.ConceptJFrameGUI;
  * Editable window with a JLabel and a JProgressbar
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.4 (beta)
+ * @version 0.5 (beta)
  */
 public class AboutWindow extends JFrame {
 

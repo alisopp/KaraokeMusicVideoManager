@@ -4,10 +4,26 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import javax.swing.JOptionPane;
+
+/**
+ * This class contains static methods for translate any kind of GUI text into
+ * the user wanted language
+ * 
+ * @author Niklas | https://github.com/AnonymerNiklasistanonym
+ * @version 0.5 (beta)
+ *
+ */
 public class LanguageController {
 
 	private static Locale currentLanguage = Locale.getDefault();
-	private static ResourceBundle rb = ResourceBundle.getBundle("SystemMessages", currentLanguage);
+
+	private static ResourceBundle rbEnglish = ResourceBundle.getBundle("SystemMessages", Locale.ENGLISH);
+	private static ResourceBundle rbGerman = ResourceBundle.getBundle("SystemMessages", Locale.GERMAN);
+
+	private static ResourceBundle currentResourceBundle = rbEnglish;
+
+	private static boolean german = false;
 
 	/**
 	 * Get the current language back
@@ -19,32 +35,92 @@ public class LanguageController {
 	}
 
 	/**
+	 * Set the ResourceBundle to the default language
+	 */
+	public static void setDefaultLanguage() {
+		setCurrentLanguageRb(Locale.getDefault());
+	}
+
+	/**
 	 * Set the current Language of the LanguageController
 	 * 
 	 * @param currentLanguage
 	 *            (new language | Locale)
 	 */
-	public static void setCurrentLanguage(Locale currentLanguage) {
-		LanguageController.currentLanguage = currentLanguage;
+	public static void setCurrentLanguage(Locale currentLang) {
+		currentLanguage = currentLang;
 
-		System.out.println();
-		if (currentLanguage.equals(Locale.GERMAN)) {
-			System.out.println("Language is GERMAN!");
-		} else if (currentLanguage.equals(Locale.ENGLISH)) {
-			System.out.println("Language is US Enlgish!");
+		if (currentLanguage.equals(Locale.GERMAN) || currentLanguage.toString().equals("de_DE")) {
+			System.out.println("Language is at the next start GERMAN!");
+
+		} else {
+			System.out.println("Language is at the next start English!");
+
 		}
+	}
 
-		System.out.println(currentLanguage);
+	public static void setCurrentLanguageRb(Locale currentLang) {
+		currentLanguage = currentLang;
 
-		rb = ResourceBundle.getBundle("SystemMessages", currentLanguage);
+		if (currentLanguage.equals(Locale.GERMAN) || currentLanguage.toString().equals("de_DE")) {
+			System.out.println("Language is GERMAN!");
+			currentResourceBundle = rbGerman;
+			german = true;
+		} else {
+			System.out.println("Language is US English!");
+			currentResourceBundle = rbEnglish;
+			german = false;
+		}
+	}
 
-		printWords();
+	public static String getLanguageToSpeech(Locale lang) {
+		String language;
+		if (lang.equals(Locale.GERMAN) || lang.toString().equals("de_DE")) {
+			language = getTranslation("German");
+		} else {
+			language = getTranslation("English");
+		}
+		return language;
+	}
+
+	public static boolean changeLanguageRestart(Locale currentLang) {
+
+		if (currentLang != currentLanguage) {
+			int dialogResult = JOptionPane.showConfirmDialog(null,
+					getTranslation("Do you really want to change the language of the program from") + " "
+							+ getLanguageToSpeech(currentLanguage) + " " + getTranslation("to") + " "
+							+ getLanguageToSpeech(currentLang) + "?",
+					getTranslation("Warning"), JOptionPane.YES_NO_OPTION);
+
+			if (dialogResult == JOptionPane.YES_OPTION) {
+
+				setCurrentLanguage(currentLang);
+				String option1 = getTranslation("now automatically");
+				String option2 = getTranslation("later manually");
+				Object[] options1 = { option1, option2 };
+				dialogResult = JOptionPane.showOptionDialog(null,
+						getTranslation(
+								"If you want to continue you either have to save your current configuration automatically now or by yourself later in the sub menu More")
+								+ ".",
+						getTranslation("Important information"), JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, options1, null);
+
+				if (dialogResult == JOptionPane.YES_OPTION) {
+					return true;
+				}
+
+				JOptionPane.showMessageDialog(null,
+						getTranslation("Please restart the program after this step to view it in") + " "
+								+ getLanguageToSpeech(currentLang) + "!");
+			}
+		}
+		return false;
 	}
 
 	/**
 	 * Print out all the actual words from the current ResourceBundle
 	 */
-	public static void printWords() {
+	public static void printWords(ResourceBundle rb) {
 		Enumeration<String> keys = rb.getKeys();
 		while (keys.hasMoreElements()) {
 			String key = keys.nextElement();
@@ -63,25 +139,26 @@ public class LanguageController {
 	 */
 	public static String getTranslation(String a) {
 
-		boolean good = false;
+		if (german) {
+			boolean good = false;
 
-		Enumeration<String> keys = rb.getKeys();
-		while (keys.hasMoreElements()) {
-			String key = keys.nextElement();
+			Enumeration<String> keys = currentResourceBundle.getKeys();
+			while (keys.hasMoreElements()) {
+				String key = keys.nextElement();
 
-			if (key.equals(a)) {
-				good = true;
+				if (key.equals(a)) {
+					good = true;
+				}
 			}
-		}
 
-		if (currentLanguage == Locale.ENGLISH) {
-			good = false;
-		}
-
-		if (good) {
-			return rb.getString(a);
+			if (good) {
+				return currentResourceBundle.getString(a);
+			} else {
+				System.err.println("Error at: " + "\"" + a + "\"");
+				return a;
+			}
 		} else {
-			System.err.println("Error at: " + "\"" + a + "\"");
+			System.out.println("hi");
 			return a;
 		}
 	}
