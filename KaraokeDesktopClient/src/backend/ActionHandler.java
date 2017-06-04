@@ -218,9 +218,16 @@ public class ActionHandler {
 				// if the extension was accepted let's move on
 				if (fileIsAMusicVideo) {
 
+					String titleFinal = artistAndTitle[1];
+					if (artistAndTitle.length > 2) {
+						for (int i = 2; i < artistAndTitle.length; i++) {
+							titleFinal = titleFinal + " - " + artistAndTitle[i];
+						}
+					}
+
 					// finally add the newMusicVideoObject to our
 					// musicVideosList
-					addMusicVideoToMusicvideoList(new MusicVideo(a, artistAndTitle[1], artistAndTitle[0]));
+					addMusicVideoToMusicvideoList(new MusicVideo(a, titleFinal, artistAndTitle[0]));
 				}
 			}
 		}
