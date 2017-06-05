@@ -9,13 +9,12 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 import backend.ActionHandler;
-import backend.language.LanguageController;
 
 /**
  * Editable window with a JLabel and a JProgressbar
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.6 (beta)
+ * @version 0.7 (beta)
  */
 public class JProgressBarWindow extends JFrame {
 
@@ -71,14 +70,16 @@ public class JProgressBarWindow extends JFrame {
 	public void setProgressBar(int a) {
 		if (a >= 0 && a <= 100) {
 			progressBar.setValue(a);
-			System.out.println("Progress bar set to " + progressBar.getValue());
+			// System.out.println("Progress bar set to " +
+			// progressBar.getValue());
 		}
 	}
 
 	public void addProgressToProgressBar(int a) {
 		if (a >= 0 && progressBar.getValue() + a <= 100) {
 			progressBar.setValue(progressBar.getValue() + a);
-			System.out.println("Progress bar set to " + progressBar.getValue());
+			// System.out.println("Progress bar set to " +
+			// progressBar.getValue());
 		}
 	}
 
@@ -90,22 +91,25 @@ public class JProgressBarWindow extends JFrame {
 		dispose();
 	}
 
-	public static void main(String[] args) {
-		JProgressBarWindow hallo = new JProgressBarWindow(LanguageController.getTranslation("Processing") + "...");
-
-		Thread a = new Thread();
-		a.start();
-		// hallo.setProgressBar(4);
-		try {
-			for (int i = 0; i < 100; i++) {
-				Thread.sleep(100);
-				hallo.setProgressBar(i);
-				hallo.setLabelText(i + " " + LanguageController.getTranslation("percent"));
-			}
-		} catch (InterruptedException e) {
-
-		}
-
-		hallo.closeJFrame();
-	}
+	// public static void main(String[] args) {
+	// JProgressBarWindow hallo = new
+	// JProgressBarWindow(LanguageController.getTranslation("Processing") +
+	// "...");
+	//
+	// Thread a = new Thread();
+	// a.start();
+	// // hallo.setProgressBar(4);
+	// try {
+	// for (int i = 0; i < 100; i++) {
+	// Thread.sleep(100);
+	// hallo.setProgressBar(i);
+	// hallo.setLabelText(i + " " +
+	// LanguageController.getTranslation("percent"));
+	// }
+	// } catch (InterruptedException e) {
+	//
+	// }
+	//
+	// hallo.closeJFrame();
+	// }
 }

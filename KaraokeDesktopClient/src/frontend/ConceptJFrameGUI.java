@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -14,12 +13,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.util.Arrays;
 import java.util.Locale;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -36,7 +33,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
-import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -56,7 +52,7 @@ import backend.libraries.FileTreeWindow;
  * interface.
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.6 (beta)
+ * @version 0.7 (beta)
  *
  */
 public class ConceptJFrameGUI {
@@ -90,7 +86,7 @@ public class ConceptJFrameGUI {
 
 		LanguageController.setDefaultLanguage();
 
-		version = "0.6 (beta)";
+		version = "0.7 (beta)";
 		releaseDate = LanguageController.getTranslation("June") + " 2017";
 
 		String[] columnNames = new String[] { "#", LanguageController.getTranslation("Artist"),
@@ -108,7 +104,7 @@ public class ConceptJFrameGUI {
 	 * if it finds one. So a fast start for already set up party's/etc. is
 	 * possible.
 	 */
-	public void startupConfig() {
+	private void startupConfig() {
 
 		// if a configuration file exists
 		if (actionManager.fileExists(actionManager.getConfigurationFile())) {
@@ -132,7 +128,7 @@ public class ConceptJFrameGUI {
 	 * 
 	 * @throws IOException
 	 */
-	public void createWindow() {
+	private void createWindow() {
 
 		guiMainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// make sure the program exits when the frame closes
@@ -161,6 +157,7 @@ public class ConceptJFrameGUI {
 		JMenu subMenuPath = new JMenu(LanguageController.getTranslation("Source folders"));
 		subMenuPath.setToolTipText(
 				LanguageController.getTranslation("Add/Change/Remove the actual folders of your music videos"));
+
 		// and the sub sub menu "Add" >>
 		ImageIcon iconAdd = null;
 		try {
@@ -188,20 +185,6 @@ public class ConceptJFrameGUI {
 		subSubMenuRemoveSourceFolder
 				.setToolTipText(LanguageController.getTranslation("Remove a folder with music videos from your list"));
 		subSubMenuRemoveSourceFolder.addActionListener((ActionEvent event) -> {
-			System.out.println("Remove a folder from your path list");
-			if (actionManager.getPathList().isEmpty() == true) {
-				JOptionPane.showMessageDialog(null,
-						LanguageController.getTranslation("There are no paths to remove") + "!");
-			} else {
-				pathEditorJFrame();
-			}
-		});
-
-		// and the sub sub menu "Beta Editor" >>
-		JMenuItem subSubMenuBetaSourceFolder = new JMenuItem(LanguageController.getTranslation("Beta Editor"));
-		subSubMenuBetaSourceFolder.setToolTipText(LanguageController.getTranslation("Remove and add in one interface"));
-		subSubMenuBetaSourceFolder.addActionListener((ActionEvent event) -> {
-
 			if (fileTreeWindow != null) {
 				fileTreeWindow.closeIt();
 				fileTreeWindow.createAndShowGUI();
@@ -210,7 +193,6 @@ public class ConceptJFrameGUI {
 				fileTreeWindow = new FileTreeWindow(actionManager, this);
 				fileTreeWindow.createAndShowGUI();
 			}
-
 		});
 
 		// with the sub menu "Export"
@@ -378,8 +360,6 @@ public class ConceptJFrameGUI {
 		subMenuPath.add(subSubMenuAddSourceFolder);
 		subMenuPath.addSeparator();
 		subMenuPath.add(subSubMenuRemoveSourceFolder);
-		subMenuPath.addSeparator();
-		subMenuPath.add(subSubMenuBetaSourceFolder);
 		menuBar.add(subMenuPath);
 		subMenuExport.add(subSubMenuExportCSV);
 		subMenuExport.addSeparator();
@@ -660,136 +640,6 @@ public class ConceptJFrameGUI {
 							JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {
 						actionManager.fileOverWriterConfig();
 					}
-				}
-			}
-		});
-	}
-
-	/**
-	 * External JFrame to manage/delete added source folder paths of music
-	 * videos. Paths that can be deleted with a click immediately update the
-	 * table (/music video list and path list) on their own.
-	 */
-	public void pathEditorJFrame() {
-
-		JScrollPane vertical;
-
-		JFrame pathEditorWindow = new JFrame(LanguageController.getTranslation("Edit the source folder paths")
-				+ ":    >> " + LanguageController.getTranslation("Close to save changes"));
-		// set title
-		pathEditorWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		// only close on exit - don't end the whole program
-
-		// pathEditorWindow.setPreferredSize(new Dimension(600, 400));
-
-		boolean[] arrayPathIndex = new boolean[actionManager.getPathList().size()];
-		Arrays.fill(arrayPathIndex, false);
-
-		// create a grid layout for all paths as a visual button list
-		// pathEditorWindow.setLayout(new
-		// GridLayout(actionManager.getPathList().size(), 1));
-
-		JPanel p = new JPanel();
-		// p.setPreferredSize(new Dimension(600, 400));
-		p.setLayout(new GridLayout(actionManager.getPathList().size(), 1));
-
-		// for all actual saved paths create one button
-		for (int i = 0; i < actionManager.getPathList().size(); i++) {
-
-			JButton removePathButton = new JButton();
-			removePathButton.setVerticalTextPosition(AbstractButton.CENTER);
-			// removePathButton.setHorizontalTextPosition(AbstractButton.LEADING);
-			removePathButton.setActionCommand("remove path from path list");
-			removePathButton.setPreferredSize(new Dimension(500, 40));
-
-			ImageIcon iconRemove;
-			JLabel label = new JLabel("<< " + LanguageController.getTranslation("Click to remove") + " "
-					+ actionManager.getPathList().get(i) + " >>", SwingConstants.CENTER);
-			try {
-				iconRemove = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/remove_20x20.png")));
-				label.setIcon(iconRemove);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			removePathButton.add(label);
-
-			String pathTextForLater = actionManager.getPathList().get(i).toString();
-			int indexOfPath = i;
-
-			removePathButton.addActionListener((ActionEvent event) -> {
-				if (arrayPathIndex[indexOfPath] == true) {
-					label.setText("<< " + LanguageController.getTranslation("Click to remove") + " " + pathTextForLater
-							+ " >>");
-					arrayPathIndex[indexOfPath] = false;
-
-					ImageIcon iconRemove2;
-					try {
-						iconRemove2 = new ImageIcon(
-								ImageIO.read(ConceptJFrameGUI.class.getResource("/remove_20x20.png")));
-						label.setIcon(iconRemove2);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				} else {
-					label.setText(pathTextForLater + " "
-							+ LanguageController.getTranslation("was removed - Click to reverse"));
-					arrayPathIndex[indexOfPath] = true;
-
-					ImageIcon iconReAdd;
-					try {
-						iconReAdd = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/undo_20x20.png")));
-						label.setIcon(iconReAdd);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-			p.add(removePathButton);
-
-			// question the user if he wants this changes to happen when he
-			// closes the window and only then delete the paths and update the
-			// table
-		}
-
-		// add panel to a scroll-able component (vertical scroll bar for many
-		// source folder)
-		vertical = new JScrollPane(p);
-		vertical.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		vertical.setPreferredSize(new Dimension(700, 400));
-		pathEditorWindow.add(vertical);
-
-		// now pack all components together for their perfect size
-		pathEditorWindow.pack();
-		// make it visible for the user
-		pathEditorWindow.setVisible(true);
-		// and let it pop up in the middle of the screen
-		pathEditorWindow.setLocationRelativeTo(null);
-
-		// when the user wants to close the window (do something)
-		pathEditorWindow.addWindowListener(new java.awt.event.WindowAdapter() {
-			@Override
-			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				boolean changeDetected = false;
-
-				for (boolean a : arrayPathIndex) {
-					if (a == true) {
-						changeDetected = true;
-					}
-				}
-
-				if (changeDetected && JOptionPane.showConfirmDialog(null,
-						LanguageController.getTranslation("Do you really want to save changes?"),
-						LanguageController.getTranslation("Important question"), JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-					int regulator = 0;
-					for (int a = 0; a < arrayPathIndex.length; a++) {
-						if (arrayPathIndex[a] == true) {
-							actionManager.deletePathFromPathList(a + regulator);
-							regulator--;
-						}
-					}
-					updateTable();
 				}
 			}
 		});

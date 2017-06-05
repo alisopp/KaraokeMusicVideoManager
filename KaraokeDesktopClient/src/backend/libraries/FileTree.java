@@ -1,12 +1,13 @@
 package backend.libraries;
 
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Stack;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -20,19 +21,22 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+/**
+ * JPanel and methods for a JTree
+ * 
+ * @author Niklas | https://github.com/AnonymerNiklasistanonym
+ * @version 0.7 (beta)
+ */
 public class FileTree extends JPanel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
-	protected DefaultMutableTreeNode rootNode;
-	protected DefaultTreeModel treeModel;
-	protected JTree tree;
-	private Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+	private DefaultMutableTreeNode rootNode;
+	private DefaultTreeModel treeModel;
+	private JTree tree;
 
 	public FileTree() {
 		// layout for a full height/width JTree
@@ -43,8 +47,8 @@ public class FileTree extends JPanel {
 		treeModel.addTreeModelListener(new MyTreeModelListener());
 		tree = new JTree(treeModel);
 		tree.setEditable(false);
-		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
-		// tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		// tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		// root should not be visible
 		tree.setRootVisible(false);
 		// expand the root node
@@ -77,25 +81,56 @@ public class FileTree extends JPanel {
 
 				for (TreePath a : e.getPaths()) {
 					System.out.println(a.toString());
-
 				}
+				if (getSelectedNodePath() != null)
+					FileTreeWindow.setLabel(" >> " + getSelectedNodePath().toString());
 			}
 		});
 	}
 
-	public Path getSelectedNodePath() {
-		String jTreeVarSelectedPath = "";
-		Object[] paths = tree.getSelectionPath().getPath();
-		for (int i = 1; i < paths.length; i++) {
-			jTreeVarSelectedPath += paths[i];
-			System.out.println(jTreeVarSelectedPath);
-			if (i + 1 < paths.length) {
-				jTreeVarSelectedPath += File.separator;
+	public Path[] getCurrentSelectedPaths() {
+
+		ArrayList<Path> stackWithAllPaths = new ArrayList<Path>();
+		Stack<DefaultMutableTreeNode> stackWithAllNodes = new Stack<DefaultMutableTreeNode>();
+		stackWithAllNodes.add((DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent());
+
+		while (!stackWithAllNodes.isEmpty()) {
+			DefaultMutableTreeNode a = stackWithAllNodes.pop();
+
+			String filePath = "";
+			for (int i = 1; i < a.getPath().length; i++) {
+				filePath += a.getPath()[i];
+				System.out.println(filePath);
+				if (i + 1 < a.getPath().length) {
+					filePath += File.separator;
+				}
+			}
+
+			stackWithAllPaths.add(Paths.get(filePath));
+
+			for (int i = 0; i < a.getChildCount(); i++) {
+				stackWithAllNodes.add((DefaultMutableTreeNode) a.getChildAt(i));
 			}
 		}
-		System.out.println(jTreeVarSelectedPath);
 
-		return Paths.get(jTreeVarSelectedPath);
+		return stackWithAllPaths.toArray(new Path[stackWithAllPaths.size()]);
+	}
+
+	public Path getSelectedNodePath() {
+		String jTreeVarSelectedPath = "";
+		try {
+			Object[] paths = tree.getSelectionPath().getPath();
+			for (int i = 1; i < paths.length; i++) {
+				jTreeVarSelectedPath += paths[i];
+				System.out.println(jTreeVarSelectedPath);
+				if (i + 1 < paths.length) {
+					jTreeVarSelectedPath += File.separator;
+				}
+			}
+			return Paths.get(jTreeVarSelectedPath);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	/**
@@ -106,27 +141,18 @@ public class FileTree extends JPanel {
 		treeModel.reload();
 	}
 
-	/** Remove the currently selected node. */
-	public void removeCurrentNode() {
-
-		for (TreePath currentSelection : tree.getSelectionPaths()) {
-			if (currentSelection != null) {
-				DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) (currentSelection.getLastPathComponent());
-				MutableTreeNode parent = (MutableTreeNode) (currentNode.getParent());
-				if (parent != null) {
-					treeModel.removeNodeFromParent(currentNode);
-					return;
-				} else {
-					currentNode.setAllowsChildren(false);
-				}
-			}
-		}
-		toolkit.beep();
-	}
-
 	/** Add child to the currently selected node. */
+	/**
+	 * Add a node to the JTree
+	 * 
+	 * @param child
+	 *            (Object
+	 * @return
+	 */
 	public DefaultMutableTreeNode addObject(Object child) {
+
 		DefaultMutableTreeNode parentNode = null;
+
 		TreePath parentPath = tree.getSelectionPath();
 
 		if (parentPath == null) {
@@ -143,94 +169,92 @@ public class FileTree extends JPanel {
 	}
 
 	public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent, Object child, boolean shouldBeVisible) {
+
 		DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(child);
 
-		if (parent == null) {
+		// check if the parent is null - if yes the root node is the parent
+		if (parent == null)
 			parent = rootNode;
-		}
 
-		// It is key to invoke this on the TreeModel, and NOT
-		// DefaultMutableTreeNode
+		// add note to the JTree
 		treeModel.insertNodeInto(childNode, parent, parent.getChildCount());
 
-		// Make sure the user can see the lovely new node.
-		if (shouldBeVisible) {
+		// if wanted make the node visible
+		if (shouldBeVisible)
 			tree.scrollPathToVisible(new TreePath(childNode.getPath()));
-		}
+
 		return childNode;
 	}
 
 	public DefaultMutableTreeNode searchNode(String nodeStr, String rootF) {
-		System.out.println("Search for: " + nodeStr + " with " + rootF);
+		return searchNode(nodeStr, rootF, true);
+	}
+
+	public DefaultMutableTreeNode searchNode(String nodeStr) {
+		return searchNode(nodeStr, null, false);
+	}
+
+	public DefaultMutableTreeNode searchNode(String nodeStr, String rootF, boolean advanced) {
+
+		if (advanced) {
+			// System.out.println("Search for: " + nodeStr + " with the
+			// \"root\": " + rootF);
+		} else {
+			// System.out.println("Search for: " + nodeStr);
+		}
 		DefaultMutableTreeNode node = null;
+
+		@SuppressWarnings("unchecked")
 		Enumeration<DefaultMutableTreeNode> e = rootNode.breadthFirstEnumeration();
 
 		while (e.hasMoreElements()) {
 			node = e.nextElement();
 			if (nodeStr.equals(node.getUserObject().toString())) {
 
-				System.out.println("Found a node with the same name: " + node.getUserObject().toString());
+				if (advanced) {
+					// System.out.println("Found a node with the same name: " +
+					// node.getUserObject().toString());
 
-				DefaultMutableTreeNode walkinNode = (DefaultMutableTreeNode) node;
-				while (walkinNode.getParent() != null && walkinNode.getParent() != rootNode) {
+					DefaultMutableTreeNode walkinNode = (DefaultMutableTreeNode) node;
+					while (walkinNode.getParent() != null && walkinNode.getParent() != rootNode) {
 
-					walkinNode = (DefaultMutableTreeNode) walkinNode.getParent();
+						walkinNode = (DefaultMutableTreeNode) walkinNode.getParent();
 
-					System.out.print(walkinNode.getUserObject().toString() + ",");
-				}
+						// System.out.print(walkinNode.getUserObject().toString()
+						// + ",");
+					}
 
-				if (!rootF.equals(walkinNode.getUserObject().toString())) {
-					System.out.println(walkinNode.getUserObject().toString() + " != " + rootF);
-					System.out.println("Root nooot found");
+					if (!rootF.equals(walkinNode.getUserObject().toString())) {
+						// System.out.println(walkinNode.getUserObject().toString()
+						// + " != " + rootF);
+						// System.out.println("Root nooot found");
+					} else {
+						// System.out.println("Root already found");
+						return node;
+					}
 				} else {
-					System.out.println("Root already found");
 					return node;
 				}
 			}
 		}
-		System.out.println("create new Node!!!");
-		return null;
-	}
-
-	public DefaultMutableTreeNode searchNode(String nodeStr) {
-		DefaultMutableTreeNode node = null;
-		@SuppressWarnings("unchecked")
-		Enumeration<DefaultMutableTreeNode> e = rootNode.breadthFirstEnumeration();
-		while (e.hasMoreElements()) {
-			node = e.nextElement();
-			if (nodeStr.equals(node.getUserObject().toString())) {
-				return node;
-			}
-		}
+		System.out.println("Create new Node!");
 		return null;
 	}
 
 	class MyTreeModelListener implements TreeModelListener {
 
 		public void treeNodeSelected(TreeModelEvent e) {
-			System.out.println(e.getChildIndices()[0]);
+			// System.out.println(e.getChildIndices()[0]);
 		}
 
 		public void treeNodesChanged(TreeModelEvent e) {
-			DefaultMutableTreeNode node;
-			node = (DefaultMutableTreeNode) (e.getTreePath().getLastPathComponent());
-
-			/*
-			 * If the event lists children, then the changed node is the child
-			 * of the node we've already gotten. Otherwise, the changed node and
-			 * the specified node are the same.
-			 */
-
-			int index = e.getChildIndices()[0];
-			node = (DefaultMutableTreeNode) (node.getChildAt(index));
-
-			System.out.println("The user has finished editing the node.");
-			System.out.println("New value: " + node.getUserObject());
 		}
 
 		public void treeNodesInserted(TreeModelEvent e) {
+			// uncomment this if you want to expand the source folders:
 			// tree.expandPath(e.getTreePath());
-			// second option
+
+			// select atomically the new node
 			tree.setSelectionPath(e.getTreePath());
 		}
 

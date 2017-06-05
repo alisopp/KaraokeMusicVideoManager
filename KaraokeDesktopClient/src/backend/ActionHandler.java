@@ -35,7 +35,7 @@ import backend.objects.MusicVideo;
  * do with a console TUI or a graphical GUI. It's the core of the project.
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.6 (beta)
+ * @version 0.7 (beta)
  *
  */
 public class ActionHandler {
@@ -1141,11 +1141,12 @@ public class ActionHandler {
 	 *            (String[] | content of the new file)
 	 */
 	private void exportDialog(String titleJFileChooser, String fileName, String[] content) {
-		String filePath = JFileChooserManager.chooseDirectoryGetPath(titleJFileChooser).toString();
+		Path a = JFileChooserManager.chooseDirectoryGetPath(titleJFileChooser);
 
-		if (filePath == null) {
+		if (a == null) {
 			System.out.println("No Directory was selected!");
 		} else {
+			String filePath = a.toString();
 
 			// add filename to filepath
 			filePath += "\\" + fileName;

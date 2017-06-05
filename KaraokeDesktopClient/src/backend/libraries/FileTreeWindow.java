@@ -14,24 +14,34 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import backend.ActionHandler;
+import backend.language.LanguageController;
 import backend.objects.MusicVideo;
 import frontend.ConceptJFrameGUI;
 
+/**
+ * JFrame and methods for an editable JTree
+ * 
+ * @author Niklas | https://github.com/AnonymerNiklasistanonym
+ * @version 0.7 (beta)
+ */
 public class FileTreeWindow extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String ADD_COMMAND = "add folder/s";
-	private static final String REMOVE_COMMAND = "remove folder/s";
-	private static final String RELOAD_COMMAND = "reload";
-	private static final String[] commands = { ADD_COMMAND, REMOVE_COMMAND, RELOAD_COMMAND };
+	private static final String ADD_COMMAND = LanguageController.getTranslation("add folder/s");
+	private static final String REMOVE_COMMAND = LanguageController.getTranslation("remove folder");
+	private static final String REMOVES_COMMAND = LanguageController.getTranslation("remove sub folders");
+	private static final String RELOAD_COMMAND = LanguageController.getTranslation("reload");
+	private static final String[] commands = { ADD_COMMAND, REMOVE_COMMAND, REMOVES_COMMAND, RELOAD_COMMAND };
 
-	private static JFrame frame;
+	private JFrame frame;
+	private static JLabel selectedLabel;
 
 	private FileTree treePanel;
 
@@ -48,129 +58,172 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 		treePanel = new FileTree();
 		treePanel.setPreferredSize(new Dimension(400, 250));
 
-		add(treePanel, BorderLayout.CENTER);
+		this.add(treePanel, BorderLayout.NORTH);
+
+		selectedLabel = new JLabel();
+		add(selectedLabel, BorderLayout.CENTER);
 
 		JPanel panel = new JPanel(new GridLayout(0, commands.length));
 
 		for (String a : commands) {
 
 			JButton button;
-			if (a.equals(ADD_COMMAND) || a.equals(REMOVE_COMMAND)) {
-				String pathToImageIcon = "";
-				switch (a) {
-				case ADD_COMMAND:
-					pathToImageIcon = "/add_20x20.png";
-					break;
-				case REMOVE_COMMAND:
-					pathToImageIcon = "/remove_20x20.png";
-					break;
-				}
-				ImageIcon iconRandom = null;
+
+			String pathToImageIcon = null;
+			if (a.equals(ADD_COMMAND)) {
+				pathToImageIcon = "/add_20x20.png";
+			} else if (a.equals(REMOVE_COMMAND) || a.equals(REMOVES_COMMAND)) {
+				pathToImageIcon = "/remove_20x20.png";
+			} else if (a.equals(RELOAD_COMMAND)) {
+				pathToImageIcon = "/reload_20x20.png";
+			}
+
+			ImageIcon iconRandom = null;
+			if (pathToImageIcon != null) {
 				try {
 					iconRandom = new ImageIcon(ImageIO.read(FileTreeWindow.class.getResource(pathToImageIcon)));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-				button = new JButton(" " + a.toString(), iconRandom);
-			} else {
-				button = new JButton(a.toString());
 			}
+
+			// and make a button with an icon (or not if null)
+			button = new JButton(" " + a.toString(), iconRandom);
+
+			// set command, Action Listener and add it to the panel
 			button.setActionCommand(a);
 			button.addActionListener(this);
 			panel.add(button);
 		}
 
-		add(panel, BorderLayout.SOUTH);
+		this.add(panel, BorderLayout.SOUTH);
 
 		populateTree(actionHandler.getPathList());
 	}
 
+	public static void setLabel(String a) {
+		selectedLabel.setText(a);
+	}
+
 	private void populateTree(ArrayList<Path> listOfPaths) {
 
+		// first clear the music video list (not necessary, but for 100%
+		// sureness) - it gets instantly filled again
 		actionHandler.clearMusicVideosList();
 
+		// for all paths:
 		for (Path a : listOfPaths) {
 
-			String pattern = Pattern.quote(System.getProperty("file.separator"));
-			String[] splittedFileName = a.toString().split(pattern);
-			System.out.println(a);
+			// convert path to usable String / String[] with all levels
+			String[] splittedFileName = a.toString().split(Pattern.quote(System.getProperty("file.separator")));
 
-			String[] splittedFileName2 = new String[splittedFileName.length - 1];
-			for (int i = 0; i < splittedFileName.length - 1; i++) {
-				splittedFileName2[i] = splittedFileName[i];
-			}
+			// create a walking parent node
+			DefaultMutableTreeNode walkingParentNode = null;
 
-			System.out.println(splittedFileName[0]);
+			// walk through all folder levels
+			for (String currentFolderLevel : splittedFileName) {
 
-			DefaultMutableTreeNode b = null;
+				// if the folder level doesn't already exist
+				if (treePanel.searchNode(currentFolderLevel, splittedFileName[0]) == null) {
 
-			for (String cc : splittedFileName) {
+					// we create it
+					DefaultMutableTreeNode newFolderLevelNode = treePanel.addObject(walkingParentNode,
+							currentFolderLevel, true);
+					// and set it to our new walking parent node
+					walkingParentNode = newFolderLevelNode;
 
-				System.out.println("\t" + cc);
-
-				if (treePanel.searchNode(cc, splittedFileName[0]) == null) {
-					DefaultMutableTreeNode bb = treePanel.addObject(b, cc);
-					b = bb;
 				} else {
-					b = treePanel.searchNode(cc, splittedFileName[0]);
+					// else we search for the existing folder and mark him as
+					// our new walking parent node
+					walkingParentNode = treePanel.searchNode(currentFolderLevel, splittedFileName[0]);
 				}
 			}
 
-			// add music videos to each folder
+			// add music videos to each folder:
 			boolean noMusicVideosFound = true;
 
+			// scan for each path
 			for (MusicVideo videoElement : actionHandler.scanDirectory(a)) {
 				noMusicVideosFound = false;
 
-				String s = videoElement.getPath().toString();
-				String file = s.substring(s.lastIndexOf("\\"));
-				String extension = file.substring(file.indexOf("."));
-
-				treePanel.addObject(b, videoElement.getArtist() + " - " + videoElement.getTitle() + extension);
+				// add to every music video file also the original file name
+				treePanel.addObject(walkingParentNode, videoElement.getPath().getFileName().toString());
 			}
 
+			// add this node so that even empty folders appear as folders
 			if (noMusicVideosFound)
-				treePanel.addObject(b, "no music videos");
+				treePanel.addObject(walkingParentNode, LanguageController.getTranslation("no music videos"));
 		}
 	}
 
+	/**
+	 * Here are all commands defined
+	 */
 	public void actionPerformed(ActionEvent e) {
 
-		switch (e.getActionCommand()) {
-		case ADD_COMMAND:
+		if (e.getActionCommand().equals(ADD_COMMAND)) {
 			// add dialogue
 			actionHandler.addToPathList(actionHandler.getPathOfDirectories());
 			// update tree window
 			updateTree();
-			break;
-		case REMOVE_COMMAND:
-			// Remove button clicked
-			// hi.deletePathFromPathList(flags);
-
+		} else if (e.getActionCommand().equals(REMOVE_COMMAND)) {
+			// check if selected path is in path list
 			if (actionHandler.getPathList().contains(treePanel.getSelectedNodePath())) {
+				// now ask the user if he wants to delete this specific folder
 				int a = JOptionPane.showConfirmDialog(null,
-						"Do you really want to delete the path: \"" + treePanel.getSelectedNodePath().toString() + "\"",
-						"Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+						LanguageController.getTranslation("Do you really want to delete the path") + ": \""
+								+ treePanel.getSelectedNodePath().toString() + "\"",
+						LanguageController.getTranslation("Warning"), JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE);
 				if (a == JOptionPane.YES_OPTION) {
+					// give back an error if there was an problem, else just
+					// delete the path
 					if (actionHandler.deletePathFromPathList(treePanel.getSelectedNodePath()) == false) {
 						JOptionPane.showMessageDialog(null,
-								"The path could not be deleted" + ". " + "Only added paths can be deleted.");
+								LanguageController.getTranslation("The path could not be deleted") + "! "
+										+ LanguageController.getTranslation("Only added paths can be deleted") + "!");
 					}
 				}
 			} else {
-				JOptionPane.showMessageDialog(null,
-						"The path cannot be deleted" + ". " + "Only added paths can be deleted.");
+				// if not give an error back
+				JOptionPane.showMessageDialog(null, LanguageController.getTranslation("The path could not be deleted")
+						+ "! " + LanguageController.getTranslation("Only added paths can be deleted") + "!");
 			}
+			updateTree();
+		} else if (e.getActionCommand().equals(REMOVES_COMMAND)) {
+			// because we have always something beneath us in the JTree from the
+			// path list we don't need to check
 
+			// now we add all selected paths to an ArrayList
+			Path[] currentlySelectedPaths = treePanel.getCurrentSelectedPaths();
+
+			// now ask the user if he really wants to delete all these sources
+			int a = JOptionPane.showConfirmDialog(null,
+					LanguageController.getTranslation("Do you really want to delete the path") + ": \""
+							+ treePanel.getSelectedNodePath().toString() + "\" "
+							+ LanguageController.getTranslation("and anything beneath it") + "?",
+					LanguageController.getTranslation("Warning"), JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE);
+			if (a == JOptionPane.YES_OPTION) {
+
+				// if he confirms we delete them all directly from the path list
+				for (Path currentPath : currentlySelectedPaths) {
+					if (actionHandler.getPathList().contains(currentPath)) {
+						actionHandler.deletePathFromPathList(currentPath);
+					}
+				}
+			}
+			// and update after that the JTable and the JTree
 			updateTree();
-			break;
-		case RELOAD_COMMAND:
-			// Reload the JTree
+		} else if (e.getActionCommand().equals(RELOAD_COMMAND)) {
+			// update the JTable and the JTree
 			updateTree();
-			break;
 		}
 	}
 
+	/**
+	 * Update the JTree in the window and the table in the main window
+	 */
 	private void updateTree() {
 		conceptJFrameGUI.updateTable();
 		treePanel.clear();
@@ -187,12 +240,10 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 		ActionHandler.windowsLookActivator();
 
 		// Create and set up the window.
-		frame = new JFrame("Beta beta path editor");
+		frame = new JFrame(LanguageController.getTranslation("Source folder editor"));
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		// Create and set up the content pane.
-		// FileTreeWindow newContentPane = new FileTreeWindow(hi, we);
-		// this.setOpaque(true); // content panes must be opaque
 		frame.setContentPane(this);
 
 		// Display the window.

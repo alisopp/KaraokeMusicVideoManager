@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
  * the user wanted language
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.6 (beta)
+ * @version 0.7 (beta)
  *
  */
 public class LanguageController {
@@ -158,7 +158,6 @@ public class LanguageController {
 				return a;
 			}
 		} else {
-			System.out.println("hi");
 			return a;
 		}
 	}
