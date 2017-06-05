@@ -10,7 +10,7 @@ import java.util.Comparator;
  * @version 0.7 (beta)
  *
  */
-public class MusicVideo implements Comparator {
+public class MusicVideo implements Comparator<MusicVideo> {
 
 	/**
 	 * The path of the music video file
@@ -105,14 +105,41 @@ public class MusicVideo implements Comparator {
 		this.path = path;
 	}
 
+	/**
+	 * compareTo
+	 */
+	public int compareTo(MusicVideo o1) {
+		// check how the artist names are compared to each other
+		int areTheArtistsTheSame = this.getArtist().toUpperCase().compareTo(o1.getArtist().toUpperCase());
+		// if the artist are the same artist (==0)
+		if (areTheArtistsTheSame == 0) {
+			// return the compare value for the title to sort titles from
+			// the same artist also alphabetically
+			return this.getTitle().toUpperCase().compareTo(o1.getTitle().toUpperCase());
+		} else {
+			// if the artist is not the same return the compare Integer
+			// calculated before
+			return areTheArtistsTheSame;
+		}
+	}
+
+	/**
+	 * Comparator
+	 */
 	@Override
-	public int compare(Object o1, Object o2) {
-		return 0;
-		/*
-		 * Comparable comp1 = getValue(obj1, methodName); Comparable comp2 =
-		 * getValue(obj2, methodName); if (isAsc) { return
-		 * comp1.compareTo(comp2); } else { return comp2.compareTo(comp1); }
-		 */
+	public int compare(MusicVideo o1, MusicVideo o2) {
+		// check how the artist names are compared to each other
+		int areTheArtistsTheSame = o1.getArtist().toUpperCase().compareTo(o2.getArtist().toUpperCase());
+		// if the artist are the same artist (==0)
+		if (areTheArtistsTheSame == 0) {
+			// return the compare value for the title to sort titles from
+			// the same artist also alphabetically
+			return String.CASE_INSENSITIVE_ORDER.compare(o1.getTitle().toUpperCase(), o2.getTitle().toUpperCase());
+		} else {
+			// if the artist is not the same return the compare Integer
+			// calculated before
+			return areTheArtistsTheSame;
+		}
 	}
 
 }

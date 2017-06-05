@@ -13,7 +13,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
@@ -236,7 +235,7 @@ public class ActionHandler {
 				}
 			}
 		}
-
+		Collections.sort(musicvideosinFolder, new MusicVideo());
 		return musicvideosinFolder;
 	}
 
@@ -336,6 +335,7 @@ public class ActionHandler {
 		// sort the music video at last
 		progress.setLabelText("Sort all music videos alphabetical...");
 		sortMusicVideoList();
+		Collections.sort(musicVideoList, new MusicVideo());
 		progress.setProgressBar(100);
 		progress.closeJFrame();
 	}
@@ -537,35 +537,10 @@ public class ActionHandler {
 	}
 
 	/**
-	 * CustomComporator to sort the MusicVideo alphabetically in the list
-	 */
-	public class CustomComparator implements Comparator<MusicVideo> {
-
-		@Override
-		/**
-		 * Compare two MusicVideo objects for sorting
-		 */
-		public int compare(MusicVideo object1, MusicVideo object2) {
-			// check how the artist names are compared to each other
-			int areTheArtistsTheSame = object1.getArtist().toLowerCase().compareTo(object2.getArtist().toLowerCase());
-			// if the artist are the same artist (==0)
-			if (areTheArtistsTheSame == 0) {
-				// return the compare value for the title to sort titles from
-				// the same artist also alphabetically
-				return object1.getTitle().toLowerCase().compareTo(object2.getTitle().toLowerCase());
-			} else {
-				// if the artist is not the same return the compare Integer
-				// calculated before
-				return areTheArtistsTheSame;
-			}
-		}
-	}
-
-	/**
 	 * Sorts the music video list
 	 */
 	public void sortMusicVideoList() {
-		Collections.sort(musicVideoList, new CustomComparator());
+		Collections.sort(musicVideoList, new MusicVideo());
 	}
 
 	/**
@@ -657,6 +632,7 @@ public class ActionHandler {
 		} else if (musicVideoList.size() <= index && 0 < index) {
 			System.err.println("The index \"" + index + "\" does not exist!");
 		} else {
+			Collections.sort(musicVideoList, new MusicVideo());
 			// if the list isn't null and the index isn't outside the
 			// musicVideosList
 			// get the MusicVideo object and make it a file with the path
