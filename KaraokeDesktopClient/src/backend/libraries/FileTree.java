@@ -82,9 +82,8 @@ public class FileTree extends JPanel {
 				// for (TreePath a : e.getPaths()) {
 				// System.out.println(a.toString());
 				// }
-				// if (getSelectedNodePath() != null)
-				// FileTreeWindow.setLabel(" >> " +
-				// getSelectedNodePath().toString());
+				if (getSelectedNodePath() != null)
+					FileTreeWindow.setLabel(" >> " + getSelectedNodePath().toString());
 			}
 		});
 	}

@@ -88,7 +88,7 @@ public class ConceptJFrameGUI {
 
 		LanguageController.setDefaultLanguage();
 
-		version = "0.7.2 (beta)";
+		version = "0.7.3 (beta)";
 		releaseDate = LanguageController.getTranslation("June") + " 2017";
 
 		String[] columnNames = new String[] { "#", LanguageController.getTranslation("Artist"),
@@ -111,16 +111,18 @@ public class ConceptJFrameGUI {
 		// if a configuration file exists
 		if (actionManager.fileExists(actionManager.getConfigurationFile())) {
 			// ask the user if he also wants to load saved data
-			if (JOptionPane.showConfirmDialog(null,
-					LanguageController.getTranslation("Would you like to load your previous saved configuration") + "?",
-					LanguageController.getTranslation("Question"), JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-				// if he accepts to load the data read the file and set the
-				// content as your new path list
-				actionManager.configFileReaderOnStart();
-				// now scan again all paths for music videos
-				actionManager.updateMusicVideoList();
-			}
+			// if (JOptionPane.showConfirmDialog(null,
+			// LanguageController.getTranslation("Would you like to load your
+			// previous saved configuration") + "?",
+			// LanguageController.getTranslation("Question"),
+			// JOptionPane.YES_NO_OPTION,
+			// JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+			// if he accepts to load the data read the file and set the
+			// content as your new path list
+			actionManager.configFileReaderOnStart();
+			// now scan again all paths for music videos
+			actionManager.updateMusicVideoList();
+			// }
 		}
 	}
 
@@ -422,9 +424,7 @@ public class ConceptJFrameGUI {
 		table.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				int row = table.getSelectedRow();
-				actionManager.openMusicVideo(row);
-
+				actionManager.openMusicVideo((int) table.getValueAt(table.getSelectedRow(), 0) - 1);
 			}
 
 			public void mouseEntered(MouseEvent e) {
@@ -523,22 +523,23 @@ public class ConceptJFrameGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				// get the actual text of the text field
-				String scannedText = jtfFilter.getText();
-
-				// check if it is a number (a String only containing digits)
-				if (scannedText.matches("[-+]?\\d*\\.?\\d+")) {
-					// if yes parse the String to an Integer and
-					// open the music video on this position
-					actionManager.openMusicVideo(Integer.parseInt(scannedText) - 1);
-				} else {
-					// when at least on row exists
-					if (table.getRowCount() > 0) {
-						// algorithm that finds the top result in the actual
-						// table and gets the number of it
-						actionManager.openMusicVideo((int) table.getValueAt(0, 0) - 1);
-					}
+				// // get the actual text of the text field
+				// String scannedText = jtfFilter.getText();
+				//
+				// // check if it is a number (a String only containing digits)
+				// if (scannedText.matches("[-+]?\\d*\\.?\\d+")) {
+				// // if yes parse the String to an Integer and
+				// // open the music video on this position
+				// actionManager.openMusicVideo(Integer.parseInt(scannedText) -
+				// 1);
+				// } else {
+				// when at least on row exists
+				if (table.getRowCount() > 0) {
+					// algorithm that finds the top result in the actual
+					// table and gets the number of it
+					actionManager.openMusicVideo((int) table.getValueAt(0, 0) - 1);
 				}
+				// }
 			}
 		};
 		jtfFilter.addActionListener(action);
@@ -672,6 +673,11 @@ public class ConceptJFrameGUI {
 		for (Object[] a : actionManager.musicVideoListToTable("  ")) {
 			model.addRow(a);
 		}
+
+		// from bbhar - https://stackoverflow.com/a/26576892/7827128
+		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
+		if (defaults.get("Table.alternateRowColor") == null)
+			defaults.put("Table.alternateRowColor", new Color(240, 240, 240));
 	}
 
 	/**

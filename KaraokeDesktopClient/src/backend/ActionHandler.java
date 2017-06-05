@@ -79,7 +79,7 @@ public class ActionHandler {
 
 		this.columnNames = columnNames;
 
-		acceptedExtensions = new String[] { "avi", "mp4", "mkv", "wmv", "mov" };
+		acceptedExtensions = new String[] { "avi", "mp4", "mkv", "wmv", "mov", "mpg", "mpeg" };
 
 		this.fileNameConfiguration = fileNameConfiguration;
 
