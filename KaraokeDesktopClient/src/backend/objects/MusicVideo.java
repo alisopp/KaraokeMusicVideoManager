@@ -1,6 +1,7 @@
 package backend.objects;
 
 import java.nio.file.Path;
+import java.util.Comparator;
 
 /**
  * The properties of every music video ([karaoke] file)
@@ -9,7 +10,7 @@ import java.nio.file.Path;
  * @version 0.7 (beta)
  *
  */
-public class MusicVideo {
+public class MusicVideo implements Comparator {
 
 	/**
 	 * The path of the music video file
@@ -102,6 +103,16 @@ public class MusicVideo {
 	 */
 	public void setPath(Path path) {
 		this.path = path;
+	}
+
+	@Override
+	public int compare(Object o1, Object o2) {
+		return 0;
+		/*
+		 * Comparable comp1 = getValue(obj1, methodName); Comparable comp2 =
+		 * getValue(obj2, methodName); if (isAsc) { return
+		 * comp1.compareTo(comp2); } else { return comp2.compareTo(comp1); }
+		 */
 	}
 
 }

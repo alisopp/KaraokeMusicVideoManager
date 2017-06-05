@@ -508,6 +508,7 @@ public class ActionHandler {
 	 * @return musicVideosList (ArrayList<MusicVideo>)
 	 */
 	public ArrayList<MusicVideo> getMusicVideosList() {
+		sortMusicVideoList();
 		return musicVideoList;
 	}
 
@@ -546,12 +547,12 @@ public class ActionHandler {
 		 */
 		public int compare(MusicVideo object1, MusicVideo object2) {
 			// check how the artist names are compared to each other
-			int areTheArtistsTheSame = object1.getArtist().compareTo(object2.getArtist());
+			int areTheArtistsTheSame = object1.getArtist().toLowerCase().compareTo(object2.getArtist().toLowerCase());
 			// if the artist are the same artist (==0)
 			if (areTheArtistsTheSame == 0) {
 				// return the compare value for the title to sort titles from
 				// the same artist also alphabetically
-				return object1.getTitle().compareTo(object2.getTitle());
+				return object1.getTitle().toLowerCase().compareTo(object2.getTitle().toLowerCase());
 			} else {
 				// if the artist is not the same return the compare Integer
 				// calculated before
