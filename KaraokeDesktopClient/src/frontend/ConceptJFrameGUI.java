@@ -33,6 +33,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -86,7 +88,7 @@ public class ConceptJFrameGUI {
 
 		LanguageController.setDefaultLanguage();
 
-		version = "0.7 (beta)";
+		version = "0.7.1 (beta)";
 		releaseDate = LanguageController.getTranslation("June") + " 2017";
 
 		String[] columnNames = new String[] { "#", LanguageController.getTranslation("Artist"),
@@ -406,6 +408,11 @@ public class ConceptJFrameGUI {
 		table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 
 		table.setAutoCreateRowSorter(true);
+
+		// from bbhar - https://stackoverflow.com/a/26576892/7827128
+		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
+		if (defaults.get("Table.alternateRowColor") == null)
+			defaults.put("Table.alternateRowColor", new Color(240, 240, 240));
 
 		// Place the JTable object in a JScrollPane for a scrolling table
 		JScrollPane tableScrollPane = new JScrollPane(table);

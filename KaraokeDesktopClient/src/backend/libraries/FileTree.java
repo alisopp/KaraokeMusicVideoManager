@@ -79,11 +79,12 @@ public class FileTree extends JPanel {
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
 
-				for (TreePath a : e.getPaths()) {
-					System.out.println(a.toString());
-				}
-				if (getSelectedNodePath() != null)
-					FileTreeWindow.setLabel(" >> " + getSelectedNodePath().toString());
+				// for (TreePath a : e.getPaths()) {
+				// System.out.println(a.toString());
+				// }
+				// if (getSelectedNodePath() != null)
+				// FileTreeWindow.setLabel(" >> " +
+				// getSelectedNodePath().toString());
 			}
 		});
 	}
@@ -100,7 +101,7 @@ public class FileTree extends JPanel {
 			String filePath = "";
 			for (int i = 1; i < a.getPath().length; i++) {
 				filePath += a.getPath()[i];
-				System.out.println(filePath);
+				// System.out.println(filePath);
 				if (i + 1 < a.getPath().length) {
 					filePath += File.separator;
 				}
@@ -122,7 +123,7 @@ public class FileTree extends JPanel {
 			Object[] paths = tree.getSelectionPath().getPath();
 			for (int i = 1; i < paths.length; i++) {
 				jTreeVarSelectedPath += paths[i];
-				System.out.println(jTreeVarSelectedPath);
+				// System.out.println(jTreeVarSelectedPath);
 				if (i + 1 < paths.length) {
 					jTreeVarSelectedPath += File.separator;
 				}
@@ -237,7 +238,7 @@ public class FileTree extends JPanel {
 				}
 			}
 		}
-		System.out.println("Create new Node!");
+		// System.out.println("Create new Node!");
 		return null;
 	}
 

@@ -58,13 +58,13 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 		treePanel = new FileTree();
 		treePanel.setPreferredSize(new Dimension(400, 250));
 
-		this.add(treePanel, BorderLayout.NORTH);
+		this.add(treePanel, BorderLayout.CENTER);
 
+		JPanel panelBig = new JPanel(new GridLayout(2, 0));
 		selectedLabel = new JLabel();
-		add(selectedLabel, BorderLayout.CENTER);
+		panelBig.add(selectedLabel);
 
 		JPanel panel = new JPanel(new GridLayout(0, commands.length));
-
 		for (String a : commands) {
 
 			JButton button;
@@ -93,10 +93,12 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 			// set command, Action Listener and add it to the panel
 			button.setActionCommand(a);
 			button.addActionListener(this);
+			button.setPreferredSize(new Dimension(200, 40));
 			panel.add(button);
 		}
 
-		this.add(panel, BorderLayout.SOUTH);
+		panelBig.add(panel);
+		this.add(panelBig, BorderLayout.SOUTH);
 
 		populateTree(actionHandler.getPathList());
 	}
