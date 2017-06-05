@@ -7,9 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
+import backend.ActionHandler;
 import backend.language.LanguageController;
 
 /**
@@ -39,22 +38,7 @@ public class JProgressBarWindow extends JFrame {
 	public JProgressBarWindow(String title) {
 
 		// Get the Windows look on Windows computers
-		try {
-			// UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-			// UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-			// UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-			if (System.getProperty("os.name").contains("Windows")) {
-				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		}
+		ActionHandler.windowsLookActivator();
 
 		// set title
 		this.setTitle(title);

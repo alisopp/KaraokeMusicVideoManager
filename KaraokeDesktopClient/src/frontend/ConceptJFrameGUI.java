@@ -48,6 +48,7 @@ import javax.swing.table.TableRowSorter;
 import backend.ActionHandler;
 import backend.language.LanguageController;
 import backend.libraries.AboutWindow;
+import backend.libraries.FileTreeWindow;
 
 /**
  * The graphical user interface of this program. It combines the already written
@@ -76,6 +77,7 @@ public class ConceptJFrameGUI {
 	TableRowSorter<TableModel> rowSorter;
 
 	private AboutWindow newAboutWindow;
+	private FileTreeWindow fileTreeWindow;
 
 	private String version;
 	private String releaseDate;
@@ -193,6 +195,22 @@ public class ConceptJFrameGUI {
 			} else {
 				pathEditorJFrame();
 			}
+		});
+
+		// and the sub sub menu "Beta Editor" >>
+		JMenuItem subSubMenuBetaSourceFolder = new JMenuItem(LanguageController.getTranslation("Beta Editor"));
+		subSubMenuBetaSourceFolder.setToolTipText(LanguageController.getTranslation("Remove and add in one interface"));
+		subSubMenuBetaSourceFolder.addActionListener((ActionEvent event) -> {
+
+			if (fileTreeWindow != null) {
+				fileTreeWindow.closeIt();
+				fileTreeWindow.createAndShowGUI();
+				// if there was already an open about windows close it
+			} else {
+				fileTreeWindow = new FileTreeWindow(actionManager, this);
+				fileTreeWindow.createAndShowGUI();
+			}
+
 		});
 
 		// with the sub menu "Export"
@@ -360,6 +378,8 @@ public class ConceptJFrameGUI {
 		subMenuPath.add(subSubMenuAddSourceFolder);
 		subMenuPath.addSeparator();
 		subMenuPath.add(subSubMenuRemoveSourceFolder);
+		subMenuPath.addSeparator();
+		subMenuPath.add(subSubMenuBetaSourceFolder);
 		menuBar.add(subMenuPath);
 		subMenuExport.add(subSubMenuExportCSV);
 		subMenuExport.addSeparator();
@@ -652,17 +672,27 @@ public class ConceptJFrameGUI {
 	 */
 	public void pathEditorJFrame() {
 
+		JScrollPane vertical;
+
 		JFrame pathEditorWindow = new JFrame(LanguageController.getTranslation("Edit the source folder paths")
 				+ ":    >> " + LanguageController.getTranslation("Close to save changes"));
 		// set title
 		pathEditorWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		// only close on exit - don't end the whole program
 
+		// pathEditorWindow.setPreferredSize(new Dimension(600, 400));
+
 		boolean[] arrayPathIndex = new boolean[actionManager.getPathList().size()];
 		Arrays.fill(arrayPathIndex, false);
 
 		// create a grid layout for all paths as a visual button list
-		pathEditorWindow.setLayout(new GridLayout(actionManager.getPathList().size(), 1));
+		// pathEditorWindow.setLayout(new
+		// GridLayout(actionManager.getPathList().size(), 1));
+
+		JPanel p = new JPanel();
+		// p.setPreferredSize(new Dimension(600, 400));
+		p.setLayout(new GridLayout(actionManager.getPathList().size(), 1));
+
 		// for all actual saved paths create one button
 		for (int i = 0; i < actionManager.getPathList().size(); i++) {
 
@@ -715,12 +745,19 @@ public class ConceptJFrameGUI {
 					}
 				}
 			});
-			pathEditorWindow.add(removePathButton);
+			p.add(removePathButton);
 
 			// question the user if he wants this changes to happen when he
 			// closes the window and only then delete the paths and update the
 			// table
 		}
+
+		// add panel to a scroll-able component (vertical scroll bar for many
+		// source folder)
+		vertical = new JScrollPane(p);
+		vertical.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		vertical.setPreferredSize(new Dimension(700, 400));
+		pathEditorWindow.add(vertical);
 
 		// now pack all components together for their perfect size
 		pathEditorWindow.pack();
@@ -800,17 +837,23 @@ public class ConceptJFrameGUI {
 	 */
 	public static void main(String[] args) {
 
-		// get the Windows look on all windows systems
-		ActionHandler.windowsLookActivator();
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
 
-		// create a new Object of our class
-		ConceptJFrameGUI mainFrame = new ConceptJFrameGUI();
+				// Get the Windows look on Windows computers
+				ActionHandler.windowsLookActivator();
 
-		// look after configuration file before starting
-		mainFrame.startupConfig();
+				// create a new Object of our class
+				ConceptJFrameGUI mainFrame = new ConceptJFrameGUI();
 
-		// open/show the window
-		mainFrame.createWindow();
+				// look after configuration file before starting
+				mainFrame.startupConfig();
+
+				// open/show the window
+				mainFrame.createWindow();
+			}
+		});
+
 	}
 
 }

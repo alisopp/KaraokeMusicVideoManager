@@ -16,9 +16,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
+import backend.ActionHandler;
 import backend.language.LanguageController;
 import frontend.ConceptJFrameGUI;
 
@@ -39,22 +38,7 @@ public class AboutWindow extends JFrame {
 	public AboutWindow(String versionNumber, String releaseDate) {
 
 		// Get the Windows look on Windows computers
-		try {
-			// UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-			// UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-			// UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-			if (System.getProperty("os.name").contains("Windows")) {
-				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		}
+		ActionHandler.windowsLookActivator();
 
 		this.setTitle(LanguageController.getTranslation("About Karaoke Desktop Client [Beta]"));
 		// "About Karaoke Desktop Client [Beta]"
@@ -111,33 +95,6 @@ public class AboutWindow extends JFrame {
 		this.setLocationRelativeTo(null);
 		// let nobody change the size of it
 		this.setResizable(false);
-
-		// // set title
-		// this.setTitle(title);
-		// this.setBounds(100, 90, 440, 150);
-		// // do not close the program if the User hits exit
-		// this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		// // this.getContentPane().setLayout(null);
-		//
-		// // create a label to determine the actual process
-		// label = new JLabel("Text");
-		//
-		// // create a JProgressBar
-		// progressBar = new JProgressBar();
-		// // progressBar.setBounds(0, 0, 400, 20);
-		//
-		// JPanel panel2 = new JPanel(new GridLayout(3, 1));
-		// panel2.add(label);
-		// panel2.add(new JLabel(""));
-		// panel2.add(progressBar);
-		// panel2.setBounds(0, 0, 400, 150);
-		// panel2.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-		//
-		// this.getContentPane().add(panel2);
-		// this.setLocationRelativeTo(null);
-		// // make the JFrame visible
-		// // this.pack();
-		// this.setVisible(true);
 	}
 
 	/**

@@ -177,7 +177,9 @@ public class ActionHandler {
 	 * @param path
 	 *            (Path | path of the directory)
 	 */
-	public void scanDirectory(Path path) {
+	public ArrayList<MusicVideo> scanDirectory(Path path) {
+		ArrayList<MusicVideo> musicvideosinFolder = new ArrayList<MusicVideo>();
+
 		Collection<Path> all = new ArrayList<Path>();
 		try (DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
 			for (Path child : ds) {
@@ -227,10 +229,15 @@ public class ActionHandler {
 
 					// finally add the newMusicVideoObject to our
 					// musicVideosList
-					addMusicVideoToMusicvideoList(new MusicVideo(a, titleFinal, artistAndTitle[0]));
+					MusicVideo musicVideo = new MusicVideo(a, titleFinal, artistAndTitle[0]);
+					if (addMusicVideoToMusicvideoList(musicVideo)) {
+						musicvideosinFolder.add(musicVideo);
+					}
 				}
 			}
 		}
+
+		return musicvideosinFolder;
 	}
 
 	/**
@@ -461,6 +468,18 @@ public class ActionHandler {
 		}
 	}
 
+	public boolean deletePathFromPathList(Path path) {
+
+		if (!pathList.contains(path)) {
+			System.err.println("The path \"" + path.toString() + "\" does not exist!");
+			return false;
+		} else {
+			// only remove a path if the index exist!
+			System.out.println("The path \"" + path.toString() + "\" was removed");
+			return pathList.remove(path);
+		}
+	}
+
 	/**
 	 * Print the path list to the console
 	 */
@@ -554,16 +573,19 @@ public class ActionHandler {
 	 * @param musicVideo
 	 *            (MusicVideo)
 	 */
-	public void addMusicVideoToMusicvideoList(MusicVideo musicVideo) {
+	public boolean addMusicVideoToMusicvideoList(MusicVideo musicVideo) {
 
 		if (musicVideo == null) {
 			System.err.println("The music video object was not added because it is null!");
+			return false;
 		} else if (musicVideocontainedInMusicVideoList(musicVideo)) {
 			System.err.println("The music video list already contains this music video object!");
+			return false;
 		} else {
 			System.out.println(
 					musicVideo.getTitle() + " by " + musicVideo.getArtist() + " was added to the music video list");
 			musicVideoList.add(musicVideo);
+			return true;
 		}
 	}
 
