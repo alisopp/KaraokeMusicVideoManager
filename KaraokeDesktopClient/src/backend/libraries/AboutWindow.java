@@ -40,6 +40,9 @@ public class AboutWindow extends JFrame {
 		// Get the Windows look on Windows computers
 		ActionHandler.windowsLookActivator();
 
+		// Set icon to the default one
+		ActionHandler.setProgramWindowIcon(this);
+
 		this.setTitle(LanguageController.getTranslation("About Karaoke Desktop Client [Beta]"));
 		// "About Karaoke Desktop Client [Beta]"
 		// set title

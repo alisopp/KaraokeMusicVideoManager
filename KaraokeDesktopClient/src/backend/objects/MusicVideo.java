@@ -7,7 +7,7 @@ import java.util.Comparator;
  * The properties of every music video ([karaoke] file)
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.7 (beta)
+ * @version 0.8 (beta)
  *
  */
 public class MusicVideo implements Comparator<MusicVideo> {
@@ -26,14 +26,14 @@ public class MusicVideo implements Comparator<MusicVideo> {
 	private String artist;
 
 	/**
-	 * normal constructor: nothing happens
+	 * Normal/Empty constructor: nothing happens
 	 */
 	public MusicVideo() {
 		// empty constructor
 	}
 
 	/**
-	 * advanced constructor: create instantly a music video object
+	 * Advanced constructor: create instantly a music video object
 	 * 
 	 * @param a
 	 *            (Path | path of the file)
@@ -106,7 +106,7 @@ public class MusicVideo implements Comparator<MusicVideo> {
 	}
 
 	/**
-	 * compareTo
+	 * Comparator: compareTo method for comparison
 	 */
 	public int compareTo(MusicVideo o1) {
 		// check how the artist names are compared to each other
@@ -124,9 +124,8 @@ public class MusicVideo implements Comparator<MusicVideo> {
 	}
 
 	/**
-	 * Comparator
+	 * Comparator: compare method for comparison
 	 */
-	@Override
 	public int compare(MusicVideo o1, MusicVideo o2) {
 		// check how the artist names are compared to each other
 		int areTheArtistsTheSame = o1.getArtist().toUpperCase().compareTo(o2.getArtist().toUpperCase());
@@ -141,5 +140,4 @@ public class MusicVideo implements Comparator<MusicVideo> {
 			return areTheArtistsTheSame;
 		}
 	}
-
 }

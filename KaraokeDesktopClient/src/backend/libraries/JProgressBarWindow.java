@@ -29,7 +29,7 @@ public class JProgressBarWindow extends JFrame {
 	/**
 	 * JLabel (global because of get and set)
 	 */
-	private JLabel label;
+	private static JLabel label;
 
 	/**
 	 * Create a JFrame with a JProgressBar
@@ -83,7 +83,11 @@ public class JProgressBarWindow extends JFrame {
 		}
 	}
 
-	public void setLabelText(String text) {
+	public static void setLabelText(String text) {
+		label.setText(text);
+	}
+
+	public void setLabelTextNotStatic(String text) {
 		label.setText(text);
 	}
 

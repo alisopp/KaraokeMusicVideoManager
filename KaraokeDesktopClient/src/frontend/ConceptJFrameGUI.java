@@ -35,6 +35,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -88,7 +89,7 @@ public class ConceptJFrameGUI {
 
 		LanguageController.setDefaultLanguage();
 
-		version = "0.7.3 (beta)";
+		version = "0.7.4 (beta)";
 		releaseDate = LanguageController.getTranslation("June") + " 2017";
 
 		String[] columnNames = new String[] { "#", LanguageController.getTranslation("Artist"),
@@ -99,6 +100,8 @@ public class ConceptJFrameGUI {
 		guiMainFrame = new JFrame();
 		// start a ActionHandler for all the under the surface commands
 		actionManager = new ActionHandler(columnNames, fileNameConfiguration);
+
+		fileTreeWindow = new FileTreeWindow(actionManager, this);
 	}
 
 	/**
@@ -123,6 +126,7 @@ public class ConceptJFrameGUI {
 			// now scan again all paths for music videos
 			actionManager.updateMusicVideoList();
 			// }
+			fileTreeWindow = new FileTreeWindow(actionManager, this);
 		}
 	}
 
@@ -148,231 +152,177 @@ public class ConceptJFrameGUI {
 				LanguageController.getTranslation("Title") });
 		releaseDate = LanguageController.getTranslation("June") + " 2017";
 
-		try {
-			guiMainFrame.setIconImage(ImageIO.read(ConceptJFrameGUI.class.getResource("/logo.png")));
-		} catch (IOException exc) {
-			exc.printStackTrace();
-		}
+		ActionHandler.setProgramWindowIcon(guiMainFrame);
+
+		String textSource = LanguageController.getTranslation("Source folders");
+		String tooltipSource = LanguageController.getTranslation("Edit the source folders of your music videos");
+
+		ImageIcon iconAdd = ActionHandler.loadImageIconFromClass("/add_20x20.png");
+		String textAdd = LanguageController.getTranslation("Add");
+		String tooltipAdd = LanguageController.getTranslation("Add a new folder with new music videos to your list");
+
+		ImageIcon iconRemove = ActionHandler.loadImageIconFromClass("/remove_20x20.png");
+		String textRemove = LanguageController.getTranslation("Remove and more");
+		String tooltipRemove = LanguageController.getTranslation("Remove a folder with music videos from your list");
+
+		String textExport = LanguageController.getTranslation("Export");
+		String tooltipExport = LanguageController.getTranslation("Export to the following formats") + ": CSV, HTML";
+
+		ImageIcon iconExportCsv = ActionHandler.loadImageIconFromClass("/csv_20x20.png");
+		String textExportCsv = LanguageController.getTranslation("Export to") + " CSV";
+		String tooltipExportCsv = LanguageController.getTranslation("Export your data to") + " CSV ("
+				+ LanguageController.getTranslation("spreadsheet") + ")";
+
+		ImageIcon iconExportHtml = ActionHandler.loadImageIconFromClass("/html_20x20.png");
+		String textExportHtml = LanguageController.getTranslation("Export to") + " HTML";
+		String tooltipExportHtml = LanguageController.getTranslation("Export your data to") + " HTML ("
+				+ LanguageController.getTranslation("web browser") + ")";
+
+		ImageIcon iconExportHtmlSearch = ActionHandler.loadImageIconFromClass("/htmlSearch_20x20.png");
+		String textExportHtmlSearch = LanguageController.getTranslation("Export to") + " HTML "
+				+ LanguageController.getTranslation("with a search");
+		String tooltipExportHtmlSearch = LanguageController.getTranslation("Export your data to") + " HTML ("
+				+ LanguageController.getTranslation("web browser") + ")";
+
+		String textLanguage = LanguageController.getTranslation("Language");
+		String tooltipLanguage = LanguageController.getTranslation("Change the language of the program") + ": GER, ENG";
+
+		ImageIcon iconLanguageEng = ActionHandler.loadImageIconFromClass("/eng_30x20.png");
+		String textLanguageEng = LanguageController.getTranslation("English");
+		String tooltipLanguageEng = LanguageController.getTranslation("Change the language of the program to") + " "
+				+ LanguageController.getTranslation("English");
+
+		ImageIcon iconLanguageGer = ActionHandler.loadImageIconFromClass("/de_30x20.png");
+		String textLanguageGer = LanguageController.getTranslation("German");
+		String tooltipLanguageGer = LanguageController.getTranslation("Change the language of the program to") + " "
+				+ LanguageController.getTranslation("German");
+
+		String textMore = LanguageController.getTranslation("More");
+		String tooltipMore = LanguageController.getTranslation("Save configuration, about and more");
+
+		ImageIcon iconSaveConfiguration = ActionHandler.loadImageIconFromClass("/save_20x20.png");
+		String textSaveConfiguration = LanguageController.getTranslation("Save configuration");
+		String tooltipSaveConfiguration = LanguageController
+				.getTranslation("Saves configuration in a configuration file");
+
+		ImageIcon iconLoadConfiguration = ActionHandler.loadImageIconFromClass("/load_20x20.png");
+		String textLoadConfiguration = LanguageController.getTranslation("Load configuration");
+		String tooltipLoadConfiguration = LanguageController
+				.getTranslation("Load configuration from a configuration file");
+
+		ImageIcon iconAbout = ActionHandler.loadImageIconFromClass("/info_20x20.png");
+		String textAbout = LanguageController.getTranslation("About");
+		String tooltipAbout = LanguageController.getTranslation("About this program");
 
 		// add a menu bar to the window
 		JMenuBar menuBar = new JMenuBar();
 
-		// with the sub menu "Source folders"
-		JMenu subMenuPath = new JMenu(LanguageController.getTranslation("Source folders"));
-		subMenuPath.setToolTipText(
-				LanguageController.getTranslation("Add/Change/Remove the actual folders of your music videos"));
+		// >> with the sub menu "Source folders"
+		JMenu subMenuSource = new JMenu(textSource);
+		subMenuSource.setToolTipText(tooltipSource);
 
-		// and the sub sub menu "Add" >>
-		ImageIcon iconAdd = null;
-		try {
-			iconAdd = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/add_20x20.png")));
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
-		JMenuItem subSubMenuAddSourceFolder = new JMenuItem(LanguageController.getTranslation("Add"), iconAdd);
-		subSubMenuAddSourceFolder.setToolTipText(
-				LanguageController.getTranslation("Add a new folder with new music videos to your list"));
+		// >> >> and the sub sub menu "Add"
+		JMenuItem subSubMenuAddSourceFolder = new JMenuItem(textAdd, iconAdd);
+		subSubMenuAddSourceFolder.setToolTipText(tooltipAdd);
 		subSubMenuAddSourceFolder.addActionListener((ActionEvent event) -> {
-			System.out.println("Add a new folder with new music videos to your list");
-			this.actionManager.addToPathList(this.actionManager.getPathOfDirectories());
-			updateTable();
+			if (actionManager.addToPathList(actionManager.getPathOfDirectories()))
+				updateTable(); // update table if new paths are here
 		});
 
-		// and the sub sub menu "Remove" >>
-		ImageIcon iconRemove = null;
-		try {
-			iconRemove = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/remove_20x20.png")));
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
-		JMenuItem subSubMenuRemoveSourceFolder = new JMenuItem(LanguageController.getTranslation("Remove"), iconRemove);
-		subSubMenuRemoveSourceFolder
-				.setToolTipText(LanguageController.getTranslation("Remove a folder with music videos from your list"));
+		// >> >> and the sub sub menu "Remove and more" >>
+		JMenuItem subSubMenuRemoveSourceFolder = new JMenuItem(textRemove, iconRemove);
+		subSubMenuRemoveSourceFolder.setToolTipText(tooltipRemove);
 		subSubMenuRemoveSourceFolder.addActionListener((ActionEvent event) -> {
-			if (fileTreeWindow != null) {
-				fileTreeWindow.closeIt();
-				fileTreeWindow.createAndShowGUI();
-				// if there was already an open about windows close it
-			} else {
-				fileTreeWindow = new FileTreeWindow(actionManager, this);
-				fileTreeWindow.createAndShowGUI();
-			}
+			fileTreeWindow.closeIt(); // if there is an open window close it
+			fileTreeWindow.createAndShowGUI(); // and open a new one
 		});
 
-		// with the sub menu "Export"
-		JMenu subMenuExport = new JMenu(LanguageController.getTranslation("Export"));
-		subMenuExport.setToolTipText(
-				LanguageController.getTranslation("Export your list to the following formats") + ": CSV, HTML");
-		// and the sub sub menu "Export" >>
-		// ImageIcon iconExport = null;
-		// try {
-		// iconExport = new
-		// ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/export_20x20.png")));
-		// } catch (IOException e5) {
-		// e5.printStackTrace();
-		// }
-		// JMenu subSubMenuExport = new
-		// JMenu(LanguageController.getTranslation("Export"));
-		// subSubMenuExport.setIcon(iconExport);
-		// with the sub sub sub menu "Export to CSV" >>
-		ImageIcon iconCSV = null;
-		try {
-			iconCSV = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/csv_20x20.png")));
-		} catch (IOException e4) {
-			e4.printStackTrace();
-		}
-		JMenuItem subSubMenuExportCSV = new JMenuItem(LanguageController.getTranslation("Export to") + " CSV", iconCSV);
-		subSubMenuExportCSV.setToolTipText(
-				LanguageController.getTranslation("Export your data to a CSV file (can be imported with Excel)"));
+		// >> with the sub menu "Export"
+		JMenu subMenuExport = new JMenu(textExport);
+		subMenuExport.setToolTipText(tooltipExport);
 
-		subSubMenuExportCSV.addActionListener((ActionEvent event) -> {
-
+		// >> >> and the sub sub menu "Export to CSV"
+		JMenuItem subSubMenuExportCsv = new JMenuItem(textExportCsv, iconExportCsv);
+		subSubMenuExportCsv.setToolTipText(tooltipExportCsv);
+		subSubMenuExportCsv.addActionListener((ActionEvent event) -> {
 			actionManager.exportCsvFile("musicvideolist.csv");
 		});
-		// with the sub sub sub menu "Export to HTML" >>
-		ImageIcon iconHTML = null;
-		try {
-			iconHTML = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/html_20x20.png")));
-		} catch (IOException e3) {
-			e3.printStackTrace();
-		}
-		JMenuItem subSubMenuExportHTML = new JMenuItem(LanguageController.getTranslation("Export to") + " HTML",
-				iconHTML);
-		subSubMenuExportHTML
-				.setToolTipText(LanguageController.getTranslation("Export your data to a HTML file (web browser)"));
-		subSubMenuExportHTML.addActionListener((ActionEvent event) -> {
 
+		// >> >> and the sub sub menu "Export to HTML"
+		JMenuItem subSubMenuExportHtml = new JMenuItem(textExportHtml, iconExportHtml);
+		subSubMenuExportHtml.setToolTipText(tooltipExportHtml);
+		subSubMenuExportHtml.addActionListener((ActionEvent event) -> {
 			actionManager.exportHtmlFile("table.html");
 		});
 
-		// with the sub sub sub menu "Export to HTML with Search" >>
-		ImageIcon iconHTMLSearch = null;
-		try {
-			iconHTMLSearch = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/htmlSearch_20x20.png")));
-		} catch (IOException e3) {
-			e3.printStackTrace();
-		}
-		JMenuItem subSubMenuExportHTMLSearch = new JMenuItem(LanguageController.getTranslation("Export to") + " HTML "
-				+ LanguageController.getTranslation("with Search"), iconHTMLSearch);
-		subSubMenuExportHTMLSearch
-				.setToolTipText(LanguageController.getTranslation("Export your data to a HTML file (web browser)")
-						+ " (" + LanguageController.getTranslation("with Search") + ")");
-		subSubMenuExportHTMLSearch.addActionListener((ActionEvent event) -> {
-
+		// >> >> and the sub sub menu "Export to HTML with a search"
+		JMenuItem subSubMenuExportHtmlWithSearch = new JMenuItem(textExportHtmlSearch, iconExportHtmlSearch);
+		subSubMenuExportHtmlWithSearch.setToolTipText(tooltipExportHtmlSearch);
+		subSubMenuExportHtmlWithSearch.addActionListener((ActionEvent event) -> {
 			actionManager.exportHtmlFileWithSearch("tableWithSearch.html");
 		});
 
-		// with the sub menu "Language" - Change language
-		JMenu subMenuLanguage = new JMenu(LanguageController.getTranslation("Language"));
-		subMenuLanguage.setToolTipText(LanguageController.getTranslation("Change the language of the program"));
-		// and the sub sub menu "Add" >>
-		ImageIcon iconLanguageDe = null;
-		try {
-			iconLanguageDe = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/de_30x20.png")));
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
-		JMenuItem subSubMenuGerman = new JMenuItem(LanguageController.getTranslation("German"), iconLanguageDe);
-		subSubMenuGerman.setToolTipText(LanguageController.getTranslation("Change the language of the program") + " "
-				+ LanguageController.getTranslation("to") + " " + LanguageController.getTranslation("German"));
-		subSubMenuGerman.addActionListener((ActionEvent event) -> {
-			System.out.println("Change GUI language to German");
-			if (LanguageController.changeLanguageRestart(Locale.GERMAN)) {
-				actionManager.fileOverWriterConfig();
-			}
-		});
-		ImageIcon iconLanguageEng = null;
-		try {
-			iconLanguageEng = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/eng_30x20.png")));
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
-		JMenuItem subSubMenuEnglish = new JMenuItem(LanguageController.getTranslation("English"), iconLanguageEng);
-		subSubMenuEnglish.setToolTipText(LanguageController.getTranslation("Change the language of the program") + " "
-				+ LanguageController.getTranslation("to") + " " + LanguageController.getTranslation("English"));
+		// >> with the sub menu "Export"
+		JMenu subMenuLanguage = new JMenu(textLanguage);
+		subMenuLanguage.setToolTipText(tooltipLanguage);
+
+		// >> >> and the sub sub menu "Export to HTML with a search"
+		JMenuItem subSubMenuEnglish = new JMenuItem(textLanguageEng, iconLanguageEng);
+		subSubMenuEnglish.setToolTipText(tooltipLanguageEng);
 		subSubMenuEnglish.addActionListener((ActionEvent event) -> {
-			System.out.println("Change GUI language to English");
-			if (LanguageController.changeLanguageRestart(Locale.ENGLISH)) {
+			if (LanguageController.changeLanguageRestart(Locale.ENGLISH))
 				actionManager.fileOverWriterConfig();
-			}
 		});
 
-		// with the sub menu "More"
-		JMenu subMenuMore = new JMenu(LanguageController.getTranslation("More"));
-		subMenuMore.setToolTipText(
-				LanguageController.getTranslation("Save your actual source folder paths and export your data"));
-		// and the sub sub menu "Save configuration" >>
-		ImageIcon iconSave = null;
-		try {
-			iconSave = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/save_20x20.png")));
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
-		JMenuItem subSubMenuConfigurationSave = new JMenuItem(LanguageController.getTranslation("Save configuration"),
-				iconSave);
-		subSubMenuConfigurationSave.setToolTipText(LanguageController
-				.getTranslation("Saves everything so you can start instantly at the next launch of the program"));
+		// >> >> and the sub sub menu "Export to HTML with a search"
+		JMenuItem subSubMenuGerman = new JMenuItem(textLanguageGer, iconLanguageGer);
+		subSubMenuGerman.setToolTipText(tooltipLanguageGer);
+		subSubMenuGerman.addActionListener((ActionEvent event) -> {
+			if (LanguageController.changeLanguageRestart(Locale.GERMAN))
+				actionManager.fileOverWriterConfig();
+		});
+
+		// >> with the sub menu "More"
+		JMenu subMenuMore = new JMenu(textMore);
+		subMenuMore.setToolTipText(tooltipMore);
+
+		// >> >> and the sub sub menu "Save configuration"
+		JMenuItem subSubMenuConfigurationSave = new JMenuItem(textSaveConfiguration, iconSaveConfiguration);
+		subSubMenuConfigurationSave.setToolTipText(tooltipSaveConfiguration);
 		subSubMenuConfigurationSave.addActionListener((ActionEvent event) -> {
-			System.out.println("Save the actual configuration (of folders)!");
 			actionManager.fileOverWriterConfig();
 		});
-		// and the sub sub menu "Load configuration" >>
-		ImageIcon iconLoad = null;
-		try {
-			iconLoad = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/load_20x20.png")));
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
-		JMenuItem subSubMenuConfigurationLoad = new JMenuItem(LanguageController.getTranslation("Load configuration"),
-				iconLoad);
-		subSubMenuConfigurationLoad
-				.setToolTipText(LanguageController.getTranslation("Load configuration from a configuration file"));
+
+		// >> >> and the sub sub menu "Load configuration"
+		JMenuItem subSubMenuConfigurationLoad = new JMenuItem(textLoadConfiguration, iconLoadConfiguration);
+		subSubMenuConfigurationLoad.setToolTipText(tooltipLoadConfiguration);
 		subSubMenuConfigurationLoad.addActionListener((ActionEvent event) -> {
-			System.out.println("dialog wich says please restart program - notify if a file even exit before this");
-			if (JOptionPane.showConfirmDialog(null,
-					LanguageController.getTranslation(
-							"This will overwrite your old configuration! Do you really want to continue?"),
-					"Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-				actionManager.loadConfigData(actionManager.getConfigurationFileOnComputer(), false);
-				// now scan again all paths for music videos
-				actionManager.updateMusicVideoList();
-				updateTable();
-			} else {
-				System.out.println("\tPlaying was denied by the user.");
-			}
+			if (actionManager.configFileLoaderDialog()) // if a new
+				updateTable(); // configuration was loaded update the table
 		});
 
-		// and last but not least the info sub sub menu "About" >>
-		ImageIcon iconAbout = null;
-		try {
-			iconAbout = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/info_20x20.png")));
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
-		JMenuItem subSubMenuAbout = new JMenuItem(LanguageController.getTranslation("About"), iconAbout);
-		subSubMenuAbout.setToolTipText(LanguageController.getTranslation("About this program"));
+		// >> >> and last but not least the sub sub menu "About"
+		JMenuItem subSubMenuAbout = new JMenuItem(textAbout, iconAbout);
+		subSubMenuAbout.setToolTipText(tooltipAbout);
 		subSubMenuAbout.addActionListener((ActionEvent event) -> {
-
-			if (newAboutWindow != null) {
-				// if there was already an open about windows close it
+			if (newAboutWindow != null)
 				newAboutWindow.closeIt();
-			}
 			newAboutWindow = new AboutWindow(version, releaseDate);
 		});
 
 		// add the menu buttons to the menu bar to the JFrame
-		subMenuPath.add(subSubMenuAddSourceFolder);
-		subMenuPath.addSeparator();
-		subMenuPath.add(subSubMenuRemoveSourceFolder);
-		menuBar.add(subMenuPath);
-		subMenuExport.add(subSubMenuExportCSV);
+		subMenuSource.add(subSubMenuAddSourceFolder);
+		subMenuSource.addSeparator();
+		subMenuSource.add(subSubMenuRemoveSourceFolder);
+		menuBar.add(subMenuSource);
+		subMenuExport.add(subSubMenuExportCsv);
 		subMenuExport.addSeparator();
-		subMenuExport.add(subSubMenuExportHTML);
+		subMenuExport.add(subSubMenuExportHtml);
 		subMenuExport.addSeparator();
-		subMenuExport.add(subSubMenuExportHTMLSearch);
+		subMenuExport.add(subSubMenuExportHtmlWithSearch);
 		menuBar.add(subMenuExport);
-		subMenuLanguage.add(subSubMenuGerman);
 		subMenuLanguage.add(subSubMenuEnglish);
+		subMenuLanguage.add(subSubMenuGerman);
 		menuBar.add(subMenuLanguage);
 		subMenuMore.add(subSubMenuConfigurationSave);
 		subMenuMore.addSeparator();
@@ -380,47 +330,63 @@ public class ConceptJFrameGUI {
 		subMenuMore.addSeparator();
 		subMenuMore.add(subSubMenuAbout);
 		menuBar.add(subMenuMore);
-
 		guiMainFrame.setJMenuBar(menuBar);
+
+		Object[] menüs = { subMenuSource, subMenuExport, subMenuLanguage, subMenuMore, subSubMenuAddSourceFolder,
+				subSubMenuRemoveSourceFolder, subSubMenuExportCsv, subSubMenuExportHtml, subSubMenuExportHtmlWithSearch,
+				subSubMenuGerman, subSubMenuEnglish, subSubMenuConfigurationSave, subSubMenuConfigurationLoad,
+				subSubMenuAbout };
+		for (Object a : menüs) {
+			try {
+				JMenu b = (JMenu) a;
+				b.addMouseListener(ActionHandler.mouseChangeListener(guiMainFrame));
+			} catch (ClassCastException e) {
+				JMenuItem b = (JMenuItem) a;
+				b.addMouseListener(ActionHandler.mouseChangeListener(guiMainFrame));
+			}
+		}
 
 		model = new DefaultTableModel(actionManager.musicVideoListToTable("  "), actionManager.getColumnNames());
 		table = new JTable(model);
 
-		table.getTableHeader().setBackground(Color.BLACK);
+		// for Linux
+		table.getTableHeader().setBackground(new Color(240, 240, 240));
 
-		// Color color = UIManager.getColor("Table.gridColor");
-		// MatteBorder border = new MatteBorder(1, 1, 0, 0, Color.BLACK);
-		// table.setBorder(border);
-		// http://stackoverflow.com/a/12846591
+		// set the color of the border
+		MatteBorder border = new MatteBorder(0, 0, 0, 0, Color.BLACK);
+		table.setBorder(border);
 
 		// if you select a cell the whole row will be selected
 		table.setRowSelectionAllowed(true);
+
 		// only one row can be selected
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+		// set the specific width of the columns
 		TableColumnModel columnModel = table.getColumnModel();
 		columnModel.getColumn(0).setPreferredWidth(5);
 		columnModel.getColumn(1).setPreferredWidth(150);
 		columnModel.getColumn(2).setPreferredWidth(225);
 
-		((DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
-
+		// center text in the first column
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 		table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 
+		// automatic row sorter
 		table.setAutoCreateRowSorter(true);
 
 		// from bbhar - https://stackoverflow.com/a/26576892/7827128
+		// 2 colors (every second row gets colored)
 		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
 		if (defaults.get("Table.alternateRowColor") == null)
 			defaults.put("Table.alternateRowColor", new Color(240, 240, 240));
 
-		// Place the JTable object in a JScrollPane for a scrolling table
+		// place the JTable object in a JScrollPane for a scrolling table
 		JScrollPane tableScrollPane = new JScrollPane(table);
-
 		guiMainFrame.add(tableScrollPane);
 
+		// add table mouse listener
 		table.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -590,6 +556,7 @@ public class ConceptJFrameGUI {
 
 		randomMusicvideoButton.setText(LanguageController.getTranslation("Play a random music video"));
 		randomMusicvideoButton.setPreferredSize(new Dimension(500, 40));
+		randomMusicvideoButton.addMouseListener(ActionHandler.mouseChangeListener(guiMainFrame));
 		randomMusicvideoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {

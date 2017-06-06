@@ -34,11 +34,14 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String ADD_COMMAND = LanguageController.getTranslation("add folder/s");
-	private static final String REMOVE_COMMAND = LanguageController.getTranslation("remove folder");
-	private static final String REMOVES_COMMAND = LanguageController.getTranslation("remove sub folders");
-	private static final String RELOAD_COMMAND = LanguageController.getTranslation("reload");
-	private static final String[] commands = { ADD_COMMAND, REMOVE_COMMAND, REMOVES_COMMAND, RELOAD_COMMAND };
+	private static String ADD_COMMAND = LanguageController.getTranslation("add folder");
+	private static String REMOVE_COMMAND = LanguageController.getTranslation("remove folder");
+	private static String REMOVES_COMMAND = LanguageController.getTranslation("remove sub folders");
+	private static String RELOAD_COMMAND = LanguageController.getTranslation("reload");
+	private static String GET_BAD_FILES_COMMAND = LanguageController.getTranslation("get bad files");
+	private static String[] command1 = { ADD_COMMAND, REMOVE_COMMAND };
+	private static String[] command2 = { REMOVES_COMMAND, RELOAD_COMMAND, GET_BAD_FILES_COMMAND };
+	private static String[][] commands = { command1, command2 };
 
 	private JFrame frame;
 	private static JLabel selectedLabel;
@@ -47,6 +50,8 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 
 	private ActionHandler actionHandler;
 	private ConceptJFrameGUI conceptJFrameGUI;
+
+	private boolean windowOpen = false;
 
 	public FileTreeWindow(ActionHandler actionHandler, ConceptJFrameGUI conceptJFrameGUI) {
 		super(new BorderLayout());
@@ -60,47 +65,48 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 
 		this.add(treePanel, BorderLayout.CENTER);
 
-		JPanel panelBig = new JPanel(new GridLayout(2, 0));
+		JPanel panelBig = new JPanel(new GridLayout(3, 0));
 		selectedLabel = new JLabel();
 		panelBig.add(selectedLabel);
 
-		JPanel panel = new JPanel(new GridLayout(0, commands.length));
-		for (String a : commands) {
+		for (String[] currentCommand : commands) {
+			JPanel panel = new JPanel(new GridLayout(0, currentCommand.length));
+			for (String a : currentCommand) {
+				JButton button;
 
-			JButton button;
-
-			String pathToImageIcon = null;
-			if (a.equals(ADD_COMMAND)) {
-				pathToImageIcon = "/add_20x20.png";
-			} else if (a.equals(REMOVE_COMMAND) || a.equals(REMOVES_COMMAND)) {
-				pathToImageIcon = "/remove_20x20.png";
-			} else if (a.equals(RELOAD_COMMAND)) {
-				pathToImageIcon = "/reload_20x20.png";
-			}
-
-			ImageIcon iconRandom = null;
-			if (pathToImageIcon != null) {
-				try {
-					iconRandom = new ImageIcon(ImageIO.read(FileTreeWindow.class.getResource(pathToImageIcon)));
-				} catch (IOException e1) {
-					e1.printStackTrace();
+				String pathToImageIcon = null;
+				if (a.equals(ADD_COMMAND)) {
+					pathToImageIcon = "/add_20x20.png";
+				} else if (a.equals(REMOVE_COMMAND) || a.equals(REMOVES_COMMAND)) {
+					pathToImageIcon = "/remove_20x20.png";
+				} else if (a.equals(RELOAD_COMMAND)) {
+					pathToImageIcon = "/reload_20x20.png";
+				} else if (a.equals(GET_BAD_FILES_COMMAND)) {
+					pathToImageIcon = "/wrongFilenameFormat_20x20.png";
 				}
+
+				ImageIcon iconRandom = null;
+				if (pathToImageIcon != null) {
+					try {
+						iconRandom = new ImageIcon(ImageIO.read(FileTreeWindow.class.getResource(pathToImageIcon)));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+
+				// and make a button with an icon (or not if null)
+				button = new JButton(" " + a.toString(), iconRandom);
+
+				// set command, Action Listener and add it to the panel
+				button.setActionCommand(a);
+				button.addActionListener(this);
+				button.setPreferredSize(new Dimension(200, 40));
+				panel.add(button);
 			}
-
-			// and make a button with an icon (or not if null)
-			button = new JButton(" " + a.toString(), iconRandom);
-
-			// set command, Action Listener and add it to the panel
-			button.setActionCommand(a);
-			button.addActionListener(this);
-			button.setPreferredSize(new Dimension(200, 40));
-			panel.add(button);
+			panelBig.add(panel);
 		}
 
-		panelBig.add(panel);
 		this.add(panelBig, BorderLayout.SOUTH);
-
-		populateTree(actionHandler.getPathList());
 	}
 
 	public static void setLabel(String a) {
@@ -153,7 +159,7 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 			}
 
 			// add this node so that even empty folders appear as folders
-			if (noMusicVideosFound)
+			if (noMusicVideosFound && walkingParentNode.isLeaf())
 				treePanel.addObject(walkingParentNode, LanguageController.getTranslation("no music videos"));
 		}
 	}
@@ -165,9 +171,8 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 
 		if (e.getActionCommand().equals(ADD_COMMAND)) {
 			// add dialogue
-			actionHandler.addToPathList(actionHandler.getPathOfDirectories());
-			// update tree window
-			updateTree();
+			if (actionHandler.addToPathList(actionHandler.getPathOfDirectories()))
+				updateTree(); // update tree window
 		} else if (e.getActionCommand().equals(REMOVE_COMMAND)) {
 			// check if selected path is in path list
 			if (actionHandler.getPathList().contains(treePanel.getSelectedNodePath())) {
@@ -184,6 +189,8 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 						JOptionPane.showMessageDialog(null,
 								LanguageController.getTranslation("The path could not be deleted") + "! "
 										+ LanguageController.getTranslation("Only added paths can be deleted") + "!");
+					} else {
+						updateTree();
 					}
 				}
 			} else {
@@ -191,7 +198,7 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(null, LanguageController.getTranslation("The path could not be deleted")
 						+ "! " + LanguageController.getTranslation("Only added paths can be deleted") + "!");
 			}
-			updateTree();
+
 		} else if (e.getActionCommand().equals(REMOVES_COMMAND)) {
 			// because we have always something beneath us in the JTree from the
 			// path list we don't need to check
@@ -214,12 +221,15 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 						actionHandler.deletePathFromPathList(currentPath);
 					}
 				}
+				// and update after that the JTable and the JTree
+				updateTree();
 			}
-			// and update after that the JTable and the JTree
-			updateTree();
 		} else if (e.getActionCommand().equals(RELOAD_COMMAND)) {
 			// update the JTable and the JTree
 			updateTree();
+		} else if (e.getActionCommand().equals(GET_BAD_FILES_COMMAND)) {
+			// give back the not correct formatted probably music videos
+			actionHandler.getWrongFormattedMusicVideos();
 		}
 	}
 
@@ -237,6 +247,7 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 	 * invoked from the event-dispatching thread.
 	 */
 	public void createAndShowGUI() {
+		windowOpen = true;
 
 		// Get the Windows look on Windows computers
 		ActionHandler.windowsLookActivator();
@@ -245,8 +256,15 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 		frame = new JFrame(LanguageController.getTranslation("Source folder editor"));
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+		// get the default program icon
+		ActionHandler.setProgramWindowIcon(frame);
+
 		// Create and set up the content pane.
 		frame.setContentPane(this);
+
+		// fill the tree
+		treePanel.clear();
+		populateTree(actionHandler.getPathList());
 
 		// Display the window.
 		frame.pack();
@@ -256,6 +274,15 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 	}
 
 	public void closeIt() {
-		frame.dispose();
+		if (windowOpen == true) {
+			frame.dispose();
+		} else {
+			System.err.println("Window wasn't even open!");
+		}
+		windowOpen = false;
+	}
+
+	public boolean getIfWindowOpen() {
+		return windowOpen;
 	}
 }

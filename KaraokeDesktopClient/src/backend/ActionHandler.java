@@ -1,6 +1,9 @@
 package backend;
 
+import java.awt.Cursor;
 import java.awt.Desktop;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +20,9 @@ import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -27,7 +33,9 @@ import backend.libraries.FileReaderManager;
 import backend.libraries.FileWriterManager;
 import backend.libraries.JFileChooserManager;
 import backend.libraries.JProgressBarWindow;
+import backend.libraries.ProbablyWrongFormattedWindow;
 import backend.objects.MusicVideo;
+import frontend.ConceptJFrameGUI;
 
 /**
  * In this class are all the behind the scenes algorithms that have nothing to
@@ -188,7 +196,10 @@ public class ActionHandler {
 			e.printStackTrace();
 		}
 		for (Path a : all) {
-			System.out.println("Path: " + a);
+			// System.out.println("Path: " + a);
+
+			JProgressBarWindow.setLabelText("Scan: " + a.toString());
+
 			// file is a "normal" readable file
 			if (Files.isRegularFile(a)) {
 
@@ -199,6 +210,7 @@ public class ActionHandler {
 
 				if (lastIndexOfPoint > 0) {
 					extension = pathOfFile.substring(lastIndexOfPoint + 1);
+					// System.out.println(extension);
 					// get everything after the point
 					justFileName = pathOfFile.substring(0, lastIndexOfPoint);
 					// get everything before the point
@@ -208,11 +220,17 @@ public class ActionHandler {
 
 				boolean fileIsAMusicVideo = false;
 
-				// now we compare it to our allowed extension array
-				for (String ab : acceptedExtensions) {
-					if (ab.equalsIgnoreCase(extension)) {
-						// if we get a hit we set the variable true
-						fileIsAMusicVideo = true;
+				if (artistAndTitle == null || artistAndTitle.length < 2) {
+					fileIsAMusicVideo = false;
+				} else {
+					// now we compare it to our allowed extension array
+					for (String ab : acceptedExtensions) {
+						// System.out.println(ab + ".equalsIgnoreCase(" +
+						// extension + ")");
+						if (ab.equalsIgnoreCase(extension)) {
+							// if we get a hit we set the variable true
+							fileIsAMusicVideo = true;
+						}
 					}
 				}
 
@@ -299,20 +317,93 @@ public class ActionHandler {
 	}
 
 	/**
+	 * Scan a directory after specific video files and map all music videos
+	 * 
+	 * @param path
+	 *            (Path | path of the directory)
+	 */
+	public ArrayList<String[]> scanDirectoryAfterProbablyMusicVideos(Path path) {
+		ArrayList<String[]> musicvideosinFolder = new ArrayList<String[]>();
+
+		Collection<Path> all = new ArrayList<Path>();
+		try (DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
+			for (Path child : ds) {
+				all.add(child);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		for (Path a : all) {
+			// System.out.println("Path: " + a);
+
+			JProgressBarWindow.setLabelText("Scan: " + a.toString());
+
+			// file is a "normal" readable file
+			if (Files.isRegularFile(a)) {
+
+				String extension = null, justFileName = null, pathOfFile = a.getFileName().toString();
+				String[] artistAndTitle = null;
+
+				int lastIndexOfPoint = pathOfFile.lastIndexOf('.');
+
+				if (lastIndexOfPoint > 0) {
+					extension = pathOfFile.substring(lastIndexOfPoint + 1);
+					// System.out.println(extension);
+					// get everything after the point
+					justFileName = pathOfFile.substring(0, lastIndexOfPoint);
+					// get everything before the point
+					artistAndTitle = justFileName.split("\\s-\\s");
+					// split String at " - "
+				}
+
+				boolean fileIsAWrongFormattedMusicVideo = false;
+
+				// now we compare it to our allowed extension array
+				for (String ab : acceptedExtensions) {
+					// System.out.println(ab + ".equalsIgnoreCase(" +
+					// extension + ")");
+					if (ab.equalsIgnoreCase(extension)) {
+						// if we get a hit we set the variable true
+
+						if (artistAndTitle == null || artistAndTitle.length < 2) {
+							fileIsAWrongFormattedMusicVideo = true;
+						} else {
+							fileIsAWrongFormattedMusicVideo = false;
+						}
+					}
+				}
+
+				// if the extension was accepted let's move on
+				if (fileIsAWrongFormattedMusicVideo) {
+					String[] ahaha = new String[2];
+					ahaha[0] = justFileName + "." + extension;
+					ahaha[1] = a.toString();
+					musicvideosinFolder.add(ahaha);
+				}
+			}
+		}
+		return musicvideosinFolder;
+	}
+
+	/**
 	 * This method simply updates the whole music video List
 	 */
 	public void updateMusicVideoList() {
 
 		JProgressBarWindow progress = new JProgressBarWindow(
 				LanguageController.getTranslation("Searching for music video files") + "...");
+
+		Thread a = new Thread();
+		a.start();
+
 		progress.setProgressBar(0);
-		progress.setLabelText("Clear music video list...");
+		progress.setLabelTextNotStatic("Clear music video list...");
 
 		// delete old entries
 		clearMusicVideosList();
 
 		progress.setProgressBar(5);
-		progress.setLabelText("Scan all added directories for music video files...");
+		progress.setLabelTextNotStatic("Scan all added directories for music video files...");
 
 		// if there are paths scan them all to update the music video list
 		if (pathList.isEmpty()) {
@@ -326,14 +417,14 @@ public class ActionHandler {
 			int progressInt = 85 / pathList.size();
 			for (Path path : pathList) {
 
-				progress.setLabelText("Scan " + path.toString());
+				progress.setLabelTextNotStatic("Scan " + path.toString());
 				scanDirectory(path);
 				progress.addProgressToProgressBar(progressInt);
 			}
 		}
 
 		// sort the music video at last
-		progress.setLabelText("Sort all music videos alphabetical...");
+		progress.setLabelTextNotStatic("Sort all music videos alphabetical...");
 		sortMusicVideoList();
 		Collections.sort(musicVideoList, new MusicVideo());
 		progress.setProgressBar(100);
@@ -362,6 +453,63 @@ public class ActionHandler {
 
 		// sort the music video at last
 		sortMusicVideoList();
+	}
+
+	/**
+	 * This method simply updates the whole music video List
+	 */
+	public void getWrongFormattedMusicVideos() {
+
+		JProgressBarWindow progress = new JProgressBarWindow(
+				LanguageController.getTranslation("Searching for wrong formatted music video files") + "...");
+
+		Thread a = new Thread();
+		a.start();
+
+		ArrayList<String[]> allWrongFormattedVideos = new ArrayList<String[]>();
+
+		progress.setProgressBar(0);
+		progress.setLabelTextNotStatic("Clear music video list...");
+
+		progress.setProgressBar(5);
+		progress.setLabelTextNotStatic("Scan all added directories for wrong formatted music video files...");
+
+		// if there are paths scan them all to update the music video list
+		if (pathList.isEmpty()) {
+			System.err.println("There are no paths to scan for wrong formatted music videos!");
+
+			progress.setProgressBar(90);
+
+		} else {
+			System.out.println("Scan all paths for music videos:");
+
+			int progressInt = 85 / pathList.size();
+			for (Path path : pathList) {
+
+				progress.setLabelTextNotStatic("Scan " + path.toString());
+				allWrongFormattedVideos.addAll(scanDirectoryAfterProbablyMusicVideos(path));
+				progress.addProgressToProgressBar(progressInt);
+			}
+		}
+
+		progress.setProgressBar(100);
+		progress.closeJFrame();
+
+		String abc = LanguageController.getTranslation("Eventually wrong formatted music video files") + ":\n";
+		abc += "(" + LanguageController.getTranslation("Correct format") + ": \""
+				+ LanguageController.getTranslation("Artist") + "\" - \"" + LanguageController.getTranslation("Title")
+				+ "\".\"" + LanguageController.getTranslation("Extension") + "\")\n\n";
+
+		int count = 1;
+
+		for (String[] hulu : allWrongFormattedVideos) {
+			abc += "#" + count + ") " + hulu[0] + "\n\t" + hulu[1] + "\n";
+			count++;
+		}
+
+		ProbablyWrongFormattedWindow atrgvfgd = new ProbablyWrongFormattedWindow(
+				LanguageController.getTranslation("Eventually wrong formatted music video files"));
+		atrgvfgd.showMe(abc);
 	}
 
 	/*
@@ -438,16 +586,18 @@ public class ActionHandler {
 	 * @param pathArray
 	 *            (Path[])
 	 */
-	public void addToPathList(Path[] pathArray) {
+	public boolean addToPathList(Path[] pathArray) {
 
 		if (pathArray == null || pathArray.length == 0) {
 			System.err.println("The path Array was null - no paths were added to your path list!");
+			return false;
 		} else {
 			// only extract the paths if the array isn't null or has no length
 			System.out.println("Load paths from path Array...");
 			for (Path pathFromPathArray : pathArray) {
 				addToPathList(pathFromPathArray);
 			}
+			return true;
 		}
 	}
 
@@ -677,9 +827,9 @@ public class ActionHandler {
 			tableData[a][2] = musicVideoList.get(a).getTitle();
 
 			// check it right now
-			System.out.print("#: " + tableData[a][0]);
-			System.out.print("\tArtist: " + tableData[a][1]);
-			System.out.println("\tTitle: " + tableData[a][2]);
+			// System.out.print("#: " + tableData[a][0]);
+			// System.out.print("\tArtist: " + tableData[a][1]);
+			// System.out.println("\tTitle: " + tableData[a][2]);
 		}
 
 		return tableData;
@@ -835,6 +985,24 @@ public class ActionHandler {
 		}
 
 		return content;
+	}
+
+	/**
+	 * Dialog to load a configuration file from a specific place
+	 */
+	public boolean configFileLoaderDialog() {
+		if (JOptionPane.showConfirmDialog(null,
+				LanguageController
+						.getTranslation("This will overwrite your old configuration! Do you really want to continue?"),
+				"Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+			loadConfigData(getConfigurationFileOnComputer(), false);
+			// now scan again all paths for music videos
+			updateMusicVideoList();
+			return true;
+		} else {
+			System.err.println("Loading of configuration file was denied by the user!");
+			return false;
+		}
 	}
 
 	/**
@@ -1145,9 +1313,10 @@ public class ActionHandler {
 			// UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 			// UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 			// UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-			if (System.getProperty("os.name").contains("Windows")) {
-				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-			}
+
+			// if (System.getProperty("os.name").contains("Windows"))
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
@@ -1159,4 +1328,52 @@ public class ActionHandler {
 		}
 	}
 
+	/**
+	 * Load an icon from the res folder
+	 * 
+	 * @param path
+	 *            (String | path to file)
+	 * @return ImageIcon if path exists - otherwise null
+	 */
+	public static ImageIcon loadImageIconFromClass(String string) {
+		try {
+			return new ImageIcon(ImageIO.read(ActionHandler.class.getResource(string)));
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		} catch (IllegalArgumentException e2) {
+			e2.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * Sets the program icon of a JFrame to the default one
+	 * 
+	 * @param a
+	 *            (JFrame | current window)
+	 */
+	public static void setProgramWindowIcon(JFrame a) {
+		try {
+			a.setIconImage(ImageIO.read(ConceptJFrameGUI.class.getResource("/logo.png")));
+		} catch (IOException exc) {
+			exc.printStackTrace();
+		}
+	}
+
+	public static MouseListener mouseChangeListener(JFrame a) {
+		// add table mouse listener
+		return (new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
+			}
+
+			public void mouseEntered(MouseEvent e) {
+				a.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			public void mouseExited(MouseEvent e) {
+				a.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
+		});
+	}
 }
