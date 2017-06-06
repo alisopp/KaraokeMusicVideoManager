@@ -3,19 +3,14 @@ package frontend;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Desktop;
-import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Locale;
 
-import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -33,13 +28,12 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -61,24 +55,54 @@ import backend.libraries.FileTreeWindow;
 public class ConceptJFrameGUI {
 
 	/**
-	 * All the management of the list and data already written
+	 * All the management of the music video list and more methods for
+	 * interaction with everything
 	 */
 	private ActionHandler actionManager;
 
 	/**
-	 * global window where the main things will happen
+	 * The global JFrame window
 	 */
 	private JFrame guiMainFrame;
 
-	// a global JTable and DefaultTableModel;
+	/**
+	 * The global main JTable table
+	 */
 	private JTable table;
-	private DefaultTableModel model;
-	TableRowSorter<TableModel> rowSorter;
 
+	/**
+	 * The DefaultTableModel of the global main JTable table
+	 */
+	private DefaultTableModel tableModel;
+
+	/**
+	 * The TableRowSorter of the global main JTable table
+	 */
+	private TableRowSorter<TableModel> tableRowSorter;
+
+	/**
+	 * Global JTextField text input field
+	 */
+	private JTextField textInputField;
+
+	/**
+	 * The about JFrame window
+	 */
 	private AboutWindow newAboutWindow;
+
+	/**
+	 * The path editor JFrame window
+	 */
 	private FileTreeWindow fileTreeWindow;
 
+	/**
+	 * The program version
+	 */
 	private String version;
+
+	/**
+	 * The program release date
+	 */
 	private String releaseDate;
 
 	/**
@@ -87,20 +111,22 @@ public class ConceptJFrameGUI {
 	 */
 	public ConceptJFrameGUI() {
 
+		// set the global language to the language of the running system
 		LanguageController.setDefaultLanguage();
 
+		// set version and release date
 		version = "0.7.4 (beta)";
 		releaseDate = LanguageController.getTranslation("June") + " 2017";
 
+		// set the column names and configuration file name
 		String[] columnNames = new String[] { "#", LanguageController.getTranslation("Artist"),
 				LanguageController.getTranslation("Title") };
 		String[] fileNameConfiguration = new String[] { "karaokeConfig", "cfg" };
 
-		// start a new window/JFrame
-		guiMainFrame = new JFrame();
 		// start a ActionHandler for all the under the surface commands
 		actionManager = new ActionHandler(columnNames, fileNameConfiguration);
 
+		// start in the background the path editor
 		fileTreeWindow = new FileTreeWindow(actionManager, this);
 	}
 
@@ -110,33 +136,31 @@ public class ConceptJFrameGUI {
 	 * possible.
 	 */
 	private void startupConfig() {
-
-		// if a configuration file exists
+		// check if a configuration file exists
 		if (actionManager.fileExists(actionManager.getConfigurationFile())) {
-			// ask the user if he also wants to load saved data
-			// if (JOptionPane.showConfirmDialog(null,
-			// LanguageController.getTranslation("Would you like to load your
-			// previous saved configuration") + "?",
-			// LanguageController.getTranslation("Question"),
-			// JOptionPane.YES_NO_OPTION,
-			// JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-			// if he accepts to load the data read the file and set the
-			// content as your new path list
+			// read it
 			actionManager.configFileReaderOnStart();
-			// now scan again all paths for music videos
-			actionManager.updateMusicVideoList();
-			// }
-			fileTreeWindow = new FileTreeWindow(actionManager, this);
+
+			// update column heads and version date if language change
+			actionManager.setColumnNames(new String[] { "#", LanguageController.getTranslation("Artist"),
+					LanguageController.getTranslation("Title") });
+			releaseDate = LanguageController.getTranslation("June") + " 2017";
 		}
 	}
 
 	/**
 	 * This method manages the main graphic user interface. Here you can find
 	 * all features.
-	 * 
-	 * @throws IOException
 	 */
 	private void createWindow() {
+
+		/*
+		 * [JFrame setup (1)]
+		 * ---------------------------------------------------------------------
+		 */
+
+		guiMainFrame = new JFrame();
+		// start the global window/JFrame
 
 		guiMainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// make sure the program exits when the frame closes
@@ -146,13 +170,16 @@ public class ConceptJFrameGUI {
 		// size of the window at the start
 		guiMainFrame.setLocationRelativeTo(null);
 		// let it pop up in the middle of the screen
-
-		// update column heads and version date if language change
-		actionManager.setColumnNames(new String[] { "#", LanguageController.getTranslation("Artist"),
-				LanguageController.getTranslation("Title") });
-		releaseDate = LanguageController.getTranslation("June") + " 2017";
-
 		ActionHandler.setProgramWindowIcon(guiMainFrame);
+		// set the default icon of the program as window icon
+
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		// create a panel in which we fit all our components
+
+		/*
+		 * [Load all the text and icons for the menu]
+		 * ---------------------------------------------------------------------
+		 */
 
 		String textSource = LanguageController.getTranslation("Source folders");
 		String tooltipSource = LanguageController.getTranslation("Edit the source folders of your music videos");
@@ -213,6 +240,11 @@ public class ConceptJFrameGUI {
 		ImageIcon iconAbout = ActionHandler.loadImageIconFromClass("/info_20x20.png");
 		String textAbout = LanguageController.getTranslation("About");
 		String tooltipAbout = LanguageController.getTranslation("About this program");
+
+		/*
+		 * [Add a JMenu Bar to the JFrame with JMenuItems]
+		 * ---------------------------------------------------------------------
+		 */
 
 		// add a menu bar to the window
 		JMenuBar menuBar = new JMenuBar();
@@ -332,11 +364,12 @@ public class ConceptJFrameGUI {
 		menuBar.add(subMenuMore);
 		guiMainFrame.setJMenuBar(menuBar);
 
-		Object[] menüs = { subMenuSource, subMenuExport, subMenuLanguage, subMenuMore, subSubMenuAddSourceFolder,
+		// add to all the buttons a mouse click effect (MouseListener)
+		Object[] menus = { subMenuSource, subMenuExport, subMenuLanguage, subMenuMore, subSubMenuAddSourceFolder,
 				subSubMenuRemoveSourceFolder, subSubMenuExportCsv, subSubMenuExportHtml, subSubMenuExportHtmlWithSearch,
 				subSubMenuGerman, subSubMenuEnglish, subSubMenuConfigurationSave, subSubMenuConfigurationLoad,
 				subSubMenuAbout };
-		for (Object a : menüs) {
+		for (Object a : menus) {
 			try {
 				JMenu b = (JMenu) a;
 				b.addMouseListener(ActionHandler.mouseChangeListener(guiMainFrame));
@@ -346,10 +379,15 @@ public class ConceptJFrameGUI {
 			}
 		}
 
-		model = new DefaultTableModel(actionManager.musicVideoListToTable("  "), actionManager.getColumnNames());
-		table = new JTable(model);
+		/*
+		 * [Create the table and load the data]
+		 * ---------------------------------------------------------------------
+		 */
 
-		// for Linux
+		tableModel = new DefaultTableModel(actionManager.musicVideoListToTable("  "), actionManager.getColumnNames());
+		table = new JTable(tableModel);
+
+		// for Linux? table background
 		table.getTableHeader().setBackground(new Color(240, 240, 240));
 
 		// set the color of the border
@@ -376,15 +414,24 @@ public class ConceptJFrameGUI {
 		// automatic row sorter
 		table.setAutoCreateRowSorter(true);
 
-		// from bbhar - https://stackoverflow.com/a/26576892/7827128
-		// 2 colors (every second row gets colored)
-		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
-		if (defaults.get("Table.alternateRowColor") == null)
-			defaults.put("Table.alternateRowColor", new Color(240, 240, 240));
+		// color the table special
+		ActionHandler.colorTableWithTwoColors();
+
+		JTableHeader header = table.getTableHeader();
+		DefaultTableCellRenderer headRenderer = new DefaultTableCellRenderer();
+		headRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+		// does not work but still...
+		headRenderer.setFont(new Font("Dialog", Font.BOLD, 18));
+		headRenderer.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
+		// ...
+
+		header.setDefaultRenderer(headRenderer);
 
 		// place the JTable object in a JScrollPane for a scrolling table
 		JScrollPane tableScrollPane = new JScrollPane(table);
-		guiMainFrame.add(tableScrollPane);
+
+		mainPanel.add(tableScrollPane, BorderLayout.CENTER);
 
 		// add table mouse listener
 		table.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -402,161 +449,142 @@ public class ConceptJFrameGUI {
 			}
 		});
 
-		// add a search bar with filter and input option
-		JTextField jtfFilter = new JTextField();
-		JPanel panel = new JPanel(new BorderLayout());
+		/*
+		 * [Create the top panel with the search]
+		 * ---------------------------------------------------------------------
+		 */
 
-		ImageIcon iconSearch = null;
-		try {
-			iconSearch = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/search.png")));
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
-		JLabel thumb = new JLabel(LanguageController.getTranslation("Search for a music video") + ":  ");
-		thumb.setIcon(iconSearch);
-		thumb.setToolTipText(LanguageController.getTranslation("Type in the field to instantly find your music video"));
-		panel.add(thumb);
+		// create a panel in which we fit all our components
+		JPanel topNorthPanel = new JPanel(new BorderLayout());
 
-		ImageIcon icon = null;
-		try {
-			icon = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/youtube.png")));
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
+		// add the search label
+		ImageIcon iconSearch = ActionHandler.loadImageIconFromClass("/search.png");
+		String textSearch = LanguageController.getTranslation("Search for a music video") + ":  ";
+		String tooltipSearch = LanguageController
+				.getTranslation("Type in the field to instantly find your music video");
 
-		JButton button234 = new JButton(icon);
-		button234.setBackground(new Color(224, 47, 47));
-		button234.setContentAreaFilled(false);
-		button234.setOpaque(true);
-		button234.addMouseListener(new java.awt.event.MouseAdapter() {
-			@Override
+		JLabel searchLabel = new JLabel(textSearch);
+		searchLabel.setIcon(iconSearch);
+		searchLabel.setToolTipText(tooltipSearch);
+
+		// create our JTextField as a text input field
+		textInputField = new JTextField();
+
+		// add the search on YouTube button
+		ImageIcon iconYoutubeButton = ActionHandler.loadImageIconFromClass("/youtube.png");
+		String tooltipYoutubeButton = LanguageController.getTranslation("Start a video search on YouTube");
+
+		JButton youTubeButtonIcon = new JButton(iconYoutubeButton);
+		youTubeButtonIcon.setToolTipText(tooltipYoutubeButton);
+
+		// make the whole area this icon red color
+		youTubeButtonIcon.setBackground(new Color(224, 47, 47));
+		youTubeButtonIcon.setContentAreaFilled(false);
+		youTubeButtonIcon.setOpaque(true);
+		// and add a MouseListener for the cursor icon
+		youTubeButtonIcon.addMouseListener(ActionHandler.mouseChangeListener(guiMainFrame));
+		// add a MouseListener for the case if the button gets clicked
+		youTubeButtonIcon.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				String scannedText = jtfFilter.getText();
 
-				String url = "https://www.youtube.com";
+				// URL we want to open
+				String urlToOpen = "https://www.youtube.com";
+
+				// get text of JTextField
+				String currentInputFieldText = textInputField.getText();
+
+				// if text field has text try to add it to the urlToOpen
 				try {
-					if (scannedText != null && scannedText.length() > 0) {
-						url = "https://www.youtube.com/results?search_query=" + URLEncoder.encode(scannedText, "UTF-8");
+					if (currentInputFieldText != null && currentInputFieldText.length() > 0) {
+						String textToSearchQuery = URLEncoder.encode(currentInputFieldText, "UTF-8");
+						urlToOpen += "/results?search_query=" + textToSearchQuery;
 					}
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
 
-				// inspired by http://stackoverflow.com/a/4898607
-
-				if (Desktop.isDesktopSupported()) {
-					// Windows
-					try {
-						Desktop.getDesktop().browse(new URI(url));
-					} catch (IOException | URISyntaxException e1) {
-						e1.printStackTrace();
-					}
-				} else {
-					// Linux
-					Runtime runtime = Runtime.getRuntime();
-					try {
-						runtime.exec("xdg-open " + url);
-						// runtime.exec("/usr/bin/firefox -new-window " + url);
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
-			}
-
-			public void mouseEntered(MouseEvent e) {
-				guiMainFrame.setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-
-			public void mouseExited(MouseEvent e) {
-				guiMainFrame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				// open URL in default web browser of the system
+				ActionHandler.openUrlInDefaultBrowser(urlToOpen);
 			}
 		});
-		button234.setToolTipText(LanguageController.getTranslation(
-				"Click the button to start a video search on YouTube with the input of the text field"));
 
-		panel.add(thumb, BorderLayout.WEST);
-		panel.add(button234, BorderLayout.EAST);
-		panel.add(jtfFilter, BorderLayout.CENTER);
-		panel.setPreferredSize(new Dimension(500, 55));
-		panel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-		guiMainFrame.add(panel, BorderLayout.NORTH);
+		// add all components to our top panel
+		topNorthPanel.add(searchLabel, BorderLayout.WEST);
+		topNorthPanel.add(youTubeButtonIcon, BorderLayout.EAST);
+		topNorthPanel.add(textInputField, BorderLayout.CENTER);
+		// create a transparent border for better usability
+		topNorthPanel.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 20));
 
-		// action listener if the enter key was pressed
+		// add the top panel at the top of our main panel
+		mainPanel.add(topNorthPanel, BorderLayout.NORTH);
+
+		/*
+		 * [Add Action Listener(s) to react to text input]
+		 * ---------------------------------------------------------------------
+		 */
+
+		// if enter was pressed do this
 		Action action = new AbstractAction() {
-			// eclipse was this, i dont't like orange light bulbs
-			private static final long serialVersionUID = 1L;
+			private static final long serialVersionUID = 2735007834058697821L;
 
-			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				// // get the actual text of the text field
-				// String scannedText = jtfFilter.getText();
-				//
-				// // check if it is a number (a String only containing digits)
-				// if (scannedText.matches("[-+]?\\d*\\.?\\d+")) {
-				// // if yes parse the String to an Integer and
-				// // open the music video on this position
-				// actionManager.openMusicVideo(Integer.parseInt(scannedText) -
-				// 1);
-				// } else {
-				// when at least on row exists
+				// because we always want to open the top result on enter:
 				if (table.getRowCount() > 0) {
-					// algorithm that finds the top result in the actual
-					// table and gets the number of it
+					// we open the top music video if there are any music videos
 					actionManager.openMusicVideo((int) table.getValueAt(0, 0) - 1);
 				}
-				// }
 			}
 		};
-		jtfFilter.addActionListener(action);
+		textInputField.addActionListener(action);
 
-		// create a row sorter: But NOT to sort the data in the table manually
-		// later, this is enabled by default! We need the row sorter for our
-		// filter in the search bar
-		rowSorter = new TableRowSorter<>(table.getModel());
-		table.setRowSorter(rowSorter);
+		// also look up if the text in the input field changes
+		textInputField.getDocument().addDocumentListener(new DocumentListener() {
 
-		jtfFilter.getDocument().addDocumentListener(new DocumentListener() {
-
-			@Override
+			// update filter if something in text field gets added
 			public void insertUpdate(DocumentEvent e) {
-				// update filter if something in text field gets added
-				updateFilter(jtfFilter.getText());
-				if (table.getSelectedRow() != 0) {
-					table.changeSelection(0, 0, true, false);
-				}
+				updateFilter(textInputField.getText());
+				selectTopRowOfTable();
 			}
 
-			@Override
+			// update filter if something in text field gets removed
 			public void removeUpdate(DocumentEvent e) {
-				// update filter if something in text field gets removed
-				updateFilter(jtfFilter.getText());
-				if (table.getSelectedRow() != 0) {
-					table.changeSelection(0, 0, true, false);
-				}
-
+				updateFilter(textInputField.getText());
+				selectTopRowOfTable();
 			}
 
-			@Override
 			public void changedUpdate(DocumentEvent arg0) {
-				// needs to be implemented, but we don't need it
-
 			}
 		});
 
-		// play a random music video button
-		ImageIcon iconRandom = null;
-		try {
-			iconRandom = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/random.png")));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		JButton randomMusicvideoButton = new JButton(LanguageController.getTranslation("Play a random music video"),
-				iconRandom);
+		/*
+		 * [Add TableRowSorter to our table]
+		 * ---------------------------------------------------------------------
+		 */
 
-		randomMusicvideoButton.setText(LanguageController.getTranslation("Play a random music video"));
-		randomMusicvideoButton.setPreferredSize(new Dimension(500, 40));
+		// create a row sorter (especially important for our search)
+		tableRowSorter = new TableRowSorter<>(table.getModel());
+		// add row sorter to the table
+		table.setRowSorter(tableRowSorter);
+		// set every column able to sort
+		for (int i = 0; i < actionManager.getColumnNames().length; i++) {
+			tableRowSorter.setSortable(i, true);
+		}
+		// set a special number comparator to the number column
+		tableRowSorter.setComparator(0, actionManager.new NumberComparator());
+
+		/*
+		 * [Add a open random music video from table button at the bottom]
+		 * ---------------------------------------------------------------------
+		 */
+
+		// play a random music video button
+		ImageIcon iconRandomButton = ActionHandler.loadImageIconFromClass("/random.png");
+		String textRandomButton = LanguageController.getTranslation("Play a random music video");
+
+		JButton randomMusicvideoButton = new JButton(textRandomButton, iconRandomButton);
+		// make it change the cursor symbol
 		randomMusicvideoButton.addMouseListener(ActionHandler.mouseChangeListener(guiMainFrame));
+		// add special click event
 		randomMusicvideoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
@@ -584,30 +612,40 @@ public class ConceptJFrameGUI {
 				}
 			}
 		});
-		guiMainFrame.add(randomMusicvideoButton, BorderLayout.SOUTH);
+		mainPanel.add(randomMusicvideoButton, BorderLayout.SOUTH);
 
-		// make the frame visible for the user (you can do this only if every
-		// graphical component was added - otherwise some components will not be
-		// displayed.
+		/*
+		 * [JFrame setup (2)]
+		 * ---------------------------------------------------------------------
+		 */
+
+		// add the panel with everything to the JFrame window
+		guiMainFrame.add(mainPanel);
+
+		// make the frame visible for the user
+		// (you can do this only if every graphical component was added -
+		// otherwise some components will not be displayed)
 		guiMainFrame.setVisible(true);
 
-		// when the user wants to close the window (do something)
+		// when the user wants to close the window (we want to do something)
 		guiMainFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-			@Override
+
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				// check if there already exist a saved configuration that is
-				// different from the actual configuration or if there exist no
-				// configuration at all
+
+				/*
+				 * check if there already exist a saved configuration that is
+				 * different from the actual configuration or if there exist no
+				 * configuration at all
+				 */
 
 				boolean fileExistButPathListIsNotTheSame = actionManager
 						.fileExists(actionManager.getConfigurationFile())
 						&& (!actionManager.configFilePathExtracter().equals(actionManager.getPathList()));
-				boolean fileDoesNotExist = !(actionManager.fileExists(actionManager.getConfigurationFile()));
+				boolean fileDoesExist = actionManager.fileExists(actionManager.getConfigurationFile());
 				boolean noPathsExist = actionManager.getPathList().isEmpty();
 
-				if (!noPathsExist && (fileExistButPathListIsNotTheSame || fileDoesNotExist)) {
-					// ask the user if he wants to close without saving his
-					// actual configuration
+				if (!noPathsExist && (fileExistButPathListIsNotTheSame || !fileDoesExist)) {
+					// then ask the user if he wants to close without saving
 					if (JOptionPane.showConfirmDialog(guiMainFrame,
 							LanguageController.getTranslation(
 									"Are you sure to close the program without saving your music video folder paths to a configuration file?"),
@@ -621,33 +659,6 @@ public class ConceptJFrameGUI {
 	}
 
 	/**
-	 * This method removes all rows of our table and updates them with new rows
-	 * created of a new read of an up to date music video list.
-	 */
-	public void updateTable() {
-
-		// delete all actual rows if there are even any rows!
-		while (model.getRowCount() > 0) {
-			model.removeRow(0);
-		}
-
-		// scan each path of the path list after music videos and update so the
-		// music video list
-		actionManager.updateMusicVideoList();
-
-		// now add for each entry in the new updated music video list a row to
-		// the empty table
-		for (Object[] a : actionManager.musicVideoListToTable("  ")) {
-			model.addRow(a);
-		}
-
-		// from bbhar - https://stackoverflow.com/a/26576892/7827128
-		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
-		if (defaults.get("Table.alternateRowColor") == null)
-			defaults.put("Table.alternateRowColor", new Color(240, 240, 240));
-	}
-
-	/**
 	 * This method updates our TableRowSorter after our filter.
 	 * 
 	 * @param searchString
@@ -655,10 +666,43 @@ public class ConceptJFrameGUI {
 	 */
 	public void updateFilter(String searchString) {
 		if (searchString.trim().length() == 0) {
-			rowSorter.setRowFilter(null);
+			tableRowSorter.setRowFilter(null);
 		} else {
-			rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchString));
+			tableRowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchString));
 		}
+	}
+
+	/**
+	 * Selects automatically the top row of the table
+	 */
+	private void selectTopRowOfTable() {
+		if (table.getSelectedRow() != 0) {
+			table.changeSelection(0, 0, true, false);
+		}
+	}
+
+	/**
+	 * This method removes all rows of our table and updates them with new rows
+	 * created of a new read of an up to date music video list.
+	 */
+	public void updateTable() {
+
+		// delete all actual rows if there are even any rows!
+		while (tableModel.getRowCount() > 0) {
+			tableModel.removeRow(0);
+		}
+
+		// update the whole music video list (rescan all paths)
+		actionManager.updateMusicVideoList();
+
+		// now add for each entry of the updated music video list a row to
+		// the empty table
+		for (Object[] a : actionManager.musicVideoListToTable("  ")) {
+			tableModel.addRow(a);
+		}
+
+		// color the table special
+		ActionHandler.colorTableWithTwoColors();
 	}
 
 	/**
@@ -683,7 +727,6 @@ public class ConceptJFrameGUI {
 				mainFrame.createWindow();
 			}
 		});
-
 	}
 
 }

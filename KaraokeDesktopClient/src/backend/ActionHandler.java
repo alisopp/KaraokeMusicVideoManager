@@ -1,5 +1,6 @@
 package backend;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.event.MouseEvent;
@@ -9,6 +10,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,6 +20,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
@@ -24,6 +29,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -865,10 +871,12 @@ public class ActionHandler {
 
 	/**
 	 * Load the contents of a configuration file at the start in the actual
-	 * directory
+	 * directory and update the music video list after that
 	 */
 	public void configFileReaderOnStart() {
 		loadConfigData(getConfigurationFile(), true);
+		// also update the music video list
+		updateMusicVideoList();
 	}
 
 	/**
@@ -1349,24 +1357,47 @@ public class ActionHandler {
 	/**
 	 * Sets the program icon of a JFrame to the default one
 	 * 
-	 * @param a
+	 * @param jFrame
 	 *            (JFrame | current window)
 	 */
-	public static void setProgramWindowIcon(JFrame a) {
+	public static void setProgramWindowIcon(JFrame jFrame) {
 		try {
-			a.setIconImage(ImageIO.read(ConceptJFrameGUI.class.getResource("/logo.png")));
+			jFrame.setIconImage(ImageIO.read(ConceptJFrameGUI.class.getResource("/logo.png")));
 		} catch (IOException exc) {
 			exc.printStackTrace();
+		}
+	}
+
+	/**
+	 * Open any String in the default web browser of the system:
+	 * 
+	 * inspired by http://stackoverflow.com/a/4898607 last edited from
+	 * SingleShot
+	 */
+	public static void openUrlInDefaultBrowser(String urlToOpen) {
+
+		// if we are on Windows
+		if (Desktop.isDesktopSupported()) {
+			try {
+				Desktop.getDesktop().browse(new URI(urlToOpen));
+			} catch (IOException | URISyntaxException e) {
+				e.printStackTrace();
+			}
+		} else {
+			// we are on Linux and open it like this:
+			Runtime runtime = Runtime.getRuntime();
+			try {
+				runtime.exec("xdg-open " + urlToOpen);
+				// runtime.exec("/usr/bin/firefox -new-window " + url);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public static MouseListener mouseChangeListener(JFrame a) {
 		// add table mouse listener
 		return (new java.awt.event.MouseAdapter() {
-			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
-			}
-
 			public void mouseEntered(MouseEvent e) {
 				a.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
@@ -1375,5 +1406,29 @@ public class ActionHandler {
 				a.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 		});
+	}
+
+	/**
+	 * Colors the actual table with two colors (every odd row)
+	 * 
+	 * @author bbhar | https://stackoverflow.com/a/26576892/7827128
+	 */
+	public static void colorTableWithTwoColors() {
+		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
+		if (defaults.get("Table.alternateRowColor") == null)
+			defaults.put("Table.alternateRowColor", new Color(240, 240, 240));
+	}
+
+	/**
+	 * Comparator for number row (because somehow the default method doesn't
+	 * work at all)
+	 * 
+	 * @author gustafc | https://stackoverflow.com/a/2683388/7827128
+	 */
+	public class NumberComparator implements Comparator<Number> {
+		// compare method for comparing two numbers
+		public int compare(Number a, Number b) {
+			return new BigDecimal(a.toString()).compareTo(new BigDecimal(b.toString()));
+		}
 	}
 }
