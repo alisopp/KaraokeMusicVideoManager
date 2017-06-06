@@ -38,9 +38,6 @@ public class ProbablyWrongFormattedWindow {
 		// Create a JFrame with title
 		frame = new JFrame(b);
 
-		// Set it to the middle
-		frame.setLocationRelativeTo(null);
-
 		// Set default close operation for JFrame
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -61,6 +58,9 @@ public class ProbablyWrongFormattedWindow {
 
 		// Automatically tries to fit everything in place
 		frame.pack();
+
+		// Set it to the middle
+		frame.setLocationRelativeTo(null);
 
 		// Make JFrame visible. So we can see it.
 		frame.setVisible(true);

@@ -73,6 +73,10 @@ public class JProgressBarWindow extends JFrame {
 			// System.out.println("Progress bar set to " +
 			// progressBar.getValue());
 		}
+
+		if (progressBar.getValue() == progressBar.getMaximum()) {
+			dispose();
+		}
 	}
 
 	public void addProgressToProgressBar(int a) {

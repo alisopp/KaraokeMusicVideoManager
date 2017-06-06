@@ -467,6 +467,9 @@ public class ActionHandler {
 	 */
 	public void getWrongFormattedMusicVideos() {
 
+		ProbablyWrongFormattedWindow atrgvfgd = new ProbablyWrongFormattedWindow(
+				LanguageController.getTranslation("Eventually wrong formatted music video files"));
+
 		JProgressBarWindow progress = new JProgressBarWindow(
 				LanguageController.getTranslation("Searching for wrong formatted music video files") + "...");
 
@@ -500,9 +503,8 @@ public class ActionHandler {
 		}
 
 		progress.setProgressBar(100);
-		progress.closeJFrame();
 
-		String abc = LanguageController.getTranslation("Eventually wrong formatted music video files") + ":\n";
+		String abc = "";
 		abc += "(" + LanguageController.getTranslation("Correct format") + ": \""
 				+ LanguageController.getTranslation("Artist") + "\" - \"" + LanguageController.getTranslation("Title")
 				+ "\".\"" + LanguageController.getTranslation("Extension") + "\")\n\n";
@@ -513,9 +515,7 @@ public class ActionHandler {
 			abc += "#" + count + ") " + hulu[0] + "\n\t" + hulu[1] + "\n";
 			count++;
 		}
-
-		ProbablyWrongFormattedWindow atrgvfgd = new ProbablyWrongFormattedWindow(
-				LanguageController.getTranslation("Eventually wrong formatted music video files"));
+		// progress.closeJFrame();
 		atrgvfgd.showMe(abc);
 	}
 

@@ -267,6 +267,9 @@ public class ConceptJFrameGUI {
 		subSubMenuRemoveSourceFolder.addActionListener((ActionEvent event) -> {
 			fileTreeWindow.closeIt(); // if there is an open window close it
 			fileTreeWindow.createAndShowGUI(); // and open a new one
+
+			// color the table special - needs somehow to be here
+			ActionHandler.colorTableWithTwoColors();
 		});
 
 		// >> with the sub menu "Export"

@@ -224,6 +224,11 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 		} else if (e.getActionCommand().equals(GET_BAD_FILES_COMMAND)) {
 			// give back the not correct formatted probably music videos
 			actionHandler.getWrongFormattedMusicVideos();
+
+			// color the table special - needs somehow to be here
+			ActionHandler.colorTableWithTwoColors();
+
+			closeIt();
 		}
 	}
 
