@@ -26,7 +26,7 @@ import frontend.ConceptJFrameGUI;
  * JFrame and methods for an editable JTree
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.7 (beta)
+ * @version 0.8 (beta)
  */
 public class FileTreeWindow extends JPanel implements ActionListener {
 

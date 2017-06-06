@@ -28,7 +28,7 @@ import backend.ActionHandler;
  * JPanel and methods for a JTree
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.7 (beta)
+ * @version 0.8 (beta)
  */
 public class FileTree extends JPanel {
 

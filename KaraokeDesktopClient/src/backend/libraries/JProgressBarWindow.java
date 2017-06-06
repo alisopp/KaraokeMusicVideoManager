@@ -14,7 +14,7 @@ import backend.ActionHandler;
  * Editable window with a JLabel and a JProgressbar
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.7 (beta)
+ * @version 0.8 (beta)
  */
 public class JProgressBarWindow extends JFrame {
 
@@ -93,6 +93,7 @@ public class JProgressBarWindow extends JFrame {
 
 	public void setLabelTextNotStatic(String text) {
 		label.setText(text);
+		progressBar.repaint();
 	}
 
 	public void closeJFrame() {

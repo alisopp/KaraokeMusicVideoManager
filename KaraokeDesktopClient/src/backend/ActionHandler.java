@@ -49,7 +49,7 @@ import frontend.ConceptJFrameGUI;
  * do with a console TUI or a graphical GUI. It's the core of the project.
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.7 (beta)
+ * @version 0.8 (beta)
  *
  */
 public class ActionHandler {

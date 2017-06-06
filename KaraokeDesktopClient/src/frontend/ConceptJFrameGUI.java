@@ -49,7 +49,7 @@ import backend.libraries.FileTreeWindow;
  * interface.
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.7 (beta)
+ * @version 0.8 (beta)
  *
  */
 public class ConceptJFrameGUI {
