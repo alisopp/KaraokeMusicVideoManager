@@ -3,6 +3,7 @@ package backend;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedReader;
@@ -1187,14 +1188,14 @@ public class ActionHandler {
 
 		try {
 
-			InputStream in = this.getClass().getClassLoader().getResourceAsStream("htmlBegin.txt");
+			InputStream in = this.getClass().getClassLoader().getResourceAsStream("/html_code/htmlBegin.txt");
 			BufferedReader r = new BufferedReader(new InputStreamReader(in));
 			String line;
 			while ((line = r.readLine()) != null) {
 				cache.add(line);
 			}
 			cache.add(table);
-			InputStream in2 = this.getClass().getClassLoader().getResourceAsStream("htmlEnd.txt");
+			InputStream in2 = this.getClass().getClassLoader().getResourceAsStream("/html_code/htmlEnd.txt");
 			BufferedReader r2 = new BufferedReader(new InputStreamReader(in2));
 			while ((line = r2.readLine()) != null) {
 				cache.add(line);
@@ -1225,14 +1226,14 @@ public class ActionHandler {
 
 		try {
 
-			InputStream in = this.getClass().getClassLoader().getResourceAsStream("htmlWithSearchBegin.txt");
+			InputStream in = this.getClass().getClassLoader().getResourceAsStream("html_code/htmlWithSearchBegin.txt");
 			BufferedReader r = new BufferedReader(new InputStreamReader(in));
 			String line;
 			while ((line = r.readLine()) != null) {
 				cache.add(line);
 			}
 			cache.add(table);
-			InputStream in2 = this.getClass().getClassLoader().getResourceAsStream("htmlWithSearchEnd.txt");
+			InputStream in2 = this.getClass().getClassLoader().getResourceAsStream("html_code/htmlWithSearchEnd.txt");
 			BufferedReader r2 = new BufferedReader(new InputStreamReader(in2));
 			while ((line = r2.readLine()) != null) {
 				cache.add(line);
@@ -1322,8 +1323,11 @@ public class ActionHandler {
 			// UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 			// UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
 
-			// if (System.getProperty("os.name").contains("Windows"))
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+			if (System.getProperty("os.name").contains("Windows")) {
+				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+			} else {
+				UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+			}
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -1348,7 +1352,7 @@ public class ActionHandler {
 			return new ImageIcon(ImageIO.read(ActionHandler.class.getResource(string)));
 		} catch (IOException e2) {
 			e2.printStackTrace();
-		} catch (IllegalArgumentException e2) {
+		} catch (java.lang.IllegalArgumentException e2) {
 			e2.printStackTrace();
 		}
 		return null;
@@ -1361,11 +1365,36 @@ public class ActionHandler {
 	 *            (JFrame | current window)
 	 */
 	public static void setProgramWindowIcon(JFrame jFrame) {
-		try {
-			jFrame.setIconImage(ImageIO.read(ConceptJFrameGUI.class.getResource("/logo.png")));
-		} catch (IOException exc) {
-			exc.printStackTrace();
+
+		int[] sizes = { 16, 32, 64, 128, 256, 512 };
+		ArrayList<Image> imageList = new ArrayList<Image>();
+
+		if (System.getProperty("os.name").contains("Windows")) {
+			try {
+				for (int size : sizes) {
+					String path = "/icon_windows/icon_windows_" + size + ".png";
+					imageList.add(ImageIO.read(ConceptJFrameGUI.class.getResource(path)));
+				}
+
+				jFrame.setIconImages(imageList);
+
+			} catch (IOException exc) {
+				exc.printStackTrace();
+			}
+		} else {
+			try {
+				for (int size : sizes) {
+					String path = "/icon_linux/icon_linux_" + size + ".png";
+					imageList.add(ImageIO.read(ConceptJFrameGUI.class.getResource(path)));
+				}
+
+				jFrame.setIconImages(imageList);
+
+			} catch (IOException exc) {
+				exc.printStackTrace();
+			}
 		}
+
 	}
 
 	/**

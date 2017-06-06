@@ -184,28 +184,28 @@ public class ConceptJFrameGUI {
 		String textSource = LanguageController.getTranslation("Source folders");
 		String tooltipSource = LanguageController.getTranslation("Edit the source folders of your music videos");
 
-		ImageIcon iconAdd = ActionHandler.loadImageIconFromClass("/add_20x20.png");
+		ImageIcon iconAdd = ActionHandler.loadImageIconFromClass("/icons/add_20x20.png");
 		String textAdd = LanguageController.getTranslation("Add");
 		String tooltipAdd = LanguageController.getTranslation("Add a new folder with new music videos to your list");
 
-		ImageIcon iconRemove = ActionHandler.loadImageIconFromClass("/remove_20x20.png");
+		ImageIcon iconRemove = ActionHandler.loadImageIconFromClass("/icons/remove_20x20.png");
 		String textRemove = LanguageController.getTranslation("Remove and more");
 		String tooltipRemove = LanguageController.getTranslation("Remove a folder with music videos from your list");
 
 		String textExport = LanguageController.getTranslation("Export");
 		String tooltipExport = LanguageController.getTranslation("Export to the following formats") + ": CSV, HTML";
 
-		ImageIcon iconExportCsv = ActionHandler.loadImageIconFromClass("/csv_20x20.png");
+		ImageIcon iconExportCsv = ActionHandler.loadImageIconFromClass("/icons/csv_20x20.png");
 		String textExportCsv = LanguageController.getTranslation("Export to") + " CSV";
 		String tooltipExportCsv = LanguageController.getTranslation("Export your data to") + " CSV ("
 				+ LanguageController.getTranslation("spreadsheet") + ")";
 
-		ImageIcon iconExportHtml = ActionHandler.loadImageIconFromClass("/html_20x20.png");
+		ImageIcon iconExportHtml = ActionHandler.loadImageIconFromClass("/icons/html_20x20.png");
 		String textExportHtml = LanguageController.getTranslation("Export to") + " HTML";
 		String tooltipExportHtml = LanguageController.getTranslation("Export your data to") + " HTML ("
 				+ LanguageController.getTranslation("web browser") + ")";
 
-		ImageIcon iconExportHtmlSearch = ActionHandler.loadImageIconFromClass("/htmlSearch_20x20.png");
+		ImageIcon iconExportHtmlSearch = ActionHandler.loadImageIconFromClass("/icons/htmlSearch_20x20.png");
 		String textExportHtmlSearch = LanguageController.getTranslation("Export to") + " HTML "
 				+ LanguageController.getTranslation("with a search");
 		String tooltipExportHtmlSearch = LanguageController.getTranslation("Export your data to") + " HTML ("
@@ -214,12 +214,12 @@ public class ConceptJFrameGUI {
 		String textLanguage = LanguageController.getTranslation("Language");
 		String tooltipLanguage = LanguageController.getTranslation("Change the language of the program") + ": GER, ENG";
 
-		ImageIcon iconLanguageEng = ActionHandler.loadImageIconFromClass("/eng_30x20.png");
+		ImageIcon iconLanguageEng = ActionHandler.loadImageIconFromClass("/icons/eng_30x20.png");
 		String textLanguageEng = LanguageController.getTranslation("English");
 		String tooltipLanguageEng = LanguageController.getTranslation("Change the language of the program to") + " "
 				+ LanguageController.getTranslation("English");
 
-		ImageIcon iconLanguageGer = ActionHandler.loadImageIconFromClass("/de_30x20.png");
+		ImageIcon iconLanguageGer = ActionHandler.loadImageIconFromClass("/icons/de_30x20.png");
 		String textLanguageGer = LanguageController.getTranslation("German");
 		String tooltipLanguageGer = LanguageController.getTranslation("Change the language of the program to") + " "
 				+ LanguageController.getTranslation("German");
@@ -227,17 +227,17 @@ public class ConceptJFrameGUI {
 		String textMore = LanguageController.getTranslation("More");
 		String tooltipMore = LanguageController.getTranslation("Save configuration, about and more");
 
-		ImageIcon iconSaveConfiguration = ActionHandler.loadImageIconFromClass("/save_20x20.png");
+		ImageIcon iconSaveConfiguration = ActionHandler.loadImageIconFromClass("/icons/save_20x20.png");
 		String textSaveConfiguration = LanguageController.getTranslation("Save configuration");
 		String tooltipSaveConfiguration = LanguageController
 				.getTranslation("Saves configuration in a configuration file");
 
-		ImageIcon iconLoadConfiguration = ActionHandler.loadImageIconFromClass("/load_20x20.png");
+		ImageIcon iconLoadConfiguration = ActionHandler.loadImageIconFromClass("/icons/load_20x20.png");
 		String textLoadConfiguration = LanguageController.getTranslation("Load configuration");
 		String tooltipLoadConfiguration = LanguageController
 				.getTranslation("Load configuration from a configuration file");
 
-		ImageIcon iconAbout = ActionHandler.loadImageIconFromClass("/info_20x20.png");
+		ImageIcon iconAbout = ActionHandler.loadImageIconFromClass("/icons/info_20x20.png");
 		String textAbout = LanguageController.getTranslation("About");
 		String tooltipAbout = LanguageController.getTranslation("About this program");
 
@@ -340,6 +340,9 @@ public class ConceptJFrameGUI {
 			if (newAboutWindow != null)
 				newAboutWindow.closeIt();
 			newAboutWindow = new AboutWindow(version, releaseDate);
+
+			// color the table special - needs somehow to be here
+			ActionHandler.colorTableWithTwoColors();
 		});
 
 		// add the menu buttons to the menu bar to the JFrame
@@ -458,7 +461,7 @@ public class ConceptJFrameGUI {
 		JPanel topNorthPanel = new JPanel(new BorderLayout());
 
 		// add the search label
-		ImageIcon iconSearch = ActionHandler.loadImageIconFromClass("/search.png");
+		ImageIcon iconSearch = ActionHandler.loadImageIconFromClass("/icons/search.png");
 		String textSearch = LanguageController.getTranslation("Search for a music video") + ":  ";
 		String tooltipSearch = LanguageController
 				.getTranslation("Type in the field to instantly find your music video");
@@ -471,7 +474,7 @@ public class ConceptJFrameGUI {
 		textInputField = new JTextField();
 
 		// add the search on YouTube button
-		ImageIcon iconYoutubeButton = ActionHandler.loadImageIconFromClass("/youtube.png");
+		ImageIcon iconYoutubeButton = ActionHandler.loadImageIconFromClass("/icons/youtube.png");
 		String tooltipYoutubeButton = LanguageController.getTranslation("Start a video search on YouTube");
 
 		JButton youTubeButtonIcon = new JButton(iconYoutubeButton);
@@ -578,7 +581,7 @@ public class ConceptJFrameGUI {
 		 */
 
 		// play a random music video button
-		ImageIcon iconRandomButton = ActionHandler.loadImageIconFromClass("/random.png");
+		ImageIcon iconRandomButton = ActionHandler.loadImageIconFromClass("/icons/random.png");
 		String textRandomButton = LanguageController.getTranslation("Play a random music video");
 
 		JButton randomMusicvideoButton = new JButton(textRandomButton, iconRandomButton);

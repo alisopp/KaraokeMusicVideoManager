@@ -10,16 +10,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import backend.ActionHandler;
 import backend.language.LanguageController;
-import frontend.ConceptJFrameGUI;
 
 /**
  * Editable window with a JLabel and a JProgressbar
@@ -52,13 +49,11 @@ public class AboutWindow extends JFrame {
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		ImageIcon iconLogo;
 		JLabel icon = new JLabel();
-		try {
-			iconLogo = new ImageIcon(ImageIO.read(ConceptJFrameGUI.class.getResource("/logo.png")));
-			icon.setIcon(iconLogo);
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (System.getProperty("os.name").contains("Windows")) {
+			icon.setIcon(ActionHandler.loadImageIconFromClass("/images/logo_windows.png"));
+		} else {
+			icon.setIcon(ActionHandler.loadImageIconFromClass("/images/logo_linux.png"));
 		}
 
 		JLabel author = new JLabel(

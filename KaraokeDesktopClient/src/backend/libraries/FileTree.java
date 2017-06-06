@@ -2,14 +2,12 @@ package backend.libraries;
 
 import java.awt.GridLayout;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Stack;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -23,6 +21,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+
+import backend.ActionHandler;
 
 /**
  * JPanel and methods for a JTree
@@ -60,9 +60,7 @@ public class FileTree extends JPanel {
 
 		// try to set a custom leaf image
 		try {
-			ImageIcon imageIcon = null;
-
-			imageIcon = new ImageIcon(ImageIO.read(FileTree.class.getResource("/tree_symbol_music_video.png")));
+			ImageIcon imageIcon = ActionHandler.loadImageIconFromClass("/icons/tree_symbol_music_video.png");
 
 			DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
 
@@ -71,7 +69,7 @@ public class FileTree extends JPanel {
 
 			tree.setCellRenderer(renderer);
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

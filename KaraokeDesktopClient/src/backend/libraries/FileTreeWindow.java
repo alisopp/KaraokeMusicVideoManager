@@ -5,12 +5,10 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -76,22 +74,18 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 
 				String pathToImageIcon = null;
 				if (a.equals(ADD_COMMAND)) {
-					pathToImageIcon = "/add_20x20.png";
+					pathToImageIcon = "add_20x20.png";
 				} else if (a.equals(REMOVE_COMMAND) || a.equals(REMOVES_COMMAND)) {
-					pathToImageIcon = "/remove_20x20.png";
+					pathToImageIcon = "remove_20x20.png";
 				} else if (a.equals(RELOAD_COMMAND)) {
-					pathToImageIcon = "/reload_20x20.png";
+					pathToImageIcon = "reload_20x20.png";
 				} else if (a.equals(GET_BAD_FILES_COMMAND)) {
-					pathToImageIcon = "/wrongFilenameFormat_20x20.png";
+					pathToImageIcon = "wrongFilenameFormat_20x20.png";
 				}
 
 				ImageIcon iconRandom = null;
 				if (pathToImageIcon != null) {
-					try {
-						iconRandom = new ImageIcon(ImageIO.read(FileTreeWindow.class.getResource(pathToImageIcon)));
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
+					iconRandom = ActionHandler.loadImageIconFromClass("/icons/" + pathToImageIcon);
 				}
 
 				// and make a button with an icon (or not if null)
