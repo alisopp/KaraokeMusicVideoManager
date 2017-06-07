@@ -50,7 +50,9 @@ public class AboutWindow extends JFrame {
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		JLabel icon = new JLabel();
-		if (!System.getProperty("os.name").contains("Windows")) {
+		boolean hi = false;
+		// System.getProperty("os.name").contains("Windows")
+		if (hi) {
 			icon.setIcon(ActionHandler.loadImageIconFromClass("/images/logo_windows.png"));
 		} else {
 			icon.setIcon(ActionHandler.loadImageIconFromClass("/images/logo_linux.png"));

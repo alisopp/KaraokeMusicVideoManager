@@ -1328,7 +1328,9 @@ public class ActionHandler {
 		int[] sizes = { 16, 32, 64, 128, 256, 512 };
 		ArrayList<Image> imageList = new ArrayList<Image>();
 
-		if (System.getProperty("os.name").contains("Windows")) {
+		boolean hi = false;
+		// System.getProperty("os.name").contains("Windows")
+		if (hi) {
 			try {
 				for (int size : sizes) {
 					String path = "/icon_windows/icon_windows_" + size + ".png";
