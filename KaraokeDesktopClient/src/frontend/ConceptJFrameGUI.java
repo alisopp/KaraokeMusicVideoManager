@@ -419,8 +419,8 @@ public class ConceptJFrameGUI {
 		// set the specific width of the columns
 		TableColumnModel columnModel = table.getColumnModel();
 		columnModel.getColumn(0).setPreferredWidth(40);
-		columnModel.getColumn(1).setPreferredWidth(200);
-		columnModel.getColumn(2).setPreferredWidth(200);
+		columnModel.getColumn(1).setPreferredWidth(150);
+		columnModel.getColumn(2).setPreferredWidth(300);
 		columnModel.getColumn(0).setMinWidth(40);
 
 		// center text in the first column
