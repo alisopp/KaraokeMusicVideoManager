@@ -1,6 +1,7 @@
 package backend.libraries;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -51,6 +52,9 @@ public class ProbablyWrongFormattedWindow {
 
 		// Set text for textArea
 		textArea.setText(textToDisplay);
+
+		// set a minimum size
+		frame.setMinimumSize(new Dimension(500, 100));
 
 		// Create a JScrollPane which contains the textArea
 		JScrollPane scrolltxt = new JScrollPane(textArea);

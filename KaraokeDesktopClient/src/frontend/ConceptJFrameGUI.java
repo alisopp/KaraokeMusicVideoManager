@@ -3,6 +3,7 @@ package frontend;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,7 +52,7 @@ import backend.libraries.FileTreeWindow;
  * interface.
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.8.2 (beta)
+ * @version 0.8.3 (beta)
  *
  */
 public class ConceptJFrameGUI {
@@ -114,7 +115,7 @@ public class ConceptJFrameGUI {
 	public ConceptJFrameGUI() {
 
 		// set version and release date
-		version = "0.8.2 (beta)";
+		version = "0.8.3 (beta)";
 		releaseDate = LanguageController.getTranslation("June") + " 2017";
 
 		// set the column names and configuration file name
@@ -124,9 +125,6 @@ public class ConceptJFrameGUI {
 
 		// start a ActionHandler for all the under the surface commands
 		actionManager = new ActionHandler(columnNames, fileNameConfiguration);
-
-		// start in the background the path editor
-		fileTreeWindow = new FileTreeWindow(actionManager, this);
 	}
 
 	/**
@@ -145,6 +143,9 @@ public class ConceptJFrameGUI {
 					LanguageController.getTranslation("Title") });
 			releaseDate = "7. " + LanguageController.getTranslation("June") + " 2017";
 		}
+
+		// start in the background the path editor
+		fileTreeWindow = new FileTreeWindow(actionManager, this);
 	}
 
 	/**
@@ -169,6 +170,8 @@ public class ConceptJFrameGUI {
 		// size of the window at the start
 		guiMainFrame.setLocationRelativeTo(null);
 		// let it pop up in the middle of the screen
+		guiMainFrame.setMinimumSize(new Dimension(400, 270));
+		// set a minimum size
 		ActionHandler.setProgramWindowIcon(guiMainFrame);
 		// set the default icon of the program as window icon
 

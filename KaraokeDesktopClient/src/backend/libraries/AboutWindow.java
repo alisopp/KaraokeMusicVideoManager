@@ -22,7 +22,7 @@ import backend.language.LanguageController;
  * Editable window with a JLabel and a JProgressbar
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.8.1 (beta)
+ * @version 0.8.3 (beta)
  */
 public class AboutWindow extends JFrame {
 
@@ -53,7 +53,7 @@ public class AboutWindow extends JFrame {
 		boolean hi = false;
 		// System.getProperty("os.name").contains("Windows")
 		if (hi) {
-			icon.setIcon(ActionHandler.loadImageIconFromClass("/images/logo_windows.png"));
+			// icon.setIcon(ActionHandler.loadImageIconFromClass("/images/logo_windows.png"));
 		} else {
 			icon.setIcon(ActionHandler.loadImageIconFromClass("/images/logo_new.png"));
 		}

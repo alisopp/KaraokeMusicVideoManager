@@ -292,6 +292,9 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 		treePanel.clear();
 		populateTree(actionHandler.getPathList());
 
+		// set a minimum size
+		frame.setMinimumSize(new Dimension(380, 320));
+
 		// Display the window.
 		frame.pack();
 		frame.setLocationRelativeTo(null);
