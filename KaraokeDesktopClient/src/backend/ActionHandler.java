@@ -1325,35 +1325,19 @@ public class ActionHandler {
 	 */
 	public static void setProgramWindowIcon(JFrame jFrame) {
 
-		int[] sizes = { 16, 32, 64, 128, 256, 512 };
+		int[] sizes = { 16, 32, 64, 128 };
 		ArrayList<Image> imageList = new ArrayList<Image>();
 
-		boolean hi = false;
-		// System.getProperty("os.name").contains("Windows")
-		if (hi) {
-			try {
-				for (int size : sizes) {
-					String path = "/icon_windows/icon_windows_" + size + ".png";
-					imageList.add(ImageIO.read(ConceptJFrameGUI.class.getResource(path)));
-				}
-
-				jFrame.setIconImages(imageList);
-
-			} catch (IOException exc) {
-				exc.printStackTrace();
+		try {
+			for (int size : sizes) {
+				String path = "/icon_new/icon_new_" + size + ".png";
+				imageList.add(ImageIO.read(ConceptJFrameGUI.class.getResource(path)));
 			}
-		} else {
-			try {
-				for (int size : sizes) {
-					String path = "/icon_linux/icon_linux_" + size + ".png";
-					imageList.add(ImageIO.read(ConceptJFrameGUI.class.getResource(path)));
-				}
 
-				jFrame.setIconImages(imageList);
+			jFrame.setIconImages(imageList);
 
-			} catch (IOException exc) {
-				exc.printStackTrace();
-			}
+		} catch (IOException exc) {
+			exc.printStackTrace();
 		}
 
 	}

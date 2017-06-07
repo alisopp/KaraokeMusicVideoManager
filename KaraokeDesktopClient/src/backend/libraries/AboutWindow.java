@@ -55,7 +55,7 @@ public class AboutWindow extends JFrame {
 		if (hi) {
 			icon.setIcon(ActionHandler.loadImageIconFromClass("/images/logo_windows.png"));
 		} else {
-			icon.setIcon(ActionHandler.loadImageIconFromClass("/images/logo_linux.png"));
+			icon.setIcon(ActionHandler.loadImageIconFromClass("/images/logo_new.png"));
 		}
 
 		JLabel author = new JLabel(
