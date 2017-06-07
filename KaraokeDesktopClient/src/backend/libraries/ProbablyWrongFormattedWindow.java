@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import backend.ActionHandler;
+
 /**
  * A simple text area JFrame (just a temporal solution)
  * 
@@ -37,6 +39,9 @@ public class ProbablyWrongFormattedWindow {
 
 		// Create a JFrame with title
 		frame = new JFrame(b);
+
+		// set the default icon of the program as window icon
+		ActionHandler.setProgramWindowIcon(frame);
 
 		// Set default close operation for JFrame
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

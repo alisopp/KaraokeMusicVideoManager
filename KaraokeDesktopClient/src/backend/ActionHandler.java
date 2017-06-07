@@ -11,9 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,7 +41,6 @@ import backend.language.LanguageController;
 import backend.libraries.FileReaderManager;
 import backend.libraries.FileWriterManager;
 import backend.libraries.JFileChooserManager;
-import backend.libraries.JProgressBarWindow;
 import backend.libraries.ProbablyWrongFormattedWindow;
 import backend.objects.MusicVideo;
 import frontend.ConceptJFrameGUI;
@@ -49,7 +50,7 @@ import frontend.ConceptJFrameGUI;
  * do with a console TUI or a graphical GUI. It's the core of the project.
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.8 (beta)
+ * @version 0.8.1 (beta)
  *
  */
 public class ActionHandler {
@@ -97,10 +98,6 @@ public class ActionHandler {
 		acceptedExtensions = new String[] { "avi", "mp4", "mkv", "wmv", "mov", "mpg", "mpeg" };
 
 		this.fileNameConfiguration = fileNameConfiguration;
-
-		if (!Desktop.isDesktopSupported()) {
-			System.err.println("Desktop is not supported - this program will not run on your Computer!");
-		}
 	}
 
 	/**
@@ -204,8 +201,6 @@ public class ActionHandler {
 		}
 		for (Path a : all) {
 			// System.out.println("Path: " + a);
-
-			JProgressBarWindow.setLabelText("Scan: " + a.toString());
 
 			// file is a "normal" readable file
 			if (Files.isRegularFile(a)) {
@@ -343,8 +338,6 @@ public class ActionHandler {
 		for (Path a : all) {
 			// System.out.println("Path: " + a);
 
-			JProgressBarWindow.setLabelText("Scan: " + a.toString());
-
 			// file is a "normal" readable file
 			if (Files.isRegularFile(a)) {
 
@@ -397,45 +390,24 @@ public class ActionHandler {
 	 */
 	public void updateMusicVideoList() {
 
-		JProgressBarWindow progress = new JProgressBarWindow(
-				LanguageController.getTranslation("Searching for music video files") + "...");
-
-		Thread a = new Thread();
-		a.start();
-
-		progress.setProgressBar(0);
-		progress.setLabelTextNotStatic("Clear music video list...");
-
 		// delete old entries
 		clearMusicVideosList();
-
-		progress.setProgressBar(5);
-		progress.setLabelTextNotStatic("Scan all added directories for music video files...");
 
 		// if there are paths scan them all to update the music video list
 		if (pathList.isEmpty()) {
 			System.err.println("There are no paths to scan for music videos!");
 
-			progress.setProgressBar(90);
-
 		} else {
 			System.out.println("Scan all paths for music videos:");
 
-			int progressInt = 85 / pathList.size();
 			for (Path path : pathList) {
-
-				progress.setLabelTextNotStatic("Scan " + path.toString());
 				scanDirectory(path);
-				progress.addProgressToProgressBar(progressInt);
 			}
 		}
 
 		// sort the music video at last
-		progress.setLabelTextNotStatic("Sort all music videos alphabetical...");
 		sortMusicVideoList();
 		Collections.sort(musicVideoList, new MusicVideo());
-		progress.setProgressBar(100);
-		progress.closeJFrame();
 	}
 
 	/**
@@ -470,50 +442,34 @@ public class ActionHandler {
 		ProbablyWrongFormattedWindow atrgvfgd = new ProbablyWrongFormattedWindow(
 				LanguageController.getTranslation("Eventually wrong formatted music video files"));
 
-		JProgressBarWindow progress = new JProgressBarWindow(
-				LanguageController.getTranslation("Searching for wrong formatted music video files") + "...");
-
-		Thread a = new Thread();
-		a.start();
-
 		ArrayList<String[]> allWrongFormattedVideos = new ArrayList<String[]>();
-
-		progress.setProgressBar(0);
-		progress.setLabelTextNotStatic("Clear music video list...");
-
-		progress.setProgressBar(5);
-		progress.setLabelTextNotStatic("Scan all added directories for wrong formatted music video files...");
 
 		// if there are paths scan them all to update the music video list
 		if (pathList.isEmpty()) {
 			System.err.println("There are no paths to scan for wrong formatted music videos!");
 
-			progress.setProgressBar(90);
-
 		} else {
-			System.out.println("Scan all paths for music videos:");
 
-			int progressInt = 85 / pathList.size();
 			for (Path path : pathList) {
 
-				progress.setLabelTextNotStatic("Scan " + path.toString());
 				allWrongFormattedVideos.addAll(scanDirectoryAfterProbablyMusicVideos(path));
-				progress.addProgressToProgressBar(progressInt);
 			}
 		}
-
-		progress.setProgressBar(100);
 
 		String abc = "";
 		abc += "(" + LanguageController.getTranslation("Correct format") + ": \""
 				+ LanguageController.getTranslation("Artist") + "\" - \"" + LanguageController.getTranslation("Title")
 				+ "\".\"" + LanguageController.getTranslation("Extension") + "\")\n\n";
 
-		int count = 1;
+		if (allWrongFormattedVideos.isEmpty()) {
+			abc += LanguageController.getTranslation("Nothing was found") + " :)";
+		} else {
+			int count = 1;
 
-		for (String[] hulu : allWrongFormattedVideos) {
-			abc += "#" + count + ") " + hulu[0] + "\n\t" + hulu[1] + "\n";
-			count++;
+			for (String[] hulu : allWrongFormattedVideos) {
+				abc += "#" + count + ") " + hulu[0] + "\n\t" + hulu[1] + "\n";
+				count++;
+			}
 		}
 		// progress.closeJFrame();
 		atrgvfgd.showMe(abc);
@@ -1028,7 +984,7 @@ public class ActionHandler {
 	 * @param file
 	 *            (File | this file gets deleted)
 	 */
-	public boolean fileDeleter(File file) {
+	public static boolean fileDeleter(File file) {
 		return FileWriterManager.fileDeleter(file);
 	}
 
@@ -1039,23 +995,13 @@ public class ActionHandler {
 	 *            (File | file that gets checked if it exists)
 	 * @return true if it exists, false if not
 	 */
-	public boolean fileExists(File file) {
+	public static boolean fileExists(File file) {
 		return FileReaderManager.fileExists(file);
 	}
 
-	/**
-	 * Generate a random Integer number
-	 * 
-	 * @param lowerLimit
-	 *            (Integer)
-	 * @param upperBound
-	 *            (Integer)
-	 * @return random Integer number between lowerLimit and upperBound
+	/*
+	 * Export Dialogs
 	 */
-	public int getRandomNumber(int lowerLimit, int upperBound) {
-
-		return ThreadLocalRandom.current().nextInt(lowerLimit, upperBound);
-	}
 
 	/**
 	 * Export a CSV file of the table of scanned music videos
@@ -1294,7 +1240,7 @@ public class ActionHandler {
 	 * @param content
 	 *            (String[] | content of the new file)
 	 */
-	private void exportDialog(String titleJFileChooser, String fileName, String[] content) {
+	private static void exportDialog(String titleJFileChooser, String fileName, String[] content) {
 		Path a = JFileChooserManager.chooseDirectoryGetPath(titleJFileChooser);
 
 		if (a == null) {
@@ -1311,6 +1257,19 @@ public class ActionHandler {
 			// overwrite or just write the file with a dialog
 			FileWriterManager.overWriteFileDialog(file, content);
 		}
+	}
+
+	/**
+	 * Generate a random Integer number
+	 * 
+	 * @param lowerLimit
+	 *            (Integer)
+	 * @param upperBound
+	 *            (Integer)
+	 * @return random Integer number between lowerLimit and upperBound
+	 */
+	public static int getRandomNumber(int lowerLimit, int upperBound) {
+		return ThreadLocalRandom.current().nextInt(lowerLimit, upperBound);
 	}
 
 	/**
@@ -1424,15 +1383,38 @@ public class ActionHandler {
 		}
 	}
 
+	/**
+	 * Open YouTube with the given search query
+	 * 
+	 * @param searchQuery
+	 */
+	public static void openYouTubeWithSearchQuery(String searchQuery) {
+		// URL we want to open
+		String urlToOpen = "https://www.youtube.com";
+
+		// if text field has text try to add it to the urlToOpen
+		try {
+			if (searchQuery != null && searchQuery.length() > 0) {
+				String textToSearchQuery = URLEncoder.encode(searchQuery, "UTF-8");
+				urlToOpen += "/results?search_query=" + textToSearchQuery;
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		// open URL in default web browser of the system
+		openUrlInDefaultBrowser(urlToOpen);
+	}
+
 	public static MouseListener mouseChangeListener(JFrame a) {
 		// add table mouse listener
 		return (new java.awt.event.MouseAdapter() {
 			public void mouseEntered(MouseEvent e) {
-				a.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				a.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			}
 
 			public void mouseExited(MouseEvent e) {
-				a.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				a.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
 		});
 	}

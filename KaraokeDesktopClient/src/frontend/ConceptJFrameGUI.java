@@ -6,6 +6,8 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -49,7 +51,7 @@ import backend.libraries.FileTreeWindow;
  * interface.
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.8 (beta)
+ * @version 0.8.1 (beta)
  *
  */
 public class ConceptJFrameGUI {
@@ -111,11 +113,8 @@ public class ConceptJFrameGUI {
 	 */
 	public ConceptJFrameGUI() {
 
-		// set the global language to the language of the running system
-		LanguageController.setDefaultLanguage();
-
 		// set version and release date
-		version = "0.7.4 (beta)";
+		version = "0.8.1 (beta)";
 		releaseDate = LanguageController.getTranslation("June") + " 2017";
 
 		// set the column names and configuration file name
@@ -137,7 +136,7 @@ public class ConceptJFrameGUI {
 	 */
 	private void startupConfig() {
 		// check if a configuration file exists
-		if (actionManager.fileExists(actionManager.getConfigurationFile())) {
+		if (ActionHandler.fileExists(actionManager.getConfigurationFile())) {
 			// read it
 			actionManager.configFileReaderOnStart();
 
@@ -187,10 +186,12 @@ public class ConceptJFrameGUI {
 		ImageIcon iconAdd = ActionHandler.loadImageIconFromClass("/icons/add_20x20.png");
 		String textAdd = LanguageController.getTranslation("Add");
 		String tooltipAdd = LanguageController.getTranslation("Add a new folder with new music videos to your list");
+		tooltipAdd += " ([control] + [a])";
 
 		ImageIcon iconRemove = ActionHandler.loadImageIconFromClass("/icons/remove_20x20.png");
 		String textRemove = LanguageController.getTranslation("Remove and more");
 		String tooltipRemove = LanguageController.getTranslation("Remove a folder with music videos from your list");
+		tooltipRemove += " ([control] + [e])";
 
 		String textExport = LanguageController.getTranslation("Export");
 		String tooltipExport = LanguageController.getTranslation("Export to the following formats") + ": CSV, HTML";
@@ -199,17 +200,20 @@ public class ConceptJFrameGUI {
 		String textExportCsv = LanguageController.getTranslation("Export to") + " CSV";
 		String tooltipExportCsv = LanguageController.getTranslation("Export your data to") + " CSV ("
 				+ LanguageController.getTranslation("spreadsheet") + ")";
+		tooltipExportCsv += " ([control] + [t])";
 
 		ImageIcon iconExportHtml = ActionHandler.loadImageIconFromClass("/icons/html_20x20.png");
 		String textExportHtml = LanguageController.getTranslation("Export to") + " HTML";
 		String tooltipExportHtml = LanguageController.getTranslation("Export your data to") + " HTML ("
 				+ LanguageController.getTranslation("web browser") + ")";
+		tooltipExportHtml += " ([control] + [h])";
 
 		ImageIcon iconExportHtmlSearch = ActionHandler.loadImageIconFromClass("/icons/htmlSearch_20x20.png");
 		String textExportHtmlSearch = LanguageController.getTranslation("Export to") + " HTML "
 				+ LanguageController.getTranslation("with a search");
 		String tooltipExportHtmlSearch = LanguageController.getTranslation("Export your data to") + " HTML ("
 				+ LanguageController.getTranslation("web browser") + ")";
+		tooltipExportHtmlSearch += " ([control] + [s])";
 
 		String textLanguage = LanguageController.getTranslation("Language");
 		String tooltipLanguage = LanguageController.getTranslation("Change the language of the program") + ": GER, ENG";
@@ -265,11 +269,13 @@ public class ConceptJFrameGUI {
 		JMenuItem subSubMenuRemoveSourceFolder = new JMenuItem(textRemove, iconRemove);
 		subSubMenuRemoveSourceFolder.setToolTipText(tooltipRemove);
 		subSubMenuRemoveSourceFolder.addActionListener((ActionEvent event) -> {
+			guiMainFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			fileTreeWindow.closeIt(); // if there is an open window close it
 			fileTreeWindow.createAndShowGUI(); // and open a new one
 
 			// color the table special - needs somehow to be here
 			ActionHandler.colorTableWithTwoColors();
+			guiMainFrame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		});
 
 		// >> with the sub menu "Export"
@@ -538,6 +544,10 @@ public class ConceptJFrameGUI {
 				if (table.getRowCount() > 0) {
 					// we open the top music video if there are any music videos
 					actionManager.openMusicVideo((int) table.getValueAt(0, 0) - 1);
+				} else if (table.getRowCount() == 0) {
+					// open YouTube with text field text as search query if
+					// there are no elements in the table
+					ActionHandler.openYouTubeWithSearchQuery(textInputField.getText());
 				}
 			}
 		};
@@ -559,6 +569,48 @@ public class ConceptJFrameGUI {
 			}
 
 			public void changedUpdate(DocumentEvent arg0) {
+			}
+		});
+
+		// key shortcuts [control] + [key]
+		textInputField.addKeyListener(new KeyListener() {
+
+			public void keyTyped(KeyEvent e) {
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// control is pressed
+				if ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0) {
+					if (e.getKeyCode() == KeyEvent.VK_A) { // add folder
+						if (actionManager.addToPathList(actionManager.getPathOfDirectories()))
+							updateTable();
+					} else if (e.getKeyCode() == KeyEvent.VK_B) {
+						// bad formatted video files
+						guiMainFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						actionManager.getWrongFormattedMusicVideos();
+						// color the table special - needs somehow to be here
+						ActionHandler.colorTableWithTwoColors();
+						guiMainFrame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+					} else if (e.getKeyCode() == KeyEvent.VK_T) {
+						actionManager.exportCsvFile("musicvideolist.csv");
+					} else if (e.getKeyCode() == KeyEvent.VK_H) {
+						actionManager.exportHtmlFile("table.html");
+					} else if (e.getKeyCode() == KeyEvent.VK_R) {
+						openRandomVideoDialog(); // random video
+					} else if (e.getKeyCode() == KeyEvent.VK_S) {
+						actionManager.exportHtmlFileWithSearch("tableWithSearch.html");
+					} else if (e.getKeyCode() == KeyEvent.VK_E) { // editor
+						guiMainFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						fileTreeWindow.closeIt();
+						fileTreeWindow.createAndShowGUI();
+						ActionHandler.colorTableWithTwoColors();
+						guiMainFrame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+					}
+				}
+			}
+
+			public void keyReleased(KeyEvent e) {
 			}
 		});
 
@@ -586,36 +638,17 @@ public class ConceptJFrameGUI {
 		// play a random music video button
 		ImageIcon iconRandomButton = ActionHandler.loadImageIconFromClass("/icons/random.png");
 		String textRandomButton = LanguageController.getTranslation("Play a random music video");
+		String tooltipRandomButton = " ([control] + [r])";
 
 		JButton randomMusicvideoButton = new JButton(textRandomButton, iconRandomButton);
+		randomMusicvideoButton.setToolTipText(tooltipRandomButton);
 		// make it change the cursor symbol
 		randomMusicvideoButton.addMouseListener(ActionHandler.mouseChangeListener(guiMainFrame));
 		// add special click event
 		randomMusicvideoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-
-				if (actionManager.getMusicVideosList().size() > 0) {
-
-					int randomNum = actionManager.getRandomNumber(0, actionManager.getMusicVideosList().size());
-					String randomSong = actionManager.getMusicVideosList().get(randomNum).getTitle() + " "
-							+ LanguageController.getTranslation("by") + " "
-							+ actionManager.getMusicVideosList().get(randomNum).getArtist() + "?";
-					System.out.println("Random music video: ...Playing " + randomSong);
-
-					if (JOptionPane.showConfirmDialog(null,
-							LanguageController.getTranslation("Would you like to play") + " " + randomSong, "Info",
-							JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-						actionManager.openMusicVideo(randomNum);
-					} else {
-						System.out.println("\tPlaying was denied by the user.");
-					}
-
-				} else {
-					JOptionPane.showMessageDialog(guiMainFrame,
-							LanguageController.getTranslation("You first need to add music videos to use this feature")
-									+ "!");
-				}
+				openRandomVideoDialog();
 			}
 		});
 		mainPanel.add(randomMusicvideoButton, BorderLayout.SOUTH);
@@ -644,10 +677,10 @@ public class ConceptJFrameGUI {
 				 * configuration at all
 				 */
 
-				boolean fileExistButPathListIsNotTheSame = actionManager
+				boolean fileExistButPathListIsNotTheSame = ActionHandler
 						.fileExists(actionManager.getConfigurationFile())
 						&& (!actionManager.configFilePathExtracter().equals(actionManager.getPathList()));
-				boolean fileDoesExist = actionManager.fileExists(actionManager.getConfigurationFile());
+				boolean fileDoesExist = ActionHandler.fileExists(actionManager.getConfigurationFile());
 				boolean noPathsExist = actionManager.getPathList().isEmpty();
 
 				if (!noPathsExist && (fileExistButPathListIsNotTheSame || !fileDoesExist)) {
@@ -655,7 +688,7 @@ public class ConceptJFrameGUI {
 					if (JOptionPane.showConfirmDialog(guiMainFrame,
 							LanguageController.getTranslation(
 									"Are you sure to close the program without saving your music video folder paths to a configuration file?"),
-							"Really Closing?", JOptionPane.YES_NO_OPTION,
+							LanguageController.getTranslation("Really Closing") + "?", JOptionPane.YES_NO_OPTION,
 							JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {
 						actionManager.fileOverWriterConfig();
 					}
@@ -693,6 +726,8 @@ public class ConceptJFrameGUI {
 	 */
 	public void updateTable() {
 
+		guiMainFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
 		// delete all actual rows if there are even any rows!
 		while (tableModel.getRowCount() > 0) {
 			tableModel.removeRow(0);
@@ -709,6 +744,31 @@ public class ConceptJFrameGUI {
 
 		// color the table special
 		ActionHandler.colorTableWithTwoColors();
+
+		guiMainFrame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+	}
+
+	public void openRandomVideoDialog() {
+		if (actionManager.getMusicVideosList().size() > 0) {
+
+			int randomNum = ActionHandler.getRandomNumber(0, actionManager.getMusicVideosList().size());
+			String randomSong = actionManager.getMusicVideosList().get(randomNum).getTitle() + " "
+					+ LanguageController.getTranslation("by") + " "
+					+ actionManager.getMusicVideosList().get(randomNum).getArtist() + "?";
+			System.out.println("Random music video: ...Playing " + randomSong);
+
+			if (JOptionPane.showConfirmDialog(null,
+					LanguageController.getTranslation("Would you like to play") + " " + randomSong, "Info",
+					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				actionManager.openMusicVideo(randomNum);
+			} else {
+				System.out.println("\tPlaying was denied by the user.");
+			}
+
+		} else {
+			JOptionPane.showMessageDialog(null,
+					LanguageController.getTranslation("You first need to add music videos to use this feature") + "!");
+		}
 	}
 
 	/**

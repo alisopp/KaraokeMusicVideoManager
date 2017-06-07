@@ -11,22 +11,38 @@ import javax.swing.JOptionPane;
  * the user wanted language
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.8 (beta)
+ * @version 0.8.1 (beta)
  *
  */
 public class LanguageController {
 
+	/**
+	 * Start language/Locale is the language of the running OS
+	 */
 	private static Locale currentLanguage = Locale.getDefault();
 
+	/**
+	 * The ResourceBundle for the English translation - doesn't work right now
+	 */
 	private static ResourceBundle rbEnglish = ResourceBundle.getBundle("SystemMessages", Locale.ENGLISH);
+
+	/**
+	 * The ResourceBundle for the English to German translation
+	 */
 	private static ResourceBundle rbGerman = ResourceBundle.getBundle("SystemMessages", Locale.GERMAN);
 
+	/**
+	 * The current ResourceBundle
+	 */
 	private static ResourceBundle currentResourceBundle = rbEnglish;
 
+	/**
+	 * A boolean which says if we are German right now or not
+	 */
 	private static boolean german = false;
 
 	/**
-	 * Get the current language back
+	 * Get the current language of the controller back
 	 * 
 	 * @return current language (Locale)
 	 */
@@ -42,7 +58,9 @@ public class LanguageController {
 	}
 
 	/**
-	 * Set the current Language of the LanguageController
+	 * Set the current Language of the LanguageController - but the changes will
+	 * only be saved for the next start (because it doesn't work instantly for
+	 * everything)
 	 * 
 	 * @param currentLanguage
 	 *            (new language | Locale)
@@ -55,10 +73,16 @@ public class LanguageController {
 
 		} else {
 			System.out.println("Language is at the next start English!");
-
 		}
 	}
 
+	/**
+	 * Set the current Language of the LanguageController - or better: set the
+	 * RessourceBundle to the given Locale
+	 * 
+	 * @param currentLang
+	 *            (wished Language | Locale)
+	 */
 	public static void setCurrentLanguageRb(Locale currentLang) {
 		currentLanguage = currentLang;
 
@@ -73,6 +97,14 @@ public class LanguageController {
 		}
 	}
 
+	/**
+	 * Get the String of the given language back (inly works with English and
+	 * German)
+	 * 
+	 * @param lang
+	 *            (Language you want to String | Locale)
+	 * @return language as a String (String)
+	 */
 	public static String getLanguageToSpeech(Locale lang) {
 		String language;
 		if (lang.equals(Locale.GERMAN) || lang.toString().equals("de_DE")) {
@@ -83,6 +115,13 @@ public class LanguageController {
 		return language;
 	}
 
+	/**
+	 * Dialog for if you want to change the language - so that everything works
+	 * 
+	 * @param currentLang
+	 *            (new Language | Locale)
+	 * @return true if the change was approved by the user (boolean)
+	 */
 	public static boolean changeLanguageRestart(Locale currentLang) {
 
 		if (currentLang != currentLanguage) {
@@ -118,7 +157,7 @@ public class LanguageController {
 	}
 
 	/**
-	 * Print out all the actual words from the current ResourceBundle
+	 * Print out all the actual words from the given ResourceBundle
 	 */
 	public static void printWords(ResourceBundle rb) {
 		Enumeration<String> keys = rb.getKeys();

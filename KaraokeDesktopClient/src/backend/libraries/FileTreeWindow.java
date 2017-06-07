@@ -1,10 +1,12 @@
 package backend.libraries;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -91,10 +93,25 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 				// and make a button with an icon (or not if null)
 				button = new JButton(" " + a.toString(), iconRandom);
 
+				if (a.equals(GET_BAD_FILES_COMMAND)) {
+					button.setToolTipText("([control] + [b])");
+				}
+
 				// set command, Action Listener and add it to the panel
 				button.setActionCommand(a);
 				button.addActionListener(this);
 				button.setPreferredSize(new Dimension(200, 40));
+
+				button.addMouseListener((new java.awt.event.MouseAdapter() {
+					public void mouseEntered(MouseEvent e) {
+						setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+					}
+
+					public void mouseExited(MouseEvent e) {
+						setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+					}
+				}));
+
 				panel.add(button);
 			}
 			panelBig.add(panel);
@@ -222,12 +239,15 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 			// update the JTable and the JTree
 			updateTree();
 		} else if (e.getActionCommand().equals(GET_BAD_FILES_COMMAND)) {
+			this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
 			// give back the not correct formatted probably music videos
 			actionHandler.getWrongFormattedMusicVideos();
 
 			// color the table special - needs somehow to be here
 			ActionHandler.colorTableWithTwoColors();
 
+			this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			closeIt();
 		}
 	}
@@ -236,9 +256,16 @@ public class FileTreeWindow extends JPanel implements ActionListener {
 	 * Update the JTree in the window and the table in the main window
 	 */
 	private void updateTree() {
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
 		conceptJFrameGUI.updateTable();
+
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
 		treePanel.clear();
 		populateTree(actionHandler.getPathList());
+
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
 	/**
