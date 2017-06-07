@@ -86,6 +86,12 @@ public class FileTree extends JPanel {
 		});
 	}
 
+	/**
+	 * Get an Array with all selected paths (that means the path of the selected
+	 * node and all of its sub nodes)
+	 * 
+	 * @return list of all paths (Path[])
+	 */
 	public Path[] getCurrentSelectedPaths() {
 
 		ArrayList<Path> stackWithAllPaths = new ArrayList<Path>();
@@ -114,6 +120,11 @@ public class FileTree extends JPanel {
 		return stackWithAllPaths.toArray(new Path[stackWithAllPaths.size()]);
 	}
 
+	/**
+	 * Get the file path of the currently selected node
+	 * 
+	 * @return path of node (Path)
+	 */
 	public Path getSelectedNodePath() {
 		String jTreeVarSelectedPath = "";
 		try {

@@ -26,19 +26,19 @@ public class ProbablyWrongFormattedWindow {
 	 */
 	private JTextArea textArea;
 
-	private String b;
+	private String titleOfTheJFrame;
 
-	public ProbablyWrongFormattedWindow(String a) {
-		this.b = a;
+	public ProbablyWrongFormattedWindow(String title) {
+		this.titleOfTheJFrame = title;
 	}
 
-	public void showMe(String a) {
+	public void showMe(String textToDisplay) {
 
 		// Create a normal text field area
 		textArea = new JTextArea();
 
 		// Create a JFrame with title
-		frame = new JFrame(b);
+		frame = new JFrame(titleOfTheJFrame);
 
 		// set the default icon of the program as window icon
 		ActionHandler.setProgramWindowIcon(frame);
@@ -50,7 +50,7 @@ public class ProbablyWrongFormattedWindow {
 		frame.setLayout(new BorderLayout());
 
 		// Set text for textArea
-		textArea.setText(a);
+		textArea.setText(textToDisplay);
 
 		// Create a JScrollPane which contains the textArea
 		JScrollPane scrolltxt = new JScrollPane(textArea);

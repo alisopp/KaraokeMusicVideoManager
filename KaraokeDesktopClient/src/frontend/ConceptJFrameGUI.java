@@ -51,7 +51,7 @@ import backend.libraries.FileTreeWindow;
  * interface.
  * 
  * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 0.8.1 (beta)
+ * @version 0.8.2 (beta)
  *
  */
 public class ConceptJFrameGUI {
@@ -114,7 +114,7 @@ public class ConceptJFrameGUI {
 	public ConceptJFrameGUI() {
 
 		// set version and release date
-		version = "0.8.1 (beta)";
+		version = "0.8.2 (beta)";
 		releaseDate = LanguageController.getTranslation("June") + " 2017";
 
 		// set the column names and configuration file name
@@ -143,7 +143,7 @@ public class ConceptJFrameGUI {
 			// update column heads and version date if language change
 			actionManager.setColumnNames(new String[] { "#", LanguageController.getTranslation("Artist"),
 					LanguageController.getTranslation("Title") });
-			releaseDate = LanguageController.getTranslation("June") + " 2017";
+			releaseDate = "7. " + LanguageController.getTranslation("June") + " 2017";
 		}
 	}
 

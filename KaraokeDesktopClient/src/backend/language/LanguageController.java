@@ -24,12 +24,13 @@ public class LanguageController {
 	/**
 	 * The ResourceBundle for the English translation - doesn't work right now
 	 */
-	private static ResourceBundle rbEnglish = ResourceBundle.getBundle("SystemMessages", Locale.ENGLISH);
+	private static ResourceBundle rbEnglish = ResourceBundle.getBundle("language_libary/SystemMessages",
+			Locale.ENGLISH);
 
 	/**
 	 * The ResourceBundle for the English to German translation
 	 */
-	private static ResourceBundle rbGerman = ResourceBundle.getBundle("SystemMessages", Locale.GERMAN);
+	private static ResourceBundle rbGerman = ResourceBundle.getBundle("language_libary/SystemMessages", Locale.GERMAN);
 
 	/**
 	 * The current ResourceBundle
@@ -124,6 +125,8 @@ public class LanguageController {
 	 */
 	public static boolean changeLanguageRestart(Locale currentLang) {
 
+		printWords(rbEnglish);
+
 		if (currentLang != currentLanguage) {
 			int dialogResult = JOptionPane.showConfirmDialog(null,
 					getTranslation("Do you really want to change the language of the program from") + " "
@@ -163,7 +166,7 @@ public class LanguageController {
 		Enumeration<String> keys = rb.getKeys();
 		while (keys.hasMoreElements()) {
 			String key = keys.nextElement();
-			String value = getTranslation(key);
+			String value = rb.getString(key);
 			System.out.println(key + ": " + value);
 		}
 	}

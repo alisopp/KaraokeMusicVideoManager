@@ -1134,14 +1134,14 @@ public class ActionHandler {
 
 		try {
 
-			InputStream in = this.getClass().getClassLoader().getResourceAsStream("/html_code/htmlBegin.txt");
+			InputStream in = this.getClass().getClassLoader().getResourceAsStream("html_code/htmlBegin.txt");
 			BufferedReader r = new BufferedReader(new InputStreamReader(in));
 			String line;
 			while ((line = r.readLine()) != null) {
 				cache.add(line);
 			}
 			cache.add(table);
-			InputStream in2 = this.getClass().getClassLoader().getResourceAsStream("/html_code/htmlEnd.txt");
+			InputStream in2 = this.getClass().getClassLoader().getResourceAsStream("html_code/htmlEnd.txt");
 			BufferedReader r2 = new BufferedReader(new InputStreamReader(in2));
 			while ((line = r2.readLine()) != null) {
 				cache.add(line);

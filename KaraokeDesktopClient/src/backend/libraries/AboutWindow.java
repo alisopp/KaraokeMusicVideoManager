@@ -117,15 +117,14 @@ public class AboutWindow extends JFrame {
 				} catch (IOException e) {
 				}
 			}
-
 		}
 
 		public void mouseEntered(MouseEvent e) {
-			setCursor(new Cursor(Cursor.HAND_CURSOR));
+			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		}
 
 		public void mouseExited(MouseEvent e) {
-			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 
 		// Not needed:
