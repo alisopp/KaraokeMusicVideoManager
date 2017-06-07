@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -417,9 +418,10 @@ public class ConceptJFrameGUI {
 
 		// set the specific width of the columns
 		TableColumnModel columnModel = table.getColumnModel();
-		columnModel.getColumn(0).setPreferredWidth(5);
-		columnModel.getColumn(1).setPreferredWidth(150);
-		columnModel.getColumn(2).setPreferredWidth(225);
+		columnModel.getColumn(0).setPreferredWidth(40);
+		columnModel.getColumn(1).setPreferredWidth(200);
+		columnModel.getColumn(2).setPreferredWidth(200);
+		columnModel.getColumn(0).setMinWidth(40);
 
 		// center text in the first column
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -478,7 +480,7 @@ public class ConceptJFrameGUI {
 		String tooltipSearch = LanguageController
 				.getTranslation("Type in the field to instantly find your music video");
 
-		JLabel searchLabel = new JLabel(textSearch);
+		JLabel searchLabel = new JLabel("    " + textSearch);
 		searchLabel.setIcon(iconSearch);
 		searchLabel.setToolTipText(tooltipSearch);
 
@@ -528,7 +530,7 @@ public class ConceptJFrameGUI {
 		topNorthPanel.add(youTubeButtonIcon, BorderLayout.EAST);
 		topNorthPanel.add(textInputField, BorderLayout.CENTER);
 		// create a transparent border for better usability
-		topNorthPanel.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 20));
+		topNorthPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
 		// add the top panel at the top of our main panel
 		mainPanel.add(topNorthPanel, BorderLayout.NORTH);
@@ -538,6 +540,18 @@ public class ConceptJFrameGUI {
 		 * ---------------------------------------------------------------------
 		 */
 
+		// only allow valid input
+		textInputField.addKeyListener(new KeyAdapter() {
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				for (String a : new String[] { "(", ")", "[", "]", "\\", "*", "?" }) {
+					String b = "" + c;
+					if (b.equalsIgnoreCase(a))
+						e.consume(); // ignore input
+				}
+			}
+		});
+
 		// if enter was pressed do this
 		Action action = new AbstractAction() {
 			private static final long serialVersionUID = 2735007834058697821L;
@@ -546,7 +560,13 @@ public class ConceptJFrameGUI {
 				// because we always want to open the top result on enter:
 				if (table.getRowCount() > 0) {
 					// we open the top music video if there are any music videos
-					actionManager.openMusicVideo((int) table.getValueAt(0, 0) - 1);
+					if (ActionHandler.isNumeric(textInputField.getText())) {
+						// special case because number first
+						actionManager.openMusicVideo(Integer.parseInt(textInputField.getText()) - 1);
+					} else {
+						actionManager.openMusicVideo((int) table.getValueAt(0, 0) - 1);
+					}
+
 				} else if (table.getRowCount() == 0) {
 					// open YouTube with text field text as search query if
 					// there are no elements in the table

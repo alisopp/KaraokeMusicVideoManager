@@ -1428,4 +1428,15 @@ public class ActionHandler {
 			return new BigDecimal(a.toString()).compareTo(new BigDecimal(b.toString()));
 		}
 	}
+
+	/**
+	 * Check if a given String is a number
+	 * 
+	 * @param s
+	 *            (String)
+	 * @return true if numeric number else false
+	 */
+	public static boolean isNumeric(String s) {
+		return s != null && s.matches("[-+]?\\d*\\.?\\d+");
+	}
 }
