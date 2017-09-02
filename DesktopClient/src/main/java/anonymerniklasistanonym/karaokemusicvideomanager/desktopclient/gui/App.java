@@ -1,8 +1,8 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui;
 
-import javax.swing.JFrame;
+import java.awt.Dimension;
 
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.MainWindow;
+import javax.swing.JFrame;
 
 /**
  * Main method. The whole program runs here.
@@ -52,7 +52,19 @@ public class App {
 		// * export a barcode to list site as HTML file with address input (choose table
 		// size before creating)
 
-		JFrame guiMainFrame = MainWindow.createMainWindow();
+		JFrame guiMainFrame = new JFrame();
+		// start the global window/JFrame
+
+		guiMainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// make sure the program exits when the frame closes
+		guiMainFrame.setTitle("Karaoke Desktop Client [Beta]");
+		// title of the window
+		guiMainFrame.setSize(500, 620);
+		// size of the window at the start
+		guiMainFrame.setLocationRelativeTo(null);
+		// let it pop up in the middle of the screen
+		guiMainFrame.setMinimumSize(new Dimension(400, 270));
+		// set a minimum size
 		guiMainFrame.setVisible(true);
 	}
 }
