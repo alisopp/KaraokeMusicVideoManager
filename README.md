@@ -34,3 +34,21 @@ You can use whatever setup you like but this is mine on Windows 10 Pro 64bit wit
   - select the project and click `Finish`
   - now you are able to edit/open/compile the project
 - Tipp: If you wanna edit the GUI with the SceneBuilder make a right click on any `.fxml` file and click `Open with SceneBuilder`
+
+### How I export the project
+
+To generate a working runnable JAR file (`xxx.jar`) of this Maven project I needed to do follow the instructions of [Jason C](https://stackoverflow.com/users/616460/jason-c) and [ItamarG3](https://stackoverflow.com/users/3625036/itamarg3) on [stackoverflow](https://stackoverflow.com/a/18218809/7827128):
+
+*Try creating a new launch configuration from scratch:*
+
+1. *`Run` -> `Run Configurations...`*
+2. *Right click "Java Application" in the list on the left and select `New`*
+3. *On the right enter a descriptive name.*
+4. *In the Main tab browse for your project and search for and select the appropriate main class.*
+5. *Close the dialog.*
+
+**
+
+If you now click under `File` `Export` and then search and select `Runnable JAR file`. After that select your just now entered descriptive name under `Launch configuration:`, select `Package required libaries into generated JAR` and click `Finish`.
+
+Like [c0der](https://stackoverflow.com/a/43454265/7827128) I had the problem that my just entered descriptive name didn't showed up under `Launch configuration:`. But a simple restart of the Eclipse IDE fixed this for me.
