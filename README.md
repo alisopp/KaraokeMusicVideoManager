@@ -47,8 +47,6 @@ To generate a working runnable JAR file (`xxx.jar`) of this Maven project I need
 4. *In the Main tab browse for your project and search for and select the appropriate main class.*
 5. *Close the dialog.*
 
-**
-
 If you now click under `File` `Export` and then search and select `Runnable JAR file`. After that select your just now entered descriptive name under `Launch configuration:`, select `Package required libaries into generated JAR` and click `Finish`.
 
 Like [c0der](https://stackoverflow.com/a/43454265/7827128) I had the problem that my just entered descriptive name didn't showed up under `Launch configuration:`. But a simple restart of the Eclipse IDE fixed this for me.
