@@ -50,3 +50,39 @@ To generate a working runnable JAR file (`xxx.jar`) of this Maven project I need
 If you now click under `File` `Export` and then search and select `Runnable JAR file`. After that select your just now entered descriptive name under `Launch configuration:`, select `Package required libaries into generated JAR` and click `Finish`.
 
 Like [c0der](https://stackoverflow.com/a/43454265/7827128) I had the problem that my just entered descriptive name didn't showed up under `Launch configuration:`. But a simple restart of the Eclipse IDE fixed this for me.
+
+### How to run the jar
+
+##### Windows XP,7,10
+
+On Windows there seems to be no problem at all as long as you have Java (a version from the last 1-2 years) installed.
+
+If not install it over here: https://www.java.com/en/download/
+
+Find the runnable JAR file (`xxx.jar`) in the explorer and double click it to run.
+
+*(NSI Installer will follow as soon as the program is ready then you can install it just like a normal Windows program)*
+
+#### Linux
+
+Probably you can run it there too, but if not (like I had the problem on my Raspberry Pi 3 with Raspbian) you need to have Java installed (if not use this `sudo apt-get install oracle-java8-jdk`) and additional openjfx (because of the JavaFx GUI). This is not a problem just install it like this:
+
+```
+$ sudo apt-get install openjfx
+```
+
+Then you can run it over the console with the following command:
+
+```
+$ java -jar path/to/file.jar
+```
+
+
+
+## Questions/Problems/Ideas?
+
+If you still have any kind of questions, problems or great ideas send me an email, open an issue, open a pull-request.
+
+Have fun using this program!
+
+ :smiley:
