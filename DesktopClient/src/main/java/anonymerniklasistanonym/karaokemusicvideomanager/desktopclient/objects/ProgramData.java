@@ -25,7 +25,7 @@ public final class ProgramData {
 	/**
 	 * Accepted file types
 	 */
-	private String[] acceptedFileTypes = null;
+	private String[] acceptedFileTypes = new String[] { "avi", "mp4", "mkv", "wmv", "mov", "mpg", "mpeg" };
 
 	/**
 	 * SFTP - Login account user name
@@ -41,6 +41,13 @@ public final class ProgramData {
 	 * SFTP - Working directory
 	 */
 	private String workingDirectorySftp = null;
+
+	/**
+	 * Constructor [empty]
+	 */
+	public ProgramData() {
+
+	}
 
 	/**
 	 * Get all paths of MusicVideo source folders

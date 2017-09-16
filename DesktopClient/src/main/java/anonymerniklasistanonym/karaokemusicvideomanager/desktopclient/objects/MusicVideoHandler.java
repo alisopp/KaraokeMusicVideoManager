@@ -1,7 +1,16 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Stream;
 
 public class MusicVideoHandler {
 
@@ -83,11 +92,13 @@ public class MusicVideoHandler {
 
 			Path[] oldPathList = this.settingsData.getPathList();
 
-			Path[] newPathList = new Path[oldPathList.length + 1];
-
-			newPathList[oldPathList.length] = directoryPath.toAbsolutePath();
-
-			this.settingsData.setPathList(newPathList);
+			if (oldPathList == null) {
+				this.settingsData.setPathList(new Path[] { directoryPath });
+			} else {
+				Path[] newPathList = Stream.concat(Arrays.stream(this.settingsData.getPathList()),
+						Arrays.stream(new Path[] { directoryPath })).toArray(Path[]::new);
+				this.settingsData.setPathList(newPathList);
+			}
 
 			System.out.println(" << Path added to path list.");
 			return true;
@@ -119,9 +130,9 @@ public class MusicVideoHandler {
 		MusicVideo[] musicVideoList = this.musicVideoList;
 
 		int numberOfLinesNumber = String.valueOf(musicVideoList.length).length();
-		int numberOfLinesTitle = 15;
-		int numberOfLinesArtist = 13;
-		int numberOfLinesPath = 25;
+		int numberOfLinesTitle = 20;
+		int numberOfLinesArtist = 10;
+		int numberOfLinesPath = 100;
 
 		String linesNumber = String.join("", Collections.nCopies(numberOfLinesNumber + 2, "-"));
 		String linesTitle = String.join("", Collections.nCopies(numberOfLinesTitle + 2, "-"));
@@ -140,7 +151,7 @@ public class MusicVideoHandler {
 		String tableInfo1 = ("+" + linesNumber + "+" + linesTitle + "+" + linesArtist + "+" + linesPath + "+%n");
 
 		int numberShowInfo = 100, numberShowInfoCount = 0;
-		for (int i = 0; i < musicVideoList.length + 1; i++) {
+		for (int i = 0; i < musicVideoList.length; i++) {
 
 			if (i == numberShowInfoCount) {
 				System.out.format(tableInfo1);
@@ -154,6 +165,161 @@ public class MusicVideoHandler {
 		}
 		System.out.format(tableInfo1);
 
+	}
+
+	/**
+	 * Scan a directory after specific video files and map all music videos
+	 * 
+	 * @param path
+	 *            (Path | path of the directory)
+	 */
+	public ArrayList<MusicVideo> scanDirectory(Path path) {
+
+		if (path == null || !path.toFile().isDirectory()) {
+			System.err.println("Path is null or no directory!");
+			return null;
+		}
+
+		// get all files in the directory
+		Collection<Path> filesInDirectory = new ArrayList<Path>();
+		try (DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
+
+			System.out.print(">> Scan " + path + " for files");
+			for (Path child : ds) {
+				filesInDirectory.add(child);
+			}
+			System.out.println(" << Scan finished.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println(" << Problem while searching for Files!");
+			return null;
+		}
+
+		ArrayList<MusicVideo> musicvideosinFolder = new ArrayList<MusicVideo>();
+
+		System.out.println(">> Finding MusicVideo files");
+
+		for (Path filePath : filesInDirectory) {
+
+			MusicVideo musicVideoFile = isFileMusicVideo(filePath);
+
+			if (musicVideoFile != null) {
+				musicvideosinFolder.add(musicVideoFile);
+			}
+
+		}
+
+		// return sorted Array
+		return musicvideosinFolder;
+
+	}
+
+	/**
+	 * Rescan and sort all files in the saved directories in the musicVideoList
+	 * 
+	 * @return
+	 */
+	public void updateMusicVideoList() {
+
+		ArrayList<MusicVideo> newMusicVideoList = new ArrayList<MusicVideo>();
+
+		for (Path directory : this.settingsData.getPathList()) {
+			newMusicVideoList.addAll(scanDirectory(directory));
+		}
+
+		MusicVideo[] newList = new MusicVideo[newMusicVideoList.size()];
+		newList = newMusicVideoList.toArray(newList);
+
+		// sort array over implemented comparator
+		Arrays.sort(newList, new MusicVideo());
+
+		this.musicVideoList = newList;
+
+	}
+
+	/**
+	 * Open with the default desktop video player a file with the path of the
+	 * MusicVideo object in the music video list
+	 * 
+	 * @param index
+	 *            (index of the MusicVideo object in the music video list)
+	 */
+	public boolean openMusicVideo(int index) {
+
+		if (!Desktop.isDesktopSupported()) {
+			System.err.println("Desktop is not supported - the program will not open videos on this computer!");
+			return false;
+		}
+
+		if (this.musicVideoList == null) {
+			System.err.println("The music videos list is null!");
+			return false;
+		}
+
+		if (this.musicVideoList.length <= index || 0 > index) {
+			System.err.println("The index " + index + " is out of bound!");
+			return false;
+		}
+
+		// get the MusicVideo object and make it a file with the path
+		File file = musicVideoList[index].getPath().toFile();
+
+		if (!file.exists()) {
+			System.err.println("<< The file " + file.getPath() + " ford not exist!");
+			return false;
+		}
+
+		// open it
+		try {
+			Desktop.getDesktop().open(file);
+			System.out.println(
+					">>> Opened " + musicVideoList[index].getTitle() + " by " + musicVideoList[index].getArtist());
+			return true;
+		} catch (IOException e) {
+			System.err.println("<< File \"" + file.getAbsolutePath() + "\" could not be opened!");
+			return false;
+		} catch (Exception e) {
+			System.err.println("<< File \"" + file.getAbsolutePath() + "\" could not be opened because of Desktop!");
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+	private MusicVideo isFileMusicVideo(Path filePath) {
+
+		// file is a "normal" readable file
+		if (Files.isRegularFile(filePath)) {
+
+			String fileType = null, pathOfFile = filePath.getFileName().toString();
+			String[] artistAndTitle = null;
+
+			int lastIndexOfPoint = pathOfFile.lastIndexOf('.');
+			boolean containsArtistAndTitle = pathOfFile.contains(" - ");
+
+			if (lastIndexOfPoint > 0 && containsArtistAndTitle) {
+
+				fileType = pathOfFile.substring(lastIndexOfPoint + 1);
+				artistAndTitle = pathOfFile.substring(0, lastIndexOfPoint).split(" - ", 2);
+
+			} else {
+				// -1 if '.' is not found or file doesn't have " - " for support of artist/title
+				System.err.println("Incompatible filename! (" + filePath + ")");
+				return null;
+			}
+
+			// now we compare it to our allowed extension array
+			for (String supportedFileTypes : this.settingsData.getAcceptedFileTypes()) {
+				if (supportedFileTypes.equalsIgnoreCase(fileType)) {
+
+					// finally add the newMusicVideoObject to our
+					// musicVideosList
+					return new MusicVideo(filePath, artistAndTitle[1], artistAndTitle[0]);
+				}
+			}
+
+		}
+		return null;
 	}
 
 }

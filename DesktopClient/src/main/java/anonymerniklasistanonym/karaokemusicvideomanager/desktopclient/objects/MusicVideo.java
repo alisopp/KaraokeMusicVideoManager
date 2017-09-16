@@ -19,7 +19,7 @@ public final class MusicVideo implements Comparator<MusicVideo> {
 	/**
 	 * The name/title of the music video file
 	 */
-	private final String name;
+	private final String title;
 	/**
 	 * The artist/s of the music video file
 	 */
@@ -37,8 +37,17 @@ public final class MusicVideo implements Comparator<MusicVideo> {
 	 */
 	public MusicVideo(Path path, String title, String artist) {
 		this.path = path;
-		this.name = title;
+		this.title = title;
 		this.artist = artist;
+	}
+
+	/**
+	 * Empty constructor for Comparator
+	 */
+	public MusicVideo() {
+		this.path = null;
+		this.title = null;
+		this.artist = null;
 	}
 
 	/**
@@ -47,7 +56,7 @@ public final class MusicVideo implements Comparator<MusicVideo> {
 	 * @return the title/name of the music video (String)
 	 */
 	public String getTitle() {
-		return this.name;
+		return this.title;
 	}
 
 	/**
