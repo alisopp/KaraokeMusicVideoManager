@@ -7,6 +7,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
+import javax.json.JsonValue;
 
 public class JsonModule {
 
@@ -63,6 +64,7 @@ public class JsonModule {
 
 	/**
 	 * Convert Json data to a string
+	 *
 	 * 
 	 * @param jsonBuilder
 	 *            (JsonObjectBuilder)
@@ -77,6 +79,46 @@ public class JsonModule {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	/**
+	 * Get the value of a key of a JsonObject
+	 * 
+	 * @param jsonObject
+	 *            (JsonObject | which holds the JSON data)
+	 * @param key
+	 *            (String | key to the desired value)
+	 * @return JsonValue (anything that can be in a JSON file)
+	 */
+	public static JsonValue getValue(JsonObject jsonObject, String key) {
+
+		if (jsonObject == null || (key == null || key.isEmpty())) {
+			System.err.println("JsonObject or key cannot be empty or null!");
+			return null;
+		}
+
+		if (jsonObject.containsKey(key)) {
+
+			try {
+
+				JsonValue value = jsonObject.get(key);
+				System.out.println("Key has the value: " + value);
+				return value;
+
+			} catch (NullPointerException notFoundException) {
+				System.err.println("Key not found!");
+				return null;
+
+			} catch (ClassCastException ex) {
+				System.err.println("Key value is not anticipated type!");
+				return null;
+			}
+
+		} else {
+			System.err.println("Key does not exist!");
+			return null;
+		}
+
 	}
 
 	// get JSON data:
@@ -105,6 +147,23 @@ public class JsonModule {
 		System.out.println(a.containsKey("name"));
 		System.out.println(a.getString("name"));
 		System.out.println(a.getInt("age"));
+
+		if (a.containsKey("null")) {
+
+			try {
+
+				int value = a.getInt("null");
+				System.out.println("Key has the value: " + value);
+
+			} catch (NullPointerException notFoundException) {
+				System.err.println("Key not found!");
+			} catch (ClassCastException ex) {
+				System.err.println("Key value is not anticipated type!");
+			}
+
+		} else {
+			System.err.println("Key does not exist!");
+		}
 
 		// Read keys from Json (coming soon):
 		System.out.println(DataTypeJson.JARRAY.value);
