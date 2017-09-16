@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="175.0" prefWidth="292.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="login.LoginController">
+<StackPane prefHeight="175.0" prefWidth="292.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.ServerLoginWindow">
   <children>
     <StackPane>
       <children>
@@ -18,14 +18,14 @@
           <children>
             <GridPane>
               <children>
-                <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                <TextField fx:id="user" promptText="sftp username" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <TextField fx:id="password" promptText="sftp password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="IP address:" />
+                        <TextField fx:id="user2" promptText="server address" GridPane.columnIndex="1" />
                         <Label text="Filepath:" GridPane.rowIndex="1" />
                         <TextField fx:id="user1" promptText="path of the website folder" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField fx:id="user2" promptText="server address" GridPane.columnIndex="1" />
+                <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField fx:id="user" promptText="sftp username" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField fx:id="password" promptText="sftp password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
               </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="79.0" />

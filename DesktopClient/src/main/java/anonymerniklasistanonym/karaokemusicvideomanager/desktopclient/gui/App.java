@@ -1,7 +1,6 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.MainWindow;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.ServerLoginWindow;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -21,8 +20,6 @@ public class App extends Application {
 		this.frame = new MainWindow(primaryStage);
 		this.frame.createStage();
 
-		ServerLoginWindow frame2 = new ServerLoginWindow();
-		frame2.createStage();
 	}
 
 	public static void main(String[] args) {

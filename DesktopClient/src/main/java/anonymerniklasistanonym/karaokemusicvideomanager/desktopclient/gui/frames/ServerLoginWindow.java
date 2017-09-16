@@ -12,13 +12,13 @@ public class ServerLoginWindow {
 
 	private Stage MainWindowStage;
 
-	private String windowTitle = "Karaoke Desktop Client [Beta]";
-	private int[] normalWindowSize = { 500, 650 };
-	private int[] minimalWindowSize = { 450, 300 };
+	private final String windowTitle = "Karaoke Desktop Client [Beta]";
+	private final int[] normalWindowSize = { 500, 650 };
+	private final int[] minimalWindowSize = { 450, 300 };
 
 	public Stage createStage() {
 		try {
-			Parent root = FXMLLoader.load(getClass().getResource("ServerLoginWindow.fxml"));
+			Parent root = FXMLLoader.load(ServerLoginWindow.class.getResource("ServerLoginWindow.fxml"));
 			MainWindowStage.setTitle(this.windowTitle);
 			MainWindowStage.setScene(new Scene(root, this.normalWindowSize[0], this.normalWindowSize[1]));
 			MainWindowStage.setResizable(true);
@@ -38,9 +38,11 @@ public class ServerLoginWindow {
 
 			return MainWindowStage;
 			// show the window
-			MainWindowStage.show();
 		} catch (Exception e) {
 			e.printStackTrace();
+
+			return MainWindowStage;
 		}
+
 	}
 }

@@ -1,4 +1,4 @@
-package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui;
+package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
