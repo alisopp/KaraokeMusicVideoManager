@@ -1,6 +1,11 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui;
 
+import java.io.File;
+import java.nio.file.Paths;
+
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions.ExportImportSettings;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.MainWindow;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoHandler;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -14,9 +19,10 @@ public class App extends Application {
 
 	private MainWindow frame;
 
+	private MusicVideoHandler manager;
+
 	@Override
 	public void start(Stage primaryStage) {
-
 		this.frame = new MainWindow(primaryStage);
 		this.frame.createStage();
 
@@ -62,6 +68,39 @@ public class App extends Application {
 		// * export a barcode to list site as HTML file with address input (choose table
 		// size before creating)
 
+		App mainApp = new App();
+
+		mainApp.manager = new MusicVideoHandler();
+
+		mainApp.startUp();
+
 		launch(args);
+
+		mainApp.onClose();
+
+	}
+
+	private void startUp() {
+
+		// load previous saved settings
+		File savedSettings = Paths.get("settings.json").toFile();
+
+		if (savedSettings.exists()) {
+			this.manager.setSettingsData(ExportImportSettings.readSettings(savedSettings));
+
+			// update the music video list
+			this.manager.updateMusicVideoList();
+		}
+	}
+
+	private void onClose() {
+
+		// load previous saved settings
+		File savedSettings = Paths.get("settings.json").toFile();
+
+		if (!savedSettings.exists()) {
+			// save changes if nothing is there
+			ExportImportSettings.writeSettings(savedSettings, this.manager.getSettingsData());
+		}
 	}
 }

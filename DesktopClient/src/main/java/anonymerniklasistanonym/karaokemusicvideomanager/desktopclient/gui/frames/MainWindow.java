@@ -1,5 +1,8 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
 
+import java.io.File;
+import java.nio.file.Paths;
+
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +14,8 @@ import javafx.stage.WindowEvent;
 public class MainWindow {
 
 	public MainWindow(Stage hi) {
-		this.MainWindowStage = hi;
+		this.setMainWindowStage(hi);
+
 	}
 
 	private Stage MainWindowStage;
@@ -23,17 +27,27 @@ public class MainWindow {
 	public void createStage() {
 		try {
 			Parent root = FXMLLoader.load(MainWindow.class.getResource("MainWindow.fxml"));
-			MainWindowStage.setTitle(this.windowTitle);
-			MainWindowStage.setScene(new Scene(root, this.normalWindowSize[0], this.normalWindowSize[1]));
-			MainWindowStage.setResizable(true);
-			MainWindowStage.setMinWidth(this.minimalWindowSize[0]);
-			MainWindowStage.setMinHeight(this.minimalWindowSize[1]);
-			MainWindowStage.centerOnScreen();
+			getMainWindowStage().setTitle(this.windowTitle);
+			getMainWindowStage().setScene(new Scene(root, this.normalWindowSize[0], this.normalWindowSize[1]));
+			getMainWindowStage().setResizable(true);
+			getMainWindowStage().setMinWidth(this.minimalWindowSize[0]);
+			getMainWindowStage().setMinHeight(this.minimalWindowSize[1]);
+			getMainWindowStage().centerOnScreen();
 
-			MainWindowStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			getMainWindowStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
+
 				@Override
 				public void handle(WindowEvent e) {
-					Dialogs.mainStageClose(e);
+
+					File savedSettings = Paths.get("settings.json").toFile();
+
+					if (!savedSettings.exists()) {
+						// save changes if nothing is there
+						System.out.println("Later...");
+					} else {
+						Dialogs.mainStageClose(e);
+					}
+
 				}
 			});
 
@@ -41,9 +55,17 @@ public class MainWindow {
 			// Image(getClass().getResourceAsStream("icon.png")));
 
 			// show the window
-			MainWindowStage.show();
+			getMainWindowStage().show();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Stage getMainWindowStage() {
+		return MainWindowStage;
+	}
+
+	public void setMainWindowStage(Stage mainWindowStage) {
+		MainWindowStage = mainWindowStage;
 	}
 }

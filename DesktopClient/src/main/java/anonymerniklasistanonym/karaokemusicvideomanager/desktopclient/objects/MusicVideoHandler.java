@@ -19,12 +19,22 @@ public class MusicVideoHandler {
 	 */
 	private ProgramData settingsData;
 
+	public ProgramData getSettingsData() {
+		return settingsData;
+	}
+
+	public void setSettingsData(ProgramData settingsData) {
+		this.settingsData = settingsData;
+	}
+
 	/**
 	 * This ArrayList<MusicVideo> contains all the MusicVideo objects and each
 	 * object is a music video file with information about title, artist and path of
 	 * the music video files that were found in the source folders
 	 */
 	private MusicVideo[] musicVideoList;
+
+	private final String[] columnNames = new String[] { "#", "Artist", "Title" };
 
 	/**
 	 * Constructor that creates an empty/default program data object
@@ -221,6 +231,11 @@ public class MusicVideoHandler {
 	 */
 	public void updateMusicVideoList() {
 
+		if (this.settingsData.getPathList() == null) {
+			System.err.println("There are no paths!");
+			return;
+		}
+
 		ArrayList<MusicVideo> newMusicVideoList = new ArrayList<MusicVideo>();
 
 		for (Path directory : this.settingsData.getPathList()) {
@@ -320,6 +335,31 @@ public class MusicVideoHandler {
 
 		}
 		return null;
+	}
+
+	/**
+	 * Convert all the data of the musicVideoList to a Object[][] for tables
+	 * 
+	 * @return Object[][] ([][#, artist, title])
+	 */
+	public Object[][] musicVideoListToTable() {
+
+		Object[][] tableData = new Object[this.musicVideoList.length][this.columnNames.length];
+
+		System.out.println("New updated table:");
+		for (int i = 0; i < this.musicVideoList.length; i++) {
+			// set data to Object[][]
+			tableData[i][0] = i + 1;
+			tableData[i][1] = this.musicVideoList[i].getArtist();
+			tableData[i][2] = this.musicVideoList[i].getTitle();
+
+			// check it right now
+			// System.out.print("#: " + tableData[a][0]);
+			// System.out.print("\tArtist: " + tableData[a][1]);
+			// System.out.println("\tTitle: " + tableData[a][2]);
+		}
+
+		return tableData;
 	}
 
 }

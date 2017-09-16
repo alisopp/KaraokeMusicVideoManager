@@ -28,8 +28,7 @@ public class Dialogs {
 		// with the following buttons
 		alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 		final ButtonType buttonAlways = new ButtonType("Always", ButtonData.RIGHT);
-		final ButtonType ButtonNever = new ButtonType("Never", ButtonData.RIGHT);
-		alert.getButtonTypes().addAll(buttonAlways, ButtonNever);
+		alert.getButtonTypes().addAll(buttonAlways);
 
 		// which button was pressed getter
 		ButtonType result = alert.showAndWait().get();
@@ -45,12 +44,11 @@ public class Dialogs {
 			// quit the program and do also:
 			if (result == ButtonType.YES) {
 				// save changes in file
+				System.out.println("Later...");
 			} else if (result == buttonAlways) {
 				// add to config that always the changes should be saved on exit
 				// save changes in file
-			} else if (result == ButtonNever) {
-				// add to config that the changes never should be saved on exit
-				// save changes in file
+				System.out.println("Later...");
 			}
 
 			// close the program without exceptions else
