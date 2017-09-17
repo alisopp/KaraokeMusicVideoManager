@@ -86,3 +86,57 @@ If you still have any kind of questions, problems or great ideas send me an emai
 Have fun using this program!
 
  :smiley:
+
+
+
+## Answered Questions:
+
+### I am on Windows and can't run `.jar` files with a double click
+
+I had the same problem after an update to Java 8 - my final solution:
+
+1. Uninstall all Java things (All updates, JRE's, JDK's)
+
+   Windows 10:
+
+   * Search in Cortana for `apps` and press enter
+   *  Search in the list of new window for `java`
+   * Click every entry with `Java SDK/UPDATE/JRE/...` and click the `Uninstall` button
+
+2. Delete all environmental variables of Java
+
+   Windows 10:
+
+   - Search in Cortana for `environmental variables` and press enter
+   - Edit the system and user `PATH` that nowhere is anything with `Java` or `Oracle`
+   - Now download the newest [Java SDK or JRE](http://www.oracle.com/technetwork/pt/java/javase/downloads/jdk8-downloads-2133151.html) and install it
+
+3. **Tada - `.jar` files can be executed :D**
+
+4. If you now have problems with Eclipse don't explode :sweat:
+
+   * Find the folder where Eclipse has it's program files (my path: `/user/myusername/eclipse/eclipse-ide-version/eclipse`)
+
+   * Open with a text editor like notepad++ the file `eclipse.ini`
+
+   * Find in this file the line:
+
+     ```
+     -vm
+     C:/Program Files/Java/jdk1.7.0_yourversion/jre/bin
+     ```
+
+     * Now open your Windows explorer and go into the folder `C:/Program Files/Java/`
+
+       * Open the folder with SDK or JRE (both works - mine was named `jdk1.8.0_144`)
+       * Open the folder `jre` and then the folder `bin`
+       * Now copy the path (click on the path bar and `CRTL + C`)
+
+     * Select the line below `-vm` and press `CRTL + V` to overwrite the *old* path: 
+
+       ```
+       -vm
+       [copy the path in this line to overwrite the old path]
+       ```
+
+5. **Even Eclipse should now start again without any problems :smile:**
