@@ -93,7 +93,7 @@
       </VBox>
    </top>
    <center>
-      <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: grey;" BorderPane.alignment="CENTER">
+      <HBox style="-fx-background-color: grey;" BorderPane.alignment="CENTER">
          <children>
             <TabPane style="-fx-border-color: black;" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="ALWAYS">
               <tabs>
@@ -125,7 +125,7 @@
                      <content>
                         <VBox>
                            <children>
-                              <TreeTableView style="-fx-background-color: purple;">
+                              <TreeTableView maxHeight="1.7976931348623157E308" style="-fx-background-color: purple;">
                                 <columns>
                                   <TreeTableColumn prefWidth="75.0" text="File Tree" />
                                   <TreeTableColumn prefWidth="75.0" text="Path" />

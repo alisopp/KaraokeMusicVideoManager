@@ -97,25 +97,27 @@ public class JsonModule {
 			return null;
 		}
 
+		System.out.print(">> Look for the key " + key);
+
 		if (jsonObject.containsKey(key)) {
 
 			try {
 
 				JsonValue value = jsonObject.get(key);
-				System.out.println("Key has the value: " + value);
+				System.out.println(" << Key has the value: " + value);
 				return value;
 
 			} catch (NullPointerException notFoundException) {
-				System.err.println("Key not found!");
+				System.err.println(" << Key not found!");
 				return null;
 
 			} catch (ClassCastException ex) {
-				System.err.println("Key value is not anticipated type!");
+				System.err.println(" << Key value is not anticipated type!");
 				return null;
 			}
 
 		} else {
-			System.err.println("Key does not exist!");
+			System.err.println(" << Key does not exist!");
 			return null;
 		}
 

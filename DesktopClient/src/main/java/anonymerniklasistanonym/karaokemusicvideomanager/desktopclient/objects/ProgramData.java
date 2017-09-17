@@ -1,6 +1,7 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -58,8 +59,34 @@ public final class ProgramData {
 		return pathList;
 	}
 
+	/**
+	 * Set path list but also clear the list so that no doubled values are in it
+	 * 
+	 * @param pathList
+	 *            (Path[])
+	 */
 	public void setPathList(Path[] pathList) {
-		this.pathList = pathList;
+
+		System.out.println(">> Set path list:");
+
+		ArrayList<Path> uniqueAddresses = new ArrayList<Path>(); // create arraylist to contain all non-repeated
+																	// addresses
+		for (Path containedPath : pathList) { // cycle through the entire array
+			if (!uniqueAddresses.contains(containedPath)) { // check if the address already there
+
+				if (containedPath.toFile().exists()) {
+					uniqueAddresses.add(containedPath); // add it
+					System.out.println("+ Added " + containedPath);
+				} else {
+					System.err.println("- Path does not exist: " + containedPath);
+				}
+
+			} else {
+				System.err.println("- Found duplicate: " + containedPath);
+			}
+		}
+
+		this.pathList = uniqueAddresses.toArray(new Path[0]);
 	}
 
 	/**

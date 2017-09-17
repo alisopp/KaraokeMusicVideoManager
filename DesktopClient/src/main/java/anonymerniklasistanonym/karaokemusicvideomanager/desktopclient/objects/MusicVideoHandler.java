@@ -105,6 +105,14 @@ public class MusicVideoHandler {
 			if (oldPathList == null) {
 				this.settingsData.setPathList(new Path[] { directoryPath });
 			} else {
+
+				for (Path containedPaths : oldPathList) {
+					if (containedPaths.compareTo(directoryPath) == 0) {
+						System.err.println(" << Path is already in the PathList!");
+						return false;
+					}
+				}
+
 				Path[] newPathList = Stream.concat(Arrays.stream(this.settingsData.getPathList()),
 						Arrays.stream(new Path[] { directoryPath })).toArray(Path[]::new);
 				this.settingsData.setPathList(newPathList);

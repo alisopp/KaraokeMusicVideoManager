@@ -1,9 +1,11 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions;
 
 import java.io.File;
-import java.math.BigDecimal;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -31,33 +33,61 @@ public class ExportImportSettings {
 		}
 
 		try {
-			JsonObjectBuilder mainJsonBuilder = Json.createObjectBuilder();
 
-			JsonArrayBuilder pathListArray = Json.createArrayBuilder();
-			pathListArray.add("String 1");
-			pathListArray.add("String 2");
-			pathListArray.add("String 3");
-			pathListArray.add("String 4");
+			if (settingsData.getPathList() != null) {
+				JsonObjectBuilder mainJsonBuilder = Json.createObjectBuilder();
 
-			mainJsonBuilder.add("path-list", pathListArray);
+				JsonArrayBuilder pathListArray = Json.createArrayBuilder();
+				for (Path line : settingsData.getPathList()) {
+					pathListArray.add(line.toString());
+				}
+				mainJsonBuilder.add("path-list", pathListArray);
 
-			JsonObjectBuilder sftpLogin = Json.createObjectBuilder();
-			sftpLogin.add("username", "pi");
-			sftpLogin.add("address", "192.168.0.192");
+				if (settingsData.getUsernameSftp() != null && settingsData.getIpAddressSftp() != null) {
+					JsonObjectBuilder sftpLogin = Json.createObjectBuilder();
+					sftpLogin.add("username", settingsData.getUsernameSftp());
+					sftpLogin.add("ip-address", settingsData.getIpAddressSftp());
+					if (settingsData.getWorkingDirectorySftp() != null) {
+						sftpLogin.add("directory", settingsData.getWorkingDirectorySftp());
+					}
+					mainJsonBuilder.add("sftp-login", sftpLogin);
+				}
 
-			mainJsonBuilder.add("sftp-login", sftpLogin);
+				if (settingsData.getAcceptedFileTypes() != null) {
+					JsonArrayBuilder acceptedFileTypesArray = Json.createArrayBuilder();
+					for (String fileType : settingsData.getAcceptedFileTypes()) {
+						acceptedFileTypesArray.add(fileType);
+					}
+					mainJsonBuilder.add("file-types", acceptedFileTypesArray);
+				}
 
-			mainJsonBuilder.add("name", "Falco#*äüö");
-			mainJsonBuilder.add("age", BigDecimal.valueOf(3));
-			mainJsonBuilder.add("biteable", Boolean.FALSE);
+				String content = JsonModule.dumpStringToJson(mainJsonBuilder);
 
-			String content = JsonModule.dumpStringToJson(mainJsonBuilder);
-
-			if (FileReadWriteModule.writeFile(file, new String[] { content })) {
-				return true;
+				if (FileReadWriteModule.writeFile(file, new String[] { content })) {
+					return true;
+				} else {
+					return false;
+				}
 			} else {
 				return false;
 			}
+
+			// JsonArrayBuilder pathListArray = Json.createArrayBuilder();
+			// pathListArray.add("String 1");
+			// pathListArray.add("String 2");
+			// pathListArray.add("String 3");
+			// pathListArray.add("String 4");
+			// mainJsonBuilder.add("path-list", pathListArray);
+
+			// JsonObjectBuilder sftpLogin = Json.createObjectBuilder();
+			// sftpLogin.add("username", "pi");
+			// sftpLogin.add("address", "192.168.0.192");
+			// mainJsonBuilder.add("sftp-login", sftpLogin);
+
+			// mainJsonBuilder.add("name", "Falco#*äüö");
+			// mainJsonBuilder.add("age", BigDecimal.valueOf(3));
+			// mainJsonBuilder.add("biteable", Boolean.FALSE);
+
 		} catch (Exception e) {
 			return false;
 		}
@@ -81,6 +111,8 @@ public class ExportImportSettings {
 	 */
 	public static ProgramData readSettings(File file) {
 
+		System.out.println("second");
+
 		if (file == null) {
 			System.err.println("File is null!");
 			return null;
@@ -89,6 +121,10 @@ public class ExportImportSettings {
 		try {
 
 			String[] contentOfFile = FileReadWriteModule.readFile(file);
+
+			// if (!Arrays.equals(settingsData.getAcceptedFileTypes(),
+			// new String[] { "avi", "mp4", "mkv", "wmv", "mov", "mpg", "mpeg" })) {
+			// }
 
 			if (contentOfFile == null) {
 				System.err.println("File could not be read!");
@@ -103,8 +139,24 @@ public class ExportImportSettings {
 
 			ProgramData settingsData = new ProgramData();
 
-			System.out.println(JsonModule.getValue(jsonObject, "sftp-login"));
-			System.out.println(JsonModule.getValue(jsonObject, "sftp"));
+			JsonArray keyValue = (JsonArray) JsonModule.getValue(jsonObject, "path-list");
+
+			if (keyValue != null) {
+
+				Path[] newPathList = new Path[keyValue.size()];
+
+				System.out.println(keyValue);
+
+				for (int i = 0; i < keyValue.size(); i++) {
+
+					newPathList[i] = Paths.get(keyValue.getString(i));
+				}
+
+				settingsData.setPathList(newPathList);
+			}
+
+			// System.out.println(JsonModule.getValue(jsonObject, "sftp-login"));
+			// System.out.println(JsonModule.getValue(jsonObject, "sftp"));
 
 			return settingsData;
 
