@@ -12,6 +12,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Stream;
 
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions.ExportMusicVideoData;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
+
 public class MusicVideoHandler {
 
 	/**
@@ -368,6 +371,28 @@ public class MusicVideoHandler {
 		}
 
 		return tableData;
+	}
+
+	public boolean saveFileHtmlBasic(Path whereToWriteTheFile) {
+
+		if (whereToWriteTheFile == null) {
+			System.err.println("Path can't be null!");
+			return false;
+		}
+
+		return FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(),
+				ExportMusicVideoData.generateHtmlSiteStatic(musicVideoListToTable(), this.columnNames));
+	}
+
+	public boolean saveFileHtmlSearchable(Path whereToWriteTheFile) {
+
+		if (whereToWriteTheFile == null) {
+			System.err.println("Path can't be null!");
+			return false;
+		}
+
+		return FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(),
+				ExportMusicVideoData.generateHtmlSiteDynamic(musicVideoListToTable(), this.columnNames));
 	}
 
 }

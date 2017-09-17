@@ -1,6 +1,7 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions.ExportImportSettings;
@@ -33,6 +34,13 @@ public class LocalTest {
 		testHandler.openMusicVideo(2);
 		testHandler.openMusicVideo(5993);
 		testHandler.openMusicVideo(5994);
+
+		Path htmlSite = Paths.get("index.html");
+		testHandler.saveFileHtmlBasic(htmlSite);
+
+		Path htmlSiteSearchable = Paths.get("index2.html");
+		testHandler.saveFileHtmlSearchable(htmlSiteSearchable);
+
 		if (!savedSettings.exists()) {
 			// save changes if nothing is there
 			ExportImportSettings.writeSettings(savedSettings, testHandler.getSettingsData());

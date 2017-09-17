@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		table {
+			font-family: arial, sans-serif;
+			border-collapse: collapse;
+			width: 100%;
+			word-wrap: break-word;
+		}
+
+		td,
+		th {
+			border: 1px solid #dddddd;
+			text-align: left;
+			padding: 8px;
+			vertical-align: top;
+		}
+
+		.number {
+			width: 40;
+		}
+
+		.artist {
+			width: 200;
+		}
+
+		.title {
+			width: 200;
+		}
+
+		tbody tr:nth-child(odd) {
+			background-color: #dddddd;
+		}
+
+		body {
+			width: 100%;
+			margin: 0;
+			max-width: 1200px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		@media (max-width: 40em) {
+			section {
+				margin-left: 0px;
+				margin-right: 0px;
+			}
+			.search {
+				display: inline-flex;
+				width: 92%;
+				max-width: 1000px;
+				border-radius: 20px;
+				margin: auto;
+				border-width: 2px;
+				border-color: black;
+				background: #fff;
+				padding: 10px;
+				height: 100%;
+			}
+		}
+
+		@media (min-width: 40em) {
+			section {
+				margin-left: 20px;
+				margin-right: 20px;
+			}
+			.search {
+				display: inline-flex;
+				width: 80%;
+				max-width: 1000px;
+				border-radius: 20px;
+				margin: auto;
+				border-width: 2px;
+				border-color: black;
+				background: #fff;
+				padding: 10px;
+				height: 100%;
+			}
+		}
+
+		html {
+			text-align: center;
+		}
+
+		.searchContainer {
+			width: 100%;
+			height: 50px;
+			display: flex;
+			background: #ffffff;
+			padding-top: 1rem;
+			padding-bottom: 1rem;
+			align-items: center;
+			position: relative;
+			margin: auto;
+		}
+
+		input:focus {
+			outline-width: 0;
+		}
+
+		tr.hide {
+			display: none;
+		}
+
+		tr.alternate {
+			background-color: #dddddd;
+		}
+
+	</style>
+</head>
+
+<body>
+
+	<section>
+
+		<div class="searchContainer">
+			<input type="search" class="search light-table-filter" data-table="order-table"
