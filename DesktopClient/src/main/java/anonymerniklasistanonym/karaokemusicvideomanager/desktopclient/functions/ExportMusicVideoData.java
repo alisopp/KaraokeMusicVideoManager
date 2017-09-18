@@ -83,6 +83,43 @@ public class ExportMusicVideoData {
 		return sb.toString();
 	}
 
+	public static String generateHtmlTableParty(Object[][] data, String[] columnNames) {
+
+		StringBuilder sb = new StringBuilder("placeholder");
+
+		sb.append("=\"Input your search query to find your music videos...\"/></div>");
+
+		sb.append("<form action=\"demo_form.php\" method=\"get\">\n");
+
+		sb.append("<table class=\"order-table table\">");
+
+		String[] columnClasses = { "class=\"number\"", "class=\"artist\"", "class=\"title\"" };
+
+		sb.append("<thead><tr>");
+		for (int a = 0; a < columnNames.length; a++) {
+			sb.append("<th " + columnClasses[a] + " >" + columnNames[a] + "</th>");
+		}
+		sb.append("<th " + "class=\"playlist\"" + " >" + "Sing!" + "</th>");
+		sb.append("</tr></thead><tbody>\n");
+
+		for (int a = 0; a < data.length; a++) {
+			sb.append("<tr>");
+			for (int b = 0; b < columnNames.length; b++) {
+				sb.append("<td>" + data[a][b] + "</td>");
+			}
+			sb.append("<td><button class=\"button\" name=\"index\" type=\"submit\" value=\"" + a + "\""
+					+ "data-title=\"" + data[a][1] + "\" data-artist=\"" + data[a][2] + "\">Sing!</button></td>");
+
+			sb.append("</tr>\n");
+		}
+
+		sb.append("</tbody></table>\n");
+
+		sb.append("</form>");
+
+		return sb.toString();
+	}
+
 	public static String[] generateHtmlSiteStatic(Object[][] data, String[] columnNames) {
 		return generateHtmlSiteMain(data, columnNames, "website_data/static_html_page_begin.html",
 				"website_data/static_html_page_end.html", HTML_SITE.STATIC.value);
@@ -120,9 +157,8 @@ public class ExportMusicVideoData {
 				cache.add(generateHtmlTable(data, columnNames));
 			} else if (typeOfHtml == HTML_SITE.SEARCH.value) {
 				cache.add(generateHtmlTableWithSearch(data, columnNames));
-			} else {
-				// default value
-				cache.add(generateHtmlTable(data, columnNames));
+			} else if (typeOfHtml == HTML_SITE.PARTY.value) {
+				cache.add(generateHtmlTableParty(data, columnNames));
 			}
 
 			BufferedReader afterTableHtmlData = new BufferedReader(

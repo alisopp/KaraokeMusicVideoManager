@@ -395,4 +395,15 @@ public class MusicVideoHandler {
 				ExportMusicVideoData.generateHtmlSiteDynamic(musicVideoListToTable(), this.columnNames));
 	}
 
+	public boolean saveFileHtmlParty(Path whereToWriteTheFile) {
+
+		if (whereToWriteTheFile == null) {
+			System.err.println("Path can't be null!");
+			return false;
+		}
+
+		return FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(),
+				ExportMusicVideoData.generateHtmlSiteParty(musicVideoListToTable(), this.columnNames));
+	}
+
 }

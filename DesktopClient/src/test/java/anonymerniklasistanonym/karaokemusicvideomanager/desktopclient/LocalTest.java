@@ -1,7 +1,6 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions.ExportImportSettings;
@@ -17,29 +16,34 @@ public class LocalTest {
 
 		if (savedSettings.exists()) {
 			System.out.println("first");
-			testHandler.setSettingsData(ExportImportSettings.readSettings(savedSettings));
+			// testHandler.setSettingsData(ExportImportSettings.readSettings(savedSettings));
 
 			// update the music video list
 			testHandler.updateMusicVideoList();
 		}
 
 		testHandler.addPathToPathList(Paths.get("c:\\Users\\nikla\\Downloads\\karaoke " + "test\\1"));
-		testHandler.addPathToPathList(Paths.get("c:\\Users\\nikla\\Downloads\\karaoke " + "test\\2"));
-		testHandler.addPathToPathList(Paths.get("c:\\Users\\nikla\\Downloads\\karaoke " + "test\\3"));
+		// testHandler.addPathToPathList(Paths.get("c:\\Users\\nikla\\Downloads\\karaoke
+		// " + "test\\2"));
+		// testHandler.addPathToPathList(Paths.get("c:\\Users\\nikla\\Downloads\\karaoke
+		// " + "test\\3"));
 		testHandler.updateMusicVideoList();
 
 		testHandler.printMusicVideoList();
+		//
+		// testHandler.openMusicVideo(0);
+		// testHandler.openMusicVideo(2);
+		// testHandler.openMusicVideo(5993);
+		// testHandler.openMusicVideo(5994);
+		//
+		// Path htmlSite = Paths.get("index.html");
+		// testHandler.saveFileHtmlBasic(htmlSite);
 
-		testHandler.openMusicVideo(0);
-		testHandler.openMusicVideo(2);
-		testHandler.openMusicVideo(5993);
-		testHandler.openMusicVideo(5994);
+		testHandler.saveFileHtmlBasic(Paths.get("basic.html"));
 
-		Path htmlSite = Paths.get("index.html");
-		testHandler.saveFileHtmlBasic(htmlSite);
+		testHandler.saveFileHtmlSearchable(Paths.get("search.html"));
 
-		Path htmlSiteSearchable = Paths.get("index2.html");
-		testHandler.saveFileHtmlSearchable(htmlSiteSearchable);
+		testHandler.saveFileHtmlParty(Paths.get("party.html"));
 
 		if (!savedSettings.exists()) {
 			// save changes if nothing is there
