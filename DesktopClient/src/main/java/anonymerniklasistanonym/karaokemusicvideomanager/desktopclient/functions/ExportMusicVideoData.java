@@ -107,8 +107,8 @@ public class ExportMusicVideoData {
 			for (int b = 0; b < columnNames.length; b++) {
 				sb.append("<td>" + data[a][b] + "</td>");
 			}
-			sb.append("<td><button class=\"button\" name=\"index\" type=\"submit\" value=\"" + a + "\""
-					+ "data-title=\"" + data[a][1] + "\" data-artist=\"" + data[a][2] + "\">Sing!</button></td>");
+			sb.append("<td><button class=\"button\" name=\"index\" type=\"submit\" value=\"" + a + "," + data[a][1]
+					+ "," + data[a][2] + "\">Sing!</button></td>");
 
 			sb.append("</tr>\n");
 		}
