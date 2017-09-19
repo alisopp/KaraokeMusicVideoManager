@@ -1,24 +1,25 @@
 <?php
-
-// var buttom = document.querySelector("button");
-// var dataArtist = buttom.getAttribute("data-artist");
-// var dataTitle = buttom.getAttribute("data-title");
-
-//echo "index:", $_REQUEST['index'];
-//echo "title:", $dataTitle;
-//echo "artist:", $dataArtist;
-
-$array = array("index", "title", "artist");
-$number = 0
-
-echo "<ul>"
-
-// get the number, title and artist that was clicked
-foreach (explode(",", $_REQUEST['index']) as $line) {
-	echo "<li>", $array[$number], ":", $line, "</li>";
-	$number++;
-};
-
-echo "</ul>"
-
+# Place posted information in an array
+$myarray = explode(",", $_REQUEST['index']);
+# 0 = index
+# 1 = title
+# 2 = artist
 ?>
+
+<form action="add_to_playlist.php">
+	<fieldset>
+		<legend>Personal information:</legend>
+
+		<input type="hidden" name="song" value="<?php echo $myarray[0]; ?>">
+		<input type="hidden" name="title" value="<?php echo $myarray[1]; ?>">
+		<input type="hidden" name="artist" value="<?php echo $myarray[2]; ?>">
+
+		Name/s:<br>
+		<input type="text" name="author" placeholder="Enter your name/s..."><br>
+
+		Comment:<br>
+		<input type="text" name="comment" placeholder="Enter your comment..."><br><br>
+
+		<input type="submit" value="Submit">
+	</fieldset>
+</form>
