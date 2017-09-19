@@ -32,6 +32,11 @@ public class ExportMusicVideoData {
 
 	private static String createHtmlTableData(Object[][] data) {
 
+		if (data == null || data.length == 0) {
+			System.out.println("There is no data");
+			return "";
+		}
+
 		int columnNumber = data[0].length;
 		int rowNumber = data.length;
 
@@ -102,15 +107,19 @@ public class ExportMusicVideoData {
 		sb.append("<th " + "class=\"playlist\"" + " >" + "Sing!" + "</th>");
 		sb.append("</tr></thead><tbody>\n");
 
-		for (int a = 0; a < data.length; a++) {
-			sb.append("<tr>");
-			for (int b = 0; b < columnNames.length; b++) {
-				sb.append("<td>" + data[a][b] + "</td>");
-			}
-			sb.append("<td><button class=\"button\" name=\"index\" type=\"submit\" value=\"" + a + "," + data[a][1]
-					+ "," + data[a][2] + "\">Sing!</button></td>");
+		if (data == null || data.length == 0) {
+			System.err.println("There is no table data!");
+		} else {
+			for (int a = 0; a < data.length; a++) {
+				sb.append("<tr>");
+				for (int b = 0; b < columnNames.length; b++) {
+					sb.append("<td>" + data[a][b] + "</td>");
+				}
+				sb.append("<td><button class=\"button\" name=\"index\" type=\"submit\" value=\"" + a + "," + data[a][1]
+						+ "," + data[a][2] + "\">Sing!</button></td>");
 
-			sb.append("</tr>\n");
+				sb.append("</tr>\n");
+			}
 		}
 
 		sb.append("</tbody></table>\n");

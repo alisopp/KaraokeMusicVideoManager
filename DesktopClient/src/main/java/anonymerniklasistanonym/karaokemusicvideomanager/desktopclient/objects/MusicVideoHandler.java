@@ -94,7 +94,7 @@ public class MusicVideoHandler {
 			return false;
 		}
 
-		System.out.print(">> Add path " + directoryPath.toAbsolutePath() + "to path list.");
+		System.out.print(">> Add path " + directoryPath.toAbsolutePath() + " to path list.");
 
 		if (!directoryPath.toFile().isDirectory()) {
 			System.err.println(" << Path is no directory!");
@@ -354,6 +354,16 @@ public class MusicVideoHandler {
 	 * @return Object[][] ([][#, artist, title])
 	 */
 	public Object[][] musicVideoListToTable() {
+
+		if (this.musicVideoList == null) {
+			System.err.println("The music video list is null!");
+			return null;
+		}
+
+		if (this.musicVideoList.length == 0) {
+			System.err.println("The music video list is empty!");
+			return null;
+		}
 
 		Object[][] tableData = new Object[this.musicVideoList.length][this.columnNames.length];
 
