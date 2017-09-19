@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<!-- Scale text on for example mobile devices: -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Link to CSS file: -->
+	<link rel="stylesheet" href="styles_party.css">
+	<!-- Link to JS file: -->
+	<script src="../libraries/w3.js"></script>
+	<!-- Custom head tag -->
+</head>
+
+<body>
+
+	<!-- Floating button with link to current playlist -->
+	<a href="playlist.html" class="float">
+		<img style="padding-top:15px" width="30px" height="30px" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDMyMCAzMjAiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDMyMCAzMjA7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPgo8Zz4KCTxnPgoJCTxyZWN0IHk9Ijk2IiB3aWR0aD0iMjU2IiBoZWlnaHQ9IjQyLjY2NyIgZmlsbD0iI0ZGRkZGRiIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHJlY3QgeT0iMTAuNjY3IiB3aWR0aD0iMjU2IiBoZWlnaHQ9IjQyLjY2NyIgZmlsbD0iI0ZGRkZGRiIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHJlY3QgeT0iMTgxLjMzMyIgd2lkdGg9IjE3MC42NjciIGhlaWdodD0iNDIuNjY3IiBmaWxsPSIjRkZGRkZGIi8+Cgk8L2c+CjwvZz4KPGc+Cgk8Zz4KCQk8cG9seWdvbiBwb2ludHM9IjIxMy4zMzMsMTgxLjMzMyAyMTMuMzMzLDMwOS4zMzMgMzIwLDI0NS4zMzMgICAiIGZpbGw9IiNGRkZGRkYiLz4KCTwvZz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K" />
+	</a>
+	<div class="label-container">
+		<div class="label-text">Party Playlist</div>
+	</div>
+
+	<!-- Section that contains the table with all found music video -->
+	<section>
+		<input class="searchbar" type="text" placeholder="Search for artist/title.." oninput="w3.filterHTML('#search-table', '.item', this.value)">
+
+		<form action="demo_form.php" method="get">
+			<!-- Example table begin -->
+			<table id="search-table">
+				<thead>
+					<tr>
+						<th onclick="w3.sortHTML('#search-table','.item', 'td:nth-child(2)')">#</th>
+						<th onclick="w3.sortHTML('#search-table','.item', 'td:nth-child(2)')">Artist</th>
+						<th onclick="w3.sortHTML('#search-table','.item', 'td:nth-child(3)')">Title</th>
+						<th onclick="w3.sortHTML('#search-table','.item', 'td:nth-child(3)')">Sing!</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="item">
+						<td>1</td>
+						<td>A Example Artist</td>
+						<td>ß Example Title</td>
+						<td><button class="button" name="index" type="submit" value="0" data-title="Halsey" data-artist="Now or Never">Sing!</button></td>
+					</tr>
+					<tr class="item">
+						<td>2</td>
+						<td>B Example Artist</td>
+						<td>V Example Title</td>
+						<td><button class="button" name="index" type="submit" value="0" data-title="Halsey" data-artist="Now or Never">Sing!</button></td>
+					</tr>
+					<tr class="item">
+						<td>3</td>
+						<td>C Example Artist</td>
+						<td>E Example Title</td>
+						<td><button class="button" name="index" type="submit" value="0" data-title="Halsey" data-artist="Now or Never">Sing!</button></td>
+					</tr>
+					<tr class="item">
+						<td>4</td>
+						<td>D Example Artist</td>
+						<td>Ä Example Title</td>
+						<td><button class="button" name="index" type="submit" value="0" data-title="Halsey" data-artist="Now or Never">Sing!</button></td>
+					</tr>
+					<tr class="item">
+						<td>5</td>
+						<td>E Example Artist</td>
+						<td>K Example Title</td>
+						<td><button class="button" name="index" type="submit" value="0" data-title="Halsey" data-artist="Now or Never">Sing!</button></td>
+					</tr>
+					<tr class="item">
+						<td>6</td>
+						<td>F Example Artist</td>
+						<td>Z Example Title</td>
+						<td><button class="button" name="index" type="submit" value="0" data-title="Halsey" data-artist="Now or Never">Sing!</button></td>
+					</tr>
+					<tr class="item">
+						<td>7</td>
+						<td>G Example Artist</td>
+						<td>H Example Title</td>
+						<td><button class="button" name="index" type="submit" value="0" data-title="Halsey" data-artist="Now or Never">Sing!</button></td>
+					</tr>
+					<tr class="item">
+						<td>8</td>
+						<td>H Example Artist</td>
+						<td>A Example Title</td>
+						<td><button class="button" name="index" type="submit" value="0" data-title="Halsey" data-artist="Now or Never">Sing!</button></td>
+					</tr>
+					<tr class="item">
+						<td>9</td>
+						<td>X Example Artist</td>
+						<td>R Example Title</td>
+						<td><button class="button" name="index" type="submit" value="0" data-title="Halsey" data-artist="Now or Never">Sing!</button></td>
+					</tr>
+					<tr class="item">
+						<td>10</td>
+						<td>Z Example Artist</td>
+						<td>T Example Title</td>
+						<td><button class="button" name="index" type="submit" value="0" data-title="Halsey" data-artist="Now or Never">Sing!</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</section>
+
+</body>
+
+</html>

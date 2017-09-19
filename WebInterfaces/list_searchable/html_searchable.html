@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<!-- Scale text on for example mobile devices: -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Link to CSS file: -->
+	<link rel="stylesheet" href="styles_searchable.css">
+	<!-- Link to JS file: -->
+	<script src="../libraries/w3.js"></script>
+	<!-- Custom head tag -->
+</head>
+
+<body>
+	<!-- Section that contains the table with all found music video -->
+	<section>
+		<input class="searchbar" type="text" placeholder="Search for artist/title.." oninput="w3.filterHTML('#search-table', '.item', this.value)">
+
+		<!-- Example table begin -->
+		<table id="search-table">
+			<thead>
+				<tr>
+					<th onclick="w3.sortHTML('#search-table','.item', 'td:nth-child(2)')">#</th>
+					<th onclick="w3.sortHTML('#search-table','.item', 'td:nth-child(2)')">Artist</th>
+					<th onclick="w3.sortHTML('#search-table','.item', 'td:nth-child(3)')">Title</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="item">
+					<td>1</td>
+					<td>A Example Artist</td>
+					<td>ß Example Title</td>
+				</tr>
+				<tr class="item">
+					<td>2</td>
+					<td>B Example Artist</td>
+					<td>V Example Title</td>
+				</tr>
+				<tr class="item">
+					<td>3</td>
+					<td>C Example Artist</td>
+					<td>E Example Title</td>
+				</tr>
+				<tr class="item">
+					<td>4</td>
+					<td>D Example Artist</td>
+					<td>Ä Example Title</td>
+				</tr>
+				<tr class="item">
+					<td>5</td>
+					<td>E Example Artist</td>
+					<td>K Example Title</td>
+				</tr>
+				<tr class="item">
+					<td>6</td>
+					<td>F Example Artist</td>
+					<td>Z Example Title</td>
+				</tr>
+				<tr class="item">
+					<td>7</td>
+					<td>G Example Artist</td>
+					<td>H Example Title</td>
+				</tr>
+				<tr class="item">
+					<td>8</td>
+					<td>H Example Artist</td>
+					<td>A Example Title</td>
+				</tr>
+				<tr class="item">
+					<td>9</td>
+					<td>X Example Artist</td>
+					<td>R Example Title</td>
+				</tr>
+				<tr class="item">
+					<td>10</td>
+					<td>Z Example Artist</td>
+					<td>T Example Title</td>
+				</tr>
+			</tbody>
+		</table>
+		<!-- Example table end -->
+	</section>
+
+</body>
+
+</html>
