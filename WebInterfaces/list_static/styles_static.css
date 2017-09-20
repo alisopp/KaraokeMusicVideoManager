@@ -98,3 +98,29 @@ tr:hover td {
 		margin: 20px;
 	}
 }
+
+
+/* The extra styles for printing the website: */
+
+@media print { 
+	/* Each row of the table in tbody: */
+	tbody>tr {
+		/* The bottom border of each cell is black */
+		border-bottom: 1pt solid black;
+	}
+	/* The table: */
+	table {
+		/* Has a black border now */
+		border: 1pt solid black;
+	}
+	/* The table head cells: */
+	th {
+		/* The border is now black and there is no background color any more */
+		border-color: black;
+		background-color: transparent;
+		/* Set the text color to black because of the transparent background */
+		color: black;
+		/* The bottom border of each cell is black */
+		border-bottom: 1pt solid black;
+	}
+}
