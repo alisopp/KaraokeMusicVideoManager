@@ -23,7 +23,7 @@
 
   ;Name and file
   Name "${PRODUCT}"
-  OutFile "${PRODUCT}_installer.exe"
+  OutFile "..\${PRODUCT}_windows_installer.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\${PRODUCT}"
@@ -44,11 +44,11 @@
   !define MUI_LANGDLL_ALLLANGUAGES
 
   ;Use the custom own icon
-  !define MUI_ICON "Install_Icon.ico"
-  !define MUI_UNICON "Uninstall_Icon.ico"
+  !define MUI_ICON "icons\icon_install.ico"
+  !define MUI_UNICON "icons\icon_uninstall.ico"
   !define MUI_HEADERIMAGE_RIGHT
-  !define MUI_WELCOMEFINISHPAGE_BITMAP "installer_picture.bmp"
-  !define MUI_UNWELCOMEFINISHPAGE_BITMAP "uninstaller_picture.bmp"
+  !define MUI_WELCOMEFINISHPAGE_BITMAP "pictures\picture_left_installer.bmp"
+  !define MUI_UNWELCOMEFINISHPAGE_BITMAP "pictures\picture_left_uninstaller.bmp"
 
 ;--------------------------------
 ;Pages
@@ -56,7 +56,7 @@
   ;For the installer
   !insertmacro MUI_PAGE_WELCOME
   !insertmacro MUI_PAGE_LICENSE "..\LICENSE"
-  !insertmacro MUI_COMPONENTSPAGE_NODESC
+  ;!insertmacro MUI_COMPONENTSPAGE_NODESC
   !insertmacro MUI_PAGE_INSTFILES
   !insertmacro MUI_PAGE_FINISH
 
@@ -146,7 +146,8 @@ Section "${PRODUCT} (Required)"
   SetOutPath $INSTDIR
 
   ;Put file here
-  File "..\Release.exe"
+  File "..\${PRODUCT}.jar"
+  File "icons\icon.ico"
 
   ;Store installation folder in registry
   WriteRegStr HKLM "Software\${PRODUCT}" "" $INSTDIR
@@ -160,6 +161,7 @@ Section "${PRODUCT} (Required)"
 
   ;Create start menu shortcut for uninstaller and search machine plugin
   CreateDirectory "$SMPROGRAMS\${PRODUCT}"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT}\${PRODUCT}.lnk" "$INSTDIR\${PRODUCT}.jar" "" "$INSTDIR\icon.ico" 0
   CreateShortCut "$SMPROGRAMS\${PRODUCT}\Uninstall ${PRODUCT}.lnk" "$INSTDIR\${PRODUCT}_uninstaller.exe" "" "$INSTDIR\${PRODUCT}_uninstaller.exe" 0
 
   ;Create uninstaller
