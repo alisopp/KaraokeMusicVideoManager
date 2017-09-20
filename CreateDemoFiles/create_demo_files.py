@@ -88,19 +88,19 @@ if __name__ == '__main__':
         os.makedirs("demo_files")
 
     # number of video files wanted
-    number_of_files = 101
+    number_of_files = 100
 
     # Let the user know about this
-    print("Exporting {} video files:".format(number_of_files - 1))
+    print("Exporting {} video files:".format(number_of_files))
 
     # determine how many leading zeroes we need for every number
-    number_of_zeroes = "%0" + str(len(str(number_of_files - 1))) + "d"
+    number_of_zeroes = "%0" + str(len(str(number_of_files))) + "d"
 
     # create all files
     for x in range(number_of_files):
 
         # format the current number with the right amount of leading zeroes
-        x = number_of_zeroes % x
+        x = number_of_zeroes % (x + 1)
 
         # these are the images we want to create
         images = [("demo_files/start", "Hi :)", x), ("demo_files/end", "Bye!", x)]
