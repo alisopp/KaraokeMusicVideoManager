@@ -28,6 +28,7 @@ You can use whatever setup you like but this is mine on Windows 10 Pro 64bit wit
 - [Windows only] ***not-needed:*** [Notepad ++](https://notepad-plus-plus.org/) for editing `.nsi` files and any other text file too
 - ***not-needed:*** [Typora](https://typora.io/) for editing `.md` files
 - ***not-needed:*** [XAMPP](https://www.apachefriends.org/download.html) for locally simulating a http and php server
+- what the hell nothing works any more - I think I am stopping this project because this is just stupid to do fully alone only with help from stack overflow
 
 ### How I open the project
 
