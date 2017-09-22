@@ -6,7 +6,7 @@ $myarray = explode(",", $_REQUEST['index']);
 # 2 = artist
 ?>
 
-<form action="add_to_playlist.php">
+<form action="process.php">
 	<fieldset>
 		<legend>Personal information:</legend>
 

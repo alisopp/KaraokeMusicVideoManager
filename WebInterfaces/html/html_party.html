@@ -5,9 +5,11 @@
 	<!-- Scale text on for example mobile devices: -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- Link to CSS file: -->
-	<link rel="stylesheet" href="styles_party.css">
+	<link rel="stylesheet" href="../css/styles_static.css">
+	<link rel="stylesheet" href="../css/styles_searchable.css">
+	<link rel="stylesheet" href="../css/styles_party.css">
 	<!-- Link to JS file: -->
-	<script src="../libraries/w3.js"></script>
+	<script src="../js/w3.js"></script>
 	<!-- Custom head tag -->
 </head>
 
@@ -25,7 +27,7 @@
 	<section>
 		<input class="searchbar" type="text" placeholder="Search for artist/title.." oninput="w3.filterHTML('#search-table', '.item', this.value)">
 
-		<form action="demo_form.php" method="get">
+		<form action="form.php" method="get">
 			<!-- Example table begin -->
 			<table id="search-table">
 				<thead>
@@ -99,6 +101,7 @@
 					</tr>
 				</tbody>
 			</table>
+		<!-- Example table end -->
 		</form>
 	</section>
 

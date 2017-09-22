@@ -1,0 +1,55 @@
+/* For small devices (smartphones): */
+
+@media (max-width: 40em) {
+	.searchbar {
+		padding-top: 1rem;
+		padding-bottom: 1rem;
+		margin-bottom: 0;
+	}
+}
+
+
+/* For normal to big devices (tablets, laptops, desktop, ...): */
+
+@media (min-width: 40em) {
+	.searchbar {
+		padding-top: 0.5rem;
+		padding-bottom: 0.5rem;
+		margin-bottom: 1rem;
+	}
+}
+
+
+/* Searchbar properties: */
+
+.searchbar {
+	/* No space between anything but the bottom */
+	margin-top: 0;
+	margin-left: 0;
+	margin-right: 0;
+	/* Give the text at the left some space */
+	padding-left: 1rem;
+	padding-right: 0;
+	/* Add a solid grey border */
+	border: 1px solid #ccc;
+	/* Calculate a width so that the field is 100% wide in the section */
+	width: calc(100% - 1rem - 2px);
+}
+
+
+/* Text input field properties: */
+
+input:focus {
+	/* No border on focus */
+	outline-width: 0;
+}
+
+
+/* The extra styles for printing the website: */
+
+@media print { 
+	.searchbar {
+		/* do not display on print */
+		display: none;
+	}
+}
