@@ -26,7 +26,7 @@ public class MainWindow {
 
 	public void createStage() {
 		try {
-			Parent root = FXMLLoader.load(MainWindow.class.getResource("MainWindow.fxml"));
+			Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"));
 			getMainWindowStage().setTitle(this.windowTitle);
 			getMainWindowStage().setScene(new Scene(root, this.normalWindowSize[0], this.normalWindowSize[1]));
 			getMainWindowStage().setResizable(true);
