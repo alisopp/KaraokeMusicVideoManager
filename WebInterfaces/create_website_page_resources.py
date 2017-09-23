@@ -232,8 +232,14 @@ def convert_party_php_forms(output_path):
         line = line.strip()
         # check if there even is a line
         if line is not "":
+            # check if line is the begin/end of the php tag
+            if line.startswith('<?php') or line.startswith('?>'):
+                if line.startswith('<?php'):
+                    walking_string += line + "\n"
+                else:
+                    walking_string += "\n" + line
             # check if line is a comment
-            if not line.startswith('#'):
+            elif not line.startswith('#'):
                 walking_string += line
     # when all lines are read add the reremaining content to the json dictonary
     json_php_forms['form'] = walking_string
@@ -246,8 +252,13 @@ def convert_party_php_forms(output_path):
         line = line.strip()
         # check if there even is a line
         if line is not "":
+            if line.startswith('<?php') or line.startswith('?>'):
+                if line.startswith('<?php'):
+                    walking_string += line + "\n"
+                else:
+                    walking_string += "\n" + line
             # check if line is a comment
-            if not line.startswith('#'):
+            elif not line.startswith('#'):
                 walking_string += line
     # when all lines are read add the reremaining content to the json dictonary
     json_php_forms['process'] = walking_string
