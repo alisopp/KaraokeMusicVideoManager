@@ -5,15 +5,15 @@ temporary till rewrite is as ready as the last upload of the default thing
 
 ## Links to the big parts of this project (Coming Soon)
 
-### [How to open/edit/export the main Java project?](Documentation/HOW_TO_JAVA.md)
+### :arrow_forward: [How to open/edit/export the main Java project?](Documentation/HOW_TO_JAVA.md)
 
-### [How to open/edit the web interfaces?](Documentation/HOW_TO_WEB.md)
+### :arrow_forward: [How to open/edit the web interfaces?](Documentation/HOW_TO_WEB.md)
 
-### [How to open/edit the logo/any images?](Documentation/HOW_TO_IMAGES.md)
+### :arrow_forward: [How to open/edit the logo/any images?](Documentation/HOW_TO_IMAGES.md)
 
-### [How to open/edit/compile the Windows installer?](Documentation/HOW_TO_NSIS.md)
+### :arrow_forward: [How to open/edit/compile the Windows installer?](Documentation/HOW_TO_NSIS.md)
 
-### [Frequently asked questions](Documentation/FAQ.md)
+### :arrow_forward: [Frequently asked questions](Documentation/FAQ.md)
 
 <br>
 
@@ -87,9 +87,9 @@ $ java -jar path/to/downloaded/file.jar
 
 <br>
 
-## Questions/Problems/Ideas?
+## Still have a Question/Problem/Idea?
 
-If you still have any kind of questions, problems or great ideas send me an email, open an issue, open a pull-request.
+If you still have any kind of questions, problems or great ideas open an issue or open a pull-request.
 
 Have fun using this program!
 

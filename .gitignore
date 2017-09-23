@@ -1,8 +1,17 @@
+# Personal workflow:
+# -----------------------
+# no shortcuts
 *.lnk
+# no exported project files
 *.jar
 *.exe
+# no unnecessary image thumbnails
 *.db
+# no visual studio code data
 .vscode
+# no pycharm community data
 .idea
+# no demo files
 demo_files
+# beta - testing automated script to compile the project without eclipse
 target
