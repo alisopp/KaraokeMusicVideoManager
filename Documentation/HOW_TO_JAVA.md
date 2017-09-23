@@ -15,23 +15,12 @@ You can use whatever setup you like but this is mine on Windows 10 Pro 64bit wit
 - [Eclipse IDE for Java Developers (64bit, version 4.7.0 'Oxygen')](https://www.eclipse.org/downloads/)
   - Eclipse Marketplace plugins:
     - [e(fx)clips (2.4.0)](http://marketplace.eclipse.org/content/efxclipse)
-    - ***not-needed:*** [EclEmma Java Code Coverage (3.3.0)](http://marketplace.eclipse.org/content/eclemma-java-code-coverage)
-  - Eclipse *Install new Software* plugins:
-    - ***not-needed:*** [ObjectAid UML Explorer](http://www.objectaid.com/update/current)
   - Eclipse custom settings (`Window > Prefrences`):
     - `Java > Editor > Save Actions`: Activated to format all lines of the source code on save and organize all imports plus additional actions. I use the Formatter `Eclipse [built-in]`.
     - `JavaFx`: insert in the Scene Builder executable path the path of the Gluon `SceneBuilder.exe` on your computer (Search for it - right click open file location two times and then copy the path).
     - ***not-needed:***  `General > Apperance > Colors and Fonts`: Set `Java Editor Text Font` with `Edit` to [Fira Code](https://github.com/tonsky/FiraCode) with `Regular` and the size of 14.
-- ***not-needed:*** [Scene Builder (64bit, version 8.3.0, from Gluon)](http://gluonhq.com/products/scene-builder/) (not the one from Oracle because they gave up developing it)
-- ***not-needed:*** [GitHub Desktop](https://desktop.github.com/) with [Git](https://git-scm.com/downloads)
-  if you wanna use the client on Linux there isn't an official version yet, but some people forked it and report of it's working -> Look here if you are interested: https://github.com/gengjiawen/desktop
-- ***not-needed:*** [Brackets](http://brackets.io/) for editing `.html`,  `.css`, `.js` , `.json` and more
-  ([Chrome](https://www.google.com/intl/en/chrome/browser/canary.html) has nice tools too for editing `.html`,  `.css`, `.js` live in the browser window)
-- ***not-needed:*** [Visual Studio Code - Insiders](https://code.visualstudio.com/insiders) for editing and running `.py` files (+ [Python 3.6](https://www.python.org/downloads/))
-- [Windows only] ***not-needed:*** [Notepad ++](https://notepad-plus-plus.org/) for editing `.nsi` files and any other text file too
-- ***not-needed:*** [Typora](https://typora.io/) for editing `.md` files
-- ***not-needed:*** [XAMPP](https://www.apachefriends.org/download.html) for locally simulating a http and php server
-- what the hell nothing works any more - I think I am stopping this project because this is just stupid to do fully alone only with help from stack overflow
+- ***needed-for-changing-the-gui:*** [Scene Builder (64bit, version 8.3.0, from Gluon)](http://gluonhq.com/products/scene-builder/)
+  (not the one from Oracle because they gave up developing it)
 
 ### How I open the project
 

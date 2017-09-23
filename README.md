@@ -17,94 +17,75 @@ temporary till rewrite is as ready as the last upload of the default thing
 
 <br>
 
-The following part will soon be changed to a explanation what this project actually is:
+## What is the MusicVideoManager about?
+
+With the MusicVideoManager you can manage your Karaoke evening/event.
+
+1. Run the portable or for Windows even installable program.
+2. Choose the folders with your music videos.
+3. Export from the software a interactive website with the list of all music video files to a SFTP server (like a Raspberry Pi 3.
+4. Let anyone vote/choose what they want to sing next or make a random choice.
+5. Watch and control a playlist that is created out of these choices on your computer and run each video with one click.
+6. Have fun!
+
+*There are many more things to find and use but this is the main function of the program.*
 
 <br>
 
-## How to open/edit this project?
+## Which music video files will be found?
 
-### My Software and Hardware Setup
+Each file is right now in this format or it will not be found (there is an option to find wrong formatted files):
 
-You can use whatever setup you like but this is mine on Windows 10 Pro 64bit with a Samsung 850 SSD and an intel i7 2600 with 16GB Ram:
+|  Artist   | " - " |           Title            | `.avi`/`.mp4`/`.mkv`/`.wmv`/`.mov`/`.mpg` |
+| :-------: | :---: | :------------------------: | :--------------------------------------: |
+| Green Day |   -   | Boulevard Of Broken Dreams |                   .mp4                   |
 
-**The following Software can be installed on Linux, Mac OS X and Windows!**
+<br>
 
-- [Eclipse IDE for Java Developers (64bit, version 4.7.0 'Oxygen')](https://www.eclipse.org/downloads/)
-  - Eclipse Marketplace plugins:
-    - [e(fx)clips (2.4.0)](http://marketplace.eclipse.org/content/efxclipse)
-    - ***not-needed:*** [EclEmma Java Code Coverage (3.3.0)](http://marketplace.eclipse.org/content/eclemma-java-code-coverage)
-  - Eclipse *Install new Software* plugins:
-    - ***not-needed:*** [ObjectAid UML Explorer](http://www.objectaid.com/update/current)
-  - Eclipse custom settings (`Window > Prefrences`):
-    - `Java > Editor > Save Actions`: Activated to format all lines of the source code on save and organize all imports plus additional actions. I use the Formatter `Eclipse [built-in]`.
-    - `JavaFx`: insert in the Scene Builder executable path the path of the Gluon `SceneBuilder.exe` on your computer (Search for it - right click open file location two times and then copy the path).
-    - ***not-needed:***  `General > Apperance > Colors and Fonts`: Set `Java Editor Text Font` with `Edit` to [Fira Code](https://github.com/tonsky/FiraCode) with `Regular` and the size of 14.
-- ***not-needed:*** [Scene Builder (64bit, version 8.3.0, from Gluon)](http://gluonhq.com/products/scene-builder/) (not the one from Oracle because they gave up developing it)
-- ***not-needed:*** [GitHub Desktop](https://desktop.github.com/) with [Git](https://git-scm.com/downloads)
-  if you wanna use the client on Linux there isn't an official version yet, but some people forked it and report of it's working -> Look here if you are interested: https://github.com/gengjiawen/desktop
-- ***not-needed:*** [Brackets](http://brackets.io/) for editing `.html`,  `.css`, `.js` , `.json` and more
-  ([Chrome](https://www.google.com/intl/en/chrome/browser/canary.html) has nice tools too for editing `.html`,  `.css`, `.js` live in the browser window)
-- ***not-needed:*** [Visual Studio Code - Insiders](https://code.visualstudio.com/insiders) for editing and running `.py` files (+ [Python 3.6](https://www.python.org/downloads/))
-- [Windows only] ***not-needed:*** [Notepad ++](https://notepad-plus-plus.org/) for editing `.nsi` files and any other text file too
-- ***not-needed:*** [Typora](https://typora.io/) for editing `.md` files
-- ***not-needed:*** [XAMPP](https://www.apachefriends.org/download.html) for locally simulating a http and php server
-- what the hell nothing works any more - I think I am stopping this project because this is just stupid to do fully alone only with help from stack overflow
+## How can I download/install/run the program?
 
-### How I open the project
+### General
 
-- First I clone it via GitHub Desktop (click clone in the web browser on the GitHub page of this project - GitHub Desktop automatically opens)
-- I start Eclipse and click in the menu bar:
-  - `File > Import`
-  - search for `Existing Maven Projects`
-  - click next after you selected it
-  - then browse to the cloned folder and click `OK`
-  - select the project and click `Finish`
-  - now you are able to edit/open/compile the project
-- Tipp: If you wanna edit the GUI with the SceneBuilder make a right click on any `.fxml` file and click `Open with SceneBuilder`
+The program runs on every computer that has Java (a Java Runtime from the last one/two years) installed:
 
-### How I export the project
+:arrow_right_hook: You can download the portable runnable `.jar` file from [GitHub Releases](https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager/releases) (the latest release).
 
-To generate a working runnable JAR file (`xxx.jar`) of this Maven project I needed to do follow the instructions of [Jason C](https://stackoverflow.com/users/616460/jason-c) and [ItamarG3](https://stackoverflow.com/users/3625036/itamarg3) on [stackoverflow](https://stackoverflow.com/a/18218809/7827128)::grinning::grinning:
+Just double click the file and the program should be running.
 
-*Try creating a new launch configuration from scratch:*
+### Windows Instructions
 
-1. *`Run` -> `Run Configurations...`*
-2. *Right click "Java Application" in the list on the left and select `New`*
-3. *On the right enter a descriptive name.*
-4. *In the Main tab browse for your project and search for and select the appropriate main class.*
-5. *Close the dialog.*
+If you have Java not installed or an old version install the newest and securest version form the official website: https://www.java.com/en/download/
 
-If you now click in the menu bar of eclipse `File` select in the new menu `Export` and then search and select `Runnable JAR file`. After that select your just now entered descriptive name next to the label `Launch configuration:`, select `Package required libaries into generated JAR` and click `Finish`.
+* Find the `.jar` file in the Windows Explorer and double click it to start the program.
+* For the Windows Operating System we even built an installer for the program:
+  * You can download the executable Windows installer `.exe` file from [GitHub Releases](https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager/releases).
+  * Double click it after you found it in the Windows Explorer and follow the instructions
+  * After the installation is finished you will find three new entries in a folder in your start menu:
+    * one will bring you right here to this website
+    * one will launch the program
+    * one will uninstall the program
 
-Like [c0der](https://stackoverflow.com/a/43454265/7827128) I had the problem that my just entered descriptive name didn't showed up under `Launch configuration:`. But a simple restart of the Eclipse IDE fixed this for me.
+### Linux
 
-### How to run the jar
-
-##### Windows XP,7,10
-
-On Windows there seems to be no problem at all as long as you have Java (a version from the last 1-2 years) installed.
-
-If not install it over here: https://www.java.com/en/download/
-
-Find the runnable JAR file (`xxx.jar`) in the explorer and double click it to run.
-
-*(NSI Installer will follow as soon as the program is ready then you can install it just like a normal Windows program)*
-
-#### Linux
-
-Probably you can run it there too, but if not (like I had the problem on my Raspberry Pi 3 with Raspbian) you need to have Java installed (if not use this `sudo apt-get install oracle-java8-jdk`) and additional openjfx (because of the JavaFx GUI). This is not a problem just install it like this:
+If you have Java not installed or an old version install the newest and securest version form the official repository:
 
 ```
+$ sudo apt-get install oracle-java8-jdk
+```
+
+Because this program uses a Java Library named JavaFx you additional need to install this too:
+
+ ```
 $ sudo apt-get install openjfx
+ ```
+
+Now you can run the program with the following command through the command line:
+
+```
+$ java -jar path/to/downloaded/file.jar
 ```
 
-Then you can run it over the console with the following command:
-
-```
-$ java -jar path/to/file.jar
-```
-
-
+<br>
 
 ## Questions/Problems/Ideas?
 
