@@ -32,7 +32,7 @@ Text editors like [Notepad++](https://notepad-plus-plus.org/) support syntax hig
 
 <br>
 
-## How to edit the NSIS (`.nsi`) script images/icons?
+## How to edit the images and icons of the installer?
 
 Right now all the icons and images are based on vector graphic templates in the directory `ImageResources`.
 
@@ -40,7 +40,7 @@ Change there the vector graphic images and run the Python 3 script `create_image
 
 ---
 
-**Attention: **:warning:
+**Attention: ** :warning:
 
 To execute the Python 3 script you first need to have installed a [Python 3.*](https://www.python.org/downloads/) version and a current version of [Inkscape](https://inkscape.org/en/release/0.92.2/windows/64-bit/) that is not from the Windows store.
 
