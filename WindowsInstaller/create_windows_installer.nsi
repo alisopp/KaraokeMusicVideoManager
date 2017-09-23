@@ -11,6 +11,7 @@
 
   ;Define name of the product
   !define PRODUCT "MusicVideoManager"
+  !define VERSION "-1.0.0d"
   !define ABOUTURL "https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager"
   !define INSTALLATIONURL "https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager"
 
@@ -23,7 +24,7 @@
 
   ;Name and file
   Name "${PRODUCT}"
-  OutFile "..\${PRODUCT}_windows_installer.exe"
+  OutFile "..\${PRODUCT}${VERSION}_windows_installer.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\${PRODUCT}"
@@ -139,14 +140,14 @@
 ;--------------------------------
 ;Installer Section
 
-Section "${PRODUCT} (Required)"
+Section "${PRODUCT}${VERSION} (Required)"
   SectionIn RO # Just means if in component mode this is locked
 
   ;Set output path to the installation directory.
   SetOutPath $INSTDIR
 
   ;Put file here
-  File "..\${PRODUCT}.jar"
+  File "..\${PRODUCT}${VERSION}.jar"
   File "icons\icon.ico"
 
   ;Store installation folder in registry
@@ -161,7 +162,7 @@ Section "${PRODUCT} (Required)"
 
   ;Create start menu shortcut for uninstaller and search machine plugin
   CreateDirectory "$SMPROGRAMS\${PRODUCT}"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT}\${PRODUCT}.lnk" "$INSTDIR\${PRODUCT}.jar" "" "$INSTDIR\icon.ico" 0
+  CreateShortCut "$SMPROGRAMS\${PRODUCT}\${PRODUCT}.lnk" "$INSTDIR\${PRODUCT}${VERSION}.jar" "" "$INSTDIR\icon.ico" 0
   CreateShortCut "$SMPROGRAMS\${PRODUCT}\Uninstall ${PRODUCT}.lnk" "$INSTDIR\${PRODUCT}_uninstaller.exe" "" "$INSTDIR\${PRODUCT}_uninstaller.exe" 0
 
   ;Create uninstaller
