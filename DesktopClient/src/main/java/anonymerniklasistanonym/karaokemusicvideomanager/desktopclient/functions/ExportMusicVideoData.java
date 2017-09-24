@@ -153,14 +153,14 @@ public class ExportMusicVideoData {
 				webPage.append(JsonModule.getValueString(jsonObject, "body-begin"));
 
 				webPage.append(
-						generateHtmlTableWithSearch(data, columnNames, " id=\"search-table\" ", " class=\"item\" "));
+						generateHtmlTableWithSearch(data, columnNames, " id=\"search-table\"", " class=\"item\""));
 
 			} else if (typeOfHtml == HTML_SITE.PARTY.value) {
 
 				webPage.append(JsonModule.getValueString(jsonObject, "body-begin"));
 
 				webPage.append(
-						generateHtmlTableWithSearch(data, columnNames, " id=\"search-table\" ", " class=\"item\" "));
+						generateHtmlTableWithSearch(data, columnNames, " id=\"search-table\"", " class=\"item\""));
 			}
 
 			webPage.append(JsonModule.getValueString(jsonObject, "end"));
