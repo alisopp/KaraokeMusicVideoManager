@@ -69,13 +69,13 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			<plugin>
-				<!-- Delete if no solution will be found: We want to compile through a script -->
+			<!--<plugin>
+				Delete if no solution will be found: We want to compile through a script
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>3.0.2</version>
 				<configuration>
-					<!-- We want to compile to the main directory -->
+					We want to compile to the main directory
 					<outputDirectory>../</outputDirectory>
 					<archive>
 						<index>true</index>
@@ -90,7 +90,7 @@
 						</manifestEntries>
 					</archive>
 				</configuration>
-			</plugin>
+			</plugin> -->
 			<plugin>
 				<!-- Delete if no solution will be found: We want to add all dependencies to the jar -->
 				<artifactId>maven-assembly-plugin</artifactId>

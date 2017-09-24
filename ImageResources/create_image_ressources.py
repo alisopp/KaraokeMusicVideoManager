@@ -56,7 +56,7 @@ def convert_svg_2_png(input_filename, output_filename, width=None, height=None):
         print('', end='')
         # wait till the process is ready
 
-    print(pro.communicate()[0])
+    print(pro.communicate()[0].decode("utf-8"))
 
     print("- \"" + source_file + "\" was converted to \"" + output_file + "\"")
 

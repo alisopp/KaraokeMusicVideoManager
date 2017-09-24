@@ -14,7 +14,8 @@ mvn clean install
 echo "-- created \"..\\MusicVideoManager-x.x.x.jar\""
 echo "-- created \"..\\MusicVideoManager-x.x.x-jar-with-dependencies.jar\""
 cd ../
-echo "Rename Dependencies Jar:"
-mv MusicVideoManager-1.0.0-jar-with-dependencies.jar MusicVideoManager-1.0.0d.jar
-echo "Buil Windows Installer with the cmd script or with NSIS"
+echo "Build Windows Installer:"
+cd WindowsInstaller
+python build_windows_installer.py
+cd ../
 read -n1 -r -p "Press any key to continue..." key
