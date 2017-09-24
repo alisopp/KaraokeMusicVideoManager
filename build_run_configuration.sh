@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # build_run_configuration.sh
 # - your run configuration
