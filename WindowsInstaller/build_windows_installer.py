@@ -20,20 +20,16 @@ XML_TREE = minidom.parse(XML_FILE)
 ARTIFACT_ID = XML_TREE.getElementsByTagName("artifactId")[0].firstChild.data
 VERSION = XML_TREE.getElementsByTagName("version")[0].firstChild.data
 
-EXPORTED_FILE_PATH = r"../" + ARTIFACT_ID + \
-    "-" + VERSION + "-jar-with-dependencies.jar"
-RENAMED_FILE_PATH = r"../" + ARTIFACT_ID + ".jar"
-RENAMED_FILE_PATH_2 = r"../" + ARTIFACT_ID + "-portable-" + VERSION + ".jar"
-if os.path.isfile(EXPORTED_FILE_PATH):
-    if os.path.isfile(RENAMED_FILE_PATH):
-        os.remove(RENAMED_FILE_PATH)
-    os.rename(EXPORTED_FILE_PATH, RENAMED_FILE_PATH)
-    print(EXPORTED_FILE_PATH + " renamed to " + RENAMED_FILE_PATH)
-elif os.path.isfile(RENAMED_FILE_PATH_2):
-    os.rename(RENAMED_FILE_PATH_2, RENAMED_FILE_PATH)
-    print(RENAMED_FILE_PATH_2 + " renamed to " + RENAMED_FILE_PATH)
+INSTALLER_FILE_NAME = r"../" + ARTIFACT_ID + ".jar"
+CORRECT_FINAL_FILE_NAME = r"../" + ARTIFACT_ID + "-portable-" + VERSION + ".jar"
+
+if os.path.isfile(CORRECT_FINAL_FILE_NAME):
+    os.rename(CORRECT_FINAL_FILE_NAME, INSTALLER_FILE_NAME)
+    print(CORRECT_FINAL_FILE_NAME + " renamed to " + INSTALLER_FILE_NAME + " for NSIS script")
+elif os.path.isfile(INSTALLER_FILE_NAME):
+    print("The filename for the installer already exists")
 else:
-    print("No .jar file to create installer from found!")
+    print("No .jar file to create installer from found! -> Script will be stopped!")
     sys.exit()
 
 
@@ -44,21 +40,26 @@ while PRO.poll() is None:
 # print out the resulting code
 print(PRO.communicate()[0].decode("utf-8"))
 
-if os.path.isfile(RENAMED_FILE_PATH):
-    if os.path.isfile(RENAMED_FILE_PATH_2):
-        os.remove(RENAMED_FILE_PATH_2)
-    os.rename(RENAMED_FILE_PATH, RENAMED_FILE_PATH_2)
-    print(RENAMED_FILE_PATH + " renamed to " + RENAMED_FILE_PATH_2)
+# rename jar file back to the "correct" portable name:
+if os.path.isfile(INSTALLER_FILE_NAME):
+    # check if the correct filename exists
+    if os.path.isfile(CORRECT_FINAL_FILE_NAME):
+        # remove this 'old' file then
+        os.remove(CORRECT_FINAL_FILE_NAME)
+    # and rename the just used jar to the portable name
+    os.rename(INSTALLER_FILE_NAME, CORRECT_FINAL_FILE_NAME)
+    print(INSTALLER_FILE_NAME + " renamed back to correct file name: " + CORRECT_FINAL_FILE_NAME)
 
+# rename the created installer to specify the correct version and use case
 INSTALLER_NAME = r"../" + ARTIFACT_ID + "_windows_installer.exe"
-RENAME_INSTALLER = r"../" + ARTIFACT_ID + "-win-installer-" + VERSION + ".exe"
+CORRECT_INSTALLER_NAME = r"../" + ARTIFACT_ID + "-win-installer-" + VERSION + ".exe"
 
 if os.path.isfile(INSTALLER_NAME):
-    if os.path.isfile(RENAME_INSTALLER):
-        os.remove(RENAME_INSTALLER)
-    os.rename(INSTALLER_NAME, RENAME_INSTALLER)
-    print(INSTALLER_NAME + " renamed to " + RENAME_INSTALLER)
+    if os.path.isfile(CORRECT_INSTALLER_NAME):
+        os.remove(CORRECT_INSTALLER_NAME)
+    os.rename(INSTALLER_NAME, CORRECT_INSTALLER_NAME)
+    print(INSTALLER_NAME + " renamed to " + CORRECT_INSTALLER_NAME)
     print("- \"" + SCRIPT_FILE + "\" was executed an built the windows installler \"" +
-      "" + RENAME_INSTALLER + "\"")
+      "" + CORRECT_INSTALLER_NAME + "\"")
 else:
     print("Something went wrong!!!!!")
