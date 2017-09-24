@@ -14,7 +14,7 @@ public class ExportMusicVideoData {
 	 */
 	public static String generateHtmlTable(Object[][] data, String[] columnNames) {
 
-		return generateHtmlTableWithSearch(data, columnNames, "");
+		return generateHtmlTableWithSearch(data, columnNames, "", "");
 	}
 
 	/**
@@ -22,7 +22,8 @@ public class ExportMusicVideoData {
 	 * 
 	 * @return table (String)
 	 */
-	public static String generateHtmlTableWithSearch(Object[][] data, String[] columnNames, String tableClass) {
+	public static String generateHtmlTableWithSearch(Object[][] data, String[] columnNames, String tableClass,
+			String rowClass) {
 
 		StringBuilder sb = new StringBuilder("<table" + tableClass + ">");
 
@@ -33,14 +34,14 @@ public class ExportMusicVideoData {
 		}
 		sb.append("</tr></thead><tbody>");
 
-		sb.append(createHtmlTableRows(data));
+		sb.append(createHtmlTableRows(data, rowClass));
 
 		sb.append("</tbody></table>");
 
 		return sb.toString();
 	}
 
-	private static String createHtmlTableRows(Object[][] data) {
+	private static String createHtmlTableRows(Object[][] data, String rowClass) {
 
 		if (data == null || data.length == 0) {
 			System.out.println("There is no data");
@@ -53,7 +54,7 @@ public class ExportMusicVideoData {
 		StringBuilder sb = new StringBuilder("");
 
 		for (int a = 0; a < rowNumber; a++) {
-			sb.append("<tr>");
+			sb.append("<tr" + rowClass + ">");
 			for (int b = 0; b < columnNumber; b++) {
 				sb.append("<td>" + data[a][b] + "</td>");
 			}
@@ -151,13 +152,15 @@ public class ExportMusicVideoData {
 
 				webPage.append(JsonModule.getValueString(jsonObject, "body-begin"));
 
-				webPage.append(generateHtmlTableWithSearch(data, columnNames, " id=\"search-table\" "));
+				webPage.append(
+						generateHtmlTableWithSearch(data, columnNames, " id=\"search-table\" ", " class=\"item\" "));
 
 			} else if (typeOfHtml == HTML_SITE.PARTY.value) {
 
 				webPage.append(JsonModule.getValueString(jsonObject, "body-begin"));
 
-				webPage.append(generateHtmlTableWithSearch(data, columnNames, " id=\"search-table\" "));
+				webPage.append(
+						generateHtmlTableWithSearch(data, columnNames, " id=\"search-table\" ", " class=\"item\" "));
 			}
 
 			webPage.append(JsonModule.getValueString(jsonObject, "end"));
@@ -168,6 +171,13 @@ public class ExportMusicVideoData {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static String exportJavascriptW3() {
+		String jsonContent = ClassResourceReaderModule.getTextContent("websites/libraries/javascript.json")[0];
+		JsonObject jsonObject = JsonModule.loadJsonFromString(jsonContent);
+
+		return JsonModule.getValueString(jsonObject, "w3-js");
 	}
 
 	public static void main(String[] args) {

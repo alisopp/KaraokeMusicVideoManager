@@ -80,7 +80,6 @@ def convert_searchable_html(output_path):
     file_path_html = os.path.join(PATH_HTML, "html_searchable.html")
     file_path_css_1 = os.path.join(PATH_CSS, "styles_static.css")
     file_path_css_2 = os.path.join(PATH_CSS, "styles_searchable.css")
-    file_path_js = os.path.join(PATH_JS, "w3.js")
 
     # read the static html template
     with open(file_path_html) as file:
@@ -105,18 +104,19 @@ def convert_searchable_html(output_path):
                 if "Link to CSS file" in line:
                     walking_string_head = walking_string
                     # let's add the css to the head
-                    walking_string_head += convert_css_to_string(file_path_css_1, True, False)
-                    walking_string_head += convert_css_to_string(file_path_css_2, False, True)
+                    walking_string_head += convert_css_to_string(
+                        file_path_css_1, True, False)
+                    walking_string_head += convert_css_to_string(
+                        file_path_css_2, False, True)
                 # check if the js file link was read
                 elif "Link to JS file" in line:
                     # this means we are at the end of the template head
-                    # so let's add the js to the head
-                    walking_string_head += convert_js_to_string(file_path_js)
-                    # add then everything to the json dictonary
-                    json_static['head'] = walking_string_head
+                    walking_string = ""
                 # check if the default head was read
                 elif "Custom head tag" in line:
                     # clean/reset the walking string
+                    walking_string_head += "<script src=\"w3.js\"></script>"
+                    json_static['head'] = walking_string_head
                     walking_string = ""
                 # check if the example table was reached
                 elif "Example table begin" in line:
@@ -146,7 +146,6 @@ def convert_party_html(output_path):
     file_path_css_1 = os.path.join(PATH_CSS, "styles_static.css")
     file_path_css_2 = os.path.join(PATH_CSS, "styles_searchable.css")
     file_path_css_3 = os.path.join(PATH_CSS, "styles_party.css")
-    file_path_js = os.path.join(PATH_JS, "w3.js")
 
     # read the static html template
     with open(file_path_html) as file:
@@ -171,14 +170,17 @@ def convert_party_html(output_path):
                 if "Link to CSS file" in line:
                     walking_string_head = walking_string
                     # let's add the css to the head
-                    walking_string_head += convert_css_to_string(file_path_css_1, True, False)
-                    walking_string_head += convert_css_to_string(file_path_css_2, False, False)
-                    walking_string_head += convert_css_to_string(file_path_css_3, False, True)
+                    walking_string_head += convert_css_to_string(
+                        file_path_css_1, True, False)
+                    walking_string_head += convert_css_to_string(
+                        file_path_css_2, False, False)
+                    walking_string_head += convert_css_to_string(
+                        file_path_css_3, False, True)
                 # check if the js file link was read
                 elif "Link to JS file" in line:
                     # this means we are at the end of the template head
                     # so let's add the js to the head
-                    walking_string_head += convert_js_to_string(file_path_js)
+                    walking_string_head += "<script src=\"w3.js\"></script>"
                     # add then everything to the json dictonary
                     json_static['head'] = walking_string_head
                 # check if the default head was read
@@ -322,6 +324,34 @@ def convert_js_to_string(js_filename):
     return walking_js_string
 
 
+def copy_we_js(output_path):
+    """Copy javascript to java project."""
+
+    js_filename = "js/w3.js"
+
+    # read the css file
+    with open(js_filename) as file:
+        content_js = file.readlines()
+
+    walking_js_string = ""
+
+    # create an empty "walking" string with the opening style tag
+    # walk through all lines of the html email
+    for line in content_js:
+        # strip whitespaces, tabs and paragraphs from line
+        walking_js_string += line.strip()
+
+    json_javascript = {}
+
+    json_javascript["w3-js"] = walking_js_string
+
+    # save the json dictionary in a json file
+    with open(output_path, 'w') as outfile:
+        json.dump(json_javascript, outfile)
+
+    print("- Json file copied to: " + output_path)
+
+
 if __name__ == '__main__':
 
     # do all convertions:
@@ -348,5 +378,10 @@ if __name__ == '__main__':
     PARTY_PHP_OUTPUT_PATH = os.path.join(
         MAIN_OUTPUT_DIRECTORY, "php_pages_party.json")
     convert_party_php_forms(PARTY_PHP_OUTPUT_PATH)
+
+    # copy javascript to websites data libraries
+    JAVASCRIPT_W3_OUTPUT_PATH = os.path.join(
+        MAIN_OUTPUT_DIRECTORY + "/libraries", "javascript.json")
+    copy_we_js(JAVASCRIPT_W3_OUTPUT_PATH)
 
     print("Ready!")

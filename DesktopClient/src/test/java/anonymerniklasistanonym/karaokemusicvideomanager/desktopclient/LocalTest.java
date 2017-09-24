@@ -40,9 +40,9 @@ public class LocalTest {
 
 		testHandler.saveFileHtmlBasic(Paths.get("basic.html"));
 
-		testHandler.saveFileHtmlSearchable(Paths.get("search.html"));
+		testHandler.saveFileHtmlSearchable(Paths.get("search.html"), Paths.get("w3.js"));
 
-		testHandler.saveFileHtmlParty(Paths.get("party.html"));
+		testHandler.saveFileHtmlParty(Paths.get("party.html"), Paths.get("w3.js"));
 
 		if (savedSettings.exists()) {
 			// save changes if nothing is there

@@ -36,6 +36,7 @@ public class JsonModule {
 
 		try {
 			JsonReader jsonReader = Json.createReader(new StringReader(jsonContent));
+
 			return jsonReader.readObject();
 
 		} catch (Exception e) {

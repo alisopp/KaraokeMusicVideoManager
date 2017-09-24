@@ -396,26 +396,35 @@ public class MusicVideoHandler {
 				ExportMusicVideoData.generateHtmlSiteStatic(musicVideoListToTable(), this.columnNames) });
 	}
 
-	public boolean saveFileHtmlSearchable(Path whereToWriteTheFile) {
+	public boolean saveFileHtmlSearchable(Path whereToWriteTheFile, Path whereToWriteTheFileJavascript) {
 
 		if (whereToWriteTheFile == null) {
 			System.err.println("Path can't be null!");
 			return false;
 		}
 
-		return FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(), new String[] {
-				ExportMusicVideoData.generateHtmlSiteDynamic(musicVideoListToTable(), this.columnNames) });
+		boolean exportSuccsessful = FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(),
+				new String[] {
+						ExportMusicVideoData.generateHtmlSiteDynamic(musicVideoListToTable(), this.columnNames) })
+				&& FileReadWriteModule.writeFile(whereToWriteTheFileJavascript.toFile(),
+						new String[] { ExportMusicVideoData.exportJavascriptW3() });
+
+		return exportSuccsessful;
 	}
 
-	public boolean saveFileHtmlParty(Path whereToWriteTheFile) {
+	public boolean saveFileHtmlParty(Path whereToWriteTheFile, Path whereToWriteTheFileJavascript) {
 
 		if (whereToWriteTheFile == null) {
 			System.err.println("Path can't be null!");
 			return false;
 		}
 
-		return FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(),
-				new String[] { ExportMusicVideoData.generateHtmlSiteParty(musicVideoListToTable(), this.columnNames) });
+		boolean exportSuccsessful = FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(),
+				new String[] { ExportMusicVideoData.generateHtmlSiteParty(musicVideoListToTable(), this.columnNames) })
+				&& FileReadWriteModule.writeFile(whereToWriteTheFileJavascript.toFile(),
+						new String[] { ExportMusicVideoData.exportJavascriptW3() });
+
+		return exportSuccsessful;
 	}
 
 }
