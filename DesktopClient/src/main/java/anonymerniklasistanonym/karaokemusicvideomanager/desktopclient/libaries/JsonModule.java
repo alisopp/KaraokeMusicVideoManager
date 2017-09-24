@@ -64,13 +64,12 @@ public class JsonModule {
 
 	/**
 	 * Convert Json data to a string
-	 *
 	 * 
 	 * @param jsonBuilder
 	 *            (JsonObjectBuilder)
 	 * @return jsonDataString (String)
 	 */
-	public static String dumpStringToJson(JsonObjectBuilder jsonBuilder) {
+	public static String dumpJsonObjectToString(JsonObjectBuilder jsonBuilder) {
 
 		try {
 			return saveJsonToString(jsonBuilder.build());
@@ -123,6 +122,38 @@ public class JsonModule {
 
 	}
 
+	/**
+	 * Compare two JSON contents
+	 * 
+	 * @param jsonBuilder
+	 *            (JsonObjectBuilder)
+	 * @return jsonDataString (String)
+	 */
+	public static boolean compareJsonStrings(String one, String two) {
+
+		System.out.print(">> Compare two JSON strings");
+
+		if (one != null || two != null) {
+			try {
+				if (loadJsonFromString(one).equals(loadJsonFromString(two))) {
+					System.out.println(" << The strings are the same!");
+					return true;
+				} else {
+					System.out.println(" << The strings are not the same!");
+					return false;
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+		} else {
+			System.err.print("<< The Strings can't be null!");
+			return false;
+		}
+
+	}
+
 	// get JSON data:
 	// -----------------------
 	// String jsonContent = "{\"name\":\"Falco\",\"age\":3,\"bitable\":false}";
@@ -141,7 +172,7 @@ public class JsonModule {
 		jsonBuilder.add("name", "Falco");
 		jsonBuilder.add("age", BigDecimal.valueOf(3));
 		jsonBuilder.add("biteable", Boolean.FALSE);
-		System.out.println(JsonModule.dumpStringToJson(jsonBuilder));
+		System.out.println(JsonModule.dumpJsonObjectToString(jsonBuilder));
 
 		// Get Json data:
 		String jsonContent = "{\"name\":\"Falco\",\"age\":3,\"bitable\":false}";

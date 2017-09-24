@@ -151,9 +151,9 @@ public class MusicVideoHandler {
 		MusicVideo[] musicVideoList = this.musicVideoList;
 
 		int numberOfLinesNumber = String.valueOf(musicVideoList.length).length();
-		int numberOfLinesTitle = 20;
-		int numberOfLinesArtist = 10;
-		int numberOfLinesPath = 100;
+		int numberOfLinesTitle = 22;
+		int numberOfLinesArtist = 15;
+		int numberOfLinesPath = 80;
 
 		String linesNumber = String.join("", Collections.nCopies(numberOfLinesNumber + 2, "-"));
 		String linesTitle = String.join("", Collections.nCopies(numberOfLinesTitle + 2, "-"));

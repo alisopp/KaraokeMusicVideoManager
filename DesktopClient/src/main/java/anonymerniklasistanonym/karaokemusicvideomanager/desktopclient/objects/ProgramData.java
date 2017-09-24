@@ -69,24 +69,33 @@ public final class ProgramData {
 
 		System.out.println(">> Set path list:");
 
-		ArrayList<Path> uniqueAddresses = new ArrayList<Path>(); // create arraylist to contain all non-repeated
-																	// addresses
-		for (Path containedPath : pathList) { // cycle through the entire array
-			if (!uniqueAddresses.contains(containedPath)) { // check if the address already there
+		if (pathList != null && pathList.length != 0) {
 
-				if (containedPath.toFile().exists()) {
-					uniqueAddresses.add(containedPath); // add it
-					System.out.println("+ Added " + containedPath);
+			// create ArrayList to contain all non-repeated paths
+			ArrayList<Path> uniqueAddresses = new ArrayList<Path>();
+
+			// cycle through the entire array
+			for (Path containedPath : pathList) {
+				// check if the address is already contained in the ArrayList
+				if (!uniqueAddresses.contains(containedPath)) {
+					// check if the address exists
+					if (containedPath.toFile().exists()) {
+						uniqueAddresses.add(containedPath); // add it
+						System.out.println("+ Added " + containedPath);
+					} else {
+						System.err.println("- Path does not exist: " + containedPath);
+					}
+
 				} else {
-					System.err.println("- Path does not exist: " + containedPath);
+					System.err.println("- Found duplicate: " + containedPath);
 				}
-
-			} else {
-				System.err.println("- Found duplicate: " + containedPath);
 			}
-		}
 
-		this.pathList = uniqueAddresses.toArray(new Path[0]);
+			this.pathList = uniqueAddresses.toArray(new Path[0]);
+
+		} else {
+			System.out.println("<< Path list was empty!");
+		}
 	}
 
 	/**
@@ -107,7 +116,32 @@ public final class ProgramData {
 	}
 
 	public void setAcceptedFileTypes(String[] acceptedFileTypes) {
-		this.acceptedFileTypes = acceptedFileTypes;
+
+		System.out.println(">> Set accepted file types:");
+
+		if (acceptedFileTypes != null && acceptedFileTypes.length != 0) {
+
+			// create ArrayList to contain all non-repeated supported file types
+			ArrayList<String> uniqueFileTypes = new ArrayList<String>();
+
+			// cycle through the entire array
+			for (String containedFileType : acceptedFileTypes) {
+				// check if the file type is already contained in the ArrayList
+				if (!uniqueFileTypes.contains(containedFileType)) {
+					// add it
+					uniqueFileTypes.add(containedFileType);
+					System.out.println("+ Added " + containedFileType);
+				} else {
+					System.err.println("- Found duplicate: " + containedFileType);
+				}
+			}
+
+			this.acceptedFileTypes = uniqueFileTypes.toArray(new String[0]);
+
+		} else {
+			System.out.println("<< accepted file types was empty!");
+		}
+
 	}
 
 	public String getUsernameSftp() {

@@ -33,6 +33,27 @@ public class ExportImportSettings {
 		}
 
 		try {
+			String content = createSettings(settingsData);
+
+			if (FileReadWriteModule.writeFile(file, new String[] { content })) {
+				return true;
+			} else {
+				return false;
+			}
+
+		} catch (Exception e) {
+			return false;
+		}
+
+	}
+
+	public static String createSettings(ProgramData settingsData) {
+
+		if (settingsData == null) {
+			return null;
+		}
+
+		try {
 
 			if (settingsData.getPathList() != null) {
 				JsonObjectBuilder mainJsonBuilder = Json.createObjectBuilder();
@@ -61,15 +82,10 @@ public class ExportImportSettings {
 					mainJsonBuilder.add("file-types", acceptedFileTypesArray);
 				}
 
-				String content = JsonModule.dumpStringToJson(mainJsonBuilder);
+				return JsonModule.dumpJsonObjectToString(mainJsonBuilder);
 
-				if (FileReadWriteModule.writeFile(file, new String[] { content })) {
-					return true;
-				} else {
-					return false;
-				}
 			} else {
-				return false;
+				return null;
 			}
 
 			// JsonArrayBuilder pathListArray = Json.createArrayBuilder();
@@ -89,32 +105,24 @@ public class ExportImportSettings {
 			// mainJsonBuilder.add("biteable", Boolean.FALSE);
 
 		} catch (Exception e) {
-			return false;
+			return null;
 		}
 
 	}
 
 	/**
-	 * Write Json file with all the settings data
+	 * Read JSON data and extract all settings information.
 	 * 
 	 * @param file
-	 *            (File | File where the data will be written to)
-	 * @param handler
-	 *            (MusicVideoHandler | probably where all the settings will be
-	 *            saved)
-	 * @return writePrcoessSuccessful (true if successful)
-	 */
-
-	/**
-	 * 
-	 * @param file
+	 *            (File | file with 'ProgramData')
+	 * @return extracted settings (ProgramData)
 	 */
 	public static ProgramData readSettings(File file) {
 
-		System.out.println("second");
+		System.out.println("READ SETTINGS");
 
 		if (file == null) {
-			System.err.println("File is null!");
+			System.err.println("<< File is null!");
 			return null;
 		}
 
@@ -122,47 +130,121 @@ public class ExportImportSettings {
 
 			String[] contentOfFile = FileReadWriteModule.readFile(file);
 
-			// if (!Arrays.equals(settingsData.getAcceptedFileTypes(),
-			// new String[] { "avi", "mp4", "mkv", "wmv", "mov", "mpg", "mpeg" })) {
-			// }
-
 			if (contentOfFile == null) {
-				System.err.println("File could not be read!");
+
 				return null;
 			}
 
+			// read settings to one string
 			StringBuilder strBuilder = new StringBuilder();
 			for (String line : contentOfFile)
 				strBuilder.append(line);
 
+			// convert string to a JSON object
 			JsonObject jsonObject = JsonModule.loadJsonFromString(strBuilder.toString());
 
+			// create an 'empty' settings data file
 			ProgramData settingsData = new ProgramData();
 
-			JsonArray keyValue = (JsonArray) JsonModule.getValue(jsonObject, "path-list");
+			// -> (try to) get path list
+			JsonArray keyValuePathList = (JsonArray) JsonModule.getValue(jsonObject, "path-list");
 
-			if (keyValue != null) {
+			if (keyValuePathList != null) {
 
-				Path[] newPathList = new Path[keyValue.size()];
+				Path[] newPathList = new Path[keyValuePathList.size()];
 
-				System.out.println(keyValue);
+				for (int i = 0; i < keyValuePathList.size(); i++) {
 
-				for (int i = 0; i < keyValue.size(); i++) {
-
-					newPathList[i] = Paths.get(keyValue.getString(i));
+					newPathList[i] = Paths.get(keyValuePathList.getString(i));
 				}
 
 				settingsData.setPathList(newPathList);
+
+			} else {
+				System.err.println(" << No saved paths");
 			}
 
-			// System.out.println(JsonModule.getValue(jsonObject, "sftp-login"));
-			// System.out.println(JsonModule.getValue(jsonObject, "sftp"));
+			// -> (try to) get SFTP connection properties
+			JsonObject keyValueSftpLogin = (JsonObject) JsonModule.getValue(jsonObject, "sftp-login");
+
+			if (keyValueSftpLogin != null) {
+
+				try {
+					String usernameValue = JsonModule.getValue(keyValueSftpLogin, "username").toString();
+					settingsData.setUsernameSftp(usernameValue);
+				} catch (Exception e) {
+					System.out.println("No Sftp username");
+				}
+
+				try {
+					String ipAddressValue = JsonModule.getValue(keyValueSftpLogin, "ip-address").toString();
+					settingsData.setIpAddressSftp(ipAddressValue);
+				} catch (Exception e) {
+					System.out.println("No Sftp Ip address");
+				}
+
+				try {
+					String workingDirectoryValue = JsonModule.getValue(keyValueSftpLogin, "directory").toString();
+					settingsData.setWorkingDirectorySftp(workingDirectoryValue);
+				} catch (Exception e) {
+					System.out.println("No Sftp Ip address");
+				}
+			} else {
+				System.out.println(" << No SFTP login data");
+			}
+
+			// -> (try to) get accepted file types list
+			JsonArray keyValueFileTypes = (JsonArray) JsonModule.getValue(jsonObject, "file-types");
+
+			if (keyValueFileTypes != null) {
+
+				String[] newAcceptedFileTypes = new String[keyValueFileTypes.size()];
+
+				for (int i = 0; i < keyValueFileTypes.size(); i++) {
+
+					newAcceptedFileTypes[i] = keyValueFileTypes.getString(i);
+				}
+
+				settingsData.setAcceptedFileTypes(newAcceptedFileTypes);
+			} else {
+				System.err.println(" << No accepted file types");
+			}
 
 			return settingsData;
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		}
+
+	}
+
+	public static boolean compareSettings(File oldSettingsFile, File newSettingsFile) {
+
+		String[] oldFile = FileReadWriteModule.readFile(oldSettingsFile);
+		String[] newFile = FileReadWriteModule.readFile(newSettingsFile);
+
+		if (oldFile != null && newFile != null) {
+			return JsonModule.compareJsonStrings(oldFile.toString(), newFile.toString());
+		} else {
+			return false;
+		}
+
+	}
+
+	public static boolean compareSettingsFileToCurrent(File oldSettingsFile, ProgramData newSettingsFile) {
+
+		String oldFile = FileReadWriteModule.readFile(oldSettingsFile)[0];
+		String newFile = createSettings(newSettingsFile);
+
+		if (oldFile != null && newFile != null) {
+			System.out.println("old file:");
+			System.out.println(oldFile);
+			System.out.println("new file:");
+			System.out.println(newFile);
+			return JsonModule.compareJsonStrings(oldFile, newFile);
+		} else {
+			return false;
 		}
 
 	}

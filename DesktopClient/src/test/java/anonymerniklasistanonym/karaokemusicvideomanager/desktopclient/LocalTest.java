@@ -15,8 +15,7 @@ public class LocalTest {
 		File savedSettings = Paths.get("settings.json").toFile();
 
 		if (savedSettings.exists()) {
-			System.out.println("first");
-			// testHandler.setSettingsData(ExportImportSettings.readSettings(savedSettings));
+			testHandler.setSettingsData(ExportImportSettings.readSettings(savedSettings));
 
 			// update the music video list
 			testHandler.updateMusicVideoList();
@@ -45,8 +44,16 @@ public class LocalTest {
 
 		testHandler.saveFileHtmlParty(Paths.get("party.html"));
 
-		if (!savedSettings.exists()) {
+		if (savedSettings.exists()) {
 			// save changes if nothing is there
+			if (ExportImportSettings.compareSettingsFileToCurrent(savedSettings, testHandler.getSettingsData())) {
+				System.out.println("Files are the same");
+			} else {
+				System.out.println("Overwrite file because there are changes!");
+				ExportImportSettings.writeSettings(savedSettings, testHandler.getSettingsData());
+			}
+		} else {
+			System.out.println("No file found, save changes");
 			ExportImportSettings.writeSettings(savedSettings, testHandler.getSettingsData());
 		}
 	}
