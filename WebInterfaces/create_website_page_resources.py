@@ -88,6 +88,7 @@ def convert_searchable_html(output_path):
 
     # create an empty "walking" string
     walking_string = ""
+    walking_string_head = ""
 
     # create an empty dictonary for the json file
     json_static = {}
@@ -102,18 +103,17 @@ def convert_searchable_html(output_path):
             if line.startswith('<!--'):
                 # check if the css file link was read
                 if "Link to CSS file" in line:
+                    walking_string_head = walking_string
                     # let's add the css to the head
-                    walking_string += convert_css_to_string(
-                        file_path_css_1, True, False)
-                    walking_string += convert_css_to_string(
-                        file_path_css_2, False, True)
+                    walking_string_head += convert_css_to_string(file_path_css_1, True, False)
+                    walking_string_head += convert_css_to_string(file_path_css_2, False, True)
                 # check if the js file link was read
-                elif "Custom head tag" in line:
+                elif "Link to JS file" in line:
                     # this means we are at the end of the template head
                     # so let's add the js to the head
-                    walking_string += convert_js_to_string(file_path_js)
+                    walking_string_head += convert_js_to_string(file_path_js)
                     # add then everything to the json dictonary
-                    json_static['head'] = walking_string
+                    json_static['head'] = walking_string_head
                 # check if the default head was read
                 elif "Custom head tag" in line:
                     # clean/reset the walking string
@@ -154,6 +154,7 @@ def convert_party_html(output_path):
 
     # create an empty "walking" string
     walking_string = ""
+    walking_string_head = ""
 
     # create an empty dictonary for the json file
     json_static = {}
@@ -168,20 +169,18 @@ def convert_party_html(output_path):
             if line.startswith('<!--'):
                 # check if the css file link was read
                 if "Link to CSS file" in line:
+                    walking_string_head = walking_string
                     # let's add the css to the head
-                    walking_string += convert_css_to_string(
-                        file_path_css_1, True, False)
-                    walking_string += convert_css_to_string(
-                        file_path_css_2, False, False)
-                    walking_string += convert_css_to_string(
-                        file_path_css_3, False, True)
+                    walking_string_head += convert_css_to_string(file_path_css_1, True, False)
+                    walking_string_head += convert_css_to_string(file_path_css_2, False, False)
+                    walking_string_head += convert_css_to_string(file_path_css_3, False, True)
                 # check if the js file link was read
-                elif "Custom head tag" in line:
+                elif "Link to JS file" in line:
                     # this means we are at the end of the template head
                     # so let's add the js to the head
-                    walking_string += convert_js_to_string(file_path_js)
+                    walking_string_head += convert_js_to_string(file_path_js)
                     # add then everything to the json dictonary
-                    json_static['head'] = walking_string
+                    json_static['head'] = walking_string_head
                 # check if the default head was read
                 elif "Custom head tag" in line:
                     # clean/reset the walking string

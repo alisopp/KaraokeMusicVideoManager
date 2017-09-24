@@ -21,8 +21,8 @@ public class LocalTest {
 			testHandler.updateMusicVideoList();
 		}
 
-		testHandler.addPathToPathList(Paths.get("c:\\Users\\nikla\\Downloads\\karaoke " + "test\\1"));
-		// testHandler.addPathToPathList(Paths.get("c:\\Users\\nikla\\Downloads\\karaoke
+		testHandler.addPathToPathList(Paths.get("C:\\Users\\nikla\\Downloads\\karaoke " + "test\\1"));
+		testHandler.addPathToPathList(Paths.get("..\\CreateDemoFiles\\demo_files"));
 		// " + "test\\2"));
 		// testHandler.addPathToPathList(Paths.get("c:\\Users\\nikla\\Downloads\\karaoke
 		// " + "test\\3"));

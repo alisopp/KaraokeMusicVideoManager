@@ -122,6 +122,17 @@ public class JsonModule {
 
 	}
 
+	public static String getValueString(JsonObject jsonObject, String key) {
+
+		String jsonvalueString = jsonObject.getString(key);
+
+		if (jsonvalueString != null) {
+			return jsonvalueString;
+		} else {
+			return null;
+		}
+	}
+
 	/**
 	 * Compare two JSON contents
 	 * 

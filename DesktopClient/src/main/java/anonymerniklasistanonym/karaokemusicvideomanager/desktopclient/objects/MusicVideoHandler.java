@@ -103,6 +103,8 @@ public class MusicVideoHandler {
 
 		try {
 
+			directoryPath = directoryPath.toAbsolutePath();
+
 			Path[] oldPathList = this.settingsData.getPathList();
 
 			if (oldPathList == null) {
@@ -390,8 +392,8 @@ public class MusicVideoHandler {
 			return false;
 		}
 
-		return FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(),
-				ExportMusicVideoData.generateHtmlSiteStatic(musicVideoListToTable(), this.columnNames));
+		return FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(), new String[] {
+				ExportMusicVideoData.generateHtmlSiteStatic(musicVideoListToTable(), this.columnNames) });
 	}
 
 	public boolean saveFileHtmlSearchable(Path whereToWriteTheFile) {
@@ -401,8 +403,8 @@ public class MusicVideoHandler {
 			return false;
 		}
 
-		return FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(),
-				ExportMusicVideoData.generateHtmlSiteDynamic(musicVideoListToTable(), this.columnNames));
+		return FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(), new String[] {
+				ExportMusicVideoData.generateHtmlSiteDynamic(musicVideoListToTable(), this.columnNames) });
 	}
 
 	public boolean saveFileHtmlParty(Path whereToWriteTheFile) {
@@ -413,7 +415,7 @@ public class MusicVideoHandler {
 		}
 
 		return FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(),
-				ExportMusicVideoData.generateHtmlSiteParty(musicVideoListToTable(), this.columnNames));
+				new String[] { ExportMusicVideoData.generateHtmlSiteParty(musicVideoListToTable(), this.columnNames) });
 	}
 
 }
