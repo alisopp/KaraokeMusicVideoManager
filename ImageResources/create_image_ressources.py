@@ -107,7 +107,7 @@ def create_installer_icons(icon_directory_path, source_file):
 
     print("- \"" + output_path_png + "\" was converted to " + output_path_ico_3)
 
-    ImageEnhance.Color(img).enhance(0.2).save(output_path_ico_2)
+    make_grey(img).save(output_path_ico_2)
 
     print("- \"" + output_path_png + "\" was converted to " + output_path_ico_2)
 
@@ -137,7 +137,7 @@ def create_installer_pages(pages_directory_path, source_file):
     print("- \"" + output_path_inst_png +
           "\" was converted to " + output_path_inst)
 
-    ImageEnhance.Color(img).enhance(0.2).save(output_path_uninst)
+    make_grey(img).save(output_path_uninst)
 
     print("- \"" + output_path_inst_png +
           "\" was converted to " + output_path_uninst)
@@ -164,6 +164,15 @@ def create_program_icon(icon_directory_path, source_file):
     print("- \"" + output_path_png + "\" was converted to " + output_path_ico)
 
     os.remove(output_path_png)
+
+
+def make_grey(source_image):
+    """Add a slight greyscale to the image."""
+
+    # Found here:
+    # https://stackoverflow.com/questions/16070078/change-saturation-with-imagekit-pil-or-pillow/16070333#16070333
+
+    return ImageEnhance.Color(source_image).enhance(0.2)
 
 
 if __name__ == '__main__':

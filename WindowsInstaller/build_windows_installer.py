@@ -55,4 +55,4 @@ if os.path.isfile(INSTALLER_NAME):
     print("- \"" + SCRIPT_FILE + "\" was executed an built the windows installler \"" +
       "" + RENAME_INSTALLER + "\"")
 else:
-    print("Something went wrong")
+    print("Something went wrong!!!!!")

@@ -1,6 +1,6 @@
 echo "Welcome to the automatic build of the whole MusicVideoManager :D"
 echo "-----------------------------------------------------------------"
-echo "Update Images:"
+echo "Update Images: (wait some seconds)"
 cd ImageResources
 python create_image_ressources.py
 cd ../
@@ -9,10 +9,8 @@ cd WebInterfaces
 python create_website_page_resources.py
 cd ../
 cd DesktopClient
-echo "Building jars:"
+echo "Build \"portable\" runnable jar:"
 mvn clean install
-echo "-- created \"..\\MusicVideoManager-x.x.x.jar\""
-echo "-- created \"..\\MusicVideoManager-x.x.x-jar-with-dependencies.jar\""
 cd ../
 echo "Build Windows Installer:"
 cd WindowsInstaller
