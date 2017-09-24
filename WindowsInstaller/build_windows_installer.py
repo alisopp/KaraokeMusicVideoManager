@@ -25,6 +25,8 @@ EXPORTED_FILE_PATH = r"../" + ARTIFACT_ID + \
 RENAMED_FILE_PATH = r"../" + ARTIFACT_ID + ".jar"
 RENAMED_FILE_PATH_2 = r"../" + ARTIFACT_ID + "-portable-" + VERSION + ".jar"
 if os.path.isfile(EXPORTED_FILE_PATH):
+    if os.path.isfile(RENAMED_FILE_PATH):
+        os.remove(RENAMED_FILE_PATH)
     os.rename(EXPORTED_FILE_PATH, RENAMED_FILE_PATH)
     print(EXPORTED_FILE_PATH + " renamed to " + RENAMED_FILE_PATH)
 elif os.path.isfile(RENAMED_FILE_PATH_2):
@@ -43,6 +45,8 @@ while PRO.poll() is None:
 print(PRO.communicate()[0].decode("utf-8"))
 
 if os.path.isfile(RENAMED_FILE_PATH):
+    if os.path.isfile(RENAMED_FILE_PATH_2):
+        os.remove(RENAMED_FILE_PATH_2)
     os.rename(RENAMED_FILE_PATH, RENAMED_FILE_PATH_2)
     print(RENAMED_FILE_PATH + " renamed to " + RENAMED_FILE_PATH_2)
 
@@ -50,6 +54,8 @@ INSTALLER_NAME = r"../" + ARTIFACT_ID + "_windows_installer.exe"
 RENAME_INSTALLER = r"../" + ARTIFACT_ID + "-win-installer-" + VERSION + ".exe"
 
 if os.path.isfile(INSTALLER_NAME):
+    if os.path.isfile(RENAME_INSTALLER):
+        os.remove(RENAME_INSTALLER)
     os.rename(INSTALLER_NAME, RENAME_INSTALLER)
     print(INSTALLER_NAME + " renamed to " + RENAME_INSTALLER)
     print("- \"" + SCRIPT_FILE + "\" was executed an built the windows installler \"" +
