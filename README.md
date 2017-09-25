@@ -13,6 +13,8 @@ temporary till rewrite is as ready as the last upload of the default thing
 
 ### :arrow_forward: [How to open/edit/compile the Windows installer?](Documentation/HOW_TO_NSIS.md)
 
+### ▶ [How to update/create/compile everything at once?](Documentation/HOW_TO_MAGIC.md)
+
 ### :arrow_forward: [Frequently asked questions](Documentation/FAQ.md)
 
 <br>
