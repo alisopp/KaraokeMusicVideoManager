@@ -1,24 +1,12 @@
 # Update/Compile everything
 
-Coming soon
+Instruction on how you can use the ***master*** shell script to compile and update every part of this project.
 
 <br>
 
-## What do you need to have installed?
+## The *master* script that does it all
 
-### Everything:
-
-* [Inkscape](https://inkscape.org/en/release/0.92.2/) (convert `.svg` files to `.png`)
-* [Maven](https://maven.apache.org/download.cgi) (compile the Java project via `pom.xml`)
-* [Python 3](https://www.python.org/downloads/) (do many things)
-  * Pillow (manipulate images and save them as `.ico`, `.bmp`)
-* [NSIS](http://nsis.sourceforge.net/Download) (create a Windows Installer)
-
-<br>
-
-## The script that does it all
-
-The script that compiles everything [build_everything.sh](../build_everything.sh) can be simply controlled with the script [build_run_configuration.sh](../build_run_configuration.sh):
+The script that compiles everything [build_everything.sh](../build_everything.sh) can be simply controlled with the script [build_run_configuration.sh](../build_run_configuration.sh) (the master script):
 
 ```shell
 # Setup your own build run configuration.
@@ -36,9 +24,9 @@ If you just want to get the runnable `.jar` file remove all parameter (`img web 
 
 If you want to update the images before creating the `.jar` add the parameter `img` (the same with all the other parameter).
 
----
+## The parts/parameter of the *master* script
 
-Here the software/the steps that are needed to do each thing:
+Here the software/the steps that are needed to do each part/thing:
 
 ### Compile only the Java project (create the runnable `.jar`)
 
@@ -63,7 +51,7 @@ Here the software/the steps that are needed to do each thing:
   * Click OK (3 times)
   * Open a console and enter `mvn -v` to test if maven can be used (reload the console if it was opened)
 
-#### Do only this outside of the main shell script:
+#### Do only this outside of the master shell script:
 
 Go into the cloned repository folder and open the folder `DesktopClient`:
 
@@ -88,7 +76,7 @@ IF you get a notification like `probably you run a JRE -> Compile error` you hav
 
 ---
 
-### Update Images/Icons too
+### Update the Images and Icons too
 
 ```shell
 . build_everything.sh img
@@ -100,7 +88,7 @@ IF you get a notification like `probably you run a JRE -> Compile error` you hav
   - Download the installer from https://inkscape.org/en/release/0.92.2/
   - After the installation should Inkscape already be usable over the command line without adding it to the environment variables
 
-#### Do only this outside of the main shell script:
+#### Do only this outside of the master shell script:
 
 Run the script [create_image_ressources.py](../ImageResources/create_image_ressources.py) in the `ImageResources` folder.
 *(Wait some seconds -> Inkscape needs it's time)*
@@ -121,6 +109,8 @@ Also be sure to use the newest available version of Inkscape because the old one
 . build_everything.sh web
 ```
 
+Not much more needed - Python handles everything in seconds.
+
 #### Do only this outside of the main shell script:
 
 Run the script [create_website_page_resources.py](../WebInterfaces/create_website_page_resources.py) in the `WebInterfaces` folder.
@@ -136,6 +126,22 @@ Run the script [create_website_page_resources.py](../WebInterfaces/create_websit
   - After installing it open once again the Windows environment variables
   - Add to the `Path` entry in the upper table with clicking the button `Edit` after selecting it the path to the `bin` folder of NSIS (for me this was `C:\Program Files (x86)\NSIS\Bin`)
 
-#### Do only this outside of the main shell script:
+#### Do only this outside of the master shell script:
 
 Run the script [build_windows_installer.py](../WindowsInstaller/build_windows_installer.py) in the folder `WindowsInstaller`.
+
+<br>
+
+---
+
+:warning:
+
+If you have any problems with just set environmental variables (Maven, NSIS was it for me) please restart your computer.
+
+In my case this worked two times. After the restart everything works great and commands like `makensis` and `mvn` get instantly recognized!
+
+---
+
+<br>
+
+I wish you success! :smile: :luck::strong:

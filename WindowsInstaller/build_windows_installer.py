@@ -33,6 +33,10 @@ CORRECT_FINAL_FILE_NAME = r"../" + ARTIFACT_ID + "-portable-" + VERSION + ".jar"
 
 # Change the file name of the jar if it isn't the one the NSIS script needs
 if os.path.isfile(CORRECT_FINAL_FILE_NAME):
+    # check if a file with the installer filename already exists
+    if os.path.isfile(INSTALLER_FILE_NAME):
+        # if yes remove this file before renaming
+        os.remove(INSTALLER_FILE_NAME)
     os.rename(CORRECT_FINAL_FILE_NAME, INSTALLER_FILE_NAME)
     print(CORRECT_FINAL_FILE_NAME + " renamed to " +
           INSTALLER_FILE_NAME + " for NSIS script")
