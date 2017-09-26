@@ -91,7 +91,7 @@ tr:hover button {
 
 .label-text {
 	/* Text has no background */
-	background-color: transparent;
+	background-color: rgba(0, 0, 0, 0.6);
 	/* Text is white */
 	color: white;
 	/* Display the text completely in the middle */
