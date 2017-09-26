@@ -14,7 +14,7 @@ Everything about the Windows installer of this project. Read about how to create
 
 ---
 
-**Attention:** :warning:
+:warning:
 
 Before you can do this you need to export the main Java project to a runnable `.jar` file with the name `MusicVideoManager.jar` and save it to the main directory of this repository.
 
@@ -40,7 +40,7 @@ Change there the vector graphic images and run the Python 3 script `create_image
 
 ---
 
-**Attention: ** :warning:
+:warning:
 
 To execute the Python 3 script you first need to have installed a [Python 3.*](https://www.python.org/downloads/) version and a current version of [Inkscape](https://inkscape.org/en/release/0.92.2/windows/64-bit/) that is not from the Windows store.
 
@@ -65,7 +65,7 @@ If you want to make changes you need to edit/look into:
 
 Documentation of NSIS script language:
 
-* [Modern USer Interface](http://nsis.sourceforge.net/Docs/Modern%20UI%202/Readme.html)
+* [Modern User Interface](http://nsis.sourceforge.net/Docs/Modern%20UI%202/Readme.html)
 * [Examples Modern UI](http://nsis.sourceforge.net/Examples/Modern%20UI/)
 * [Main Documentation](http://nsis.sourceforge.net/Docs/)
 * [Examples](http://nsis.sourceforge.net/Category:Code_Examples)

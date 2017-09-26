@@ -144,4 +144,4 @@ In my case this worked two times. After the restart everything works great and c
 
 <br>
 
-I wish you success! :smile: :luck: :strong:
+I wish you success! :smile:
