@@ -32,14 +32,12 @@ table {
 	text-align: left;
 }
 
-
 /* Each row of the table body: */
 
-tbody>tr {
+tbody > tr {
 	/* The bottom border of each cell is light grey and 1px thick */
 	border-bottom: 1pt solid #dddddd;
 }
-
 
 /* The table head cells, the table body cells: */
 
@@ -49,15 +47,13 @@ td {
 	padding: 8px;
 }
 
-
 /* The table head and body cells: [their first element] */
 
-th:first-child,
-td:first-child {
+th:nth-child(1),
+td:nth-child(1) {
 	/* The first cell in every row has a 16px invisible padding */
 	padding-left: 16px;
 }
-
 
 /* The table head cells: */
 
@@ -74,7 +70,6 @@ th {
 
 /* MEDIA TAGS */
 
-
 /* CSS for small devices (smartphones): */
 
 @media screen and (max-width: 50em) {
@@ -85,7 +80,6 @@ th {
 	}
 }
 
-
 /* CSS for normal to big devices (tablets, laptops, desktop, ...): */
 
 @media screen and (min-width: 50em) {
@@ -95,7 +89,6 @@ th {
 		padding: 2rem;
 	}
 }
-
 
 /* CSS in case someone wants to print the site: */
 
@@ -115,7 +108,7 @@ th {
 		border: 1pt solid black;
 	}
 	/* The table head row cells: */
-	thead>tr>th {
+	thead > tr > th {
 		/* The border is now black */
 		border-color: black;
 		/* No background color */
@@ -124,8 +117,8 @@ th {
 		color: black;
 	}
 	/* The table head row, The table body row cells: */
-	thead>tr,
-	tbody>tr>td {
+	thead > tr,
+	tbody > tr > td {
 		/* The bottom border of each cell is black */
 		border-bottom: 1pt solid black;
 	}

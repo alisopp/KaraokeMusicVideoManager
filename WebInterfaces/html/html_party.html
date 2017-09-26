@@ -16,9 +16,7 @@
 <body>
 
 	<!-- Floating button with link to current playlist -->
-	<a href="playlist.html" class="float">
-		<img style="padding-top:15px" width="30px" height="30px" src="data:image/svg+xml,%3Csvg%20enable-background%3D%22new%200%200%2024%2024%22%20fill%3D%22%23FFFFFF%22%20height%3D%2248%22%20id%3D%22Layer_1%22%20version%3D%221.1%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2248%22%20x%3D%220px%22%20xml%3Aspace%3D%22preserve%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%20y%3D%220px%22%3E%0A%3Cg%20id%3D%22XMLID_1_%22%3E%0A%09%3Cpath%20d%3D%22M0%2C0h24v24H0V0z%22%20fill%3D%22none%22/%3E%0A%09%3Cg%20id%3D%22XMLID_2_%22%3E%0A%09%09%3Crect%20height%3D%222%22%20id%3D%22XMLID_3_%22%20width%3D%2212%22%20x%3D%224%22%20y%3D%2210%22/%3E%0A%09%09%3Crect%20height%3D%222%22%20id%3D%22XMLID_4_%22%20width%3D%2212%22%20x%3D%224%22%20y%3D%226%22/%3E%0A%09%09%3Crect%20height%3D%222%22%20id%3D%22XMLID_5_%22%20width%3D%228%22%20x%3D%224%22%20y%3D%2214%22/%3E%0A%09%09%3Cpolygon%20id%3D%22XMLID_6_%22%20points%3D%2214%2C14%2014%2C20%2019%2C17%20%20%20%22/%3E%0A%09%3C/g%3E%0A%3C/g%3E%0A%3C/svg%3E" />
-	</a>
+	<a href="playlist.html" class="floating-button"></a>
 	<div class="label-container">
 		<div class="label-text">Party Playlist</div>
 	</div>
@@ -26,11 +24,11 @@
 	<!-- Section that contains the table with all found music video -->
 	<section>
 		<div class="fixed-search-overlay">
-			<input class="searchbar fixedSearch" type="text" placeholder="Search for artist/title.." oninput="w3.filterHTML('#search-table', '.item', this.value)">
+			<input class="fixed-searchbar" type="text" placeholder="Search for artist/title.." oninput="w3.filterHTML('#search-table', '.item', this.value)">
 
 			<!-- Example table begin -->
-			<table class="fixedTable">
-				<thead style="display:table-header-group">
+			<table class="fixed-header">
+				<thead>
 					<tr>
 						<th onclick="w3.sortHTML('#search-table','.item', 'td:nth-child(2)')">#</th>
 						<th onclick="w3.sortHTML('#search-table','.item', 'td:nth-child(2)')">Artist</th>
@@ -53,109 +51,108 @@
 					<tr class="item">
 						<td>1</td>
 						<td>A Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>2</td>
 						<td>B Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>3</td>
 						<td>C Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>4</td>
 						<td>D Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>5</td>
 						<td>E Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>6</td>
 						<td>F Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>7</td>
 						<td>G Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>8</td>
 						<td>H Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>9</td>
 						<td>X Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>10</td>
 						<td>Z Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>11</td>
 						<td>ZA Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>12</td>
 						<td>ZB Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>13</td>
 						<td>ZC Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>14</td>
 						<td>ZD Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>15</td>
 						<td>ZE Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>16</td>
 						<td>ZF Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>17</td>
 						<td>ZG Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>18</td>
 						<td>ZH Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>19</td>
 						<td>ZX Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 					<tr class="item">
 						<td>20</td>
 						<td>ZZ Example Artist</td>
-						<td><button class="button" name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
+						<td><button name="index" type="submit" value="0,Halsey,Now or Never">ß Example Title</button></td>
 					</tr>
 				</tbody>
 			</table>
 			<!-- Example table end -->
 		</form>
 	</section>
-
 
 </body>
 
