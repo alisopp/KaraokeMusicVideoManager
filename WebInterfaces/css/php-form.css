@@ -1,0 +1,115 @@
+body {
+	font-size: 20px;
+}
+
+.submit-form {
+	padding: 2rem;
+	background-color: #24a204;
+	color: white;
+	border-radius: 30px;
+	text-align: center;
+}
+
+
+/* Nice & simple: Input text field */
+
+input {
+	background-color: white;
+	border-radius: 0.2em;
+	border: 2px solid lightgray;
+	box-sizing: border-box;
+	color: black;
+	font-family: inherit;
+	font-size: inherit;
+	min-width: 15em;
+	outline: none;
+	padding: 0.6em;
+	-webkit-transition: 0.4s;
+	margin: 0.5rem;
+}
+
+input:required:invalid,
+input:required:focus:invalid {
+	background-color: #ff0000;
+	border: 2px solid #ff0000;
+	box-sizing: border-box;
+	color: white;
+	padding: 0.6em;
+}
+
+input:required:invalid::-webkit-input-placeholder {
+	/* WebKit, Blink, Edge */
+	color: white;
+	font-weight: bold;
+}
+
+::-webkit-input-placeholder {
+	/* WebKit, Blink, Edge */
+	color: darkgray;
+}
+
+input:hover {
+	border-color: silver;
+}
+
+input:focus {
+	border-color: darkgray;
+}
+
+input:focus:required:invalid {
+	color: red;
+	border-color: red;
+	box-shadow: 0 0 6px red;
+}
+
+.song-title {
+	font-size: 24px;
+	margin-top: 2rem;
+	margin-bottom: 0.2rem;
+}
+
+.artist-title {
+	margin-top: 0.2rem;
+	margin-bottom: 3rem;
+}
+
+.form-title {
+	font-weight: bold;
+	margin-top: 0;
+	font-size: 30px;
+}
+
+.submit-button {
+	margin-top: 3rem;
+	border-radius: 1000px;
+	min-width: 7em;
+}
+
+section {
+	max-width: 600px;
+}
+
+
+/* MEDIA TAGS */
+
+
+/* CSS for small devices (smartphones): */
+
+@media screen and (max-width: 50em) {
+	/* Everything */
+	body {
+		/* Change background color to form bg color */
+		background-color: #24a204;
+	}
+}
+
+
+/* CSS for normal to big devices (tablets, laptops, desktop, ...): */
+
+@media screen and (min-width: 50em) {
+	/* Everything */
+	body {
+		/* Make background color white-grey */
+		background-color: whitesmoke;
+	}
+}

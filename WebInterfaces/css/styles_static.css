@@ -1,35 +1,39 @@
 /* The whole site: */
 
 body {
+	/* No space anywhere for fixed elements */
+	margin: 0;
+	padding: 0;
 	/* Font for the whole site */
 	font-family: arial, sans-serif;
+}
+
+
+/* The area where all the content (table) is: */
+
+section {
 	/* Maximum site width */
 	max-width: 1200px;
 	/* Center the whole body */
-	margin-left: auto;
-	margin-right: auto;
-	/* No space at the top for the whole body */
-	margin-top: 0;
+	margin: auto;
 }
 
 
 /* The table: */
 
 table {
-	/* The table is always as wide as it can get in the body */
+	/* The table is always as wide as it can get in the section */
 	width: 100%;
 	/* All table borders are one border - not detached */
 	border-collapse: collapse;
-	/* Text is left aligned */
-	text-align: left;
-	/* Make the border a consistent 1px thick grey line */
+	/* We do not want a table/cell border */
 	border-width: 0;
-	border-style: solid;
-	border-color: grey;
+	/* All the text is left aligned */
+	text-align: left;
 }
 
 
-/* Each row of the table in tbody: */
+/* Each row of the table body: */
 
 tbody>tr {
 	/* The bottom border of each cell is light grey and 1px thick */
@@ -37,13 +41,16 @@ tbody>tr {
 }
 
 
-/* The table head and body cells: */
+/* The table head cells, the table body cells: */
 
 th,
 td {
 	/* Each cell has a 8px invisible padding */
 	padding: 8px;
 }
+
+
+/* The table head and body cells: [their first element] */
 
 th:first-child,
 td:first-child {
@@ -60,66 +67,65 @@ th {
 	background-color: #616161;
 	/* Set the text color to white because of the dark background */
 	color: white;
-}
-
-th:hover {
-	/* On selection make border and background darker */
-	background-color: #333333;
+	/* Make the text bold */
+	font-weight: bold;
 }
 
 
-/* On hover of a table row do this with all cells of the table row: */
-
-tr:hover td {
-	/* Color everything blue but the text color (= white) */
-	background-color: #24a204;
-	border-color: #24a204;
-	color: white;
-}
+/* MEDIA TAGS */
 
 
-/* For small devices (smartphones): */
+/* CSS for small devices (smartphones): */
 
-@media (max-width: 40em) {
+@media screen and (max-width: 50em) {
 	/* The area where the table is located */
 	section {
 		/* Zero space between the area and the window border */
-		margin: 0;
+		padding: 0;
 	}
 }
 
 
-/* For normal to big devices (tablets, laptops, desktop, ...): */
+/* CSS for normal to big devices (tablets, laptops, desktop, ...): */
 
-@media (min-width: 40em) {
+@media screen and (min-width: 50em) {
 	/* The area where the table is located */
 	section {
 		/* A bit space between the area and the window border */
-		margin: 20px;
+		padding: 2rem;
 	}
 }
 
 
-/* The extra styles for printing the website: */
+/* CSS in case someone wants to print the site: */
 
-@media print { 
-	/* Each row of the table in tbody: */
-	tbody>tr {
-		/* The bottom border of each cell is black */
-		border-bottom: 1pt solid black;
+@media print {
+	/* Settings for the page if it should be printed */
+	@page {
+		/* Paper default size: */
+		size: A4;
+		/* Invisible border around everything: */
+		margin: 2rem;
+		/* Paper default alignment: */
+		size: portrait;
 	}
 	/* The table: */
 	table {
 		/* Has a black border now */
 		border: 1pt solid black;
 	}
-	/* The table head cells: */
-	th {
-		/* The border is now black and there is no background color any more */
+	/* The table head row cells: */
+	thead>tr>th {
+		/* The border is now black */
 		border-color: black;
+		/* No background color */
 		background-color: transparent;
-		/* Set the text color to black because of the transparent background */
+		/* Black text */
 		color: black;
+	}
+	/* The table head row, The table body row cells: */
+	thead>tr,
+	tbody>tr>td {
 		/* The bottom border of each cell is black */
 		border-bottom: 1pt solid black;
 	}

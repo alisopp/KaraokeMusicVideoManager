@@ -9,6 +9,7 @@ To convert the svg file you need to have inkscape installed on your system.
 
 import os
 import subprocess
+from shutil import copyfile
 
 from PIL import Image, ImageEnhance
 
@@ -175,6 +176,15 @@ def make_grey(source_image):
     return ImageEnhance.Color(source_image).enhance(0.2)
 
 
+def copy_svg_icon(destination_file, source_file):
+
+    # check if the source exists
+    if os.path.exists(source_file):
+        # check if the destination exists
+        copyfile(source_file, destination_file)
+        print("- \"" + source_file + "\" was copied to " + destination_file)
+
+
 if __name__ == '__main__':
 
     # do all convertions:
@@ -182,6 +192,7 @@ if __name__ == '__main__':
     create_installer_pages(
         r"..\WindowsInstaller\pictures", "installer.svg")
     create_installer_icons(r"..\WindowsInstaller\icons", "logo.svg")
-    create_program_icon(r"..\DesktopClient\res\icon", "logo.svg")
+    create_program_icon(r"..\DesktopClient\res\websites\favicons", "logo.svg")
+    copy_svg_icon(r"..\DesktopClient\res\websites\favicons\favicon.svg", "logo.svg")
 
     print("Ready!")

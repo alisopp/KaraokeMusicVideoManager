@@ -12,5 +12,5 @@ fwrite($fp, json_encode($content));
 fclose($fp);
 
 # Redirect the user to the main list
-echo "<script> location.href='party.html'; </script>";
+echo "<script> location.href='../html/party.html'; </script>";
 ?>
