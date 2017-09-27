@@ -15,6 +15,8 @@ temporary till rewrite is as ready as the last upload of the default thing
 
 ### ▶ [How to update/create/compile everything at once?](Documentation/HOW_TO_MAGIC.md)
 
+### ▶ [How to setup a server for the 'party-mode' (Raspberry Pi 3)](Documentation/HOW_TO_SERVER.md)
+
 ### :arrow_forward: [Frequently asked questions](Documentation/FAQ.md)
 
 <br>
