@@ -170,196 +170,8 @@ def html_to_json(output_path):
     dictonary_to_json(output_path, json_html)
 
 
-def convert_basic_html(output_path):
-    """Save changes to the static html template in the java project."""
 
-    # set the path to the html and css template
-    file_path_html = os.path.join(PATH_HTML, "html_static.html")
-    file_path_css = os.path.join(PATH_CSS, "styles_static.css")
-
-    # read the static html template
-    with open(file_path_html) as file:
-        content_html = file.readlines()
-
-    # create an empty "walking" string
-    walking_string = ""
-
-    # create an empty dictonary for the json file
-    json_static = {}
-
-    # walk through all lines of the html email
-    for line in content_html:
-        # strip whitespaces, tabs and paragraphs from line
-        line = line.strip()
-        # check if the current line has any content
-        if line is not "":
-            # check if line is a comment
-            if line.startswith('<!--'):
-                # check if the css file link was read
-                if "Link to CSS file" in line:
-                    # this means we are at the end of the template head
-                    # so let's add the css to the head
-                    walking_string += convert_css_to_string(file_path_css)
-                    # add then everything to the json dictonary
-                    json_static['head'] = walking_string
-                # check if the default head was read
-                elif "Custom head tag" in line:
-                    # clean/reset the walking string
-                    walking_string = ""
-                # check if the example table was reached
-                elif "Example table begin" in line:
-                    # add everything read to the json dictonary
-                    json_static['body-begin'] = walking_string
-                elif "Example table end" in line:
-                    # clean/reset the walking string because we do not want the table
-                    walking_string = ""
-            else:
-                # text must be a normal line - add it to the "walking" string
-                walking_string += line
-    # when all lines are read add the reremaining content to the json dictonary
-    json_static['end'] = walking_string
-
-    # save the json dictionary in a json file
-    with open(output_path, 'w') as outfile:
-        json.dump(json_static, outfile)
-
-    print("- Json file exported: " + output_path)
-
-
-def convert_searchable_html(output_path):
-    """Save changes to the searchable html template."""
-
-    # set the path to the html and css template + js file
-    file_path_html = os.path.join(PATH_HTML, "html_searchable.html")
-    file_path_css_1 = os.path.join(PATH_CSS, "styles_static.css")
-    file_path_css_2 = os.path.join(PATH_CSS, "styles_searchable.css")
-
-    # read the static html template
-    with open(file_path_html) as file:
-        content_html = file.readlines()
-
-    # create an empty "walking" string
-    walking_string = ""
-    walking_string_head = ""
-
-    # create an empty dictonary for the json file
-    json_static = {}
-
-    # walk through all lines of the html email
-    for line in content_html:
-        # strip whitespaces, tabs and paragraphs from line
-        line = line.strip()
-        # check if the current line has any content
-        if line is not "":
-            # check if line is a comment
-            if line.startswith('<!--'):
-                # check if the css file link was read
-                if "Link to CSS file" in line:
-                    walking_string_head = walking_string
-                    # let's add the css to the head
-                    walking_string_head += convert_css_to_string(
-                        file_path_css_1, True, False)
-                    walking_string_head += convert_css_to_string(
-                        file_path_css_2, False, True)
-                # check if the js file link was read
-                elif "Link to JS file" in line:
-                    # this means we are at the end of the template head
-                    walking_string = ""
-                # check if the default head was read
-                elif "Custom head tag" in line:
-                    # clean/reset the walking string
-                    walking_string_head += "<script src=\"w3.js\"></script>"
-                    json_static['head'] = walking_string_head
-                    walking_string = ""
-                # check if the example table was reached
-                elif "Example table begin" in line:
-                    # add everything read to the json dictonary
-                    json_static['body-begin'] = walking_string
-                elif "Example table end" in line:
-                    # clean/reset the walking string because we do not want the table
-                    walking_string = ""
-            else:
-                # text must be a normal line - add it to the "walking" string
-                walking_string += line
-    # when all lines are read add the reremaining content to the json dictonary
-    json_static['end'] = walking_string
-
-    # save the json dictionary in a json file
-    with open(output_path, 'w') as outfile:
-        json.dump(json_static, outfile)
-
-    print("- Json file exported: " + output_path)
-
-
-def convert_party_html(output_path):
-    """Save changes to the party html template."""
-
-    # set the path to the html and css template + js file
-    file_path_html = os.path.join(PATH_HTML, "html_party.html")
-    file_path_css_1 = os.path.join(PATH_CSS, "styles_static.css")
-    file_path_css_2 = os.path.join(PATH_CSS, "styles_searchable.css")
-    file_path_css_3 = os.path.join(PATH_CSS, "styles_party.css")
-
-    # read the static html template
-    with open(file_path_html) as file:
-        content_html = file.readlines()
-
-    # create an empty "walking" string
-    walking_string = ""
-    walking_string_head = ""
-
-    # create an empty dictonary for the json file
-    json_static = {}
-
-    # walk through all lines of the html email
-    for line in content_html:
-        # strip whitespaces, tabs and paragraphs from line
-        line = line.strip()
-        # check if the current line has any content
-        if line is not "":
-            # check if line is a comment
-            if line.startswith('<!--'):
-                # check if the css file link was read
-                if "Link to CSS file" in line:
-                    walking_string_head = walking_string
-                    # let's add the css to the head
-                    walking_string_head += convert_css_to_string(
-                        file_path_css_1, True, False)
-                    walking_string_head += convert_css_to_string(
-                        file_path_css_2, False, False)
-                    walking_string_head += convert_css_to_string(
-                        file_path_css_3, False, True)
-                # check if the js file link was read
-                elif "Link to JS file" in line:
-                    # this means we are at the end of the template head
-                    # so let's add the js to the head
-                    walking_string_head += "<script src=\"w3.js\"></script>"
-                    # add then everything to the json dictonary
-                    json_static['head'] = walking_string_head
-                # check if the default head was read
-                elif "Custom head tag" in line:
-                    # clean/reset the walking string
-                    walking_string = ""
-                # check if the example table was reached
-                elif "Example table begin" in line:
-                    # add everything read to the json dictonary
-                    json_static['body-begin'] = walking_string
-                elif "Example table end" in line:
-                    # clean/reset the walking string because we do not want the table
-                    walking_string = ""
-            else:
-                # text must be a normal line - add it to the "walking" string
-                walking_string += line
-    # when all lines are read add the reremaining content to the json dictonary
-    json_static['end'] = walking_string
-
-    # save the json dictionary in a json file
-    with open(output_path, 'w') as outfile:
-        json.dump(json_static, outfile)
-
-    print("- Json file exported: " + output_path)
-
-
+#TODO
 def convert_party_php_forms(output_path):
     """Save changes to the php add to playlist form template."""
 
@@ -424,59 +236,6 @@ def convert_party_php_forms(output_path):
     print("- Json file exported: " + output_path)
 
 
-def convert_css_to_string(css_filename, begin_tag=True, end_tag=True):
-    """Convert the content of a .css file to a single line string."""
-
-    # read the css file
-    with open(css_filename) as file:
-        content_css = file.readlines()
-
-    # create walking string
-    walking_css_string = ""
-
-    if begin_tag:
-        # create an empty "walking" string with the opening style tag
-        walking_css_string = "<style>"
-    # walk through all lines of the html email
-    for line in content_css:
-        # strip whitespaces, tabs and paragraphs from line
-        line = line.strip()
-        # check if the line is neither empty nor a comment
-        if line is not "" and not line.startswith("/*"):
-            # if yes save content in the walking string
-            walking_css_string += line
-    if end_tag:
-        # add the final closing style tag
-        walking_css_string += "</style>"
-
-    # return the "real/important" content of the css file as a string
-    return walking_css_string
-
-
-def convert_js_to_string(js_filename):
-    """Convert the content of a .css file to a single line string."""
-
-    # read the css file
-    with open(js_filename) as file:
-        content_js = file.readlines()
-
-    # create an empty "walking" string with the opening style tag
-    walking_js_string = "<script>"
-    # walk through all lines of the html email
-    for line in content_js:
-        # strip whitespaces, tabs and paragraphs from line
-        line = line.strip()
-        # check if the line is neither empty nor a comment
-        if line is not "" and not line.startswith("/*") and not line.startswith("//"):
-            # if yes save content in the walking string
-            walking_js_string += line
-    # add the final closing style tag
-    walking_js_string += "</script>"
-
-    # return the "real/important" content of the css file as a string
-    return walking_js_string
-
-
 def copy_we_js(output_path):
     """Copy javascript to java project."""
 
@@ -518,5 +277,17 @@ if __name__ == '__main__':
     # part of the html data to json
     HTML_OUTPUT_PATH = os.path.join(MAIN_OUTPUT_DIRECTORY, "html.json")
     html_to_json(HTML_OUTPUT_PATH)
+
+    # php pages are still missing!!!!!
+    # PARTY_OUTPUT_PATH = os.path.join(MAIN_OUTPUT_DIRECTORY, "html_page_party.json")
+    # convert_party_html(PARTY_OUTPUT_PATH)
+    # party php websites data
+    # PARTY_PHP_OUTPUT_PATH = os.path.join(MAIN_OUTPUT_DIRECTORY, "php_pages_party.json")
+    # convert_party_php_forms(PARTY_PHP_OUTPUT_PATH)
+
+    # copy javascript to websites data libraries
+    JAVASCRIPT_W3_OUTPUT_PATH = os.path.join(
+        MAIN_OUTPUT_DIRECTORY + "/libraries", "javascript.json")
+    copy_we_js(JAVASCRIPT_W3_OUTPUT_PATH)
 
     print("Ready!")
