@@ -1,9 +1,13 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ClassResourceReaderModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.JsonModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
 
 public class ExportMusicVideoData {
 
@@ -178,6 +182,95 @@ public class ExportMusicVideoData {
 		JsonObject jsonObject = JsonModule.loadJsonFromString(jsonContent);
 
 		return JsonModule.getValueString(jsonObject, "w3-js");
+	}
+
+	/**
+	 * Convert all the data of the musicVideoList to a Object[][] for the JTable
+	 * 
+	 * @return Object[][] ([][#, artist, title])
+	 */
+	public Object[][] musicVideoListToObjectArray(MusicVideo[] musicVideoList, Integer rowNumber) {
+
+		// create a array of objects with a object that has 3 entries
+		Object[][] tableData = new Object[musicVideoList.length][rowNumber];
+
+		for (int a = 0; a < musicVideoList.length; a++) {
+			tableData[a][0] = a + 1;
+			tableData[a][1] = musicVideoList[a].getArtist();
+			tableData[a][2] = musicVideoList[a].getTitle();
+		}
+
+		return tableData;
+	}
+
+	/**
+	 * Generate CSV table content
+	 * 
+	 * @return content (String[])
+	 */
+	public String generateCsvContent(MusicVideo[] musicVideoList, String[] columns) {
+
+		int columnNumber = columns.length;
+		int rowNumber = musicVideoList.length;
+
+		Object[][] csvData = musicVideoListToObjectArray(musicVideoList, columnNumber);
+
+		// save everything in one string
+		StringBuilder csvDataString = new StringBuilder("");
+
+		for (int a = 0; a < columnNumber - 1; a++) {
+			csvDataString.append(columns[a] + ",");
+		}
+		csvDataString.append(columns[columnNumber - 1] + "\n");
+
+		for (int a = 0; a < rowNumber; a++) {
+			for (int b = 0; b < columnNumber - 1; b++) {
+				csvDataString.append(csvData[a][b].toString() + ",");
+			}
+			csvDataString.append(csvData[a][columnNumber - 1].toString() + "\n");
+		}
+
+		return csvDataString.toString();
+	}
+
+	/**
+	 * Generate CSV table content
+	 * 
+	 * @return content (String[])
+	 */
+	public String generateJsonContent(MusicVideo[] musicVideoList, String[] columns) {
+
+		int columnNumber = columns.length;
+		int rowNumber = musicVideoList.length;
+
+		Object[][] csvData = musicVideoListToObjectArray(musicVideoList, columnNumber);
+
+		// the whole object
+		JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+
+		// add the columns
+		JsonArrayBuilder tableHead = Json.createArrayBuilder();
+
+		for (String column : columns) {
+			tableHead.add(column);
+		}
+
+		jsonObject.add("table-head", tableHead);
+
+		// add the data
+		JsonArrayBuilder tableBody = Json.createArrayBuilder();
+
+		for (int a = 0; a < rowNumber; a++) {
+			JsonArrayBuilder tableRow = Json.createArrayBuilder();
+			tableRow.add((Integer) csvData[a][0]);
+			tableRow.add(csvData[a][1].toString());
+			tableRow.add(csvData[a][2].toString());
+			tableBody.add(tableRow);
+		}
+
+		jsonObject.add("table-body", tableBody);
+
+		return JsonModule.dumpJsonObjectToString(jsonObject);
 	}
 
 	public static void main(String[] args) {

@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -27,7 +28,7 @@ public class MainWindow {
 	public void createStage() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getResource("/windows/MainWindow.fxml"));
+			loader.setLocation(getClass().getClassLoader().getResource("windows/MainWindow.fxml"));
 			Parent root = loader.load();
 			getMainWindowStage().setTitle(this.windowTitle);
 			getMainWindowStage().setScene(new Scene(root, this.normalWindowSize[0], this.normalWindowSize[1]));
@@ -36,6 +37,18 @@ public class MainWindow {
 			getMainWindowStage().setMinHeight(this.minimalWindowSize[1]);
 			getMainWindowStage().centerOnScreen();
 
+			// try to add a window icon
+			try {
+				Integer[] supportedSizes = { 16, 32, 48, 64, 128, 194, 256, 512 };
+				Image[] icons = new Image[supportedSizes.length];
+				for (int i = 0; i < supportedSizes.length; i++) {
+					String filePath = "websites/favicons/favicon-" + supportedSizes[i] + "x" + supportedSizes[i];
+					icons[i] = new Image(getClass().getClassLoader().getResourceAsStream(filePath + ".png"));
+				}
+				getMainWindowStage().getIcons().addAll(icons);
+			} catch (Exception e) {
+				System.err.println("Exception while loding icons");
+			}
 			getMainWindowStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
 
 				@Override

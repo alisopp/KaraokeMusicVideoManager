@@ -14,6 +14,7 @@
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.TreeTableColumn?>
 <?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -21,40 +22,62 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="430.0" prefHeight="400.0" prefWidth="430.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="430.0" prefHeight="400.0" prefWidth="430.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <VBox prefHeight="73.0" prefWidth="427.0" BorderPane.alignment="CENTER">
          <children>
-            <MenuBar style="-fx-background-color: orange;">
+            <MenuBar style="-fx-background-color: white;">
               <menus>
                   <Menu mnemonicParsing="false" text="Paths">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                      <MenuItem mnemonicParsing="false" text="Add Source Folder" />
+                        <MenuItem mnemonicParsing="false" text="Source Folder Manager" />
                     </items>
                   </Menu>
                 <Menu mnemonicParsing="false" text="Export">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
+                        <Menu mnemonicParsing="false" text="Website">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Static List" />
+                              <MenuItem mnemonicParsing="false" text="Searchable List" />
+                              <MenuItem mnemonicParsing="false" text="Party List" />
+                          </items>
+                        </Menu>
+                    <MenuItem mnemonicParsing="false" text="CSV" />
+                        <MenuItem mnemonicParsing="false" text="JSON" />
                   </items>
                 </Menu>
                   <Menu mnemonicParsing="false" text="Network">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem mnemonicParsing="false" text="Reconnect" />
+                        <MenuItem mnemonicParsing="false" text="Change Login" />
+                        <MenuItem mnemonicParsing="false" text="Setup The Server" />
+                      <MenuItem mnemonicParsing="false" text="Reset Network Settings" />
                     </items>
                   </Menu>
                 <Menu mnemonicParsing="false" text="Save &amp; Restore">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
+                    <MenuItem mnemonicParsing="false" text="Save Configuration" />
+                        <MenuItem mnemonicParsing="false" text="Load/Restore Configuration" />
+                        <MenuItem mnemonicParsing="false" text="Reset Everything" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Settings">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
+                        <MenuItem mnemonicParsing="false" text="Language" />
+                    <MenuItem mnemonicParsing="false" text="Random Songs Number" />
                   </items>
                 </Menu>
                   <Menu mnemonicParsing="false" text="About">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                      <MenuItem mnemonicParsing="false" text="About">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="A" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem mnemonicParsing="false" text="Help">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="H" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
                     </items>
                   </Menu>
               </menus>
@@ -62,7 +85,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </MenuBar>
-            <HBox maxHeight="50.0" prefHeight="50.0" prefWidth="427.0" style="-fx-background-color: orange; -fx-background-radius: 0px;">
+            <HBox maxHeight="50.0" prefHeight="50.0" prefWidth="427.0" style="-fx-background-color: white; -fx-background-radius: 0px;">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Search">
                      <HBox.margin>
@@ -73,9 +96,9 @@
                      </font>
                   </Text>
                   <TextField prefHeight="25.0" prefWidth="103.0" HBox.hgrow="ALWAYS" />
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="YouTube" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" style="-fx-background-color: #ff0000; -fx-text-fill: white; -fx-border-radius: 20; -fx-border-color: none;" text="YouTube" />
                   <Region prefHeight="25.0" prefWidth="32.0" HBox.hgrow="ALWAYS" />
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="67.0" text="Random" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="67.0" styleClass="-fx-background-color" text="Random" />
                   <Region prefHeight="25.0" prefWidth="46.0" HBox.hgrow="ALWAYS" />
                   <ToggleButton mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Network" />
                </children>
@@ -93,13 +116,13 @@
       </VBox>
    </top>
    <center>
-      <HBox style="-fx-background-color: grey;" BorderPane.alignment="CENTER">
+      <HBox style="-fx-background-color: white;" BorderPane.alignment="CENTER">
          <children>
-            <TabPane style="-fx-border-color: black;" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="ALWAYS">
+            <TabPane style="-fx-border-color: transparent; -fx-background-color: white;" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="ALWAYS">
               <tabs>
                 <Tab text="Music Video List">
                      <content>
-                        <TableView style="-fx-background-color: grey;">
+                        <TableView style="-fx-background-color: white;">
                           <columns>
                             <TableColumn maxWidth="1.7976931348623157E308" prefWidth="75.0" text="#" />
                             <TableColumn maxWidth="1.7976931348623157E308" prefWidth="75.0" text="Title" />
@@ -110,7 +133,7 @@
                 </Tab>
                 <Tab text="Playlist">
                      <content>
-                        <TableView style="-fx-background-color: green;">
+                        <TableView style="-fx-background-color: white;">
                           <columns>
                             <TableColumn prefWidth="75.0" text="Time" />
                             <TableColumn prefWidth="75.0" text="Title" />
@@ -121,11 +144,11 @@
                         </TableView>
                      </content>
                 </Tab>
-                  <Tab text="Source Folder">
+                  <Tab text="Source Folder/s">
                      <content>
                         <VBox>
                            <children>
-                              <TreeTableView maxHeight="1.7976931348623157E308" style="-fx-background-color: purple;">
+                              <TreeTableView maxHeight="1.7976931348623157E308" style="-fx-background-color: white;">
                                 <columns>
                                   <TreeTableColumn prefWidth="75.0" text="File Tree" />
                                   <TreeTableColumn prefWidth="75.0" text="Path" />

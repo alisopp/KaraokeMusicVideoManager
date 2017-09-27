@@ -72,7 +72,7 @@ def create_png_favicons(favicon_directory_path, source_file):
         os.makedirs(favicon_directory_path)
 
     # all the sizes we want:
-    favicon_sizes = [16, 32, 64, 94, 128, 160, 180, 194, 256, 512]
+    favicon_sizes = [16, 32, 48, 64, 94, 128, 160, 180, 194, 256, 512]
 
     for favicon_size in favicon_sizes:
         output_path = os.path.join(
