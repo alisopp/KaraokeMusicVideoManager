@@ -14,7 +14,7 @@ $myarray = explode(",", $_REQUEST['index']);
 	<!-- Scale text on for example mobile devices: -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- Link to CSS file: -->
-	<link rel="stylesheet" href="../css/php-form.css">
+	<link rel="stylesheet" href="../css/styles_php_form.css">
 	<!-- Link to JS file: -->
 	<script src="../js/w3.js"></script>
 	<!-- Custom head tag -->
