@@ -12,8 +12,8 @@ import json
 import os
 
 PATH_HTML = "html"
-HTML_FILES = ["html_head", "html_static", "html_searchable",
-              "html_party"]
+HTML_FILES = ["html_static", "html_party"]
+HTML_HEAD = "html_head"
 PATH_PHP = "php"
 PHP_FILES = ["form", "process"]
 PATH_CSS = "css"
@@ -73,22 +73,99 @@ def html_to_json(output_path):
     # create an empty (json) dictonary for the json file
     json_html = {}
 
+    walking_html_string = ""
+
+    for line in read_text_file_to_lines(os.path.join(PATH_HTML, HTML_HEAD + ".html")):
+        # strip whitespaces, tabs and paragraphs from line
+        line = line.strip()
+        # check if the line is neither empty nor a comment
+        if line is not "":
+            if line.startswith("<head>"):
+                walking_html_string = ""
+                walking_html_string_special = ""
+            elif line.startswith("</head>"):
+                walking_html_string_special += walking_html_string
+                json_html['head'] = walking_html_string_special
+            elif line.startswith("<!--"):
+                # now the categories:
+                if "custom-begin" in line:
+                    # reset the string when the custom head begins
+                    walking_html_string_special += walking_html_string
+                    walking_html_string = ""
+                elif "custom-end" in line:
+                    walking_html_string = ""
+                elif "favicon-begin" in line:
+                    # reset the string when the custom head begins
+                    walking_html_string_special += walking_html_string
+                    walking_html_string = ""
+                elif "favicon-end" in line:
+                    # reset the string when the custom head begins
+                    walking_html_string = ""
+            else:
+                walking_html_string += line
+
     for html_file in HTML_FILES:
 
         # create walking string
         walking_html_string = ""
 
         # walk through all lines of the current css file
-        for line in read_text_file_to_lines(os.path.join(PATH_HTML, html_file + ".css")):
+        for line in read_text_file_to_lines(os.path.join(PATH_HTML, html_file + ".html")):
             # strip whitespaces, tabs and paragraphs from line
             line = line.strip()
             # check if the line is neither empty nor a comment
-            if line is not "" and not line.startswith("<!--"):
-                # if yes save content in the walking string
-                walking_html_string += line
-
-        # save the css file in the dictonary
-        json_html[html_file] = walking_html_string
+            if line is not "":
+                if line.startswith("<!--"):
+                    # now the categories:
+                    if "custom-head-begin" in line:
+                        # reset the string when the custom head begins
+                        walking_html_string = ""
+                    elif "custom-head-end" in line:
+                        # save the custom head
+                        json_html['custom-head-' +
+                                  html_file] = walking_html_string
+                    elif "body-begin" in line:
+                        # reset the string when the the body begins
+                        walking_html_string = ""
+                    elif "floating-button-begin" in line:
+                        # reset the string when the the body begins
+                        walking_html_string = ""
+                    elif "floating-button-end" in line:
+                        # save the first part of the floating button
+                        json_html['floating-button-end-' +
+                                  html_file] = walking_html_string
+                        # reset the string when the the button ends
+                        walking_html_string = ""
+                    elif "begin-section-end" in line:
+                        # save the first part of the floating button
+                        json_html['section-start-' +
+                                  html_file] = walking_html_string
+                        # reset the string when the the button ends
+                        walking_html_string = ""
+                    elif "overlay-begin" in line:
+                        # reset the string when the the body begins
+                        walking_html_string = ""
+                    elif "overlay-end" in line:
+                        # save everything before the overlay to the table
+                        json_html['overlay-' + html_file] = walking_html_string
+                        # reset the string when the the body begins
+                        walking_html_string = ""
+                    elif "table-header-begin" in line:
+                        # reset the string when the the body begins
+                        walking_html_string = ""
+                    elif "example-table-begin" in line:
+                        # save everything before the overlay to the table
+                        json_html['table-header-' +
+                                  html_file] = walking_html_string
+                    elif "example-table-end" in line:
+                        # reset the string when the example table ends
+                        walking_html_string = ""
+                    elif "body-end" in line:
+                        # save everything after the table to the end of the body
+                        json_html['after-table-' +
+                                  html_file] = walking_html_string
+                else:
+                    walking_html_string += line
 
     dictonary_to_json(output_path, json_html)
 
@@ -437,5 +514,9 @@ if __name__ == '__main__':
     # css website data to json
     CSS_OUTPUT_PATH = os.path.join(MAIN_OUTPUT_DIRECTORY, "css.json")
     css_to_json(CSS_OUTPUT_PATH)
+
+    # part of the html data to json
+    HTML_OUTPUT_PATH = os.path.join(MAIN_OUTPUT_DIRECTORY, "html.json")
+    html_to_json(HTML_OUTPUT_PATH)
 
     print("Ready!")
