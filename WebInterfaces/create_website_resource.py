@@ -15,7 +15,8 @@ PATH_HTML = "html"
 HTML_FILES = ["html_static", "html_party"]
 HTML_HEAD = "html_head"
 PATH_PHP = "php"
-PHP_FILES = ["form", "process"]
+PHP_FILE_FORM = "form"
+PHP_FILE_PROCESS = "process"
 PATH_CSS = "css"
 CSS_FILES = ["styles_static", "styles_searchable",
              "styles_party", "styles_php_form"]
@@ -170,70 +171,122 @@ def html_to_json(output_path):
     dictonary_to_json(output_path, json_html)
 
 
-
-#TODO
-def convert_party_php_forms(output_path):
+def php_to_json(output_path):
     """Save changes to the php add to playlist form template."""
 
-    # set the path to the php files
-    file_path_php_form = os.path.join(PATH_PHP, "form.php")
-    file_path_php_process = os.path.join(PATH_PHP, "process.php")
+    # create an empty (json) dictonary for the json file
+    json_php = {}
 
-    # read the static html template
-    with open(file_path_php_form) as file:
-        content_php_form = file.readlines()
+    walking_php_string = ""
 
-    with open(file_path_php_process) as file:
-        content_php_process = file.readlines()
-
-     # create an empty "walking" string
-    walking_string = ""
-
-    # create an empty dictonary for the json file
-    json_php_forms = {}
-
-    # walk through all lines of the php form
-    for line in content_php_form:
+    for line in read_text_file_to_lines(os.path.join(PATH_PHP, PHP_FILE_FORM + ".php")):
         # strip whitespaces, tabs and paragraphs from line
         line = line.strip()
-        # check if there even is a line
+        # check if the line is neither empty nor a comment
         if line is not "":
-            # check if line is the begin/end of the php tag
-            if line.startswith('<?php') or line.startswith('?>'):
-                if line.startswith('<?php'):
-                    walking_string += line + "\n"
+            if line.startswith("<!--"):
+                # now the categories:
+                if "before-html" in line:
+                    json_php['before-html-' +
+                             PHP_FILE_FORM] = walking_php_string
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+                elif "custom-head-begin" in line:
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+                elif "custom-head-end" in line:
+                    json_php['custom-head-' +
+                             PHP_FILE_FORM] = walking_php_string
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+                elif "floating-button-begin" in line:
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+                elif "floating-button-end" in line:
+                    json_php['floating-button-' +
+                             PHP_FILE_FORM] = walking_php_string
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+                elif "before-title" in line:
+                    json_php['before-title-' +
+                             PHP_FILE_FORM] = walking_php_string
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+                elif "after-title" in line:
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+                elif "before-artist" in line:
+                    json_php['before-title-' +
+                             PHP_FILE_FORM] = walking_php_string
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+                elif "after-artist" in line:
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+                elif "before-input" in line:
+                    json_php['before-input-' +
+                             PHP_FILE_FORM] = walking_php_string
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+                elif "after-input" in line:
+                    json_php['input-' + PHP_FILE_FORM] = walking_php_string
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+                elif "before-submit" in line:
+                    json_php['before-submit-' +
+                             PHP_FILE_FORM] = walking_php_string
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+                elif "after-submit" in line:
+                    json_php['submit-' + PHP_FILE_FORM] = walking_php_string
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+                elif "body-end" in line:
+                    json_php['after-submit-' +
+                             PHP_FILE_FORM] = walking_php_string
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+            elif line.startswith('<?php'):
+                if line.startswith('<?php '):
+                    walking_php_string += line
                 else:
-                    walking_string += "\n" + line
-            # check if line is a comment
+                    walking_php_string += line + "\n"
+            elif line.startswith('?>'):
+                walking_php_string += "\n" + line
             elif not line.startswith('#'):
-                walking_string += line
-    # when all lines are read add the reremaining content to the json dictonary
-    json_php_forms['form'] = walking_string
+                walking_php_string += line
 
-    walking_string = ""
+    walking_php_string = ""
 
-    # walk through all lines of the php process document
-    for line in content_php_process:
+    for line in read_text_file_to_lines(os.path.join(PATH_PHP, PHP_FILE_PROCESS + ".php")):
         # strip whitespaces, tabs and paragraphs from line
         line = line.strip()
-        # check if there even is a line
+        # check if the line is neither empty nor a comment
         if line is not "":
-            if line.startswith('<?php') or line.startswith('?>'):
-                if line.startswith('<?php'):
-                    walking_string += line + "\n"
+            if line.startswith("#"):
+                # now the categories:
+                if "link-begin" in line:
+                    json_php['before-link-' +
+                             PHP_FILE_PROCESS] = walking_php_string
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+                if "link-end" in line:
+                    json_php['link-' + PHP_FILE_PROCESS] = walking_php_string
+                    # reset the string when the custom head begins
+                    walking_php_string = ""
+            elif line.startswith('<?php'):
+                if line.startswith('<?php '):
+                    walking_php_string += line
                 else:
-                    walking_string += "\n" + line
-            # check if line is a comment
-            elif not line.startswith('#'):
-                walking_string += line
-    # when all lines are read add the reremaining content to the json dictonary
-    json_php_forms['process'] = walking_string
+                    walking_php_string += line + "\n"
+            elif line.startswith('?>'):
+                walking_php_string += "\n" + line
+            else:
+                walking_php_string += line
 
-    # save the json dictionary in a json file
-    with open(output_path, 'w') as outfile:
-        json.dump(json_php_forms, outfile)
+    json_php['after-link-' + PHP_FILE_PROCESS] = walking_php_string
 
-    print("- Json file exported: " + output_path)
+    dictonary_to_json(output_path, json_php)
 
 
 def copy_we_js(output_path):
@@ -274,16 +327,13 @@ if __name__ == '__main__':
     CSS_OUTPUT_PATH = os.path.join(MAIN_OUTPUT_DIRECTORY, "css.json")
     css_to_json(CSS_OUTPUT_PATH)
 
-    # part of the html data to json
+    # the html data to json
     HTML_OUTPUT_PATH = os.path.join(MAIN_OUTPUT_DIRECTORY, "html.json")
     html_to_json(HTML_OUTPUT_PATH)
 
-    # php pages are still missing!!!!!
-    # PARTY_OUTPUT_PATH = os.path.join(MAIN_OUTPUT_DIRECTORY, "html_page_party.json")
-    # convert_party_html(PARTY_OUTPUT_PATH)
-    # party php websites data
-    # PARTY_PHP_OUTPUT_PATH = os.path.join(MAIN_OUTPUT_DIRECTORY, "php_pages_party.json")
-    # convert_party_php_forms(PARTY_PHP_OUTPUT_PATH)
+    # part of the php data to json
+    PHP_OUTPUT_PATH = os.path.join(MAIN_OUTPUT_DIRECTORY, "php.json")
+    php_to_json(PHP_OUTPUT_PATH)
 
     # copy javascript to websites data libraries
     JAVASCRIPT_W3_OUTPUT_PATH = os.path.join(

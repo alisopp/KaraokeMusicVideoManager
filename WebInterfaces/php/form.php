@@ -1,4 +1,3 @@
-<!--
 <?php
 # Place posted information in an array
 $myarray = explode(",", $_REQUEST['index']);
@@ -6,7 +5,7 @@ $myarray = explode(",", $_REQUEST['index']);
 # 1 = title
 # 2 = artist
 ?>
--->
+<!-- "before-html"-->
 <!DOCTYPE html>
 <html>
 
@@ -18,38 +17,56 @@ $myarray = explode(",", $_REQUEST['index']);
 	<!-- Link to JS file: -->
 	<script src="../js/w3.js"></script>
 	<!-- Custom head tag -->
+
+	<!-- "custom-head-begin" -->
+
+	<!-- BG color -->
+	<meta name="theme-color" content="#24a204" />
+
+	<!-- "custom-head-end" -->
 </head>
 
 <body>
+	<!-- "body-begin" -->
 
 	<!-- Floating button with link to current playlist -->
+	<!-- "floating-button-begin" -->
 	<a href="#" onclick="history.back();" class="floating-button"></a>
 	<div class="label-container">
 		<div class="label-text">Back to the list</div>
 	</div>
+	<!-- "floating-button-end" -->
 
 	<!-- Section that contains the table with all found music video -->
 	<section class="form-bg">
 
 		<form action="process.php" class="submit-form">
-			<p class="form-title">Submit this song to the playlist:</p>
-			<p class="song-title">
-				<?php echo $myarray[1]; ?>
-			</p>
-			<p class="artist-title">from
-				<?php echo $myarray[2]; ?>
-			</p>
+			<p class="form-title">
+				<!-- "before-title" -->
+				Submit this song to the playlist:</p>
+				<!-- "after-title" -->
+			<p class="song-title"><?php echo $myarray[1]; ?></p>
+			<p class="artist-title">
+				<!-- "before-artist" -->
+				from
+				<!-- "after-artist" -->
+				<?php echo $myarray[2]; ?></p>
 
 			<input type="hidden" name="song" value="<?php echo $myarray[0]; ?>">
 			<input type="hidden" name="title" value="<?php echo $myarray[1]; ?>">
 			<input type="hidden" name="artist" value="<?php echo $myarray[2]; ?>">
+			<!-- "before-input" -->
 			<input class="requiered-button" type="text" name="author" placeholder="Your name/s..." required><br>
 			<input type="text" name="comment" placeholder="Your comment..."><br>
+			<!-- "after-input" -->
 			<br>
+			<!-- "before-submit" -->
 			<input class="submit-button" type="submit" value="Submit">
+			<!-- "after-submit" -->
 		</form>
 
 	</section>
+	<!-- "body-end" -->
 </body>
 
 </html>

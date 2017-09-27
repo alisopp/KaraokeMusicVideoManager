@@ -12,5 +12,7 @@ fwrite($fp, json_encode($content));
 fclose($fp);
 
 # Redirect the user to the main list
+# "link-begin"
 echo "<script> location.href='../html/party.html'; </script>";
+# "link-end"
 ?>
