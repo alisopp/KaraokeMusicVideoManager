@@ -189,7 +189,7 @@ public class ExportMusicVideoData {
 	 * 
 	 * @return Object[][] ([][#, artist, title])
 	 */
-	public Object[][] musicVideoListToObjectArray(MusicVideo[] musicVideoList, Integer rowNumber) {
+	public static Object[][] musicVideoListToObjectArray(MusicVideo[] musicVideoList, Integer rowNumber) {
 
 		// create a array of objects with a object that has 3 entries
 		Object[][] tableData = new Object[musicVideoList.length][rowNumber];
@@ -208,7 +208,7 @@ public class ExportMusicVideoData {
 	 * 
 	 * @return content (String[])
 	 */
-	public String generateCsvContent(MusicVideo[] musicVideoList, String[] columns) {
+	public static String generateCsvContent(MusicVideo[] musicVideoList, String[] columns) {
 
 		int columnNumber = columns.length;
 		int rowNumber = musicVideoList.length;
@@ -238,7 +238,7 @@ public class ExportMusicVideoData {
 	 * 
 	 * @return content (String[])
 	 */
-	public String generateJsonContent(MusicVideo[] musicVideoList, String[] columns) {
+	public static String generateJsonContent(MusicVideo[] musicVideoList, String[] columns) {
 
 		int columnNumber = columns.length;
 		int rowNumber = musicVideoList.length;

@@ -38,11 +38,16 @@ public class LocalTest {
 		// Path htmlSite = Paths.get("index.html");
 		// testHandler.saveFileHtmlBasic(htmlSite);
 
-		testHandler.saveFileHtmlBasic(Paths.get("basic.html"));
+		testHandler.saveCsv(Paths.get("basic.csv"));
 
-		testHandler.saveFileHtmlSearchable(Paths.get("search.html"), Paths.get("w3.js"));
+		testHandler.saveJson(Paths.get("basic.json"));
 
-		testHandler.saveFileHtmlParty(Paths.get("party.html"), Paths.get("w3.js"));
+		// testHandler.saveFileHtmlBasic(Paths.get("basic.html"));
+
+		// testHandler.saveFileHtmlSearchable(Paths.get("search.html"),
+		// Paths.get("w3.js"));
+
+		// testHandler.saveFileHtmlParty(Paths.get("party.html"), Paths.get("w3.js"));
 
 		if (savedSettings.exists()) {
 			// save changes if nothing is there

@@ -427,4 +427,26 @@ public class MusicVideoHandler {
 		return exportSuccsessful;
 	}
 
+	public boolean saveCsv(Path whereToWriteTheFile) {
+
+		if (whereToWriteTheFile == null) {
+			System.err.println("Path can't be null!");
+			return false;
+		}
+
+		return FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(),
+				ExportMusicVideoData.generateCsvContent(this.musicVideoList, this.columnNames).split("\n"));
+	}
+
+	public boolean saveJson(Path whereToWriteTheFile) {
+
+		if (whereToWriteTheFile == null) {
+			System.err.println("Path can't be null!");
+			return false;
+		}
+
+		return FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(),
+				new String[] { ExportMusicVideoData.generateJsonContent(this.musicVideoList, this.columnNames) });
+	}
+
 }
