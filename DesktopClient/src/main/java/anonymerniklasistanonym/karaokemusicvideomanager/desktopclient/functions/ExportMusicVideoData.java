@@ -16,6 +16,26 @@ public class ExportMusicVideoData {
 	 * 
 	 * @return table (String)
 	 */
+	public static String generateHtmlTableDataStatic(Object[][] data) {
+
+		return createHtmlTableRows(data, "");
+	}
+
+	/**
+	 * Generate a HTML table string
+	 * 
+	 * @return table (String)
+	 */
+	public static String generateHtmlTableDataSearch(Object[][] data) {
+
+		return createHtmlTableRows(data, " class=\"item\"");
+	}
+
+	/**
+	 * Generate a HTML table string
+	 * 
+	 * @return table (String)
+	 */
 	public static String generateHtmlTable(Object[][] data, String[] columnNames) {
 
 		return generateHtmlTableWithSearch(data, columnNames, "", "");
@@ -177,7 +197,7 @@ public class ExportMusicVideoData {
 		return null;
 	}
 
-	public static String exportJavascriptW3() {
+	public static String getW3JavascriptText() {
 		String jsonContent = ClassResourceReaderModule.getTextContent("websites/libraries/javascript.json")[0];
 		JsonObject jsonObject = JsonModule.loadJsonFromString(jsonContent);
 
@@ -234,7 +254,7 @@ public class ExportMusicVideoData {
 	}
 
 	/**
-	 * Generate CSV table content
+	 * Generate JSON table content
 	 * 
 	 * @return content (String[])
 	 */
@@ -271,11 +291,6 @@ public class ExportMusicVideoData {
 		jsonObject.add("table-body", tableBody);
 
 		return JsonModule.dumpJsonObjectToString(jsonObject);
-	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

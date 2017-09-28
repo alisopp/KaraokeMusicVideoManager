@@ -324,7 +324,7 @@ public class FileReadWriteModule {
 	 */
 	public static boolean copy(InputStream sourceFile, Path destinationPath) {
 
-		System.out.println("Copying ->" + sourceFile + "\n\tto ->" + destinationPath.toString());
+		System.out.println(">> Copying to -> " + destinationPath.toString());
 
 		try {
 			destinationPath = destinationPath.toAbsolutePath();

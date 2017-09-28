@@ -76,6 +76,8 @@ td:nth-child(3) {
 th:hover {
 	/* On selection make border and background darker */
 	background-color: #333333;
+	/* Notify with another cursor that this is interactive */
+	cursor: pointer;
 }
 
 /* On hover of a table row do this with all cells of the table row: */

@@ -6,15 +6,20 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Stream;
 
+import javax.json.JsonObject;
+
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions.ExportImportSettings;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions.ExportMusicVideoData;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ClassResourceReaderModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.JsonModule;
 
 public class MusicVideoHandler {
 
@@ -393,60 +398,233 @@ public class MusicVideoHandler {
 		return tableData;
 	}
 
-	public enum WEBSITE_TYPE {
-		HTML_LIST, HTML_SEARCHABLE, PHP_PARTY
+	/**
+	 * Create the favicon folder with all the icons in a given directory
+	 * 
+	 * @param outputFolder
+	 *            (Path | Path of directory in which the favicon folder should be
+	 *            created)
+	 * @return
+	 */
+	private boolean copyFavicons(Path outputFolder) {
+
+		if (outputFolder == null) {
+			System.err.println("Path is null!");
+		}
+
+		if (!outputFolder.toFile().exists()) {
+			System.err.println("Folder to copy does not exist!");
+		}
+
+		try {
+
+			outputFolder = outputFolder.toAbsolutePath();
+
+			String faviconFolder = outputFolder.toString() + "/favicons";
+
+			// create the favicon directory
+			FileReadWriteModule.createDirectory(new File(faviconFolder));
+
+			// copy all .png images
+			Integer[] sizes = { 16, 32, 48, 64, 94, 128, 160, 180, 194, 256, 512 };
+
+			for (Integer size : sizes) {
+				String inputPath = "websites/favicons/favicon-" + size + "x" + size + ".png";
+				Path outpuPath = Paths.get(faviconFolder + "/favicon-" + size + "x" + size + ".png");
+				FileReadWriteModule.copy(ClassResourceReaderModule.getInputStream(inputPath), outpuPath);
+			}
+
+			// copy .svg image
+			FileReadWriteModule.copy(ClassResourceReaderModule.getInputStream("websites/favicons/favicon.svg"),
+					Paths.get(faviconFolder + "/favicon.svg"));
+
+			// copy .ico image
+			FileReadWriteModule.copy(ClassResourceReaderModule.getInputStream("websites/favicons/icon.ico"),
+					Paths.get(faviconFolder + "/icon.ico"));
+
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
 	}
 
-	public boolean saveHtmlList(Path outputFile) {
-		return htmlAndPhpExport(outputFile, WEBSITE_TYPE.HTML_LIST);
+	private String generateHeadName() {
+
+		// string builder for all links
+		StringBuilder specialHead = new StringBuilder("");
+
+		String name = "MusicVideoManager";
+		specialHead.append("<title>" + name + "</title>");
+		specialHead.append("<meta name=\"apple-mobile-web-app-title\" content=\"" + name + "\">");
+		specialHead.append("<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">");
+		specialHead.append("<meta name=\"application-name\" content=\"" + name + "\">");
+
+		return specialHead.toString();
+	}
+
+	private String generateFaviconLinks() {
+
+		// string builder for all links
+		StringBuilder faviconLinks = new StringBuilder("");
+
+		// firefox svg link
+		faviconLinks.append("<link rel=\"icon\" type=\"image/svg+xml\" href=\"favicons/favicon.svg\">");
+
+		// apple links
+		faviconLinks.append("<link rel=\"apple-touch-icon\" href=\"favicons/favicon-180x180.png\">");
+		faviconLinks.append("<link rel=\"mask-icon\" href=\"favicons/favicon.svg\" color=\"#000000\">");
+
+		// add all .png images
+		Integer[] sizes = { 16, 32, 48, 64, 94, 128, 160, 180, 194, 256, 512 };
+
+		for (Integer size : sizes) {
+			faviconLinks.append("<link rel=\"icon\" type=\"image/png\" href=\"favicons/favicon-" + size + "x" + size
+					+ ".png\" sizes=\"" + size + "x" + size + "\">");
+		}
+
+		return faviconLinks.toString();
+	}
+
+	private String generateHtmlSearch() {
+		// string builder for the whole site
+		StringBuilder htmlStatic = new StringBuilder("");
+
+		// json data html file
+		JsonObject htmlJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/html.json")[0]);
+		JsonObject cssJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/css.json")[0]);
+		JsonObject jsJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/js.json")[0]);
+
+		// add default head
+		htmlStatic.append("<!DOCTYPE html><html><head>");
+		// add generic head
+		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "head"));
+		// add custom head for static
+		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "custom-head-html_party"));
+
+		// add title and more
+		htmlStatic.append(generateHeadName());
+
+		// add links to all the images
+		htmlStatic.append(generateFaviconLinks());
+
+		// add js
+		htmlStatic.append("<script>");
+		htmlStatic.append(JsonModule.getValueString(jsJsonContent, "w3-js"));
+
+		// add css
+		htmlStatic.append("</script><style>");
+		htmlStatic.append(JsonModule.getValueString(cssJsonContent, "styles_static"));
+		htmlStatic.append(JsonModule.getValueString(cssJsonContent, "styles_searchable"));
+
+		// close head and open body
+		htmlStatic.append("</style></head><body>");
+		// add section begin
+		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "section-start-html_party"));
+
+		// add the overlay / table header
+		String tableHeader = JsonModule.getValueString(htmlJsonContent, "overlay-html_party");
+		tableHeader = tableHeader.replaceFirst("#", this.columnNames[0]);
+		tableHeader = tableHeader.replaceFirst("Artist", this.columnNames[1]);
+		tableHeader = tableHeader.replaceFirst("Title", this.columnNames[2]);
+		htmlStatic.append(tableHeader);
+
+		// add the second table header (for print)
+		String tableHeader2 = JsonModule.getValueString(htmlJsonContent, "table-header-html_party");
+		tableHeader2 = tableHeader2.replaceFirst("#", this.columnNames[0]);
+		tableHeader2 = tableHeader2.replaceFirst("Artist", this.columnNames[1]);
+		tableHeader2 = tableHeader2.replaceFirst("Title", this.columnNames[2]);
+		htmlStatic.append(tableHeader2);
+
+		// table data
+		htmlStatic.append(ExportMusicVideoData.generateHtmlTableDataSearch(musicVideoListToTable()));
+
+		// add after table data
+		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "before-form-html_party"));
+		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "after-table-html_party"));
+
+		return htmlStatic.toString();
+	}
+
+	private String generateHtmlStatic() {
+
+		// string builder for the whole site
+		StringBuilder htmlStatic = new StringBuilder("");
+
+		// json data html file
+		JsonObject htmlJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/html.json")[0]);
+		JsonObject cssJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/css.json")[0]);
+
+		// add default head
+		htmlStatic.append("<!DOCTYPE html><html><head>");
+		// add generic head
+		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "head"));
+		// add custom head for static
+		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "custom-head-html_static"));
+
+		// add title and more
+		htmlStatic.append(generateHeadName());
+
+		// add links to all the images
+		htmlStatic.append(generateFaviconLinks());
+
+		// add css
+		htmlStatic.append("<style>");
+		htmlStatic.append(JsonModule.getValueString(cssJsonContent, "styles_static"));
+
+		// close head and open body
+		htmlStatic.append("</style></head><body>");
+		// add section begin: section-start-html_static
+		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "section-start-html_static"));
+
+		// add table header
+		String tableHeader = JsonModule.getValueString(htmlJsonContent, "table-header-html_static");
+		tableHeader = tableHeader.replaceFirst("#", this.columnNames[0]);
+		tableHeader = tableHeader.replaceFirst("Artist", this.columnNames[1]);
+		tableHeader = tableHeader.replaceFirst("Title", this.columnNames[2]);
+		htmlStatic.append(tableHeader);
+
+		// table data
+		htmlStatic.append(ExportMusicVideoData.generateHtmlTableDataStatic(musicVideoListToTable()));
+
+		// add after table data
+		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "after-table-html_static"));
+
+		return htmlStatic.toString();
+	}
+
+	public boolean saveHtmlList(Path outputDirectory, boolean faviconsOn) {
+
+		if (faviconsOn) {
+			copyFavicons(outputDirectory);
+		}
+
+		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.html"),
+				new String[] { generateHtmlStatic() });
+	}
+
+	public boolean saveHtmlSearch(Path outputDirectory, boolean faviconsOn) {
+
+		if (faviconsOn) {
+			copyFavicons(outputDirectory);
+		}
+
+		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.html"),
+				new String[] { generateHtmlSearch() });
 	}
 
 	public boolean saveHtmlStructureSearchable(Path outputDirectory) {
-		return htmlAndPhpExport(outputDirectory, WEBSITE_TYPE.HTML_SEARCHABLE);
-	}
 
-	public boolean savePHPStructureParty(Path outputDirectory) {
-		return htmlAndPhpExport(outputDirectory, WEBSITE_TYPE.PHP_PARTY);
-	}
-
-	private boolean htmlAndPhpExport(Path outputPath, WEBSITE_TYPE type) {
-
-		if (type == WEBSITE_TYPE.HTML_LIST) {
-			// only CSS -> no extra file or icon
-			return FileReadWriteModule.writeTextFile(outputPath.toFile(), new String[] {
-					ExportMusicVideoData.generateHtmlSiteStatic(musicVideoListToTable(), this.columnNames) });
-		} else if (type == WEBSITE_TYPE.HTML_SEARCHABLE) {
-			// export the whole package:
-			// create directory for favicons
-			// copy in there all favicons
-			// create next to the directory a index file which is searchable
-
-			return FileReadWriteModule.writeTextFile(outputPath.toFile(), new String[] {
-					ExportMusicVideoData.generateHtmlSiteStatic(musicVideoListToTable(), this.columnNames) });
-		} else if (type == WEBSITE_TYPE.PHP_PARTY) {
-			// export the whole package:
-			// create directory for favicons
-			// copy in there all favicons
-			// create next to the directory a index file which is in party mode
-			// create next to this file a party.html file for the live view
-			// create next to these files the two php files for handling requests
-		}
-
-		StringBuilder outputStringIndexFile = new StringBuilder("");
-
-		if (type == WEBSITE_TYPE.PHP_PARTY) {
-			// load php begin
-		}
-
-		outputStringIndexFile.append("<!DOCTYPE html><html><head>");
-
-		// load head
-
-		// load custom head
-
-		outputStringIndexFile.append("<!DOCTYPE html><html><head>");
-
-		return false;
+		copyFavicons(outputDirectory);
+		// return htmlAndPhpExport(outputDirectory, WEBSITE_TYPE.HTML_SEARCHABLE);
+		return true;
 	}
 
 	public boolean saveFileHtmlBasic(Path whereToWriteTheFile) {
@@ -460,37 +638,13 @@ public class MusicVideoHandler {
 				ExportMusicVideoData.generateHtmlSiteStatic(musicVideoListToTable(), this.columnNames) });
 	}
 
-	public boolean saveFileHtmlSearchable(Path whereToWriteTheFile, Path whereToWriteTheFileJavascript) {
-
-		if (whereToWriteTheFile == null) {
-			System.err.println("Path can't be null!");
-			return false;
-		}
-
-		boolean exportSuccsessful = FileReadWriteModule.writeTextFile(whereToWriteTheFile.toFile(),
-				new String[] {
-						ExportMusicVideoData.generateHtmlSiteDynamic(musicVideoListToTable(), this.columnNames) })
-				&& FileReadWriteModule.writeTextFile(whereToWriteTheFileJavascript.toFile(),
-						new String[] { ExportMusicVideoData.exportJavascriptW3() });
-
-		return exportSuccsessful;
-	}
-
-	public boolean saveFileHtmlParty(Path whereToWriteTheFile, Path whereToWriteTheFileJavascript) {
-
-		if (whereToWriteTheFile == null) {
-			System.err.println("Path can't be null!");
-			return false;
-		}
-
-		boolean exportSuccsessful = FileReadWriteModule.writeTextFile(whereToWriteTheFile.toFile(),
-				new String[] { ExportMusicVideoData.generateHtmlSiteParty(musicVideoListToTable(), this.columnNames) })
-				&& FileReadWriteModule.writeTextFile(whereToWriteTheFileJavascript.toFile(),
-						new String[] { ExportMusicVideoData.exportJavascriptW3() });
-
-		return exportSuccsessful;
-	}
-
+	/**
+	 * Save the music video list in CSV format (Excel)
+	 * 
+	 * @param whereToWriteTheFile
+	 *            (Path)
+	 * @return writeWasSuccsessful (Boolean)
+	 */
 	public boolean saveCsv(Path whereToWriteTheFile) {
 
 		if (whereToWriteTheFile == null) {
@@ -502,6 +656,13 @@ public class MusicVideoHandler {
 				ExportMusicVideoData.generateCsvContent(this.musicVideoList, this.columnNames).split("\n"));
 	}
 
+	/**
+	 * Save the music video list in JSON format
+	 * 
+	 * @param whereToWriteTheFile
+	 *            (Path)
+	 * @return writeWasSuccsessful (Boolean)
+	 */
 	public boolean saveJson(Path whereToWriteTheFile) {
 
 		if (whereToWriteTheFile == null) {

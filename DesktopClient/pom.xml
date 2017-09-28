@@ -55,6 +55,7 @@
 					<include>**/*.fxml</include>
 					<include>**/*.ico</include>
 					<include>**/*.png</include>
+					<include>**/*.svg</include>
 				</includes>
 			</resource>
 		</resources>

@@ -27,7 +27,11 @@ public class LocalTest {
 		// " + "test\\3"));
 		testHandler.updateMusicVideoList();
 
-		testHandler.printMusicVideoList();
+		// testHandler.printMusicVideoList();
+
+		testHandler.saveHtmlSearch(Paths.get("C:\\Users\\nikla\\Downloads"), true);
+		// testHandler.saveHtmlList(Paths.get("C:\\Users\\nikla\\Downloads"), true);
+
 		//
 		// testHandler.openMusicVideo(0);
 		// testHandler.openMusicVideo(2);
@@ -37,9 +41,9 @@ public class LocalTest {
 		// Path htmlSite = Paths.get("index.html");
 		// testHandler.saveFileHtmlBasic(htmlSite);
 
-		testHandler.saveCsv(Paths.get("basic.csv"));
+		// testHandler.saveCsv(Paths.get("basic.csv"));
 
-		testHandler.saveJson(Paths.get("basic.json"));
+		// testHandler.saveJson(Paths.get("basic.json"));
 
 		// testHandler.saveFileHtmlBasic(Paths.get("basic.html"));
 

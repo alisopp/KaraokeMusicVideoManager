@@ -151,6 +151,11 @@ def html_to_json(output_path):
                         json_html['overlay-' + html_file] = walking_html_string
                         # reset the string when the the body begins
                         walking_html_string = ""
+                    elif "form-start" in line:
+                        # save everything before the overlay to the table
+                        json_html['form-start-' + html_file] = walking_html_string
+                        # reset the string when the the body begins
+                        walking_html_string = ""
                     elif "table-header-begin" in line:
                         # reset the string when the the body begins
                         walking_html_string = ""
@@ -160,6 +165,14 @@ def html_to_json(output_path):
                                   html_file] = walking_html_string
                     elif "example-table-end" in line:
                         # reset the string when the example table ends
+                        walking_html_string = ""
+                    elif "before-form-end" in line:
+                        json_html['before-form-' + html_file] = walking_html_string
+                        # reset the string when the the body begins
+                        walking_html_string = ""
+                    elif "after-form-end" in line:
+                        json_html['form-end-' + html_file] = walking_html_string
+                        # reset the string when the the body begins
                         walking_html_string = ""
                     elif "body-end" in line:
                         # save everything after the table to the end of the body
@@ -336,8 +349,7 @@ if __name__ == '__main__':
     php_to_json(PHP_OUTPUT_PATH)
 
     # copy javascript to websites data libraries
-    JAVASCRIPT_W3_OUTPUT_PATH = os.path.join(
-        MAIN_OUTPUT_DIRECTORY + "/libraries", "javascript.json")
+    JAVASCRIPT_W3_OUTPUT_PATH = os.path.join(MAIN_OUTPUT_DIRECTORY, "js.json")
     copy_we_js(JAVASCRIPT_W3_OUTPUT_PATH)
 
     print("Ready!")
