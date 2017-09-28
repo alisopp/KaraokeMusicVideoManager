@@ -29,7 +29,8 @@ public class LocalTest {
 
 		// testHandler.printMusicVideoList();
 
-		testHandler.saveHtmlSearch(Paths.get("C:\\Users\\nikla\\Downloads"), true);
+		testHandler.saveHtmlParty(Paths.get("C:\\Users\\nikla\\Downloads\\XAMPP Portable\\htdocs"), true);
+		// testHandler.saveHtmlSearch(Paths.get("C:\\Users\\nikla\\Downloads"), true);
 		// testHandler.saveHtmlList(Paths.get("C:\\Users\\nikla\\Downloads"), true);
 
 		//

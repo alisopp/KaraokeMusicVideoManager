@@ -133,7 +133,7 @@ def html_to_json(output_path):
                         walking_html_string = ""
                     elif "floating-button-end" in line:
                         # save the first part of the floating button
-                        json_html['floating-button-end-' +
+                        json_html['floating-button-' +
                                   html_file] = walking_html_string
                         # reset the string when the the button ends
                         walking_html_string = ""
@@ -153,7 +153,8 @@ def html_to_json(output_path):
                         walking_html_string = ""
                     elif "form-start" in line:
                         # save everything before the overlay to the table
-                        json_html['form-start-' + html_file] = walking_html_string
+                        json_html['form-start-' +
+                                  html_file] = walking_html_string
                         # reset the string when the the body begins
                         walking_html_string = ""
                     elif "table-header-begin" in line:
@@ -167,11 +168,13 @@ def html_to_json(output_path):
                         # reset the string when the example table ends
                         walking_html_string = ""
                     elif "before-form-end" in line:
-                        json_html['before-form-' + html_file] = walking_html_string
+                        json_html['before-form-' +
+                                  html_file] = walking_html_string
                         # reset the string when the the body begins
                         walking_html_string = ""
                     elif "after-form-end" in line:
-                        json_html['form-end-' + html_file] = walking_html_string
+                        json_html['form-end-' +
+                                  html_file] = walking_html_string
                         # reset the string when the the body begins
                         walking_html_string = ""
                     elif "body-end" in line:

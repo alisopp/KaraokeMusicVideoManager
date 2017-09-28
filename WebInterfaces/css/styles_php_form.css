@@ -246,6 +246,18 @@ a.floating-button:hover + div.label-container {
 		/* Zero space between the area and the window border */
 		padding: 0;
 	}
+	/* Floating button properties: */
+	.floating-button {
+		/* Give it some box shadow */
+		box-shadow: 0px 0px 0px rgba(153, 153, 153, 0);
+	}
+	/* Floating button on hover/touch: */
+	.floating-button:hover {
+		/* make the background color a bit brighter */
+		background-color: #25b701;
+		/* Change the box shadow for a depth effect */
+		box-shadow: 0px 0px 0px rgba(153, 153, 153, 0);
+	}
 }
 
 /* CSS for normal to big devices (tablets, laptops, desktop, ...): */

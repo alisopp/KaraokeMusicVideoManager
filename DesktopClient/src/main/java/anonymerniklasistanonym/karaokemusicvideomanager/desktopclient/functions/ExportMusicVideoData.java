@@ -18,7 +18,7 @@ public class ExportMusicVideoData {
 	 */
 	public static String generateHtmlTableDataStatic(Object[][] data) {
 
-		return createHtmlTableRows(data, "");
+		return createHtmlTableRows(data, "", false);
 	}
 
 	/**
@@ -28,7 +28,17 @@ public class ExportMusicVideoData {
 	 */
 	public static String generateHtmlTableDataSearch(Object[][] data) {
 
-		return createHtmlTableRows(data, " class=\"item\"");
+		return createHtmlTableRows(data, " class=\"item\"", false);
+	}
+
+	/**
+	 * Generate a HTML table string
+	 * 
+	 * @return table (String)
+	 */
+	public static String generateHtmlTableDataParty(Object[][] data) {
+
+		return createHtmlTableRows(data, " class=\"item\"", true);
 	}
 
 	/**
@@ -58,14 +68,14 @@ public class ExportMusicVideoData {
 		}
 		sb.append("</tr></thead><tbody>");
 
-		sb.append(createHtmlTableRows(data, rowClass));
+		sb.append(createHtmlTableRows(data, rowClass, false));
 
 		sb.append("</tbody></table>");
 
 		return sb.toString();
 	}
 
-	private static String createHtmlTableRows(Object[][] data, String rowClass) {
+	private static String createHtmlTableRows(Object[][] data, String rowClass, boolean useButtons) {
 
 		if (data == null || data.length == 0) {
 			System.out.println("There is no data");
@@ -77,12 +87,24 @@ public class ExportMusicVideoData {
 
 		StringBuilder sb = new StringBuilder("");
 
-		for (int a = 0; a < rowNumber; a++) {
-			sb.append("<tr" + rowClass + ">");
-			for (int b = 0; b < columnNumber; b++) {
-				sb.append("<td>" + data[a][b] + "</td>");
+		if (!useButtons) {
+			for (int a = 0; a < rowNumber; a++) {
+				sb.append("<tr" + rowClass + ">");
+				for (int b = 0; b < columnNumber; b++) {
+					sb.append("<td>" + data[a][b] + "</td>");
+				}
+				sb.append("</tr>");
 			}
-			sb.append("</tr>");
+		} else {
+			for (int a = 0; a < rowNumber; a++) {
+				sb.append("<tr" + rowClass + ">");
+				for (int b = 0; b < columnNumber - 1; b++) {
+					sb.append("<td>" + data[a][b] + "</td>");
+				}
+				sb.append("<td><button name=\"index\" type=\"submit\" value=\"" + data[a][0] + ',' + data[a][1] + ','
+						+ data[a][2] + "\">" + data[a][2] + "</button></td>");
+				sb.append("</tr>");
+			}
 		}
 
 		return sb.toString();

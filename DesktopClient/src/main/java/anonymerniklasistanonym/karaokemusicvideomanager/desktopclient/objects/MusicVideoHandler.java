@@ -488,7 +488,7 @@ public class MusicVideoHandler {
 		return faviconLinks.toString();
 	}
 
-	private String generateHtmlSearch() {
+	private String generateHtmlSearchPartyMain(boolean party) {
 		// string builder for the whole site
 		StringBuilder htmlStatic = new StringBuilder("");
 
@@ -522,8 +522,17 @@ public class MusicVideoHandler {
 		htmlStatic.append(JsonModule.getValueString(cssJsonContent, "styles_static"));
 		htmlStatic.append(JsonModule.getValueString(cssJsonContent, "styles_searchable"));
 
+		if (party) {
+			htmlStatic.append(JsonModule.getValueString(cssJsonContent, "styles_party"));
+		}
+
 		// close head and open body
 		htmlStatic.append("</style></head><body>");
+
+		if (party) {
+			htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "floating-button-html_party"));
+		}
+
 		// add section begin
 		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "section-start-html_party"));
 
@@ -541,14 +550,37 @@ public class MusicVideoHandler {
 		tableHeader2 = tableHeader2.replaceFirst("Title", this.columnNames[2]);
 		htmlStatic.append(tableHeader2);
 
+		if (party) {
+			htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "form-start-html_party"));
+		}
+
 		// table data
-		htmlStatic.append(ExportMusicVideoData.generateHtmlTableDataSearch(musicVideoListToTable()));
+		if (party) {
+			htmlStatic.append(ExportMusicVideoData.generateHtmlTableDataParty(musicVideoListToTable()));
+		} else {
+			htmlStatic.append(ExportMusicVideoData.generateHtmlTableDataSearch(musicVideoListToTable()));
+		}
 
 		// add after table data
 		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "before-form-html_party"));
+
+		if (party) {
+			htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "form-end-html_party"));
+		}
+
 		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "after-table-html_party"));
 
+		htmlStatic.append("</body></html>");
+
 		return htmlStatic.toString();
+	}
+
+	private String generateHtmlParty() {
+		return generateHtmlSearchPartyMain(true);
+	}
+
+	private String generateHtmlSearch() {
+		return generateHtmlSearchPartyMain(false);
 	}
 
 	private String generateHtmlStatic() {
@@ -620,22 +652,17 @@ public class MusicVideoHandler {
 				new String[] { generateHtmlSearch() });
 	}
 
-	public boolean saveHtmlStructureSearchable(Path outputDirectory) {
+	public boolean saveHtmlParty(Path outputDirectory, boolean faviconsOn) {
 
-		copyFavicons(outputDirectory);
-		// return htmlAndPhpExport(outputDirectory, WEBSITE_TYPE.HTML_SEARCHABLE);
-		return true;
-	}
-
-	public boolean saveFileHtmlBasic(Path whereToWriteTheFile) {
-
-		if (whereToWriteTheFile == null) {
-			System.err.println("Path can't be null!");
-			return false;
+		if (faviconsOn) {
+			copyFavicons(outputDirectory);
 		}
 
-		return FileReadWriteModule.writeTextFile(whereToWriteTheFile.toFile(), new String[] {
-				ExportMusicVideoData.generateHtmlSiteStatic(musicVideoListToTable(), this.columnNames) });
+		// now add a folder with the PHP files
+		// + change the PHP link in HTML form
+
+		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.html"),
+				new String[] { generateHtmlParty() });
 	}
 
 	/**
