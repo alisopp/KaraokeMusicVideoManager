@@ -8,6 +8,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -64,6 +67,11 @@ public class Dialogs {
 
 	}
 
+	/**
+	 * For a simpler handling with the file chooser -> use this instead of
+	 * Integers<br>
+	 * (CHOOSE_ACTION.NORMAL.value => 0, CHOOSE_ACTION.MULTI_FILE.value => 1,...)
+	 */
 	public static enum CHOOSE_ACTION {
 		NORMAL(0), MULTI_FILE(1), SAVE(2);
 
@@ -171,6 +179,56 @@ public class Dialogs {
 			System.out.println(" << No directory was selected");
 			return null;
 		}
+
+	}
+
+	/**
+	 * 
+	 * @param mainStage
+	 */
+	/**
+	 * Display an exception in a pop-up window
+	 * 
+	 * @param mainStage
+	 *            (Main Stage | Main Class)
+	 * @param title
+	 *            (String | Title of the window)
+	 * @param header
+	 *            (String | Header text of the window)
+	 * @param content
+	 *            (String | Content text of the window)
+	 * @param stacktrace
+	 *            (String | Exception text to display -> see below)
+	 *            <li>StringWriter stringWriter = new StringWriter();</li>
+	 *            <li>PrintWriter printWriter = new PrintWriter(stringWriter);</li>
+	 *            <li>exception.printStackTrace(printWriter);</li>
+	 *            <li>String exceptionText = stringWriter.toString();</li>
+	 */
+	public static void exceptionDialog(Stage mainStage, String title, String header, String content,
+			String stacktrace) {
+
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+		alert.setContentText(content);
+
+		TextArea textArea = new TextArea(stacktrace);
+		textArea.setEditable(false);
+		textArea.setWrapText(true);
+
+		textArea.setMaxWidth(Double.MAX_VALUE);
+		textArea.setMaxHeight(Double.MAX_VALUE);
+		GridPane.setVgrow(textArea, Priority.ALWAYS);
+		GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+		GridPane expContent = new GridPane();
+		expContent.setMaxWidth(Double.MAX_VALUE);
+		expContent.add(textArea, 0, 0);
+
+		// Set expandable Exception into the dialog pane.
+		alert.getDialogPane().setExpandableContent(expContent);
+
+		alert.showAndWait();
 
 	}
 
