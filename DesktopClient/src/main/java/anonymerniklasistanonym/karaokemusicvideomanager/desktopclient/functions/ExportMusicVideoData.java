@@ -2,17 +2,15 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ClassResourceReaderModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.JsonModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
 
 public class ExportMusicVideoData {
 
 	/**
-	 * Generate a HTML table string
+	 * Generate a HTML table string for the static site
 	 * 
 	 * @return table (String)
 	 */
@@ -22,7 +20,7 @@ public class ExportMusicVideoData {
 	}
 
 	/**
-	 * Generate a HTML table string
+	 * Generate a HTML table string for the search site
 	 * 
 	 * @return table (String)
 	 */
@@ -32,7 +30,7 @@ public class ExportMusicVideoData {
 	}
 
 	/**
-	 * Generate a HTML table string
+	 * Generate a HTML table string for the party site
 	 * 
 	 * @return table (String)
 	 */
@@ -42,22 +40,11 @@ public class ExportMusicVideoData {
 	}
 
 	/**
-	 * Generate a HTML table string
+	 * Generate a HTML table string (for a different use than this program)
 	 * 
 	 * @return table (String)
 	 */
-	public static String generateHtmlTable(Object[][] data, String[] columnNames) {
-
-		return generateHtmlTableWithSearch(data, columnNames, "", "");
-	}
-
-	/**
-	 * Generate a HTML table string
-	 * 
-	 * @return table (String)
-	 */
-	public static String generateHtmlTableWithSearch(Object[][] data, String[] columnNames, String tableClass,
-			String rowClass) {
+	public static String generateHtmlTable(Object[][] data, String[] columnNames, String tableClass, String rowClass) {
 
 		StringBuilder sb = new StringBuilder("<table" + tableClass + ">");
 
@@ -75,6 +62,17 @@ public class ExportMusicVideoData {
 		return sb.toString();
 	}
 
+	/**
+	 * Main method to create the html table
+	 * 
+	 * @param data
+	 *            (Object[][] | MusicVideoList)
+	 * @param rowClass
+	 *            (String | Add something like a class to list rows for search)
+	 * @param useButtons
+	 *            (Boolean | Convert title to button or not)
+	 * @return TableBody (String)
+	 */
 	private static String createHtmlTableRows(Object[][] data, String rowClass, boolean useButtons) {
 
 		if (data == null || data.length == 0) {
@@ -109,121 +107,6 @@ public class ExportMusicVideoData {
 
 		return sb.toString();
 
-	}
-
-	public static enum HTML_SITE {
-		STATIC(0), SEARCH(1), PARTY(2);
-
-		private final int value;
-
-		HTML_SITE(final int newValue) {
-			value = newValue;
-		}
-	}
-
-	public static String generateHtmlTableParty(Object[][] data, String[] columnNames) {
-
-		StringBuilder sb = new StringBuilder("placeholder");
-
-		sb.append("=\"Input your search query to find your music videos...\"/></div>");
-
-		sb.append("<form action=\"demo_form.php\" method=\"get\">\n");
-
-		sb.append("<table class=\"order-table table\">");
-
-		String[] columnClasses = { "class=\"number\"", "class=\"artist\"", "class=\"title\"" };
-
-		sb.append("<thead><tr>");
-		for (int a = 0; a < columnNames.length; a++) {
-			sb.append("<th " + columnClasses[a] + " >" + columnNames[a] + "</th>");
-		}
-		sb.append("<th " + "class=\"playlist\"" + " >" + "Sing!" + "</th>");
-		sb.append("</tr></thead><tbody>\n");
-
-		if (data == null || data.length == 0) {
-			System.err.println("There is no table data!");
-		} else {
-			for (int a = 0; a < data.length; a++) {
-				sb.append("<tr>");
-				for (int b = 0; b < columnNames.length; b++) {
-					sb.append("<td>" + data[a][b] + "</td>");
-				}
-				sb.append("<td><button class=\"button\" name=\"index\" type=\"submit\" value=\"" + a + "," + data[a][1]
-						+ "," + data[a][2] + "\">Sing!</button></td>");
-
-				sb.append("</tr>\n");
-			}
-		}
-
-		sb.append("</tbody></table>\n");
-
-		sb.append("</form>");
-
-		return sb.toString();
-	}
-
-	public static String generateHtmlSiteStatic(Object[][] data, String[] columnNames) {
-		return generateHtmlSiteMain(data, columnNames, "websites/html_page_static.json", HTML_SITE.STATIC.value);
-	}
-
-	public static String generateHtmlSiteDynamic(Object[][] data, String[] columnNames) {
-		return generateHtmlSiteMain(data, columnNames, "websites/html_page_searchable.json", HTML_SITE.SEARCH.value);
-	}
-
-	public static String generateHtmlSiteParty(Object[][] data, String[] columnNames) {
-		return generateHtmlSiteMain(data, columnNames, "websites/html_page_party.json", HTML_SITE.PARTY.value);
-	}
-
-	private static String generateHtmlSiteMain(Object[][] data, String[] columnNames, String jsonHtmlPath,
-			int typeOfHtml) {
-
-		// save all lines in this array list
-		StringBuilder webPage = new StringBuilder("");
-
-		try {
-			// class loader
-			String jsonContent = ClassResourceReaderModule.getTextContent(jsonHtmlPath)[0];
-			JsonObject jsonObject = JsonModule.loadJsonFromString(jsonContent);
-
-			webPage.append(JsonModule.getValueString(jsonObject, "head"));
-
-			// create specific table data for each type
-			if (typeOfHtml == HTML_SITE.STATIC.value) {
-
-				webPage.append(JsonModule.getValueString(jsonObject, "body-begin"));
-
-				webPage.append(generateHtmlTable(data, columnNames));
-
-			} else if (typeOfHtml == HTML_SITE.SEARCH.value) {
-
-				webPage.append(JsonModule.getValueString(jsonObject, "body-begin"));
-
-				webPage.append(
-						generateHtmlTableWithSearch(data, columnNames, " id=\"search-table\"", " class=\"item\""));
-
-			} else if (typeOfHtml == HTML_SITE.PARTY.value) {
-
-				webPage.append(JsonModule.getValueString(jsonObject, "body-begin"));
-
-				webPage.append(
-						generateHtmlTableWithSearch(data, columnNames, " id=\"search-table\"", " class=\"item\""));
-			}
-
-			webPage.append(JsonModule.getValueString(jsonObject, "end"));
-
-			return webPage.toString();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public static String getW3JavascriptText() {
-		String jsonContent = ClassResourceReaderModule.getTextContent("websites/libraries/javascript.json")[0];
-		JsonObject jsonObject = JsonModule.loadJsonFromString(jsonContent);
-
-		return JsonModule.getValueString(jsonObject, "w3-js");
 	}
 
 	/**
