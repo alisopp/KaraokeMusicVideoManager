@@ -44,7 +44,7 @@
 /* The table with all the data: */
 
 #search-table {
-	margin-top: 6em;
+	margin-top: calc(6em - 4px);
 }
 
 /* The first table cell and every first normal cell: */
