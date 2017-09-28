@@ -3,7 +3,6 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient;
 import java.io.File;
 import java.nio.file.Paths;
 
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions.ExportImportSettings;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoHandler;
 
 public class LocalTest {
@@ -15,7 +14,7 @@ public class LocalTest {
 		File savedSettings = Paths.get("settings.json").toFile();
 
 		if (savedSettings.exists()) {
-			testHandler.setSettingsData(ExportImportSettings.readSettings(savedSettings));
+			testHandler.loadSettings(savedSettings);
 
 			// update the music video list
 			testHandler.updateMusicVideoList();
@@ -51,15 +50,15 @@ public class LocalTest {
 
 		if (savedSettings.exists()) {
 			// save changes if nothing is there
-			if (ExportImportSettings.compareSettingsFileToCurrent(savedSettings, testHandler.getSettingsData())) {
+			if (testHandler.compareSettings(savedSettings)) {
 				System.out.println("Files are the same");
 			} else {
 				System.out.println("Overwrite file because there are changes!");
-				ExportImportSettings.writeSettings(savedSettings, testHandler.getSettingsData());
+				testHandler.saveSettings(savedSettings);
 			}
 		} else {
 			System.out.println("No file found, save changes");
-			ExportImportSettings.writeSettings(savedSettings, testHandler.getSettingsData());
+			testHandler.saveSettings(savedSettings);
 		}
 	}
 

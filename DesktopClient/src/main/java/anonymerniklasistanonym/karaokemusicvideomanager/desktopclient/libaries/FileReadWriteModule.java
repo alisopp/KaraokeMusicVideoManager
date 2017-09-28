@@ -6,6 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 /**
@@ -25,7 +29,7 @@ public class FileReadWriteModule {
 	 *            (filename of configuration file)
 	 * @return ArrayList<Path> (list with all extracted paths)
 	 */
-	public static String[] readFile(File file) {
+	public static String[] readTextFile(File file) {
 
 		if (file == null) {
 			System.err.println("File could not be read because of it's null!");
@@ -79,7 +83,7 @@ public class FileReadWriteModule {
 	 *            (String[] | content that should be saved into it)
 	 * @return writeFileSuccssessfull (Boolean)
 	 */
-	public static boolean writeFile(File file, String[] content) {
+	public static boolean writeTextFile(File file, String[] content) {
 
 		if (file == null || content == null || content.length == 0) {
 			System.err.println("File could not be written because of it's null!");
@@ -150,7 +154,7 @@ public class FileReadWriteModule {
 			try {
 				if (file.delete()) {
 
-					System.out.println("<< file succsessfully deleted.");
+					System.out.println("<< File succsessfully deleted.");
 					return true;
 
 				} else {
@@ -169,6 +173,167 @@ public class FileReadWriteModule {
 			System.err.println("File does not exist!");
 			return false;
 		}
+	}
+
+	/**
+	 * Creates a directory
+	 * 
+	 * @param directory
+	 *            (File | name of the directory that should be created)
+	 * 
+	 * @return directoryCouldBeCreated (Boolean)
+	 */
+	public static boolean createDirectory(File directory) {
+
+		if (directory == null) {
+			System.err.println("Directory could not be created because of it's null!");
+			return false;
+		}
+
+		System.out.print(">> Create directory: " + directory.getAbsolutePath());
+
+		if (!directory.exists()) {
+
+			try {
+
+				if (directory.mkdir()) {
+					System.out.println("<< Directory succsessfully created.");
+					return true;
+
+				} else {
+
+					System.err.println("<< Directory creation failed!");
+					return false;
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+
+		} else {
+
+			System.err.println("Directory already exists!");
+			return false;
+		}
+	}
+
+	/**
+	 * Deletes a directory
+	 * 
+	 * @param directory
+	 *            (File | name of the directory that should be removed)
+	 * 
+	 * @return directoryCouldBeCreated (Boolean)
+	 */
+	public static boolean deleteDirectory(File directory) {
+
+		if (directory == null) {
+			System.err.println("Directory could not be deleted because of it's null!");
+			return false;
+		}
+
+		System.out.print(">> Delete directory: " + directory.getAbsolutePath());
+
+		if (directory.exists()) {
+
+			try {
+
+				if (directory.delete()) {
+					System.out.println("<< Directory succsessfully removed.");
+					return true;
+
+				} else {
+
+					System.err.println("<< Directory deletion failed!");
+					return false;
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+
+		} else {
+
+			System.err.println("Directory doesn't exist!");
+			return false;
+		}
+	}
+
+	/**
+	 * Deletes a directory and all it's content (only non directories! - depth = 1!)
+	 * 
+	 * @param directory
+	 *            (File | name of the directory that should be removed)
+	 * 
+	 * @return directoryCouldBeCreated (Boolean)
+	 */
+	public static boolean deleteDirectoryWithFiles(File directory) {
+
+		if (directory == null) {
+			System.err.println("Directory could not be deleted because of it's null!");
+			return false;
+		}
+
+		System.out.print(">> Delete directory: " + directory.getAbsolutePath());
+
+		if (directory.exists()) {
+
+			try {
+
+				// collect the files in the directory
+				String[] entries = directory.list();
+				for (String currentFile : entries) {
+					// and delete them
+					deleteFile(new File(directory.getPath(), currentFile));
+				}
+
+				// then delete the directory
+				if (directory.delete()) {
+					System.out.println("<< Directory succsessfully removed.");
+					return true;
+
+				} else {
+					System.err.println("<< Directory deletion failed!");
+					return false;
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+
+		} else {
+
+			System.err.println("Directory doesn't exist!");
+			return false;
+		}
+	}
+
+	/**
+	 * Copy any file to a destination (especially important for the res files)
+	 * 
+	 * --- inspired by https://stackoverflow.com/a/44077426/7827128 ---
+	 *
+	 * @param sourceFile
+	 *            (InputStream | for example a picture from res)
+	 * @param destinationPath
+	 *            (Path | here the copy should be saved)
+	 * @return ifEverythingWorked (Boolean)
+	 */
+	public static boolean copy(InputStream sourceFile, Path destinationPath) {
+
+		System.out.println("Copying ->" + sourceFile + "\n\tto ->" + destinationPath.toString());
+
+		try {
+			destinationPath = destinationPath.toAbsolutePath();
+			Files.copy(sourceFile, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+			return true;
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		return false;
 	}
 
 }

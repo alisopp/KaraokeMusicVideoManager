@@ -35,7 +35,7 @@ public class ExportImportSettings {
 		try {
 			String content = createSettings(settingsData);
 
-			if (FileReadWriteModule.writeFile(file, new String[] { content })) {
+			if (FileReadWriteModule.writeTextFile(file, new String[] { content })) {
 				return true;
 			} else {
 				return false;
@@ -128,7 +128,7 @@ public class ExportImportSettings {
 
 		try {
 
-			String[] contentOfFile = FileReadWriteModule.readFile(file);
+			String[] contentOfFile = FileReadWriteModule.readTextFile(file);
 
 			if (contentOfFile == null) {
 
@@ -221,8 +221,8 @@ public class ExportImportSettings {
 
 	public static boolean compareSettings(File oldSettingsFile, File newSettingsFile) {
 
-		String[] oldFile = FileReadWriteModule.readFile(oldSettingsFile);
-		String[] newFile = FileReadWriteModule.readFile(newSettingsFile);
+		String[] oldFile = FileReadWriteModule.readTextFile(oldSettingsFile);
+		String[] newFile = FileReadWriteModule.readTextFile(newSettingsFile);
 
 		if (oldFile != null && newFile != null) {
 			return JsonModule.compareJsonStrings(oldFile.toString(), newFile.toString());
@@ -234,7 +234,7 @@ public class ExportImportSettings {
 
 	public static boolean compareSettingsFileToCurrent(File oldSettingsFile, ProgramData newSettingsFile) {
 
-		String oldFile = FileReadWriteModule.readFile(oldSettingsFile)[0];
+		String oldFile = FileReadWriteModule.readTextFile(oldSettingsFile)[0];
 		String newFile = createSettings(newSettingsFile);
 
 		if (oldFile != null && newFile != null) {

@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Stream;
 
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions.ExportImportSettings;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions.ExportMusicVideoData;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
 
@@ -26,8 +27,15 @@ public class MusicVideoHandler {
 		return settingsData;
 	}
 
-	public void setSettingsData(ProgramData settingsData) {
-		this.settingsData = settingsData;
+	public boolean setSettingsData(ProgramData settingsData) {
+
+		if (settingsData != null) {
+			this.settingsData = settingsData;
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 	/**
@@ -385,6 +393,62 @@ public class MusicVideoHandler {
 		return tableData;
 	}
 
+	public enum WEBSITE_TYPE {
+		HTML_LIST, HTML_SEARCHABLE, PHP_PARTY
+	}
+
+	public boolean saveHtmlList(Path outputFile) {
+		return htmlAndPhpExport(outputFile, WEBSITE_TYPE.HTML_LIST);
+	}
+
+	public boolean saveHtmlStructureSearchable(Path outputDirectory) {
+		return htmlAndPhpExport(outputDirectory, WEBSITE_TYPE.HTML_SEARCHABLE);
+	}
+
+	public boolean savePHPStructureParty(Path outputDirectory) {
+		return htmlAndPhpExport(outputDirectory, WEBSITE_TYPE.PHP_PARTY);
+	}
+
+	private boolean htmlAndPhpExport(Path outputPath, WEBSITE_TYPE type) {
+
+		if (type == WEBSITE_TYPE.HTML_LIST) {
+			// only CSS -> no extra file or icon
+			return FileReadWriteModule.writeTextFile(outputPath.toFile(), new String[] {
+					ExportMusicVideoData.generateHtmlSiteStatic(musicVideoListToTable(), this.columnNames) });
+		} else if (type == WEBSITE_TYPE.HTML_SEARCHABLE) {
+			// export the whole package:
+			// create directory for favicons
+			// copy in there all favicons
+			// create next to the directory a index file which is searchable
+
+			return FileReadWriteModule.writeTextFile(outputPath.toFile(), new String[] {
+					ExportMusicVideoData.generateHtmlSiteStatic(musicVideoListToTable(), this.columnNames) });
+		} else if (type == WEBSITE_TYPE.PHP_PARTY) {
+			// export the whole package:
+			// create directory for favicons
+			// copy in there all favicons
+			// create next to the directory a index file which is in party mode
+			// create next to this file a party.html file for the live view
+			// create next to these files the two php files for handling requests
+		}
+
+		StringBuilder outputStringIndexFile = new StringBuilder("");
+
+		if (type == WEBSITE_TYPE.PHP_PARTY) {
+			// load php begin
+		}
+
+		outputStringIndexFile.append("<!DOCTYPE html><html><head>");
+
+		// load head
+
+		// load custom head
+
+		outputStringIndexFile.append("<!DOCTYPE html><html><head>");
+
+		return false;
+	}
+
 	public boolean saveFileHtmlBasic(Path whereToWriteTheFile) {
 
 		if (whereToWriteTheFile == null) {
@@ -392,7 +456,7 @@ public class MusicVideoHandler {
 			return false;
 		}
 
-		return FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(), new String[] {
+		return FileReadWriteModule.writeTextFile(whereToWriteTheFile.toFile(), new String[] {
 				ExportMusicVideoData.generateHtmlSiteStatic(musicVideoListToTable(), this.columnNames) });
 	}
 
@@ -403,10 +467,10 @@ public class MusicVideoHandler {
 			return false;
 		}
 
-		boolean exportSuccsessful = FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(),
+		boolean exportSuccsessful = FileReadWriteModule.writeTextFile(whereToWriteTheFile.toFile(),
 				new String[] {
 						ExportMusicVideoData.generateHtmlSiteDynamic(musicVideoListToTable(), this.columnNames) })
-				&& FileReadWriteModule.writeFile(whereToWriteTheFileJavascript.toFile(),
+				&& FileReadWriteModule.writeTextFile(whereToWriteTheFileJavascript.toFile(),
 						new String[] { ExportMusicVideoData.exportJavascriptW3() });
 
 		return exportSuccsessful;
@@ -419,9 +483,9 @@ public class MusicVideoHandler {
 			return false;
 		}
 
-		boolean exportSuccsessful = FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(),
+		boolean exportSuccsessful = FileReadWriteModule.writeTextFile(whereToWriteTheFile.toFile(),
 				new String[] { ExportMusicVideoData.generateHtmlSiteParty(musicVideoListToTable(), this.columnNames) })
-				&& FileReadWriteModule.writeFile(whereToWriteTheFileJavascript.toFile(),
+				&& FileReadWriteModule.writeTextFile(whereToWriteTheFileJavascript.toFile(),
 						new String[] { ExportMusicVideoData.exportJavascriptW3() });
 
 		return exportSuccsessful;
@@ -434,7 +498,7 @@ public class MusicVideoHandler {
 			return false;
 		}
 
-		return FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(),
+		return FileReadWriteModule.writeTextFile(whereToWriteTheFile.toFile(),
 				ExportMusicVideoData.generateCsvContent(this.musicVideoList, this.columnNames).split("\n"));
 	}
 
@@ -445,8 +509,49 @@ public class MusicVideoHandler {
 			return false;
 		}
 
-		return FileReadWriteModule.writeFile(whereToWriteTheFile.toFile(),
+		return FileReadWriteModule.writeTextFile(whereToWriteTheFile.toFile(),
 				new String[] { ExportMusicVideoData.generateJsonContent(this.musicVideoList, this.columnNames) });
+	}
+
+	/**
+	 * Load the current Settings from a file and set them as new settings
+	 * 
+	 * @param settingsFilePath
+	 *            (File | File with the settingsData)
+	 * @return saveOperationSuccsessful (Boolean)
+	 */
+	public boolean loadSettings(File settingsFilePath) {
+
+		// read the settingsData
+		if (setSettingsData(ExportImportSettings.readSettings(settingsFilePath))) {
+			updateMusicVideoList();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Save the current Settings to a file
+	 * 
+	 * @param settingsFilePath
+	 *            (File | File for the settingsData)
+	 * @return saveOperationSuccsessful (Boolean)
+	 */
+	public boolean saveSettings(File settingsFilePath) {
+		return ExportImportSettings.writeSettings(settingsFilePath, this.settingsData);
+	}
+
+	/**
+	 * Returns FALSE if the new settings data from the file is different to the
+	 * current settings data. If they aren't the same TRUE will be returned.
+	 * 
+	 * @param settingsFilePathNew
+	 *            (File | File that contains settingsData in JSON format)
+	 * @return theyAreTheSame (Boolean)
+	 */
+	public boolean compareSettings(File settingsFilePathNew) {
+		return ExportImportSettings.compareSettingsFileToCurrent(settingsFilePathNew, this.settingsData);
 	}
 
 }

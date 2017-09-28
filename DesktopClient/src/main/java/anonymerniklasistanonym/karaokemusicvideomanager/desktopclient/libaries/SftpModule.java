@@ -521,7 +521,7 @@ public class SftpModule {
 
 		File a = new File("Test2.rb");
 
-		System.out.println(Arrays.toString(FileReadWriteModule.readFile(a)));
+		System.out.println(Arrays.toString(FileReadWriteModule.readTextFile(a)));
 
 	}
 
