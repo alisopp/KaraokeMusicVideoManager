@@ -661,6 +661,9 @@ public class MusicVideoHandler {
 		// now add a folder with the PHP files
 		// + change the PHP link in HTML form
 
+		// replace "html/html_party_live" with "live.html"
+		// export live view as "live.html" next to index.html
+
 		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.html"),
 				new String[] { generateHtmlParty() });
 	}

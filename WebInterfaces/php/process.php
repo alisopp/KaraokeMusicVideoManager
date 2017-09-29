@@ -13,6 +13,6 @@ fclose($fp);
 
 # Redirect the user to the main list
 # "link-begin"
-echo "<script> location.href='../html/party.html'; </script>";
+echo "<script> location.href='../html/html_party_live.html'; </script>";
 # "link-end"
 ?>
