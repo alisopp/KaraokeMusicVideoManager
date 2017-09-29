@@ -32,9 +32,6 @@ $myarray = explode(",", $_REQUEST['index']);
 	<!-- Floating button with link to current playlist -->
 	<!-- "floating-button-begin" -->
 	<a href="#" onclick="history.back();" class="floating-button"></a>
-	<div class="label-container">
-		<div class="label-text">Back to the list</div>
-	</div>
 	<!-- "floating-button-end" -->
 
 	<!-- Section that contains the table with all found music video -->

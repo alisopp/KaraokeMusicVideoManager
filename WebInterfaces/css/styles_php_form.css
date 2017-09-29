@@ -140,77 +140,34 @@ input:required:invalid::-webkit-input-placeholder {
 /* Floating button properties: */
 
 .floating-button {
+	/* Set the fixed position of the floating button */
 	position: fixed;
+	bottom: 23px;
+	right: 23px;
+	/* Set width and height */
 	width: 60px;
 	height: 60px;
-	bottom: 5%;
-	right: 5%;
-	color: #FFF;
+	/* Make it round */
 	border-radius: 50px;
+	/* Aglin text centered */
 	text-align: center;
-	box-shadow: 2px 2px 3px #999;
-	-webkit-transition-duration: 0.4s;
-	/* Safari */
-	transition-duration: 0.4s;
+	/* Give it some box shadow */
+	box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
+	/* Add a background image */
 	background: url(data:image/svg+xml,%3Csvg%20fill%3D%22%23FFFFFF%22%20height%3D%2248%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2248%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%200h24v24H0z%22%20fill%3D%22none%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M20%2011H7.83l5.59-5.59L12%204l-8%208%208%208%201.41-1.41L7.83%2013H20v-2z%22/%3E%0A%3C/svg%3E) no-repeat 8px;
+	/* Add color and background color */
 	background-color: #24a204;
+	color: #FFF;
 }
 
 /* Floating button on hover/touch: */
 
 .floating-button:hover {
-	/* make the background color a bit brighter */
-	background-color: #25b701;
 	/* Change the box shadow for a depth effect */
-	box-shadow: 11px 13px 20px #999;
+	box-shadow: 0 0 6px rgba(0,0,0,.16), 0 6px 12px rgba(0,0,0,.32);
+	/* Add animation duration */
+	transition: box-shadow 150ms cubic-bezier(0,0,.2,1);
 }
-
-/* Floating button label container: */
-
-.label-container {
-	/* Set the fixed position of the text container */
-	position: fixed;
-	bottom: 6%;
-	/* Calculate the fixed position in relation to the floating button */
-	right: calc(5% + 80px);
-	display: table;
-	/* Hide the label container */
-	visibility: hidden;
-}
-
-/* Floating button label container text: */
-
-.label-text {
-	/* Text has no background */
-	background-color: rgba(0, 0, 0, 0.6);
-	/* Text is white */
-	color: white;
-	/* Display the text completely in the middle */
-	display: table-cell;
-	vertical-align: middle;
-	/* Add some padding and a border radius for viewing experience */
-	padding: 10px;
-	border-radius: 6px;
-}
-
-/* Hide the label container when the floating button is not hovered/touched: */
-
-a.floating-button + div.label-container {
-	/* Hide the label container */
-	visibility: hidden;
-	opacity: 0;
-	/* Add a animation to the visibility */
-	transition: visibility 0s, opacity 0.5s ease;
-}
-
-/* Show the label container when the floating button is hovered/touched: */
-
-a.floating-button:hover + div.label-container {
-	/* Show the label container */
-	visibility: visible;
-	opacity: 1;
-}
-
 
 
 /* MEDIA TAGS */
