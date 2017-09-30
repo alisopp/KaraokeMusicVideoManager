@@ -3,12 +3,13 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frame
 import java.io.File;
 import java.nio.file.Paths;
 
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -19,7 +20,15 @@ public class MainWindow {
 
 	}
 
+	public MainWindow(Main hih) {
+		this.main = hih;
+		this.setMainWindowStage(hih.primaryStage);
+
+	}
+
 	private Stage MainWindowStage;
+
+	private Main main;
 
 	private String windowTitle = "Karaoke Desktop Client [Beta]";
 	private int[] normalWindowSize = { 500, 650 };
@@ -29,13 +38,19 @@ public class MainWindow {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getClassLoader().getResource("windows/MainWindow.fxml"));
-			Parent root = loader.load();
-			getMainWindowStage().setTitle(this.windowTitle);
-			getMainWindowStage().setScene(new Scene(root, this.normalWindowSize[0], this.normalWindowSize[1]));
-			getMainWindowStage().setResizable(true);
-			getMainWindowStage().setMinWidth(this.minimalWindowSize[0]);
-			getMainWindowStage().setMinHeight(this.minimalWindowSize[1]);
-			getMainWindowStage().centerOnScreen();
+			BorderPane mainPane = loader.load();
+
+			this.MainWindowStage.setTitle(this.windowTitle);
+
+			// Connection to the Controller from the primary Stage
+			MainWindowController mainWindowController = loader.getController();
+			mainWindowController.setMainWindow(this.main);
+
+			this.MainWindowStage.setScene(new Scene(mainPane, this.normalWindowSize[0], this.normalWindowSize[1]));
+			this.MainWindowStage.setResizable(true);
+			this.MainWindowStage.setMinWidth(this.minimalWindowSize[0]);
+			this.MainWindowStage.setMinHeight(this.minimalWindowSize[1]);
+			this.MainWindowStage.centerOnScreen();
 
 			// try to add a window icon
 			try {

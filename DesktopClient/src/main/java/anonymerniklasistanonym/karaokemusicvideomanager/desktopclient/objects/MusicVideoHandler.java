@@ -50,6 +50,10 @@ public class MusicVideoHandler {
 	 */
 	private MusicVideo[] musicVideoList;
 
+	public MusicVideo[] getMusicVideoList() {
+		return musicVideoList;
+	}
+
 	private final String[] columnNames = new String[] { "#", "Artist", "Title" };
 
 	/**
