@@ -108,7 +108,7 @@
 					<outputDirectory>../</outputDirectory>
 					<archive>
 						<manifest>
-							<mainClass>anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.App</mainClass>
+							<mainClass>anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
