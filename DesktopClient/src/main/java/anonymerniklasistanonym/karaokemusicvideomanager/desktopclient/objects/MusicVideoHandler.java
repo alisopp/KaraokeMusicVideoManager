@@ -204,6 +204,53 @@ public class MusicVideoHandler {
 	}
 
 	/**
+	 * Print the music video list to the console in a table
+	 */
+	public void printWrongFormattedFiles() {
+
+		System.out.println(">> Print wrong formatted files list:");
+
+		Path[] wrongFormattedFiles = getWrongFormattedFiles();
+
+		if (wrongFormattedFiles == null) {
+			System.err.println("<< There are no files!");
+			return;
+		}
+
+		if (wrongFormattedFiles.length == 0) {
+			System.err.println("<< There were no wrong formatted files found!");
+			return;
+		}
+
+		int numberOfLinesNumber = String.valueOf(wrongFormattedFiles.length).length();
+		int numberOfLinesPath = 80;
+
+		String linesNumber = String.join("", Collections.nCopies(numberOfLinesNumber + 2, "-"));
+		String linesPath = String.join("", Collections.nCopies(numberOfLinesPath + 2, "-"));
+		String pathForm = String.join(".", Collections.nCopies(2, String.valueOf(numberOfLinesPath)));
+
+		String tableDataFormat = "| %-" + numberOfLinesNumber + "d | %-" + pathForm + "s | %n";
+		String tableInfoFormat = "| %-" + numberOfLinesNumber + "s | %-" + pathForm + "s | %n";
+
+		String tableInfo1 = ("+" + linesNumber + "+" + linesPath + "+%n");
+
+		int numberShowInfo = 100, numberShowInfoCount = 0;
+		for (int i = 0; i < wrongFormattedFiles.length; i++) {
+
+			if (i == numberShowInfoCount) {
+				System.out.format(tableInfo1);
+				System.out.format(tableInfoFormat, "#", "Wrong formatted files (Paths)");
+				System.out.format(tableInfo1);
+				numberShowInfoCount += numberShowInfo;
+			}
+
+			System.out.format(tableDataFormat, i + 1, wrongFormattedFiles[i]);
+		}
+		System.out.format(tableInfo1);
+
+	}
+
+	/**
 	 * Scan a directory after specific video files and map all music videos
 	 * 
 	 * @param path
@@ -251,6 +298,51 @@ public class MusicVideoHandler {
 	}
 
 	/**
+	 * Scan a directory after specific video files and map all music videos
+	 * 
+	 * @param path
+	 *            (Path | path of the directory)
+	 */
+	public ArrayList<Path> scanDirectoryForWrongFiles(Path path) {
+
+		if (path == null || !path.toFile().isDirectory()) {
+			System.err.println("Path is null or no directory!");
+			return null;
+		}
+
+		// get all files in the directory
+		Collection<Path> filesInDirectory = new ArrayList<Path>();
+		try (DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
+
+			System.out.print(">> Scan " + path + " for wrong files");
+			for (Path child : ds) {
+				filesInDirectory.add(child);
+			}
+			System.out.println(" << Scan finished.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println(" << Problem while searching for Files!");
+			return null;
+		}
+
+		ArrayList<Path> wrongFormattedFiles = new ArrayList<Path>();
+
+		System.out.println(">> Finding wrong formatted files");
+
+		for (Path filePath : filesInDirectory) {
+
+			if (isFileMusicVideoButWrong(filePath)) {
+				wrongFormattedFiles.add(filePath);
+			}
+
+		}
+
+		// return sorted Array
+		return wrongFormattedFiles;
+
+	}
+
+	/**
 	 * Rescan and sort all files in the saved directories in the musicVideoList
 	 * 
 	 * @return
@@ -275,6 +367,32 @@ public class MusicVideoHandler {
 		Arrays.sort(newList, new MusicVideo());
 
 		this.musicVideoList = newList;
+
+	}
+
+	/**
+	 * Rescan and get all wrong formatted files
+	 * 
+	 * @return
+	 */
+	public Path[] getWrongFormattedFiles() {
+
+		if (this.settingsData.getPathList() == null) {
+			System.err.println("There are no paths!");
+			return null;
+		}
+
+		ArrayList<Path> newMusicVideoList = new ArrayList<Path>();
+
+		for (Path directory : this.settingsData.getPathList()) {
+			newMusicVideoList.addAll(scanDirectoryForWrongFiles(directory));
+		}
+
+		Path[] newList = new Path[newMusicVideoList.size()];
+		newList = newMusicVideoList.toArray(newList);
+
+		Arrays.sort(newList);
+		return newList;
 
 	}
 
@@ -361,6 +479,39 @@ public class MusicVideoHandler {
 
 		}
 		return null;
+	}
+
+	private boolean isFileMusicVideoButWrong(Path filePath) {
+
+		// file is a "normal" readable file
+		if (Files.isRegularFile(filePath)) {
+
+			String fileType = null, pathOfFile = filePath.getFileName().toString();
+
+			int lastIndexOfPoint = pathOfFile.lastIndexOf('.');
+			boolean containsArtistAndTitle = pathOfFile.contains(" - ");
+
+			boolean rightFileEnd = false;
+
+			if (lastIndexOfPoint > 0) {
+				fileType = pathOfFile.substring(lastIndexOfPoint + 1);
+			} else {
+				return false;
+			}
+
+			for (String supportedFileTypes : this.settingsData.getAcceptedFileTypes()) {
+				if (supportedFileTypes.equalsIgnoreCase(fileType)) {
+
+					rightFileEnd = true;
+				}
+			}
+
+			if (rightFileEnd && !containsArtistAndTitle) {
+				return true;
+			}
+
+		}
+		return false;
 	}
 
 	/**

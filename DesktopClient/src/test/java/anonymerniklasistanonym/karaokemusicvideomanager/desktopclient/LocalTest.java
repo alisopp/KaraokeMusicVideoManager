@@ -27,9 +27,12 @@ public class LocalTest {
 		// " + "test\\3"));
 		testHandler.updateMusicVideoList();
 
+		testHandler.printWrongFormattedFiles();
+
 		// testHandler.printMusicVideoList();
 
-		testHandler.saveHtmlParty(Paths.get("C:\\Users\\nikla\\Downloads\\XAMPP Portable\\htdocs"), true);
+		// testHandler.saveHtmlParty(Paths.get("C:\\Users\\nikla\\Downloads\\XAMPP
+		// Portable\\htdocs"), true);
 		// testHandler.saveHtmlSearch(Paths.get("C:\\Users\\nikla\\Downloads"), true);
 		// testHandler.saveHtmlList(Paths.get("C:\\Users\\nikla\\Downloads"), true);
 
