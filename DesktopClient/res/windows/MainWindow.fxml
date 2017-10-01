@@ -97,7 +97,7 @@
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <TextField fx:id="field" onAction="#handleChangedText" prefHeight="25.0" prefWidth="103.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="searchBox" onAction="#openTopMusicVideoFile" prefHeight="25.0" prefWidth="103.0" HBox.hgrow="ALWAYS" />
                   <Button mnemonicParsing="false" onAction="#searchOnYouTube" prefHeight="25.0" prefWidth="71.0" style="-fx-background-color: #ff0000; -fx-text-fill: white; -fx-border-radius: 20; -fx-border-color: none;" text="YouTube" />
                   <Region prefHeight="25.0" prefWidth="32.0" HBox.hgrow="ALWAYS" />
                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="67.0" styleClass="-fx-background-color" text="Random" />
@@ -124,7 +124,7 @@
               <tabs>
                 <Tab text="Music Video List">
                      <content>
-                        <TableView fx:id="musicVideoListTable" onMouseClicked="#handleRowSelect" style="-fx-background-color: white;">
+                        <TableView fx:id="musicVideoListTable" onMouseClicked="#openSelectedVideoFile" onSort="#unSelectVideoFile" style="-fx-background-color: white;">
                           <columns>
                             <TableColumn maxWidth="1.7976931348623157E308" prefWidth="140.0" text="#" />
                             <TableColumn maxWidth="1.7976931348623157E308" prefWidth="278.0" text="Title" />

@@ -20,7 +20,7 @@ public class MainWindowController {
 	@FXML
 	private Label label;
 	@FXML
-	private TextField field;
+	private TextField searchBox;
 	@FXML
 	private TableView<Integer> musicVideoListTable;
 	@FXML
@@ -34,7 +34,7 @@ public class MainWindowController {
 
 	public void setMainWindow(Main window) {
 		this.mainWindow = window;
-		this.field.setText("hi");
+		this.searchBox.setText("hi");
 
 		MusicVideo[] listOfVideos = window.musicVideohandler.getMusicVideoList();
 
@@ -72,14 +72,41 @@ public class MainWindowController {
 
 	}
 
+	/**
+	 * Do the following when a row is selected/clicked with the mouse
+	 */
 	@FXML
-	public void handleChangedText() {
-		label.setText(field.getText());
+	private void openSelectedVideoFile() {
+		Integer rowIndex = this.musicVideoListTable.getSelectionModel().getSelectedItem();
+		if (rowIndex != null) {
+			this.mainWindow.musicVideohandler.openMusicVideo(rowIndex);
+		}
+
 	}
 
+	/**
+	 * Open on enter the video file that is on the top of the table
+	 */
 	@FXML
-	public void handleButton() {
-		field.clear();
+	public void openTopMusicVideoFile() {
+
+		// select the top item
+		this.musicVideoListTable.getSelectionModel().select(0);
+
+		// open the music video that is selected
+		openSelectedVideoFile();
+
+		// clear the selection
+		this.musicVideoListTable.getSelectionModel().clearSelection();
+	}
+
+	/**
+	 * Clears the current selection
+	 */
+	@FXML
+	private void unSelectVideoFile() {
+		// clear the current selection
+		this.musicVideoListTable.getSelectionModel().clearSelection();
 
 	}
 
@@ -91,7 +118,7 @@ public class MainWindowController {
 	public void searchOnYouTube() {
 
 		// Text we want to search on YouTube
-		String searchQuery = field.getText();
+		String searchQuery = searchBox.getText();
 
 		// The URL of YouTube
 		String youTubeUrl = "https://www.youtube.com";
@@ -112,16 +139,6 @@ public class MainWindowController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-
-	}
-
-	@FXML
-	private void handleRowSelect() {
-		Integer row = this.musicVideoListTable.getSelectionModel().getSelectedItem();
-		if (row == null)
-			return;
-
-		this.mainWindow.musicVideohandler.openMusicVideo(row);
 
 	}
 
