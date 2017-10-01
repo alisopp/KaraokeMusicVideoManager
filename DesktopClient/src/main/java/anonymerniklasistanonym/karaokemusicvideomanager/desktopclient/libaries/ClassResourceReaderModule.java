@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ClassResourceReaderModule {
 
@@ -16,22 +17,42 @@ public class ClassResourceReaderModule {
 	 */
 	public static String[] getTextContent(String path) {
 
+		// create empty list for the file content
 		ArrayList<String> cache = new ArrayList<String>();
 
 		try {
-
-			ClassLoader cl = ClassResourceReaderModule.class.getClassLoader();
-
+			// open content of file in a buffered reader
 			BufferedReader beforeTableHtmlData = new BufferedReader(new InputStreamReader(getInputStream(path)));
 			String line;
+			// as long as there is a next line that isn't null add this line to the cache
 			while ((line = beforeTableHtmlData.readLine()) != null) {
 				cache.add(line);
 			}
-
 			return cache.toArray(new String[0]);
 		} catch (Exception e) {
-			return null;
+			e.printStackTrace();
 		}
+		return null;
+	}
+
+	/**
+	 * Load a text file into a String and return it
+	 * 
+	 * @param path
+	 *            (String | path to resource file)
+	 * @return content (String[])
+	 */
+	public static String getTextContentinOneString(String path) {
+
+		// open the file with lines
+		String[] contentOfFile = getTextContent(path);
+
+		if (contentOfFile != null) {
+			// if content isn't null convert all lines to one String
+			return Arrays.toString(contentOfFile);
+		}
+
+		return null;
 	}
 
 	/**
