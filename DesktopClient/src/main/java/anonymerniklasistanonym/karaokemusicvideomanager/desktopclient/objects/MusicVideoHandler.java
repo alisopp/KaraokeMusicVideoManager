@@ -1,8 +1,6 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,6 +16,7 @@ import javax.json.JsonObject;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions.ExportImportSettings;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions.ExportMusicVideoData;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ClassResourceReaderModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.JsonModule;
 
@@ -409,11 +408,6 @@ public class MusicVideoHandler {
 	 */
 	public boolean openMusicVideo(int index) {
 
-		if (!Desktop.isDesktopSupported()) {
-			System.err.println("Desktop is not supported - the program will not open videos on this computer!");
-			return false;
-		}
-
 		if (this.musicVideoList == null) {
 			System.err.println("The music videos list is null!");
 			return false;
@@ -424,28 +418,23 @@ public class MusicVideoHandler {
 			return false;
 		}
 
-		// get the MusicVideo object and make it a file with the path
-		File file = musicVideoList[index].getPath().toFile();
+		MusicVideo videoToOpen = musicVideoList[index];
+		File fileToOpen = videoToOpen.getPath().toFile();
 
-		if (!file.exists()) {
-			System.err.println("<< The file " + file.getPath() + " ford not exist!");
+		if (videoToOpen == null || fileToOpen == null) {
+			System.err.println("The music video object's path is null!");
 			return false;
 		}
 
-		// open it
-		try {
-			Desktop.getDesktop().open(file);
-			System.out.println(
-					">>> Opened " + musicVideoList[index].getTitle() + " by " + musicVideoList[index].getArtist());
+		System.out.println(">> Opening \"" + videoToOpen.getTitle() + "\" by \"" + videoToOpen.getArtist() + "\"");
+
+		if (ExternalApplicationHandler.openFile(fileToOpen)) {
+			System.out.println("<< File succsessfully opened");
 			return true;
-		} catch (IOException e) {
-			System.err.println("<< File \"" + file.getAbsolutePath() + "\" could not be opened!");
-			return false;
-		} catch (Exception e) {
-			System.err.println("<< File \"" + file.getAbsolutePath() + "\" could not be opened because of Desktop!");
-			e.printStackTrace();
-			return false;
+		} else {
+			System.err.println("<< File was not opened!");
 		}
+		return false;
 
 	}
 

@@ -1,6 +1,10 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -76,6 +80,38 @@ public class MainWindowController {
 	@FXML
 	public void handleButton() {
 		field.clear();
+
+	}
+
+	/**
+	 * Search for the text in the input field on YouTube with the external default
+	 * browser
+	 */
+	@FXML
+	public void searchOnYouTube() {
+
+		// Text we want to search on YouTube
+		String searchQuery = field.getText();
+
+		// The URL of YouTube
+		String youTubeUrl = "https://www.youtube.com";
+
+		// if text field has text try to add it to the urlToOpen
+		try {
+			if (searchQuery != null && searchQuery.length() > 0) {
+
+				// encode the text to a browser query
+				String textToSearchQuery = URLEncoder.encode(searchQuery, "UTF-8");
+
+				// add the search query to the YouTube URL
+				youTubeUrl += "/results?search_query=" + textToSearchQuery;
+
+				// open the new URL
+				ExternalApplicationHandler.openUrl(youTubeUrl);
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 
 	}
 
