@@ -63,26 +63,32 @@ public class MainWindow {
 
 				@Override
 				public void handle(WindowEvent e) {
-
-					File savedSettings = Paths.get("settings.json").toFile();
-
-					if (!savedSettings.exists()) {
-						// save changes if nothing is there
-						System.out.println("Later...");
-					} else {
-						Dialogs.mainStageClose(e);
-					}
-
+					onCloseDialog(e);
 				}
 			});
-
-			// primaryStage.getIcons().add(new
-			// Image(getClass().getResourceAsStream("icon.png")));
 
 			// show the window
 			getMainWindowStage().show();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void onCloseDialog(WindowEvent e) {
+		File savedSettings = Paths.get("settings.json").toFile();
+
+		if (!savedSettings.exists()) {
+			// save changes if nothing is there
+			this.main.musicVideohandler.saveSettings(savedSettings);
+			System.out.println("Later...");
+		} else {
+
+			if (!this.main.musicVideohandler.compareSettings(savedSettings)) {
+				Dialogs.mainStageClose(e, this.main.musicVideohandler, savedSettings);
+			} else {
+				System.out.println("Settings were the same");
+			}
+
 		}
 	}
 

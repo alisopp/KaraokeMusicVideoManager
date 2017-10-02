@@ -3,6 +3,7 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialo
 import java.io.File;
 import java.util.List;
 
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoHandler;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -26,7 +27,8 @@ public class Dialogs {
 	 *            (WindowEvent - needed to let the window alive if 'Cancel' get's
 	 *            pressed)
 	 */
-	public static void mainStageClose(WindowEvent mainWindowEvent) {
+	public static void mainStageClose(WindowEvent mainWindowEvent, MusicVideoHandler saveTheSettings,
+			File settingsFile) {
 
 		// create a JavaFX Alert pop-up window
 		Alert alert = new Alert(AlertType.WARNING);
@@ -54,10 +56,11 @@ public class Dialogs {
 			// quit the program and do also:
 			if (result == ButtonType.YES) {
 				// save changes in file
-				System.out.println("Later...");
+				saveTheSettings.saveSettings(settingsFile);
 			} else if (result == buttonAlways) {
 				// add to config that always the changes should be saved on exit
 				// save changes in file
+				saveTheSettings.saveSettings(settingsFile);
 				System.out.println("Later...");
 			}
 

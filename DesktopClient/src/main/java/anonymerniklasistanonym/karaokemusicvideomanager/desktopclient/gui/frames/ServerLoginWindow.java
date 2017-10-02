@@ -29,7 +29,7 @@ public class ServerLoginWindow {
 			MainWindowStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 				@Override
 				public void handle(WindowEvent e) {
-					Dialogs.mainStageClose(e);
+					Dialogs.mainStageClose(e, null, null);
 				}
 			});
 
