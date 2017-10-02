@@ -47,6 +47,7 @@ public class MainWindow {
 			mainWindowController.setMainWindow(this.main);
 
 			this.MainWindowStage.setScene(new Scene(mainPane, this.normalWindowSize[0], this.normalWindowSize[1]));
+
 			this.MainWindowStage.setResizable(true);
 			this.MainWindowStage.setMinWidth(this.minimalWindowSize[0]);
 			this.MainWindowStage.setMinHeight(this.minimalWindowSize[1]);

@@ -1,13 +1,18 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
-import javafx.beans.property.ReadOnlyIntegerWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoTableView;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -21,54 +26,74 @@ public class MainWindowController {
 	private Label label;
 	@FXML
 	private TextField searchBox;
+
 	@FXML
-	private TableView<Integer> musicVideoListTable;
+	private TableView<MusicVideoTableView> musicVideoTable;
 	@FXML
-	private TableColumn<Integer, Integer> musicVideoListTabelNumber;
+	private TableColumn<MusicVideoTableView, Number> columnIndex;
 	@FXML
-	private TableColumn<Integer, String> musicVideoListTabelArtist;
+	private TableColumn<MusicVideoTableView, String> columnArtist;
 	@FXML
-	private TableColumn<Integer, String> musicVideoListTabelTitle;
+	private TableColumn<MusicVideoTableView, String> columnTitle;
+
+	private ObservableList<MusicVideoTableView> tableData = FXCollections.observableArrayList();
 
 	public Main mainWindow;
 
+	/**
+	 * This method get's called when the FXML file get's loaded
+	 */
+	@FXML
+	private void initialize() {
+
+		/*
+		 * The following code is mostly copied from the wonderful tutorial by Marco
+		 * Jakob from code.makery
+		 * http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
+		 */
+
+		// 0. Initialize the columns.
+		columnIndex.setCellValueFactory(cellData -> cellData.getValue().getIndexProperty());
+		columnArtist.setCellValueFactory(cellData -> cellData.getValue().getArtistProperty());
+		columnTitle.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
+
+		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
+		FilteredList<MusicVideoTableView> filteredData = new FilteredList<>(tableData, p -> true);
+
+		// 2. Set the filter Predicate whenever the filter changes.
+		searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+			filteredData.setPredicate(musicVideoObject -> {
+				// If filter text is empty, display all persons.
+				if (newValue == null || newValue.isEmpty()) {
+					return true;
+				}
+
+				// Compare first name and last name of every person with filter text.
+				String lowerCaseFilter = newValue.toLowerCase();
+
+				if (musicVideoObject.getArtist().toLowerCase().contains(lowerCaseFilter)) {
+					return true; // Filter matches first name.
+				} else if (musicVideoObject.getTitle().toLowerCase().contains(lowerCaseFilter)) {
+					return true; // Filter matches last name.
+				}
+				return false; // Does not match.
+			});
+		});
+
+		// 3. Wrap the FilteredList in a SortedList.
+		SortedList<MusicVideoTableView> sortedData = new SortedList<>(filteredData);
+
+		// 4. Bind the SortedList comparator to the TableView comparator.
+		sortedData.comparatorProperty().bind(musicVideoTable.comparatorProperty());
+
+		// 5. Add sorted (and filtered) data to the table.
+		musicVideoTable.setItems(sortedData);
+	}
+
 	public void setMainWindow(Main window) {
 		this.mainWindow = window;
-		this.searchBox.setText("hi");
 
-		MusicVideo[] listOfVideos = window.musicVideohandler.getMusicVideoList();
-
-		for (int i = 0; i < listOfVideos.length; i++) {
-			this.musicVideoListTable.getItems().add(i);
-		}
-
-		TableColumn<Integer, Number> intColumn = new TableColumn<>("#");
-		intColumn.setCellValueFactory(cellData -> {
-			Integer rowIndex = cellData.getValue();
-			return new ReadOnlyIntegerWrapper(rowIndex + 1);
-		});
-
-		TableColumn<Integer, String> artistColumn = new TableColumn<>("Artist");
-		artistColumn.setCellValueFactory(cellData -> {
-			Integer rowIndex = cellData.getValue();
-			return new ReadOnlyStringWrapper(listOfVideos[rowIndex].getArtist());
-		});
-
-		TableColumn<Integer, String> titleColumn = new TableColumn<>("Title");
-		titleColumn.setCellValueFactory(cellData -> {
-			Integer rowIndex = cellData.getValue();
-			return new ReadOnlyStringWrapper(listOfVideos[rowIndex].getTitle());
-		});
-
-		this.musicVideoListTable.getColumns().clear();
-
-		intColumn.prefWidthProperty().bind(this.musicVideoListTable.widthProperty().multiply(0.2));
-		artistColumn.prefWidthProperty().bind(this.musicVideoListTable.widthProperty().multiply(0.3));
-		titleColumn.prefWidthProperty().bind(this.musicVideoListTable.widthProperty().multiply(0.5));
-
-		this.musicVideoListTable.getColumns().add(intColumn);
-		this.musicVideoListTable.getColumns().add(artistColumn);
-		this.musicVideoListTable.getColumns().add(titleColumn);
+		updateMusicVideoListTable();
 
 	}
 
@@ -77,11 +102,18 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void openSelectedVideoFile() {
-		Integer rowIndex = this.musicVideoListTable.getSelectionModel().getSelectedItem();
-		if (rowIndex != null) {
-			this.mainWindow.musicVideohandler.openMusicVideo(rowIndex);
-		}
 
+		// ge the currently selected entry
+		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
+
+		// if entry isn't null
+		if (selectedEntry != null) {
+			// open the music video file with the index
+			this.mainWindow.musicVideohandler.openMusicVideo(selectedEntry.getIndex() - 1);
+		} else {
+			// search on YouTube
+			searchOnYouTube();
+		}
 	}
 
 	/**
@@ -91,13 +123,13 @@ public class MainWindowController {
 	public void openTopMusicVideoFile() {
 
 		// select the top item
-		this.musicVideoListTable.getSelectionModel().select(0);
+		this.musicVideoTable.getSelectionModel().select(0);
 
 		// open the music video that is selected
 		openSelectedVideoFile();
 
 		// clear the selection
-		this.musicVideoListTable.getSelectionModel().clearSelection();
+		this.musicVideoTable.getSelectionModel().clearSelection();
 	}
 
 	/**
@@ -106,7 +138,7 @@ public class MainWindowController {
 	@FXML
 	private void unSelectVideoFile() {
 		// clear the current selection
-		this.musicVideoListTable.getSelectionModel().clearSelection();
+		this.musicVideoTable.getSelectionModel().clearSelection();
 
 	}
 
@@ -140,6 +172,39 @@ public class MainWindowController {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * Search for the text in the input field on YouTube with the external default
+	 * browser
+	 */
+	@FXML
+	public void addSourceFolderDialog() {
+		File directory = Dialogs.chooseDirectory(this.mainWindow.primaryStage, "Add a path", null);
+
+		if (directory != null && (directory.exists() && directory.isDirectory())) {
+			this.mainWindow.musicVideohandler.addPathToPathList(directory.toPath());
+			this.mainWindow.musicVideohandler.updateMusicVideoList();
+
+			updateMusicVideoListTable();
+
+		}
+	}
+
+	/**
+	 * Update the music video table in the window with the current music video list
+	 */
+	public void updateMusicVideoListTable() {
+		// get music video data
+		MusicVideo[] listOfVideos = this.mainWindow.musicVideohandler.getMusicVideoList();
+
+		// add music video data
+		if (listOfVideos != null) {
+			tableData.clear();
+			for (int i = 0; i < listOfVideos.length; i++) {
+				tableData.add(new MusicVideoTableView(i + 1, listOfVideos[i].getArtist(), listOfVideos[i].getTitle()));
+			}
+		}
 	}
 
 }
