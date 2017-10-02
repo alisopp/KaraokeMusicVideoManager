@@ -82,6 +82,10 @@ public class ExportImportSettings {
 					mainJsonBuilder.add("file-types", acceptedFileTypesArray);
 				}
 
+				if (settingsData.getAlwaysSaveSettings() != false) {
+					mainJsonBuilder.add("always-save", Boolean.TRUE);
+				}
+
 				return JsonModule.dumpJsonObjectToString(mainJsonBuilder);
 
 			} else {
@@ -208,6 +212,15 @@ public class ExportImportSettings {
 				settingsData.setAcceptedFileTypes(newAcceptedFileTypes);
 			} else {
 				System.err.println(" << No accepted file types");
+			}
+
+			// -> (try to) get if always the changes should be saved
+			boolean keyValueAlwaysSave = JsonModule.getValueBoolean(jsonObject, "always-save");
+
+			if (keyValueAlwaysSave != false) {
+				settingsData.setAlwaysSaveSettings(true);
+			} else {
+				System.err.println(" << No always save setting");
 			}
 
 			return settingsData;

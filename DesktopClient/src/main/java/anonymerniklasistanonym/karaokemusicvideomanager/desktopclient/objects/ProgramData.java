@@ -44,6 +44,11 @@ public final class ProgramData {
 	private String workingDirectorySftp = null;
 
 	/**
+	 * SFTP - Working directory
+	 */
+	private Boolean alwaysSaveSettings = false;
+
+	/**
 	 * Constructor [empty]
 	 */
 	public ProgramData() {
@@ -166,6 +171,14 @@ public final class ProgramData {
 
 	public void setWorkingDirectorySftp(String workingDirectorySftp) {
 		this.workingDirectorySftp = workingDirectorySftp;
+	}
+
+	public Boolean getAlwaysSaveSettings() {
+		return alwaysSaveSettings;
+	}
+
+	public void setAlwaysSaveSettings(Boolean alwaysSaveSettings) {
+		this.alwaysSaveSettings = alwaysSaveSettings;
 	}
 
 }

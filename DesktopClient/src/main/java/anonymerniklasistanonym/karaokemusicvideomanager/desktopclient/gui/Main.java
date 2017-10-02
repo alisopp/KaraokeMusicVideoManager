@@ -30,11 +30,11 @@ public class Main extends Application {
 		File savedSettings = Paths.get("settings.json").toFile();
 		if (savedSettings.exists()) {
 			this.musicVideohandler.loadSettings(savedSettings);
-			this.musicVideohandler.updateMusicVideoList();
 		}
-		this.musicVideohandler.addPathToPathList(Paths.get("C:\\Users\\nikla\\Downloads\\karaoke " + "test\\1"));
-		this.musicVideohandler.addPathToPathList(Paths.get("..\\CreateDemoFiles\\demo_files"));
-		this.musicVideohandler.updateMusicVideoList();
+		// this.musicVideohandler.addPathToPathList(Paths.get("C:\\Users\\nikla\\Downloads\\karaoke
+		// " + "test\\1"));
+		// this.musicVideohandler.addPathToPathList(Paths.get("..\\CreateDemoFiles\\demo_files"));
+		// this.musicVideohandler.updateMusicVideoList();
 
 		mainWindowCreator = new MainWindow(this);
 		mainWindowCreator.createStage();

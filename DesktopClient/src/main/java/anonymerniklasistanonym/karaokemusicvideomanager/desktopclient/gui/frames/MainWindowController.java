@@ -222,13 +222,6 @@ public class MainWindowController {
 			// only a exit button will be shown
 			stage.initStyle(StageStyle.UTILITY);
 
-			// try to add a window icon
-			try {
-				stage.getIcons().addAll(WindowMethods.getWindowIcons());
-			} catch (Exception e) {
-				System.err.println("Exception while loding icons");
-			}
-
 			stage.show();
 		} catch (Exception e) {
 			e.printStackTrace();

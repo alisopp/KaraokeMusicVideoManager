@@ -889,4 +889,13 @@ public class MusicVideoHandler {
 		return ExportImportSettings.compareSettingsFileToCurrent(settingsFilePathNew, this.settingsData);
 	}
 
+	public void setAlwaysSave(boolean b) {
+		this.settingsData.setAlwaysSaveSettings(b);
+
+	}
+
+	public boolean getAlwaysSave() {
+		return this.settingsData.getAlwaysSaveSettings();
+	}
+
 }

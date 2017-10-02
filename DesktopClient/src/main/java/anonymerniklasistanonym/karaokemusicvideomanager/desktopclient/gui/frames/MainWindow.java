@@ -77,7 +77,7 @@ public class MainWindow {
 	public void onCloseDialog(WindowEvent e) {
 		File savedSettings = Paths.get("settings.json").toFile();
 
-		if (!savedSettings.exists()) {
+		if (!savedSettings.exists() || this.main.musicVideohandler.getAlwaysSave() == true) {
 			// save changes if nothing is there
 			this.main.musicVideohandler.saveSettings(savedSettings);
 			System.out.println("Later...");

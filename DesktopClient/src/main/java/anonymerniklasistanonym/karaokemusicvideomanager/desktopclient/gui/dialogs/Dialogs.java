@@ -60,6 +60,7 @@ public class Dialogs {
 			} else if (result == buttonAlways) {
 				// add to config that always the changes should be saved on exit
 				// save changes in file
+				saveTheSettings.setAlwaysSave(true);
 				saveTheSettings.saveSettings(settingsFile);
 				System.out.println("Later...");
 			}

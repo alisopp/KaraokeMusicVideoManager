@@ -156,6 +156,47 @@ public class JsonModule {
 	}
 
 	/**
+	 * Get the value of a key of a JsonObject as a String
+	 * 
+	 * @param jsonObject
+	 *            (JsonObject | contains the key or null)
+	 * @param key
+	 *            (String | key to the desired value)
+	 * @return stringValueOfTheKey (String)
+	 */
+	public static boolean getValueBoolean(JsonObject jsonObject, String key) {
+
+		if (jsonObject == null || (key == null || key.isEmpty())) {
+			System.err.println("JsonObject or key cannot be empty or null!");
+			return false;
+		}
+
+		System.out.print(">> Look for the key " + key);
+
+		if (jsonObject.containsKey(key)) {
+
+			try {
+
+				boolean value = jsonObject.getBoolean(key);
+				System.out.println(" << Key has the String: " + value);
+				return value;
+
+			} catch (NullPointerException notFoundException) {
+				System.err.println(" << Key not found!");
+				return false;
+
+			} catch (ClassCastException ex) {
+				System.err.println(" << Key value is not anticipated type!");
+				return false;
+			}
+
+		} else {
+			System.err.println(" << Key does not exist!");
+			return false;
+		}
+	}
+
+	/**
 	 * Compare two JSON contents
 	 * 
 	 * @param jsonBuilder
