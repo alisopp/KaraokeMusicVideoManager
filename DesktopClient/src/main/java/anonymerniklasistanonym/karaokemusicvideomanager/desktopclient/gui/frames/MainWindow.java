@@ -5,10 +5,10 @@ import java.nio.file.Paths;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowMethods;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -55,13 +55,7 @@ public class MainWindow {
 
 			// try to add a window icon
 			try {
-				Integer[] supportedSizes = { 16, 32, 48, 64, 128, 194, 256, 512 };
-				Image[] icons = new Image[supportedSizes.length];
-				for (int i = 0; i < supportedSizes.length; i++) {
-					String filePath = "websites/favicons/favicon-" + supportedSizes[i] + "x" + supportedSizes[i];
-					icons[i] = new Image(getClass().getClassLoader().getResourceAsStream(filePath + ".png"));
-				}
-				getMainWindowStage().getIcons().addAll(icons);
+				getMainWindowStage().getIcons().addAll(WindowMethods.getWindowIcons());
 			} catch (Exception e) {
 				System.err.println("Exception while loding icons");
 			}

@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowMethods;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoTableView;
 import javafx.collections.FXCollections;
@@ -14,10 +15,15 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class MainWindowController {
 
@@ -188,6 +194,44 @@ public class MainWindowController {
 
 			updateMusicVideoListTable();
 
+		}
+	}
+
+	/**
+	 * Open the About Window
+	 */
+	@FXML
+	public void openAboutWindow() {
+		try {
+
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getClassLoader().getResource("windows/AboutWindow.fxml"));
+
+			Parent root1 = (Parent) loader.load();
+
+			// Connection to the Controller from the primary Stage
+			AboutWindowController aboutWindowController = loader.getController();
+			aboutWindowController.setAboutWindow(this.mainWindow);
+
+			Stage stage = new Stage();
+			stage.setScene(new Scene(root1));
+			stage.setResizable(false);
+
+			stage.setTitle("About");
+
+			// only a exit button will be shown
+			stage.initStyle(StageStyle.UTILITY);
+
+			// try to add a window icon
+			try {
+				stage.getIcons().addAll(WindowMethods.getWindowIcons());
+			} catch (Exception e) {
+				System.err.println("Exception while loding icons");
+			}
+
+			stage.show();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
