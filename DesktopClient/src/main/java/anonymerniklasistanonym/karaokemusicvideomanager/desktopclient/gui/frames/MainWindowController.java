@@ -236,6 +236,41 @@ public class MainWindowController {
 	}
 
 	/**
+	 * Open the About Window
+	 */
+	@FXML
+	public void openServerLoginWindow() {
+		try {
+
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getClassLoader().getResource("windows/ServerLoginWindow.fxml"));
+
+			Parent root1 = (Parent) loader.load();
+
+			// Connection to the Controller from the primary Stage
+			ServerLoginWindowController aboutWindowController = loader.getController();
+			aboutWindowController.setServerLoginWindow(this.mainWindow);
+
+			Stage stage = new Stage();
+			stage.setScene(new Scene(root1));
+			stage.setResizable(false);
+
+			stage.setTitle("Server Login");
+
+			// try to add a window icon
+			try {
+				stage.getIcons().addAll(WindowMethods.getWindowIcons());
+			} catch (Exception e) {
+				System.err.println("Exception while loding icons");
+			}
+
+			stage.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Update the music video table in the window with the current music video list
 	 */
 	public void updateMusicVideoListTable() {

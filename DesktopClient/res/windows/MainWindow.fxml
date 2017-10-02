@@ -96,12 +96,12 @@
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <TextField fx:id="searchBox" onAction="#openTopMusicVideoFile" prefHeight="25.0" prefWidth="103.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="searchBox" onAction="#openTopMusicVideoFile" prefHeight="25.0" prefWidth="103.0" promptText="Search for music videos..." HBox.hgrow="ALWAYS" />
                   <Button mnemonicParsing="false" onAction="#searchOnYouTube" prefHeight="25.0" prefWidth="71.0" style="-fx-background-color: #ff0000; -fx-text-fill: white; -fx-border-radius: 20; -fx-border-color: none;" text="YouTube" />
                   <Region prefHeight="25.0" prefWidth="32.0" HBox.hgrow="ALWAYS" />
                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="67.0" styleClass="-fx-background-color" text="Random" />
                   <Region prefHeight="25.0" prefWidth="46.0" HBox.hgrow="ALWAYS" />
-                  <ToggleButton mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Network" />
+                  <ToggleButton mnemonicParsing="false" onAction="#openServerLoginWindow" prefHeight="25.0" prefWidth="71.0" text="Network" />
                </children>
                <opaqueInsets>
                   <Insets />
