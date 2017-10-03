@@ -495,6 +495,34 @@ public class MainWindowController {
 			// open the music video file with the index
 			ExternalApplicationHandler.openFile(Paths.get(selectedEntry.getFilePath()).toFile());
 		}
+	}
+
+	@FXML
+	public void addVideoToPlaylist() {
+		System.out.println("Later");
+	}
+
+	@FXML
+	public void showDirectoryOfFileInExplorer() {
+
+		// get the currently selected entry
+		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
+
+		System.out.println("hi");
+		// if entry isn't null
+		if (selectedEntry != null) {
+			Path filePath = this.mainWindow.musicVideohandler.getMusicVideoList()[selectedEntry.getIndex() - 1]
+					.getPath();
+
+			// open the music video file with the index
+			File selectedFile = filePath.toAbsolutePath().toFile();
+			System.out.println("selectedFile: " + selectedFile.getAbsolutePath());
+			if (selectedFile.exists() && !selectedFile.isDirectory()) {
+				System.out.println("hi 3");
+				ExternalApplicationHandler.openFile(selectedFile.getParentFile());
+			}
+
+		}
 
 	}
 

@@ -126,8 +126,8 @@
                               <ContextMenu>
                                 <items>
                                   <MenuItem mnemonicParsing="false" onAction="#openSelectedVideoFile" text="Play Music Video" />
-                                    <MenuItem mnemonicParsing="false" text="Add To Playlist" />
-                                    <MenuItem mnemonicParsing="false" text="Show Directory" />
+                                    <MenuItem mnemonicParsing="false" onAction="#addVideoToPlaylist" text="Add To Playlist" />
+                                    <MenuItem mnemonicParsing="false" onAction="#showDirectoryOfFileInExplorer" text="Show Directory" />
                                 </items>
                               </ContextMenu>
                            </contextMenu>
