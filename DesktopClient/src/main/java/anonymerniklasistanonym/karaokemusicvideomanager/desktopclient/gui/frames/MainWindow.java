@@ -22,7 +22,8 @@ public class MainWindow {
 
 	public MainWindow(Main hih) {
 		this.main = hih;
-		this.setMainWindowStage(hih.primaryStage);
+		this.setMainWindowStage(hih.getPrimaryStage());
+		createStage();
 
 	}
 
@@ -77,14 +78,14 @@ public class MainWindow {
 	public void onCloseDialog(WindowEvent e) {
 		File savedSettings = Paths.get("settings.json").toFile();
 
-		if (!savedSettings.exists() || this.main.musicVideohandler.getAlwaysSave() == true) {
+		if (!savedSettings.exists() || this.main.getMusicVideohandler().getAlwaysSave() == true) {
 			// save changes if nothing is there
-			this.main.musicVideohandler.saveSettings(savedSettings);
+			this.main.getMusicVideohandler().saveSettings(savedSettings);
 			System.out.println("Later...");
 		} else {
 
-			if (!this.main.musicVideohandler.compareSettings(savedSettings)) {
-				Dialogs.mainStageClose(e, this.main.musicVideohandler, savedSettings);
+			if (!this.main.getMusicVideohandler().compareSettings(savedSettings)) {
+				Dialogs.mainStageClose(e, this.main.getMusicVideohandler(), savedSettings);
 			} else {
 				System.out.println("Settings were the same");
 			}

@@ -1,6 +1,7 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class WindowMethods {
 
@@ -17,6 +18,18 @@ public class WindowMethods {
 			System.err.println("Exception while loding icons");
 			return null;
 		}
+	}
+
+	public static ImageView createMenuIcon(String pathToImage) {
+		return createMenuIcon(pathToImage, 15);
+	}
+
+	public static ImageView createMenuIcon(String pathToImage, int size) {
+		Image userIcon = new Image(ClassResourceReaderModule.getInputStream(pathToImage));
+		ImageView userView = new ImageView(userIcon);
+		userView.setFitWidth(size);
+		userView.setFitHeight(size);
+		return userView;
 	}
 
 }

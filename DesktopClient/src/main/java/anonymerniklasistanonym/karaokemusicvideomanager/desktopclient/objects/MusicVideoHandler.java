@@ -63,6 +63,18 @@ public class MusicVideoHandler {
 		settingsData = new ProgramData();
 	}
 
+	private final File settingsFileName = new File("settings.json");
+
+	/**
+	 * Load settings from "settings.json" file if there is one
+	 */
+	public void loadSettingsFromFile() {
+		if (settingsFileName.exists()) {
+			loadSettings(settingsFileName);
+		}
+
+	}
+
 	public void loadMusicVideoFiles() {
 
 		if (settingsData == null) {

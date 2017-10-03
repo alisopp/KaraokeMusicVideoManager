@@ -27,20 +27,20 @@
          <children>
             <MenuBar style="-fx-background-color: white;">
               <menus>
-                <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export">
+                <Menu mnemonicParsing="false" text="Export">
                   <items>
-                        <Menu mnemonicParsing="false" text="Website">
+                        <Menu fx:id="menuButtonWebsites" mnemonicParsing="false" text="Website">
                           <items>
-                            <MenuItem mnemonicParsing="false" text="Static List" />
-                              <MenuItem mnemonicParsing="false" text="Searchable List" />
-                              <MenuItem mnemonicParsing="false" text="Party List" />
+                            <MenuItem fx:id="menuButtonHtmlStatic" mnemonicParsing="false" text="Static List" />
+                              <MenuItem fx:id="menuButtonHtmlSearch" mnemonicParsing="false" text="Searchable List" />
+                              <MenuItem fx:id="menuButtonHtmlParty" mnemonicParsing="false" text="Party List" />
                           </items>
                         </Menu>
-                    <MenuItem mnemonicParsing="false" text="CSV" />
-                        <MenuItem mnemonicParsing="false" text="JSON" />
+                    <MenuItem fx:id="menuButtonCsv" mnemonicParsing="false" text="CSV" />
+                        <MenuItem fx:id="menuButtonJson" mnemonicParsing="false" text="JSON" />
                   </items>
                 </Menu>
-                  <Menu fx:id="networkMenu" mnemonicParsing="false" text="Network">
+                  <Menu mnemonicParsing="false" text="Network">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Reconnect" />
                         <MenuItem mnemonicParsing="false" text="Change Login" />
@@ -48,7 +48,7 @@
                       <MenuItem mnemonicParsing="false" text="Reset Network Settings" />
                     </items>
                   </Menu>
-                <Menu fx:id="backupMenu" mnemonicParsing="false" text="Save &amp; Restore">
+                <Menu mnemonicParsing="false" text="Save &amp; Restore">
                   <items>
                     <MenuItem mnemonicParsing="false" text="Save Configuration" />
                         <MenuItem mnemonicParsing="false" text="Load/Restore Configuration" />
@@ -61,7 +61,7 @@
                     <MenuItem mnemonicParsing="false" text="Random Songs Number" />
                   </items>
                 </Menu>
-                  <Menu fx:id="aboutWindow" mnemonicParsing="false" text="About">
+                  <Menu mnemonicParsing="false" text="About">
                     <items>
                       <MenuItem fx:id="aboutButton" mnemonicParsing="false" onAction="#openAboutWindow" text="About" />
                         <MenuItem fx:id="helpButton" mnemonicParsing="false" text="Help">
@@ -163,7 +163,7 @@
                                       <items>
                                         <MenuItem fx:id="pathShowExplorer" mnemonicParsing="false" onAction="#showInExplorer" text="Show in Explorer" />
                                           <MenuItem fx:id="pathRemove" mnemonicParsing="false" onAction="#removeDirectory" text="Remove Source" />
-                                          <MenuItem fx:id="pathWrongFormatted" mnemonicParsing="false" text="Show wrong formatted Files" />
+                                          <MenuItem fx:id="pathWrongFormatted" mnemonicParsing="false" onAction="#openWrongFormattedFilesWindow" text="Show wrong formatted Files" />
                                       </items>
                                     </ContextMenu>
                                  </contextMenu>

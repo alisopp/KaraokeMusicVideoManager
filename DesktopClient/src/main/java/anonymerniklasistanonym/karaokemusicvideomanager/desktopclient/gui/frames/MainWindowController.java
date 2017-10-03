@@ -10,7 +10,6 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.DirectoryPathTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoTableView;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ClassResourceReaderModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowMethods;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
@@ -33,8 +32,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -47,9 +44,6 @@ public class MainWindowController {
 	private Label searchLabel;
 	@FXML
 	private TextField searchBox;
-
-	@FXML
-	private Menu exportMenu;
 
 	// the music video table
 	@FXML
@@ -88,8 +82,22 @@ public class MainWindowController {
 	private MenuItem pathShowExplorer;
 	@FXML
 	private MenuItem pathRemove;
+	@FXML
+	private MenuItem menuButtonCsv;
+	@FXML
+	private MenuItem menuButtonJson;
+	@FXML
+	private MenuItem menuButtonHtmlStatic;
+	@FXML
+	private MenuItem menuButtonHtmlSearch;
+	@FXML
+	private MenuItem menuButtonHtmlParty;
+	@FXML
+	private MenuItem pathWrongFormatted;
 
 	// menu bar
+	@FXML
+	private Menu menuButtonWebsites;
 	@FXML
 	private MenuItem aboutButton;
 	@FXML
@@ -211,32 +219,32 @@ public class MainWindowController {
 		 */
 
 		// Context menu
-		contextMenuPlay.setGraphic(createMenuIcon("images/menu/play.png"));
-		contextMenuPlaylist.setGraphic(createMenuIcon("images/menu/playlist.png"));
-		contextMenuDirectory.setGraphic(createMenuIcon("images/menu/directory.png"));
-		pathShowExplorer.setGraphic(createMenuIcon("images/menu/directory.png"));
-		pathRemove.setGraphic(createMenuIcon("images/menu/remove.png"));
+		contextMenuPlay.setGraphic(WindowMethods.createMenuIcon("images/menu/play.png"));
+		contextMenuPlaylist.setGraphic(WindowMethods.createMenuIcon("images/menu/playlist.png"));
+		contextMenuDirectory.setGraphic(WindowMethods.createMenuIcon("images/menu/directory.png"));
+		pathShowExplorer.setGraphic(WindowMethods.createMenuIcon("images/menu/directory.png"));
+		pathRemove.setGraphic(WindowMethods.createMenuIcon("images/menu/remove.png"));
+		pathWrongFormatted.setGraphic(WindowMethods.createMenuIcon("images/menu/wrongFormattedFiles.png"));
 
-		// network button
-		networkButton.setGraphic(createMenuIcon("images/menu/network.png"));
-		youTubeButton.setGraphic(createMenuIcon("images/menu/youTube.png"));
-		aboutButton.setGraphic(createMenuIcon("images/menu/about.png"));
-		randomButton.setGraphic(createMenuIcon("images/menu/random.png"));
-		addPathButton.setGraphic(createMenuIcon("images/menu/add.png"));
-		removePathButton.setGraphic(createMenuIcon("images/menu/remove.png"));
-		showInExplorerButton.setGraphic(createMenuIcon("images/menu/directory.png"));
+		// other buttons
+		networkButton.setGraphic(WindowMethods.createMenuIcon("images/menu/network.png"));
+		youTubeButton.setGraphic(WindowMethods.createMenuIcon("images/menu/youTube.png"));
+		aboutButton.setGraphic(WindowMethods.createMenuIcon("images/menu/about.png"));
+		randomButton.setGraphic(WindowMethods.createMenuIcon("images/menu/random.png"));
+		addPathButton.setGraphic(WindowMethods.createMenuIcon("images/menu/add.png"));
+		removePathButton.setGraphic(WindowMethods.createMenuIcon("images/menu/remove.png"));
+		showInExplorerButton.setGraphic(WindowMethods.createMenuIcon("images/menu/directory.png"));
+
+		// menu buttons
+		menuButtonWebsites.setGraphic(WindowMethods.createMenuIcon("images/menu/html_static.png"));
+		menuButtonCsv.setGraphic(WindowMethods.createMenuIcon("images/menu/csv.png"));
+		menuButtonJson.setGraphic(WindowMethods.createMenuIcon("images/menu/json.png"));
+		menuButtonHtmlStatic.setGraphic(WindowMethods.createMenuIcon("images/menu/html_static.png"));
+		menuButtonHtmlSearch.setGraphic(WindowMethods.createMenuIcon("images/menu/html_search.png"));
+		menuButtonHtmlParty.setGraphic(WindowMethods.createMenuIcon("images/menu/html_playlist.png"));
 
 		// label
-		searchLabel.setGraphic(createMenuIcon("images/menu/search.png"));
-	}
-
-	private ImageView createMenuIcon(String pathToImage) {
-		// int imageSize = 15;
-		Image userIcon = new Image(ClassResourceReaderModule.getInputStream(pathToImage));
-		ImageView userView = new ImageView(userIcon);
-		// userView.setFitWidth(imageSize);
-		// userView.setFitHeight(imageSize);
-		return userView;
+		searchLabel.setGraphic(WindowMethods.createMenuIcon("images/menu/search.png"));
 	}
 
 	public void setMainWindow(Main window) {
@@ -259,7 +267,7 @@ public class MainWindowController {
 		// if entry isn't null
 		if (musicVideoTableTab.isSelected() && selectedEntry != null) {
 			// open the music video file with the index
-			this.mainWindow.musicVideohandler.openMusicVideo(selectedEntry.getIndex() - 1);
+			this.mainWindow.getMusicVideohandler().openMusicVideo(selectedEntry.getIndex() - 1);
 		} else {
 			// search on YouTube
 			searchOnYouTube();
@@ -402,11 +410,11 @@ public class MainWindowController {
 	 */
 	@FXML
 	public void addSourceFolderDialog() {
-		File directory = Dialogs.chooseDirectory(this.mainWindow.primaryStage, "Add a path", null);
+		File directory = Dialogs.chooseDirectory(this.mainWindow.getPrimaryStage(), "Add a path", null);
 
 		if (directory != null && (directory.exists() && directory.isDirectory())) {
-			this.mainWindow.musicVideohandler.addPathToPathList(directory.toPath());
-			this.mainWindow.musicVideohandler.updateMusicVideoList();
+			this.mainWindow.getMusicVideohandler().addPathToPathList(directory.toPath());
+			this.mainWindow.getMusicVideohandler().updateMusicVideoList();
 
 			updateMusicVideoListTable();
 			updateDirectoryPathTable();
@@ -446,7 +454,7 @@ public class MainWindowController {
 	}
 
 	/**
-	 * Open the About Window
+	 * Open the server login window
 	 */
 	@FXML
 	public void openServerLoginWindow() {
@@ -490,6 +498,43 @@ public class MainWindowController {
 		}
 	}
 
+	/**
+	 * Open the wrong formatted files window
+	 */
+	@FXML
+	public void openWrongFormattedFilesWindow() {
+		try {
+
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getClassLoader().getResource("windows/WrongFomattedFilesWindow.fxml"));
+
+			Parent root1 = (Parent) loader.load();
+
+			Stage stage = new Stage();
+			stage.setScene(new Scene(root1));
+			stage.setResizable(true);
+			stage.setMinWidth(450);
+			stage.setMinHeight(350);
+
+			// try to add a window icon
+			try {
+				stage.getIcons().addAll(WindowMethods.getWindowIcons());
+			} catch (Exception e) {
+				System.err.println("Exception while loding icons");
+			}
+
+			stage.setTitle("Wrong Formatted Files");
+
+			// Connection to the Controller from the primary Stage
+			WrongFormattedFilesWindowController wrongWindowController = loader.getController();
+			wrongWindowController.setWrongFormattedFilesWindow(this.mainWindow);
+
+			stage.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void checkNetwork() {
 		// TODO Auto-generated method stub
 		this.networkButton.setSelected(false);
@@ -501,7 +546,7 @@ public class MainWindowController {
 	 */
 	public void updateMusicVideoListTable() {
 		// get music video data
-		MusicVideo[] listOfVideos = this.mainWindow.musicVideohandler.getMusicVideoList();
+		MusicVideo[] listOfVideos = this.mainWindow.getMusicVideohandler().getMusicVideoList();
 
 		// add music video data
 		if (listOfVideos != null) {
@@ -518,7 +563,7 @@ public class MainWindowController {
 	 */
 	public void updateDirectoryPathTable() {
 		// get music video data
-		Path[] listOfPaths = this.mainWindow.musicVideohandler.getPathList();
+		Path[] listOfPaths = this.mainWindow.getMusicVideohandler().getPathList();
 
 		// add music video data
 		if (listOfPaths != null) {
@@ -537,7 +582,7 @@ public class MainWindowController {
 		// if entry isn't null
 		if (selectedEntry != null) {
 			// open the music video file with the index
-			this.mainWindow.musicVideohandler.removeFromPathList(selectedEntry.getFilePath());
+			this.mainWindow.getMusicVideohandler().removeFromPathList(selectedEntry.getFilePath());
 			updateDirectoryPathTable();
 			updateMusicVideoListTable();
 		}
@@ -570,7 +615,7 @@ public class MainWindowController {
 		System.out.println("hi");
 		// if entry isn't null
 		if (selectedEntry != null) {
-			Path filePath = this.mainWindow.musicVideohandler.getMusicVideoList()[selectedEntry.getIndex() - 1]
+			Path filePath = this.mainWindow.getMusicVideohandler().getMusicVideoList()[selectedEntry.getIndex() - 1]
 					.getPath();
 
 			// open the music video file with the index
