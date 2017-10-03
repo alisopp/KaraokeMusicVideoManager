@@ -188,7 +188,7 @@ def copy_svg_icon(destination_file, source_file):
 
 
 def create_menu_icons(destination_directory, source_file_directory):
-    
+
     # check if the source exists
     if os.path.exists(source_file_directory):
          # create the directory if there is no such directory
@@ -214,7 +214,8 @@ if __name__ == '__main__':
         r"..\WindowsInstaller\pictures", "installer.svg")
     create_installer_icons(r"..\WindowsInstaller\icons", "logo.svg")
     create_program_icon(r"..\DesktopClient\res\websites\favicons", "logo.svg")
-    copy_svg_icon(r"..\DesktopClient\res\websites\favicons\favicon.svg", "logo.svg")
+    copy_svg_icon(
+        r"..\DesktopClient\res\websites\favicons\favicon.svg", "logo.svg")
     create_menu_icons(r"..\DesktopClient\res\images\menu", "menu")
 
     print("Ready!")

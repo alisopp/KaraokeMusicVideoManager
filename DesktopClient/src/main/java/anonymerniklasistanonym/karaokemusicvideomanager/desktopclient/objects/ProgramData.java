@@ -2,6 +2,7 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 
 /**
@@ -95,7 +96,7 @@ public final class ProgramData {
 					System.err.println("- Found duplicate: " + containedPath);
 				}
 			}
-
+			Collections.sort(uniqueAddresses);
 			this.pathList = uniqueAddresses.toArray(new Path[0]);
 
 		} else {

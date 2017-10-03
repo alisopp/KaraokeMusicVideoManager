@@ -113,7 +113,7 @@
               <tabs>
                 <Tab fx:id="musicVideoTableTab" onSelectionChanged="#clearSearch" text="Music Video List">
                      <content>
-                        <TableView id="my-table" fx:id="musicVideoTable" onMouseClicked="#openTopMusicVideoFileLeftClick" onMousePressed="#mousePressed" onSort="#unSelectVideoFile" style="-fx-background-color: white;">
+                        <TableView id="my-table" fx:id="musicVideoTable" onMouseClicked="#openMusicVideoFileLeftClick" onMousePressed="#mousePressed" onSort="#unSelectVideoFile" style="-fx-background-color: white;">
                           <columns>
                             <TableColumn fx:id="columnIndex" editable="false" prefWidth="10.0" style="-fx-alignment: CENTER_RIGHT;" text="#" />
                               <TableColumn fx:id="columnArtist" editable="false" minWidth="90.0" text="Artist" />
@@ -151,13 +151,22 @@
                      <content>
                         <VBox>
                            <children>
-                              <TableView fx:id="directoryPathTable" minHeight="150.0" onMouseClicked="#showInExplorer" onSort="#unSelectDirectoryPath" VBox.vgrow="ALWAYS">
+                              <TableView fx:id="directoryPathTable" minHeight="150.0" onMouseClicked="#openDirectoryLeftClick" onMousePressed="#mousePressed" onSort="#unSelectDirectoryPath" VBox.vgrow="ALWAYS">
                                 <columns>
                                   <TableColumn fx:id="columnFilePath" prefWidth="400.0" text="Directory Path" />
                                 </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
+                                 <contextMenu>
+                                    <ContextMenu>
+                                      <items>
+                                        <MenuItem fx:id="pathShowExplorer" mnemonicParsing="false" onAction="#showInExplorer" text="Show in Explorer" />
+                                          <MenuItem fx:id="pathRemove" mnemonicParsing="false" onAction="#removeDirectory" text="Remove Source" />
+                                          <MenuItem fx:id="pathWrongFormatted" mnemonicParsing="false" text="Show wrong formatted Files" />
+                                      </items>
+                                    </ContextMenu>
+                                 </contextMenu>
                               </TableView>
                               <HBox alignment="TOP_CENTER" minHeight="-Infinity" spacing="20.0" VBox.vgrow="NEVER">
                                  <children>

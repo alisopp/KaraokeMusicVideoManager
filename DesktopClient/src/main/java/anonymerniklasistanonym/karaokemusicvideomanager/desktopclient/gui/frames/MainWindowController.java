@@ -84,6 +84,10 @@ public class MainWindowController {
 	private MenuItem contextMenuPlaylist;
 	@FXML
 	private MenuItem contextMenuDirectory;
+	@FXML
+	private MenuItem pathShowExplorer;
+	@FXML
+	private MenuItem pathRemove;
 
 	// menu bar
 	@FXML
@@ -210,6 +214,8 @@ public class MainWindowController {
 		contextMenuPlay.setGraphic(createMenuIcon("images/menu/play.png"));
 		contextMenuPlaylist.setGraphic(createMenuIcon("images/menu/playlist.png"));
 		contextMenuDirectory.setGraphic(createMenuIcon("images/menu/directory.png"));
+		pathShowExplorer.setGraphic(createMenuIcon("images/menu/directory.png"));
+		pathRemove.setGraphic(createMenuIcon("images/menu/remove.png"));
 
 		// network button
 		networkButton.setGraphic(createMenuIcon("images/menu/network.png"));
@@ -279,9 +285,19 @@ public class MainWindowController {
 	 * Open a video file only when the left mouse key was clicked
 	 */
 	@FXML
-	public void openTopMusicVideoFileLeftClick() {
+	public void openMusicVideoFileLeftClick() {
 		if (leftMouseKeyWasPressed == true) {
 			openSelectedVideoFile();
+		}
+	}
+
+	/**
+	 * Open a video file only when the left mouse key was clicked
+	 */
+	@FXML
+	public void openDirectoryLeftClick() {
+		if (leftMouseKeyWasPressed == true) {
+			showInExplorer();
 		}
 	}
 
