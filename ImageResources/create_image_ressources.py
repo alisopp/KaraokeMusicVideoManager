@@ -7,12 +7,12 @@ the needed png and ico files.
 To convert the svg file you need to have inkscape installed on your system.
 '''
 
+import ntpath
 import os
 import subprocess
 from shutil import copyfile
 
 from PIL import Image, ImageEnhance
-
 
 # current directory
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -37,7 +37,7 @@ def convert_svg_2_png(input_filename, output_filename, width=None, height=None):
         output_file = output_filename
 
     # change directory to the inkscape directory
-    os.chdir(DIR_INKSCAPE)
+    # os.chdir(DIR_INKSCAPE)
 
     if width is None and height is None:
         pro = subprocess.Popen(
@@ -61,7 +61,7 @@ def convert_svg_2_png(input_filename, output_filename, width=None, height=None):
 
     print("- \"" + source_file + "\" was converted to \"" + output_file + "\"")
 
-    os.chdir(DIR_PATH)
+    # os.chdir(DIR_PATH)
 
 
 def create_png_favicons(favicon_directory_path, source_file):
@@ -154,8 +154,10 @@ def create_program_icon(icon_directory_path, source_file):
         os.makedirs(icon_directory_path)
 
     output_name = "icon"
-    output_path_png = os.path.abspath(os.path.join(icon_directory_path, output_name + ".png"))
-    output_path_ico = os.path.abspath(os.path.join(icon_directory_path, output_name + ".ico"))
+    output_path_png = os.path.abspath(os.path.join(
+        icon_directory_path, output_name + ".png"))
+    output_path_ico = os.path.abspath(os.path.join(
+        icon_directory_path, output_name + ".ico"))
 
     convert_svg_2_png(source_file, output_path_png, 255, 255)
 
@@ -185,9 +187,28 @@ def copy_svg_icon(destination_file, source_file):
         print("- \"" + source_file + "\" was copied to " + destination_file)
 
 
+def create_menu_icons(destination_directory, source_file_directory):
+    
+    # check if the source exists
+    if os.path.exists(source_file_directory):
+         # create the directory if there is no such directory
+        if not os.path.exists(destination_directory):
+            os.makedirs(destination_directory)
+        # check if the destination is a directory
+        if os.path.isdir(source_file_directory):
+            for file in os.listdir(source_file_directory):
+                file = os.path.join(source_file_directory, file)
+                if not os.path.isabs(file):
+                    file = os.path.abspath(file)
+                filename, file_extension = os.path.splitext(file)
+                if file_extension == ".svg":
+                    convert_svg_2_png(file, os.path.join(
+                        destination_directory, ntpath.basename(filename) + ".png"), 16, 16)
+    print("All menu icons were created")
+
+
 if __name__ == '__main__':
 
-    # do all convertions:
     create_png_favicons(r"..\DesktopClient\res\websites\favicons", "logo.svg")
     create_installer_pages(
         r"..\WindowsInstaller\pictures", "installer.svg")

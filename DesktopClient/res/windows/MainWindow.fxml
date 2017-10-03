@@ -91,7 +91,7 @@
                   <Region prefHeight="25.0" prefWidth="32.0" HBox.hgrow="ALWAYS" />
                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="67.0" styleClass="-fx-background-color" text="Random" />
                   <Region prefHeight="25.0" prefWidth="46.0" HBox.hgrow="ALWAYS" />
-                  <ToggleButton fx:id="networkButton" mnemonicParsing="false" onAction="#openServerLoginWindow" prefHeight="25.0" prefWidth="71.0" text="Network" />
+                  <ToggleButton fx:id="networkButton" mnemonicParsing="false" onAction="#openServerLoginWindow" text="Network" />
                </children>
                <opaqueInsets>
                   <Insets />

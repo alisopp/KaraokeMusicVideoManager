@@ -23,6 +23,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -87,6 +88,10 @@ public class MainWindowController {
 	// network button
 	@FXML
 	private ToggleButton networkButton;
+
+	// YouTtube button
+	@FXML
+	private Button youTubeButton;
 
 	// Mouse key monitoring
 	private boolean leftMouseKeyWasPressed;
@@ -184,12 +189,17 @@ public class MainWindowController {
 		directoryPathTable.setItems(sortedDataDirectory);
 
 		/**
-		 * Set Menu icons
+		 * Set menu icons
 		 */
 
+		// Context menu
 		contextMenuPlay.setGraphic(createMenuIcon("images/menu/play.png"));
 		contextMenuPlaylist.setGraphic(createMenuIcon("images/menu/playlist.png"));
 		contextMenuDirectory.setGraphic(createMenuIcon("images/menu/directory.png"));
+
+		// network button
+		networkButton.setGraphic(createMenuIcon("images/menu/play.png"));
+		youTubeButton.setGraphic(createMenuIcon("images/menu/youTube.png"));
 	}
 
 	private ImageView createMenuIcon(String pathToImage) {
