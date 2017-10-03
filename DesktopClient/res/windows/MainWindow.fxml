@@ -125,9 +125,9 @@
                            <contextMenu>
                               <ContextMenu>
                                 <items>
-                                  <MenuItem mnemonicParsing="false" onAction="#openSelectedVideoFile" text="Play Music Video" />
-                                    <MenuItem mnemonicParsing="false" onAction="#addVideoToPlaylist" text="Add To Playlist" />
-                                    <MenuItem mnemonicParsing="false" onAction="#showDirectoryOfFileInExplorer" text="Show Directory" />
+                                  <MenuItem fx:id="contextMenuPlay" mnemonicParsing="false" onAction="#openSelectedVideoFile" text="Play Music Video" />
+                                    <MenuItem fx:id="contextMenuPlaylist" mnemonicParsing="false" onAction="#addVideoToPlaylist" text="Add To Playlist" />
+                                    <MenuItem fx:id="contextMenuDirectory" mnemonicParsing="false" onAction="#showDirectoryOfFileInExplorer" text="Show Directory" />
                                 </items>
                               </ContextMenu>
                            </contextMenu>

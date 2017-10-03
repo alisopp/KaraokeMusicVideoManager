@@ -25,6 +25,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -74,6 +75,14 @@ public class MainWindowController {
 	private TabPane tabView;
 	@FXML
 	private Tab musicVideoTableTab;
+
+	// context menu
+	@FXML
+	private MenuItem contextMenuPlay;
+	@FXML
+	private MenuItem contextMenuPlaylist;
+	@FXML
+	private MenuItem contextMenuDirectory;
 
 	// network button
 	@FXML
@@ -178,15 +187,17 @@ public class MainWindowController {
 		 * Set Menu icons
 		 */
 
-		exportMenu.setGraphic(createMenuIcon("images/menu/test.png"));
+		contextMenuPlay.setGraphic(createMenuIcon("images/menu/play.png"));
+		contextMenuPlaylist.setGraphic(createMenuIcon("images/menu/playlist.png"));
+		contextMenuDirectory.setGraphic(createMenuIcon("images/menu/directory.png"));
 	}
 
 	private ImageView createMenuIcon(String pathToImage) {
-		int imageSize = 15;
+		// int imageSize = 15;
 		Image userIcon = new Image(ClassResourceReaderModule.getInputStream(pathToImage));
 		ImageView userView = new ImageView(userIcon);
-		userView.setFitWidth(imageSize);
-		userView.setFitHeight(imageSize);
+		// userView.setFitWidth(imageSize);
+		// userView.setFitHeight(imageSize);
 		return userView;
 	}
 
