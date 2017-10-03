@@ -18,6 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -29,10 +30,13 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 public class MainWindowController {
 
@@ -70,6 +74,13 @@ public class MainWindowController {
 	private TabPane tabView;
 	@FXML
 	private Tab musicVideoTableTab;
+
+	// network button
+	@FXML
+	private ToggleButton networkButton;
+
+	// Mouse key monitoring
+	private boolean leftMouseKeyWasPressed;
 
 	public Main mainWindow;
 
@@ -207,10 +218,37 @@ public class MainWindowController {
 	}
 
 	/**
+	 * Monitor if the left mouse key was clicked
+	 * 
+	 * @param e
+	 *            (MouseEvent | Needed to get the mouse key)
+	 */
+	public void mousePressed(MouseEvent e) {
+		leftMouseKeyWasPressed = false;
+
+		if (e.isPrimaryButtonDown()) {
+			leftMouseKeyWasPressed = true;
+			System.out.println("Primary button");
+		}
+	}
+
+	/**
+	 * Open a video file only when the left mouse key was clicked
+	 */
+	@FXML
+	public void openTopMusicVideoFileLeftClick() {
+		if (leftMouseKeyWasPressed == true) {
+			openTopMusicVideoFile();
+		}
+	}
+
+	/**
 	 * Open on enter the video file that is on the top of the table
 	 */
 	@FXML
 	public void openTopMusicVideoFile() {
+
+		System.out.println("hi");
 
 		// if the musicVideoTable is selected
 		if (tabView.getSelectionModel().getSelectedItem() == musicVideoTableTab) {
@@ -360,10 +398,6 @@ public class MainWindowController {
 
 			Parent root1 = (Parent) loader.load();
 
-			// Connection to the Controller from the primary Stage
-			ServerLoginWindowController aboutWindowController = loader.getController();
-			aboutWindowController.setServerLoginWindow(this.mainWindow);
-
 			Stage stage = new Stage();
 			stage.setScene(new Scene(root1));
 			stage.setResizable(false);
@@ -377,10 +411,30 @@ public class MainWindowController {
 				System.err.println("Exception while loding icons");
 			}
 
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+				@Override
+				public void handle(WindowEvent event) {
+					checkNetwork();
+				}
+
+			});
+
+			// Connection to the Controller from the primary Stage
+			ServerLoginWindowController aboutWindowController = loader.getController();
+			aboutWindowController.setServerLoginWindow(this.mainWindow, stage);
+
 			stage.show();
+			checkNetwork();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void checkNetwork() {
+		// TODO Auto-generated method stub
+		this.networkButton.setSelected(false);
+
 	}
 
 	/**

@@ -3,8 +3,10 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frame
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.SftpModule;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class ServerLoginWindowController {
 
@@ -18,27 +20,44 @@ public class ServerLoginWindowController {
 	@FXML
 	private PasswordField userPassword;
 
+	@FXML
+	private Button loginButton;
+
+	private Stage a;
+
 	public Main mainWindow;
 
-	public void setServerLoginWindow(Main window) {
+	public void setServerLoginWindow(Main window, Stage a) {
 		this.mainWindow = window;
+		this.a = a;
 	}
 
 	@FXML
 	public void tryToLogin() {
 
-		if (((serverAddress.getText() != null) && (workingDirectory.getText() != null))
-				&& ((userName.getText() != null) && (userPassword.getText() != null))) {
-			SftpModule sftpConnect = new SftpModule(userName.getText(), userPassword.getText(),
-					serverAddress.getText());
+		SftpModule sftpConnect = new SftpModule(userName.getText(), userPassword.getText(), serverAddress.getText());
 
-			sftpConnect.connectSFTP();
+		sftpConnect.connectSFTP();
 
+		if (sftpConnect.isConnectionEstablished()) {
 			for (String a : sftpConnect.listFiles()) {
 				System.out.println(a);
 			}
 
+			sftpConnect.disconnectSFTP();
+			this.a.close();
 		}
 
+		sftpConnect.disconnectSFTP();
+
+	}
+
+	public void checkConnectButton() {
+		if ((!userName.getText().equals("") && !userPassword.getText().equals(""))
+				&& (!serverAddress.getText().equals("") && !workingDirectory.getText().equals(""))) {
+			loginButton.setDisable(false);
+		} else {
+			loginButton.setDisable(true);
+		}
 	}
 }

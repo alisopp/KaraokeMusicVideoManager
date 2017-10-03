@@ -60,6 +60,10 @@ public class SftpModule {
 	 */
 	private boolean connectionEstablished = false;
 
+	public boolean isConnectionEstablished() {
+		return connectionEstablished;
+	}
+
 	/**
 	 * Setup SFTP source without starting a connection
 	 * 

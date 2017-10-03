@@ -32,12 +32,12 @@
             <GridPane>
               <children>
                         <Label text="IP address:" />
-                        <TextField fx:id="serverAddress" promptText="server address" GridPane.columnIndex="1" />
+                        <TextField fx:id="serverAddress" onKeyReleased="#checkConnectButton" promptText="server address" GridPane.columnIndex="1" />
                         <Label text="Filepath:" GridPane.rowIndex="1" />
-                        <TextField fx:id="workingDirectory" promptText="path of the website folder" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="workingDirectory" onKeyReleased="#checkConnectButton" promptText="path of the website folder" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                  <TextField fx:id="userName" promptText="sftp username" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <PasswordField fx:id="userPassword" promptText="sftp password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="userName" onKeyReleased="#checkConnectButton" promptText="sftp username" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <PasswordField fx:id="userPassword" onKeyReleased="#checkConnectButton" promptText="sftp password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
               </children>
               <columnConstraints>
@@ -53,7 +53,7 @@
             </GridPane>
             <StackPane prefHeight="-1.0" prefWidth="-1.0">
               <children>
-                <Button alignment="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#tryToLogin" text="Connect" StackPane.alignment="CENTER_RIGHT" />
+                <Button fx:id="loginButton" alignment="CENTER" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#tryToLogin" text="Connect" StackPane.alignment="CENTER_RIGHT" />
               </children>
             </StackPane>
           </children>
