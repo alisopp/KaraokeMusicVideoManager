@@ -1,6 +1,7 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -896,6 +897,32 @@ public class MusicVideoHandler {
 
 	public boolean getAlwaysSave() {
 		return this.settingsData.getAlwaysSaveSettings();
+	}
+
+	public Path[] getPathList() {
+		return this.settingsData.getPathList();
+	}
+
+	public void removeFromPathList(String filePathToRemove) {
+		Path[] pathList = this.settingsData.getPathList();
+		ArrayList<Path> newPathList = new ArrayList<Path>();
+
+		for (Path path : pathList) {
+			Path filePathToRemovePath = Paths.get(filePathToRemove);
+			try {
+				if (!Files.isSameFile(path, filePathToRemovePath)) {
+					newPathList.add(path);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				newPathList.add(path);
+			}
+		}
+		this.settingsData.setPathList(newPathList.toArray(new Path[0]));
+
+		// update the music video list now
+		updateMusicVideoList();
 	}
 
 }

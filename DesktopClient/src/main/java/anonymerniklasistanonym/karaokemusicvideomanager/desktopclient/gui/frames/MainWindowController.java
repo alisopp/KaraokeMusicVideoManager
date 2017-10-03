@@ -3,13 +3,17 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frame
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.DirectoryPathTableView;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoTableView;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ClassResourceReaderModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowMethods;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoTableView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -19,9 +23,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -34,6 +43,10 @@ public class MainWindowController {
 	private TextField searchBox;
 
 	@FXML
+	private Menu exportMenu;
+
+	// the music video table
+	@FXML
 	private TableView<MusicVideoTableView> musicVideoTable;
 	@FXML
 	private TableColumn<MusicVideoTableView, Number> columnIndex;
@@ -42,7 +55,21 @@ public class MainWindowController {
 	@FXML
 	private TableColumn<MusicVideoTableView, String> columnTitle;
 
-	private ObservableList<MusicVideoTableView> tableData = FXCollections.observableArrayList();
+	private ObservableList<MusicVideoTableView> tableDataMusicVideo = FXCollections.observableArrayList();
+
+	// the directory path table
+	@FXML
+	private TableView<DirectoryPathTableView> directoryPathTable;
+	@FXML
+	private TableColumn<DirectoryPathTableView, String> columnFilePath;
+
+	private ObservableList<DirectoryPathTableView> tableDataDirectory = FXCollections.observableArrayList();
+
+	// the tabs
+	@FXML
+	private TabPane tabView;
+	@FXML
+	private Tab musicVideoTableTab;
 
 	public Main mainWindow;
 
@@ -54,7 +81,7 @@ public class MainWindowController {
 
 		/*
 		 * The following code is mostly copied from the wonderful tutorial by Marco
-		 * Jakob from code.makery
+		 * Jakob from code.makery and initializes the music video table
 		 * http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
 		 */
 
@@ -64,7 +91,7 @@ public class MainWindowController {
 		columnTitle.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
 
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
-		FilteredList<MusicVideoTableView> filteredData = new FilteredList<>(tableData, p -> true);
+		FilteredList<MusicVideoTableView> filteredData = new FilteredList<>(tableDataMusicVideo, p -> true);
 
 		// 2. Set the filter Predicate whenever the filter changes.
 		searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -94,12 +121,69 @@ public class MainWindowController {
 
 		// 5. Add sorted (and filtered) data to the table.
 		musicVideoTable.setItems(sortedData);
+
+		/*
+		 * The following code is mostly copied from the wonderful tutorial by Marco
+		 * Jakob from code.makery and initializes the direectory path table
+		 * http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
+		 */
+
+		// 0. Initialize the columns.
+		columnFilePath.setCellValueFactory(cellData -> cellData.getValue().getFilePathProperty());
+
+		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
+		FilteredList<DirectoryPathTableView> filteredDataDirectory = new FilteredList<>(tableDataDirectory, p -> true);
+
+		// 2. Set the filter Predicate whenever the filter changes.
+		searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+			filteredDataDirectory.setPredicate(directoryPathObject -> {
+				// If filter text is empty, display all persons.
+				if (newValue == null || newValue.isEmpty()) {
+					return true;
+				}
+
+				// Compare first name and last name of every person with filter text.
+				String lowerCaseFilter = newValue.toLowerCase();
+
+				if (directoryPathObject.getFilePath().toLowerCase().contains(lowerCaseFilter)) {
+					return true; // Filter matches first name.
+				} else if (directoryPathObject.getFilePath().toLowerCase().contains(lowerCaseFilter)) {
+					return true; // Filter matches last name.
+				}
+				return false; // Does not match.
+			});
+		});
+
+		// 3. Wrap the FilteredList in a SortedList.
+		SortedList<DirectoryPathTableView> sortedDataDirectory = new SortedList<>(filteredDataDirectory);
+
+		// 4. Bind the SortedList comparator to the TableView comparator.
+		sortedDataDirectory.comparatorProperty().bind(directoryPathTable.comparatorProperty());
+
+		// 5. Add sorted (and filtered) data to the table.
+		directoryPathTable.setItems(sortedDataDirectory);
+
+		/**
+		 * Set Menu icons
+		 */
+
+		exportMenu.setGraphic(createMenuIcon("images/menu/test.png"));
+	}
+
+	private ImageView createMenuIcon(String pathToImage) {
+		int imageSize = 15;
+		Image userIcon = new Image(ClassResourceReaderModule.getInputStream(pathToImage));
+		ImageView userView = new ImageView(userIcon);
+		userView.setFitWidth(imageSize);
+		userView.setFitHeight(imageSize);
+		return userView;
 	}
 
 	public void setMainWindow(Main window) {
 		this.mainWindow = window;
 
 		updateMusicVideoListTable();
+		updateDirectoryPathTable();
 
 	}
 
@@ -113,7 +197,7 @@ public class MainWindowController {
 		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
 
 		// if entry isn't null
-		if (selectedEntry != null) {
+		if (musicVideoTableTab.isSelected() && selectedEntry != null) {
 			// open the music video file with the index
 			this.mainWindow.musicVideohandler.openMusicVideo(selectedEntry.getIndex() - 1);
 		} else {
@@ -128,14 +212,26 @@ public class MainWindowController {
 	@FXML
 	public void openTopMusicVideoFile() {
 
-		// select the top item
-		this.musicVideoTable.getSelectionModel().select(0);
+		// if the musicVideoTable is selected
+		if (tabView.getSelectionModel().getSelectedItem() == musicVideoTableTab) {
+			// select the top item
+			this.musicVideoTable.getSelectionModel().select(0);
 
-		// open the music video that is selected
-		openSelectedVideoFile();
+			// open the music video that is selected
+			openSelectedVideoFile();
 
-		// clear the selection
-		this.musicVideoTable.getSelectionModel().clearSelection();
+			// clear the selection
+			this.musicVideoTable.getSelectionModel().clearSelection();
+		} else {
+			// select the top item
+			this.directoryPathTable.getSelectionModel().select(0);
+
+			// open the music video that is selected
+			showInExplorer();
+
+			// clear the selection
+			this.directoryPathTable.getSelectionModel().clearSelection();
+		}
 	}
 
 	/**
@@ -145,6 +241,29 @@ public class MainWindowController {
 	private void unSelectVideoFile() {
 		// clear the current selection
 		this.musicVideoTable.getSelectionModel().clearSelection();
+	}
+
+	/**
+	 * Clears the current selection
+	 */
+	@FXML
+	private void unSelectDirectoryPath() {
+		// clear the current selection
+		this.directoryPathTable.getSelectionModel().clearSelection();
+	}
+
+	/**
+	 * Clears the current text in the search box
+	 */
+	@FXML
+	private void clearSearch() {
+		// clear the current selection
+		this.searchBox.setText("");
+		if (tabView.getSelectionModel().getSelectedItem() == musicVideoTableTab) {
+			this.searchBox.setPromptText("Search for music videos...");
+		} else {
+			this.searchBox.setPromptText("Search for directories...");
+		}
 
 	}
 
@@ -193,6 +312,7 @@ public class MainWindowController {
 			this.mainWindow.musicVideohandler.updateMusicVideoList();
 
 			updateMusicVideoListTable();
+			updateDirectoryPathTable();
 
 		}
 	}
@@ -272,11 +392,56 @@ public class MainWindowController {
 
 		// add music video data
 		if (listOfVideos != null) {
-			tableData.clear();
+			tableDataMusicVideo.clear();
 			for (int i = 0; i < listOfVideos.length; i++) {
-				tableData.add(new MusicVideoTableView(i + 1, listOfVideos[i].getArtist(), listOfVideos[i].getTitle()));
+				tableDataMusicVideo
+						.add(new MusicVideoTableView(i + 1, listOfVideos[i].getArtist(), listOfVideos[i].getTitle()));
 			}
 		}
+	}
+
+	/**
+	 * Update the directory path table in the window with the current path list
+	 */
+	public void updateDirectoryPathTable() {
+		// get music video data
+		Path[] listOfPaths = this.mainWindow.musicVideohandler.getPathList();
+
+		// add music video data
+		if (listOfPaths != null) {
+			tableDataDirectory.clear();
+			for (int i = 0; i < listOfPaths.length; i++) {
+				tableDataDirectory.add(new DirectoryPathTableView(listOfPaths[i].toString()));
+			}
+		}
+	}
+
+	@FXML
+	public void removeDirectory() {
+		// ge the currently selected entry
+		DirectoryPathTableView selectedEntry = this.directoryPathTable.getSelectionModel().getSelectedItem();
+
+		// if entry isn't null
+		if (selectedEntry != null) {
+			// open the music video file with the index
+			this.mainWindow.musicVideohandler.removeFromPathList(selectedEntry.getFilePath());
+			updateDirectoryPathTable();
+			updateMusicVideoListTable();
+		}
+	}
+
+	@FXML
+	public void showInExplorer() {
+
+		// get the currently selected entry
+		DirectoryPathTableView selectedEntry = this.directoryPathTable.getSelectionModel().getSelectedItem();
+
+		// if entry isn't null
+		if (selectedEntry != null) {
+			// open the music video file with the index
+			ExternalApplicationHandler.openFile(Paths.get(selectedEntry.getFilePath()).toFile());
+		}
+
 	}
 
 }

@@ -1,4 +1,4 @@
-package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
+package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
