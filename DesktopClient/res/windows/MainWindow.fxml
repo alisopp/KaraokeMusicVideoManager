@@ -151,7 +151,7 @@
                      <content>
                         <VBox>
                            <children>
-                              <TableView fx:id="directoryPathTable" minHeight="150.0" onMouseClicked="#showInExplorer" onSort="#unSelectDirectoryPath">
+                              <TableView fx:id="directoryPathTable" minHeight="150.0" onMouseClicked="#showInExplorer" onSort="#unSelectDirectoryPath" VBox.vgrow="ALWAYS">
                                 <columns>
                                   <TableColumn fx:id="columnFilePath" prefWidth="400.0" text="Directory Path" />
                                 </columns>
@@ -159,7 +159,7 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                               </TableView>
-                              <HBox alignment="TOP_CENTER" minHeight="-Infinity" spacing="20.0">
+                              <HBox alignment="TOP_CENTER" minHeight="-Infinity" spacing="20.0" VBox.vgrow="NEVER">
                                  <children>
                                     <Button mnemonicParsing="false" onAction="#addSourceFolderDialog" text="Add source" />
                                     <Button mnemonicParsing="false" onAction="#removeDirectory" text="Remove source" />
