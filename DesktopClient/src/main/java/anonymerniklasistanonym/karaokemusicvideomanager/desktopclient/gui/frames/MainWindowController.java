@@ -44,7 +44,7 @@ public class MainWindowController {
 
 	// Views
 	@FXML
-	private Label label;
+	private Label searchLabel;
 	@FXML
 	private TextField searchBox;
 
@@ -85,13 +85,27 @@ public class MainWindowController {
 	@FXML
 	private MenuItem contextMenuDirectory;
 
+	// menu bar
+	@FXML
+	private MenuItem aboutButton;
+	@FXML
+	private MenuItem helpButton;
+
 	// network button
 	@FXML
 	private ToggleButton networkButton;
 
-	// YouTtube button
+	// Normal buttons
 	@FXML
 	private Button youTubeButton;
+	@FXML
+	private Button randomButton;
+	@FXML
+	private Button addPathButton;
+	@FXML
+	private Button removePathButton;
+	@FXML
+	private Button showInExplorerButton;
 
 	// Mouse key monitoring
 	private boolean leftMouseKeyWasPressed;
@@ -198,8 +212,16 @@ public class MainWindowController {
 		contextMenuDirectory.setGraphic(createMenuIcon("images/menu/directory.png"));
 
 		// network button
-		networkButton.setGraphic(createMenuIcon("images/menu/play.png"));
+		networkButton.setGraphic(createMenuIcon("images/menu/network.png"));
 		youTubeButton.setGraphic(createMenuIcon("images/menu/youTube.png"));
+		aboutButton.setGraphic(createMenuIcon("images/menu/about.png"));
+		randomButton.setGraphic(createMenuIcon("images/menu/random.png"));
+		addPathButton.setGraphic(createMenuIcon("images/menu/add.png"));
+		removePathButton.setGraphic(createMenuIcon("images/menu/remove.png"));
+		showInExplorerButton.setGraphic(createMenuIcon("images/menu/directory.png"));
+
+		// label
+		searchLabel.setGraphic(createMenuIcon("images/menu/search.png"));
 	}
 
 	private ImageView createMenuIcon(String pathToImage) {
@@ -225,7 +247,7 @@ public class MainWindowController {
 	@FXML
 	private void openSelectedVideoFile() {
 
-		// ge the currently selected entry
+		// get the currently selected entry
 		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
 
 		// if entry isn't null
@@ -259,7 +281,7 @@ public class MainWindowController {
 	@FXML
 	public void openTopMusicVideoFileLeftClick() {
 		if (leftMouseKeyWasPressed == true) {
-			openTopMusicVideoFile();
+			openSelectedVideoFile();
 		}
 	}
 

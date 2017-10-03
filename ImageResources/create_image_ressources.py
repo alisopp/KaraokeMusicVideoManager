@@ -203,7 +203,7 @@ def create_menu_icons(destination_directory, source_file_directory):
                 filename, file_extension = os.path.splitext(file)
                 if file_extension == ".svg":
                     convert_svg_2_png(file, os.path.join(
-                        destination_directory, ntpath.basename(filename) + ".png"), 16, 16)
+                        destination_directory, ntpath.basename(filename) + ".png"), 15, 15)
     print("All menu icons were created")
 
 
