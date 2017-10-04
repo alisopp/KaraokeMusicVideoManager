@@ -17,43 +17,43 @@ public final class ProgramData {
 	/**
 	 * All the paths to music video files
 	 */
-	private Path[] pathList = null;
+	private Path[] pathList;
 
 	/**
 	 * Language of the program
 	 */
-	private Locale language = null;
+	private Locale language;
 
 	/**
 	 * Accepted file types
 	 */
-	private String[] acceptedFileTypes = new String[] { "avi", "mp4", "mkv", "wmv", "mov", "mpg", "mpeg" };
+	private String[] acceptedFileTypes;
 
 	/**
 	 * SFTP - Login account user name
 	 */
-	private String userNameSftp = null;
+	private String userNameSftp;
 
 	/**
 	 * SFTP - IP address of server
 	 */
-	private String ipAddressSftp = null;
+	private String ipAddressSftp;
 
 	/**
 	 * SFTP - Working directory
 	 */
-	private String workingDirectorySftp = null;
+	private String workingDirectorySftp;
 
 	/**
 	 * SFTP - Working directory
 	 */
-	private Boolean alwaysSaveSettings = false;
+	private Boolean alwaysSaveSettings;
 
 	/**
 	 * Constructor [empty]
 	 */
 	public ProgramData() {
-
+		resetSettings();
 	}
 
 	/**
@@ -63,6 +63,21 @@ public final class ProgramData {
 	 */
 	public Path[] getPathList() {
 		return pathList;
+	}
+
+	/**
+	 * Get all paths of MusicVideo source folders
+	 * 
+	 * @return pathList (Path[])
+	 */
+	public void resetSettings() {
+		pathList = null;
+		language = null;
+		acceptedFileTypes = new String[] { "avi", "mp4", "mkv", "wmv", "mov", "mpg", "mpeg" };
+		userNameSftp = null;
+		ipAddressSftp = null;
+		workingDirectorySftp = null;
+		alwaysSaveSettings = false;
 	}
 
 	/**

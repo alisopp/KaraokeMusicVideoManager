@@ -13,7 +13,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 /**
- * Static methods to read, write and copy files
+ * Static methods to read, write, rename and copy files
  * 
  * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
  *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
@@ -338,22 +338,34 @@ public class FileReadWriteModule {
 	/**
 	 * Rename a file into a new file
 	 * 
-	 * @param oldfile
+	 * @param oldFile
 	 *            (File)
-	 * @param newfile
+	 * @param newFile
 	 *            (File)
 	 * @return true if rename worked
 	 */
-	public static boolean rename(File oldfile, File newfile) {
+	public static boolean rename(File oldFile, File newFile) {
 
-		if (oldfile.renameTo(newfile)) {
-			System.out.println("Rename succesful");
+		if (oldFile != null && newFile != null) {
+			System.err.println("File can't be renamed because the old or new path is null!");
+			return false;
+		}
+
+		if (!oldFile.exists()) {
+			System.err
+					.println("The file " + oldFile.getAbsolutePath() + " can't be renamed because it doesn't exists!");
+			return false;
+		}
+
+		System.out.println(">> Rename " + oldFile.getAbsolutePath() + " to " + newFile.getAbsolutePath());
+
+		if (oldFile.renameTo(newFile)) {
+			System.out.println("<< Rename succesful");
 			return true;
 		} else {
-			System.out.println("Rename failed");
+			System.err.println("<< Rename failed!");
+			return false;
 		}
-		return false;
-
 	}
 
 }

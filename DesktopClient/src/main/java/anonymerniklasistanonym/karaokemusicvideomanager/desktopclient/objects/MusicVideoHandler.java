@@ -389,7 +389,8 @@ public class MusicVideoHandler {
 	public void updateMusicVideoList() {
 
 		if (this.settingsData.getPathList() == null) {
-			System.err.println("There are no paths!");
+			this.musicVideoList = null;
+			System.out.println("There are no paths!");
 			return;
 		}
 
@@ -973,8 +974,8 @@ public class MusicVideoHandler {
 	}
 
 	public void reset() {
-		this.settingsData = new ProgramData();
-		updateMusicVideoList();
+		this.settingsData.resetSettings();
+		// updateMusicVideoList();
 	}
 
 }

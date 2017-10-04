@@ -38,7 +38,6 @@ public class ExternalApplicationHandler {
 
 		System.out.println(">> Try to externaly open the URL " + urlToOpen);
 
-		// if we are on Windows
 		if (Desktop.isDesktopSupported()) {
 			try {
 				Desktop.getDesktop().browse(new URI(urlToOpen));
@@ -46,15 +45,6 @@ public class ExternalApplicationHandler {
 			} catch (IOException | URISyntaxException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			// we are on Linux and open it like this:
-			Runtime runtime = Runtime.getRuntime();
-			try {
-				runtime.exec("xdg-open " + urlToOpen);
-				return true;
-			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}

@@ -798,9 +798,11 @@ public class MainWindowController {
 		// get music video data
 		MusicVideo[] listOfVideos = this.mainWindow.getMusicVideohandler().getMusicVideoList();
 
+		// clear table
+		tableDataMusicVideo.clear();
+
 		// add music video data
 		if (listOfVideos != null) {
-			tableDataMusicVideo.clear();
 			for (int i = 0; i < listOfVideos.length; i++) {
 				tableDataMusicVideo
 						.add(new MusicVideoTableView(i + 1, listOfVideos[i].getArtist(), listOfVideos[i].getTitle()));
@@ -817,11 +819,13 @@ public class MainWindowController {
 		// get music video data
 		Path[] listOfPaths = this.mainWindow.getMusicVideohandler().getPathList();
 
+		// clear table
+		tableDataDirectory.clear();
+
 		// add music video data
 		if (listOfPaths != null) {
-			tableDataDirectory.clear();
-			for (int i = 0; i < listOfPaths.length; i++) {
-				tableDataDirectory.add(new DirectoryPathTableView(listOfPaths[i].toString()));
+			for (Path directory : listOfPaths) {
+				tableDataDirectory.add(new DirectoryPathTableView(directory.toString()));
 			}
 		}
 	}
