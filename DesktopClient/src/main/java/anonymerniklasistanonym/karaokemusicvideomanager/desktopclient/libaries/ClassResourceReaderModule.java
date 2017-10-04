@@ -6,6 +6,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Static methods that help with loading class resources
+ * 
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com>
+ */
 public class ClassResourceReaderModule {
 
 	/**

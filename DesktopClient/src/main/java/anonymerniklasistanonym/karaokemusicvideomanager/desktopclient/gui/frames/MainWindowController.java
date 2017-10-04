@@ -39,11 +39,18 @@ import javafx.stage.WindowEvent;
 
 public class MainWindowController {
 
-	// Views
-	@FXML
-	private Label searchLabel;
+	// FXML Views
+
+	/**
+	 * input search box/field
+	 */
 	@FXML
 	private TextField searchBox;
+	/**
+	 * label of the input search box/field
+	 */
+	@FXML
+	private Label searchLabel;
 
 	// the music video table
 	@FXML
@@ -55,15 +62,11 @@ public class MainWindowController {
 	@FXML
 	private TableColumn<MusicVideoTableView, String> columnTitle;
 
-	private ObservableList<MusicVideoTableView> tableDataMusicVideo = FXCollections.observableArrayList();
-
 	// the directory path table
 	@FXML
 	private TableView<DirectoryPathTableView> directoryPathTable;
 	@FXML
 	private TableColumn<DirectoryPathTableView, String> columnFilePath;
-
-	private ObservableList<DirectoryPathTableView> tableDataDirectory = FXCollections.observableArrayList();
 
 	// the tabs
 	@FXML
@@ -71,78 +74,146 @@ public class MainWindowController {
 	@FXML
 	private Tab musicVideoTableTab;
 
-	// context menu
+	// music video files table context menu
 
 	/**
-	 * music video files table > add file to the play list
+	 * music video files table context menu > add file to the play list
 	 */
 	@FXML
 	private MenuItem contextMusicVideoPlaylist;
 	/**
-	 * music video files table > open directory of file
+	 * music video files table context menu > open directory of file
 	 */
 	@FXML
 	private MenuItem contextMusicVideoDirectory;
 	/**
-	 * music video files table > ignore the current file
+	 * music video files table context menu > ignore the current file
 	 */
 	@FXML
 	private MenuItem contextMusicVideoIgnore;
 	/**
-	 * music video files table > clear the current selection
+	 * music video files table context menu > clear the current selection
 	 */
 	@FXML
 	private MenuItem contextMusicVideoClear;
 	/**
-	 * music video files table > refresh the table
+	 * music video files table context menu > refresh the table
 	 */
 	@FXML
 	private MenuItem contextMusicVideoRefresh;
 
+	// music video path table context menu
+
+	/**
+	 * music video path table context menu > remove the current selected directory
+	 */
 	@FXML
 	private MenuItem contextPathRemove;
-	@FXML
-	private MenuItem contextPathWrongFormatted;
+	/**
+	 * music video path table context menu > clear the current selection
+	 */
 	@FXML
 	private MenuItem contextPathClear;
+	/**
+	 * music video path table context menu > refresh the table
+	 */
 	@FXML
 	private MenuItem contextPathRefresh;
 
+	// menu buttons
+
+	/**
+	 * export menu button > CSV export
+	 */
 	@FXML
 	private MenuItem menuButtonCsv;
+	/**
+	 * export menu button > JSON export
+	 */
 	@FXML
 	private MenuItem menuButtonJson;
+	/**
+	 * export menu button > export of websites
+	 */
+	@FXML
+	private Menu menuButtonWebsites;
+	/**
+	 * export menu button > HTML static list export
+	 */
 	@FXML
 	private MenuItem menuButtonHtmlStatic;
+	/**
+	 * export menu button > HTML list with search export
+	 */
 	@FXML
 	private MenuItem menuButtonHtmlSearch;
+	/**
+	 * export menu button > HTML list with party playlist export
+	 */
 	@FXML
 	private MenuItem menuButtonHtmlParty;
 
-	// menu bar
-	@FXML
-	private Menu menuButtonWebsites;
+	/**
+	 * about menu button > about button
+	 */
 	@FXML
 	private MenuItem aboutButton;
+	/**
+	 * about menu button > help button
+	 */
 	@FXML
 	private MenuItem helpButton;
 
-	// network button
+	// window buttons
+
+	/**
+	 * network toggle button
+	 */
 	@FXML
 	private ToggleButton networkButton;
-
-	// Normal buttons
+	/**
+	 * YouTube button
+	 */
 	@FXML
 	private Button youTubeButton;
+	/**
+	 * Random button
+	 */
 	@FXML
 	private Button randomButton;
-	@FXML
-	private Button addPathButton;
 
-	// Mouse key monitoring
+	/**
+	 * Add a directory to the path list button
+	 */
+	@FXML
+	private Button buttonAddDirectory;
+	/**
+	 * Open the wrong formatted files window button
+	 */
+	@FXML
+	private Button buttonWrongFormattedFiles;
+
+	// other
+
+	/**
+	 * table data of the table with music video files
+	 */
+	private ObservableList<MusicVideoTableView> tableDataMusicVideo;
+
+	/**
+	 * table data of the table with music video file directories
+	 */
+	private ObservableList<DirectoryPathTableView> tableDataDirectory;
+
+	/**
+	 * get if the last mouse key that was pressed was the left mouse key
+	 */
 	private boolean leftMouseKeyWasPressed;
 
-	public Main mainWindow;
+	/**
+	 * Main class
+	 */
+	private Main mainWindow;
 
 	/**
 	 * This method get's called when the FXML file get's loaded
@@ -162,6 +233,7 @@ public class MainWindowController {
 		columnTitle.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
 
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
+		tableDataMusicVideo = FXCollections.observableArrayList();
 		FilteredList<MusicVideoTableView> filteredData = new FilteredList<>(tableDataMusicVideo, p -> true);
 
 		// 2. Set the filter Predicate whenever the filter changes.
@@ -203,6 +275,7 @@ public class MainWindowController {
 		columnFilePath.setCellValueFactory(cellData -> cellData.getValue().getFilePathProperty());
 
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
+		tableDataDirectory = FXCollections.observableArrayList();
 		FilteredList<DirectoryPathTableView> filteredDataDirectory = new FilteredList<>(tableDataDirectory, p -> true);
 
 		// 2. Set the filter Predicate whenever the filter changes.
@@ -245,16 +318,16 @@ public class MainWindowController {
 		contextMusicVideoClear.setGraphic(WindowMethods.createMenuIcon("images/menu/clear.png"));
 		contextMusicVideoRefresh.setGraphic(WindowMethods.createMenuIcon("images/menu/refresh.png"));
 		contextPathRemove.setGraphic(WindowMethods.createMenuIcon("images/menu/remove.png"));
-		contextPathWrongFormatted.setGraphic(WindowMethods.createMenuIcon("images/menu/wrongFormattedFiles.png"));
 		contextPathClear.setGraphic(WindowMethods.createMenuIcon("images/menu/clear.png"));
 		contextPathRefresh.setGraphic(WindowMethods.createMenuIcon("images/menu/refresh.png"));
 
 		// other buttons
+		buttonWrongFormattedFiles.setGraphic(WindowMethods.createMenuIcon("images/menu/wrongFormattedFiles.png"));
+		buttonAddDirectory.setGraphic(WindowMethods.createMenuIcon("images/menu/add.png"));
 		networkButton.setGraphic(WindowMethods.createMenuIcon("images/menu/network.png"));
 		youTubeButton.setGraphic(WindowMethods.createMenuIcon("images/menu/youTube.png"));
 		aboutButton.setGraphic(WindowMethods.createMenuIcon("images/menu/about.png"));
 		randomButton.setGraphic(WindowMethods.createMenuIcon("images/menu/random.png"));
-		addPathButton.setGraphic(WindowMethods.createMenuIcon("images/menu/add.png"));
 
 		// menu buttons
 		menuButtonWebsites.setGraphic(WindowMethods.createMenuIcon("images/menu/html_static.png"));
@@ -271,8 +344,8 @@ public class MainWindowController {
 	public void setMainWindow(Main window) {
 		this.mainWindow = window;
 
-		updateMusicVideoFileTable();
-		updateDirectoryPathTable();
+		refreshMusicVideoFileTable();
+		refreshMusicVideoPathTable();
 
 	}
 
@@ -301,12 +374,12 @@ public class MainWindowController {
 	 * @param e
 	 *            (MouseEvent | Needed to get the mouse key)
 	 */
-	public void mousePressed(MouseEvent e) {
+	@FXML
+	private void mousePressed(MouseEvent e) {
 		leftMouseKeyWasPressed = false;
 
 		if (e.isPrimaryButtonDown()) {
 			leftMouseKeyWasPressed = true;
-			System.out.println("Primary button");
 		}
 	}
 
@@ -314,7 +387,7 @@ public class MainWindowController {
 	 * Open a video file only when the left mouse key was clicked
 	 */
 	@FXML
-	public void openMusicVideoFileLeftClick() {
+	private void openMusicVideoFileLeftClick() {
 		if (leftMouseKeyWasPressed == true) {
 			openSelectedVideoFile();
 		}
@@ -324,7 +397,7 @@ public class MainWindowController {
 	 * Open a video file only when the left mouse key was clicked
 	 */
 	@FXML
-	public void openDirectoryLeftClick() {
+	private void openDirectoryLeftClick() {
 		if (leftMouseKeyWasPressed == true) {
 			showDirectoryInExplorerPathList();
 		}
@@ -334,7 +407,7 @@ public class MainWindowController {
 	 * Open on enter the video file that is on the top of the table
 	 */
 	@FXML
-	public void openTopMusicVideoFile() {
+	private void openTopMusicVideoFile() {
 
 		System.out.println("hi");
 
@@ -398,7 +471,7 @@ public class MainWindowController {
 	 * browser
 	 */
 	@FXML
-	public void searchOnYouTube() {
+	private void searchOnYouTube() {
 
 		// Text we want to search on YouTube
 		String searchQuery = searchBox.getText();
@@ -430,15 +503,15 @@ public class MainWindowController {
 	 * browser
 	 */
 	@FXML
-	public void addSourceFolderDialog() {
+	private void addSourceFolderDialog() {
 		File directory = Dialogs.chooseDirectory(this.mainWindow.getPrimaryStage(), "Add a path", null);
 
 		if (directory != null && (directory.exists() && directory.isDirectory())) {
 			this.mainWindow.getMusicVideohandler().addPathToPathList(directory.toPath());
 			this.mainWindow.getMusicVideohandler().updateMusicVideoList();
 
-			updateMusicVideoFileTable();
-			updateDirectoryPathTable();
+			refreshMusicVideoFileTable();
+			refreshMusicVideoPathTable();
 
 		}
 	}
@@ -447,7 +520,7 @@ public class MainWindowController {
 	 * Open the About Window
 	 */
 	@FXML
-	public void openAboutWindow() {
+	private void openAboutWindow() {
 		try {
 
 			FXMLLoader loader = new FXMLLoader();
@@ -478,7 +551,7 @@ public class MainWindowController {
 	 * Open the server login window
 	 */
 	@FXML
-	public void openServerLoginWindow() {
+	private void openServerLoginWindow() {
 		try {
 
 			FXMLLoader loader = new FXMLLoader();
@@ -523,16 +596,25 @@ public class MainWindowController {
 	 * Open the wrong formatted files window
 	 */
 	@FXML
-	public void openWrongFormattedFilesWindow() {
-		try {
+	private void openWrongFormattedFilesWindow() {
 
+		try {
+			// load the window from file
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getClassLoader().getResource("windows/WrongFomattedFilesWindow.fxml"));
 
+			// Connection to the Controller from the primary Stage
+			WrongFormattedFilesWindowController wrongWindowController = loader.getController();
+			wrongWindowController.setWrongFormattedFilesWindow(this.mainWindow);
+
+			// load main element as parent
 			Parent root1 = (Parent) loader.load();
 
+			// create new Stage and scene with the main element as parent
 			Stage stage = new Stage();
 			stage.setScene(new Scene(root1));
+
+			// make it resizable and set minimal widths
 			stage.setResizable(true);
 			stage.setMinWidth(450);
 			stage.setMinHeight(350);
@@ -544,28 +626,93 @@ public class MainWindowController {
 				System.err.println("Exception while loding icons");
 			}
 
+			// set a window title
 			stage.setTitle("Wrong Formatted Files");
 
-			// Connection to the Controller from the primary Stage
-			WrongFormattedFilesWindowController wrongWindowController = loader.getController();
-			wrongWindowController.setWrongFormattedFilesWindow(this.mainWindow);
-
+			// show the stage/window
 			stage.show();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void checkNetwork() {
-		// TODO Auto-generated method stub
-		this.networkButton.setSelected(false);
+	/**
+	 * Remove a directory from the path list
+	 */
+	@FXML
+	private void removeDirectory() {
 
+		// get the currently selected directory/path
+		DirectoryPathTableView selectedEntry = this.directoryPathTable.getSelectionModel().getSelectedItem();
+
+		// if something was selected
+		if (selectedEntry != null) {
+			// remove this entry from the path list
+			this.mainWindow.getMusicVideohandler().removeFromPathList(selectedEntry.getFilePath());
+
+			// update now both tables
+			refreshMusicVideoPathTable();
+			refreshMusicVideoFileTable();
+		}
 	}
 
 	/**
-	 * Update the music video table in the window with the current music video list
+	 * Show the currently selected directory in the default file manager
 	 */
-	public void updateMusicVideoFileTable() {
+	@FXML
+	private void showDirectoryInExplorerPathList() {
+
+		// get the currently selected entry
+		DirectoryPathTableView selectedEntry = this.directoryPathTable.getSelectionModel().getSelectedItem();
+
+		// if entry isn't null
+		if (selectedEntry != null) {
+			// open the music video file with the index
+			ExternalApplicationHandler.openFile(Paths.get(selectedEntry.getFilePath()).toFile());
+		}
+	}
+
+	/**
+	 * Show the currently selected files directory in the default file manager
+	 */
+	@FXML
+	private void showDirectoryInExplorerMusicVideoList() {
+
+		// get the currently selected entry
+		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
+
+		// if entry isn't null
+		if (selectedEntry != null) {
+
+			// get the path of the music video object over the table index - 1
+			MusicVideo selectedFile = this.mainWindow.getMusicVideohandler()
+					.getMusicVideoList()[selectedEntry.getIndex() - 1];
+
+			// open the selected music video file externally
+			ExternalApplicationHandler.openDirectory(selectedFile.getPath().toFile());
+		}
+	}
+
+	/**
+	 * Add currently selected music video file to play list
+	 */
+	@FXML
+	private void addVideoToPlaylist() {
+
+		// get the currently selected entry
+		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
+
+		if (selectedEntry != null) {
+			// TODO
+		}
+	}
+
+	/**
+	 * Refresh the music video file table
+	 */
+	@FXML
+	private void refreshMusicVideoFileTable() {
 
 		// update the music video data
 		this.mainWindow.getMusicVideohandler().updateMusicVideoList();
@@ -584,9 +731,10 @@ public class MainWindowController {
 	}
 
 	/**
-	 * Update the directory path table in the window with the current path list
+	 * Refresh the music video path table
 	 */
-	public void updateDirectoryPathTable() {
+	@FXML
+	private void refreshMusicVideoPathTable() {
 
 		// get music video data
 		Path[] listOfPaths = this.mainWindow.getMusicVideohandler().getPathList();
@@ -600,126 +748,32 @@ public class MainWindowController {
 		}
 	}
 
-	@FXML
-	public void removeDirectory() {
-		// ge the currently selected entry
-		DirectoryPathTableView selectedEntry = this.directoryPathTable.getSelectionModel().getSelectedItem();
-
-		// if entry isn't null
-		if (selectedEntry != null) {
-			// open the music video file with the index
-			this.mainWindow.getMusicVideohandler().removeFromPathList(selectedEntry.getFilePath());
-			updateDirectoryPathTable();
-			updateMusicVideoFileTable();
-		}
-	}
-
-	/**
-	 * Show the currently selected directory in the default file manager
-	 */
-	@FXML
-	public void showDirectoryInExplorerPathList() {
-
-		// get the currently selected entry
-		DirectoryPathTableView selectedEntry = this.directoryPathTable.getSelectionModel().getSelectedItem();
-
-		// if entry isn't null
-		if (selectedEntry != null) {
-			// open the music video file with the index
-			ExternalApplicationHandler.openFile(Paths.get(selectedEntry.getFilePath()).toFile());
-		}
-	}
-
-	/**
-	 * Show the currently selected files directory in the default file manager
-	 */
-	@FXML
-	public void showDirectoryInExplorerMusicVideoList() {
-
-		// get the currently selected entry
-		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
-
-		// if entry isn't null
-		if (selectedEntry != null) {
-
-			// get the path of the music video object over the table index - 1
-			MusicVideo selectedFile = this.mainWindow.getMusicVideohandler()
-					.getMusicVideoList()[selectedEntry.getIndex() - 1];
-
-			// open the selected music video file externally
-			ExternalApplicationHandler.openDirectory(selectedFile.getPath().toFile());
-		}
-	}
-
-	/**
-	 * Add currently selected music video file to playlist
-	 */
-	@FXML
-	public void addVideoToPlaylist() {
-		// TODO
-
-		// get the currently selected entry
-		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
-
-		if (selectedEntry != null) {
-
-		}
-	}
-
-	@FXML
-	public void showDirectoryOfFileInExplorer() {
-
-		// get the currently selected entry
-		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
-
-		System.out.println("hi");
-		// if entry isn't null
-		if (selectedEntry != null) {
-			Path filePath = this.mainWindow.getMusicVideohandler().getMusicVideoList()[selectedEntry.getIndex() - 1]
-					.getPath();
-
-			// open the music video file with the index
-			File selectedFile = filePath.toAbsolutePath().toFile();
-			System.out.println("selectedFile: " + selectedFile.getAbsolutePath());
-			if (selectedFile.exists() && !selectedFile.isDirectory()) {
-				System.out.println("hi 3");
-				ExternalApplicationHandler.openFile(selectedFile.getParentFile());
-			}
-		}
-	}
-
-	/**
-	 * Refresh the music video file table
-	 */
-	@FXML
-	private void refreshMusicVideoFileTable() {
-		updateMusicVideoFileTable();
-	}
-
-	/**
-	 * Refresh the music video path table
-	 */
-	@FXML
-	private void refreshMusicVideoPathTable() {
-		updateDirectoryPathTable();
-	}
-
 	/**
 	 * Ignore the currently selected music video file
 	 */
 	@FXML
 	private void ignoreMusicVideoFile() {
-		// TODO
 
 		// get the currently selected entry
 		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
 
 		if (selectedEntry != null) {
-
+			// TODO
 		}
 
 		// update the music video list after this
-		updateMusicVideoFileTable();
+		refreshMusicVideoFileTable();
+	}
+
+	/**
+	 * Add network: Check if a working network connection is established
+	 */
+	private void checkNetwork() {
+		// TODO
+
+		// set the network button to connected if a connection was established
+		this.networkButton.setSelected(false);
+
 	}
 
 }

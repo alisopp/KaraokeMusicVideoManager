@@ -8,8 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -21,6 +19,12 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 
+/**
+ * Class to create s SFTP connection and transfer files back and for
+ * 
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
+ *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
+ */
 public class SftpModule {
 
 	/**
@@ -497,36 +501,4 @@ public class SftpModule {
 
 		}
 	}
-
-	public static void main(String[] args) {
-		SftpModule test = new SftpModule("username", "1234", "192.168.0.192");
-
-		test.connectSFTP();
-
-		long millis = System.currentTimeMillis() % 1000;
-
-		System.out.println(Arrays.toString(test.listFiles()));
-
-		test.changeDirectory("/home/pi");
-
-		System.out.println(Arrays.toString(test.listFiles(".rb")));
-
-		test.retrieveFile("Test.rb", test.listFiles(".rb")[0]);
-
-		test.transferFile(Paths.get("c:\\Video\\aha"));
-
-		test.removeFile("aha/a/myfile.txt");
-		test.removeEmptyDirectory("aha/a");
-
-		long millis2 = System.currentTimeMillis() % 1000;
-		System.out.println((millis2 - millis) + "ms");
-
-		test.disconnectSFTP();
-
-		File a = new File("Test2.rb");
-
-		System.out.println(Arrays.toString(FileReadWriteModule.readTextFile(a)));
-
-	}
-
 }

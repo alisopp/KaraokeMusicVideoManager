@@ -77,7 +77,7 @@ public class WrongFormattedFilesWindowController {
 	@FXML
 	private TableColumn<WrongFormattedFilesTableView, String> columnFilePath;
 
-	// "normal" class attributes
+	// other
 
 	/**
 	 * table data of the table with wrong formatted file paths
@@ -85,7 +85,7 @@ public class WrongFormattedFilesWindowController {
 	private ObservableList<WrongFormattedFilesTableView> wrongFormattedFilesTableData;
 
 	/**
-	 * Get if the last mouse key that was pressed was the left mouse key
+	 * get if the last mouse key that was pressed was the left mouse key
 	 */
 	private boolean leftMouseKeyWasPressed;
 

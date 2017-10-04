@@ -11,8 +11,8 @@ import javax.json.JsonValue;
 /**
  * Essential and quick static methods to handle JSON files (write/load)
  * 
- * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com>
- *
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
+ *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  */
 public class JsonModule {
 
