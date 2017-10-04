@@ -1,5 +1,6 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,6 +51,11 @@ public final class ProgramData {
 	private Boolean alwaysSaveSettings;
 
 	/**
+	 * Files that should be ignored
+	 */
+	private File[] ignoredFileList;
+
+	/**
 	 * Constructor [empty]
 	 */
 	public ProgramData() {
@@ -78,6 +84,7 @@ public final class ProgramData {
 		ipAddressSftp = null;
 		workingDirectorySftp = null;
 		alwaysSaveSettings = false;
+		ignoredFileList = null;
 	}
 
 	/**
@@ -189,12 +196,45 @@ public final class ProgramData {
 		this.workingDirectorySftp = workingDirectorySftp;
 	}
 
-	public Boolean getAlwaysSaveSettings() {
+	public boolean getAlwaysSaveSettings() {
 		return alwaysSaveSettings;
 	}
 
-	public void setAlwaysSaveSettings(Boolean alwaysSaveSettings) {
+	public void setAlwaysSaveSettings(boolean alwaysSaveSettings) {
 		this.alwaysSaveSettings = alwaysSaveSettings;
+	}
+
+	public File[] getIgnoredFiles() {
+		return this.ignoredFileList;
+	}
+
+	public void setIgnoredFiles(File[] filesToIgnore) {
+
+		System.out.println(">> Set ignored files:");
+
+		if (filesToIgnore != null && filesToIgnore.length != 0) {
+
+			// create ArrayList to contain all non-repeated supported file types
+			ArrayList<File> uniqueFileTypes = new ArrayList<File>();
+
+			// cycle through the entire array
+			for (File fileToIgnore : filesToIgnore) {
+				// check if the file type is already contained in the ArrayList
+				if (!uniqueFileTypes.contains(fileToIgnore)) {
+					// add it
+					uniqueFileTypes.add(fileToIgnore);
+					System.out.println("+ Added " + fileToIgnore);
+				} else {
+					System.err.println("- Found duplicate: " + fileToIgnore);
+				}
+			}
+
+			this.ignoredFileList = uniqueFileTypes.toArray(new File[0]);
+
+		} else {
+			System.out.println("<< ignored files list was empty!");
+			this.ignoredFileList = null;
+		}
 	}
 
 }

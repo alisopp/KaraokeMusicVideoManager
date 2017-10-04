@@ -82,6 +82,14 @@ public class ExportImportSettings {
 					mainJsonBuilder.add("file-types", acceptedFileTypesArray);
 				}
 
+				if (settingsData.getIgnoredFiles() != null) {
+					JsonArrayBuilder ignoredFileList = Json.createArrayBuilder();
+					for (File ignoredFile : settingsData.getIgnoredFiles()) {
+						ignoredFileList.add(ignoredFile.getAbsolutePath());
+					}
+					mainJsonBuilder.add("ignored-files", ignoredFileList);
+				}
+
 				if (settingsData.getAlwaysSaveSettings() != false) {
 					mainJsonBuilder.add("always-save", Boolean.TRUE);
 				}
@@ -210,6 +218,23 @@ public class ExportImportSettings {
 				}
 
 				settingsData.setAcceptedFileTypes(newAcceptedFileTypes);
+			} else {
+				System.err.println(" << No accepted file types");
+			}
+
+			// -> (try to) get the ignored file list
+			JsonArray keyValueIgnoredFiles = (JsonArray) JsonModule.getValue(jsonObject, "ignored-files");
+
+			if (keyValueIgnoredFiles != null) {
+
+				File[] newAcceptedFileTypes = new File[keyValueIgnoredFiles.size()];
+
+				for (int i = 0; i < keyValueIgnoredFiles.size(); i++) {
+
+					newAcceptedFileTypes[i] = Paths.get(keyValueIgnoredFiles.getString(i)).toFile();
+				}
+
+				settingsData.setIgnoredFiles(newAcceptedFileTypes);
 			} else {
 				System.err.println(" << No accepted file types");
 			}

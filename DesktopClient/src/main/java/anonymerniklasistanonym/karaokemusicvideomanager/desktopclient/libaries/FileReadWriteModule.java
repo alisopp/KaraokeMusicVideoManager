@@ -84,7 +84,7 @@ public class FileReadWriteModule {
 	 */
 	public static boolean writeTextFile(File file, String[] content) {
 
-		if (file == null || content == null || content.length == 0) {
+		if ((file == null || content == null) || (content.length == 0 || content[0] == null)) {
 			System.err.println("File could not be written because of it's null!");
 			return false;
 		}
@@ -346,7 +346,7 @@ public class FileReadWriteModule {
 	 */
 	public static boolean rename(File oldFile, File newFile) {
 
-		if (oldFile != null && newFile != null) {
+		if (oldFile == null || newFile == null) {
 			System.err.println("File can't be renamed because the old or new path is null!");
 			return false;
 		}
@@ -366,6 +366,40 @@ public class FileReadWriteModule {
 			System.err.println("<< Rename failed!");
 			return false;
 		}
+	}
+
+	/**
+	 * Returns true if both files are the same and false if not
+	 * 
+	 * @param fileOne
+	 *            (File)
+	 * @param fileTwo
+	 *            (File)
+	 * @return true if they are the same, false if not
+	 * @throws IOException
+	 */
+	public static boolean compareFiles(File fileOne, File fileTwo) throws IOException {
+
+		if (fileOne == null || fileTwo == null) {
+			System.out.println("One of the files or both are null!");
+			return false;
+		}
+
+		if (!fileOne.exists() || !fileTwo.exists()) {
+			System.out.println("One of the files do not exist!");
+			return false;
+		}
+
+		System.out.println(">> Compare " + fileOne.getAbsolutePath() + " to " + fileTwo.getAbsolutePath());
+
+		if (fileOne.getCanonicalPath().equals(fileTwo.getCanonicalPath())) {
+			System.out.println("<< They are the same");
+			return true;
+		} else {
+			System.out.println("<< They are not the same");
+			return false;
+		}
+
 	}
 
 }

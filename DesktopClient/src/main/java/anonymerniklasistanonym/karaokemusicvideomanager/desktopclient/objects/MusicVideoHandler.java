@@ -170,9 +170,69 @@ public class MusicVideoHandler {
 					}
 				}
 
-				Path[] newPathList = Stream.concat(Arrays.stream(this.settingsData.getPathList()),
-						Arrays.stream(new Path[] { directoryPath })).toArray(Path[]::new);
+				Path[] newPathList = Stream
+						.concat(Arrays.stream(oldPathList), Arrays.stream(new Path[] { directoryPath }))
+						.toArray(Path[]::new);
 				this.settingsData.setPathList(newPathList);
+			}
+
+			System.out.println(" << Path added to path list.");
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+	/**
+	 * Add a path to the ignored files list
+	 * 
+	 * @param directoryPath
+	 *            (Path)
+	 * @return true if everything worked else false (Boolean)
+	 */
+	public boolean addIgnoredFileToIgnoredFilesList(Path directoryPath) {
+
+		if (settingsData == null) {
+			System.err.println("No settings found!");
+			return false;
+		}
+
+		if (directoryPath == null) {
+			System.err.println("Path can't be null!");
+			return false;
+		}
+
+		System.out.print(">> Add path " + directoryPath.toAbsolutePath() + " to ignored files list.");
+
+		if (directoryPath.toFile().isDirectory()) {
+			System.err.println(" << Path can not be a directory!");
+			return false;
+		}
+
+		try {
+
+			File newIgnoredFile = directoryPath.toAbsolutePath().toFile();
+
+			File[] oldIgnoredFilesList = this.settingsData.getIgnoredFiles();
+
+			if (oldIgnoredFilesList == null) {
+				this.settingsData.setIgnoredFiles(new File[] { newIgnoredFile });
+			} else {
+
+				for (File containedIgnoredFiles : oldIgnoredFilesList) {
+					if (containedIgnoredFiles.compareTo(newIgnoredFile) == 0) {
+						System.err.println(" << File is already in the ignored files list!");
+						return false;
+					}
+				}
+
+				File[] newPathList = Stream
+						.concat(Arrays.stream(oldIgnoredFilesList), Arrays.stream(new File[] { newIgnoredFile }))
+						.toArray(File[]::new);
+				this.settingsData.setIgnoredFiles(newPathList);
 			}
 
 			System.out.println(" << Path added to path list.");
@@ -475,10 +535,34 @@ public class MusicVideoHandler {
 
 	}
 
+	/**
+	 * Check if a file is a correct formatted music video file
+	 * 
+	 * @param filePath
+	 *            (Path | Path of file)
+	 * @return true if it is a correct formatted music video file (boolean)
+	 */
 	private MusicVideo isFileMusicVideo(Path filePath) {
 
+		if (this.settingsData.getIgnoredFiles() != null) {
+			final File musicVideoFile = filePath.toFile();
+			for (File ignoredFilePath : this.settingsData.getIgnoredFiles()) {
+				try {
+					if (ignoredFilePath.getCanonicalPath().equals(musicVideoFile.getCanonicalPath())) {
+						System.err.println("File is a ignored File! (" + filePath + ")");
+						return null;
+					}
+				} catch (IOException e) {
+					System.err.println("Error");
+					e.printStackTrace();
+				}
+			}
+		}
+
 		// file is a "normal" readable file
-		if (Files.isRegularFile(filePath)) {
+		if (Files.isRegularFile(filePath))
+
+		{
 
 			String fileType = null, pathOfFile = filePath.getFileName().toString();
 			String[] artistAndTitle = null;
@@ -511,7 +595,29 @@ public class MusicVideoHandler {
 		return null;
 	}
 
+	/**
+	 * Check if a file is not correct formatted and so *no* music video file
+	 * 
+	 * @param filePath
+	 *            (Path | Path of file)
+	 * @return true if it is not a music video file (boolean)
+	 */
 	private boolean isFileMusicVideoButWrong(Path filePath) {
+
+		if (this.settingsData.getIgnoredFiles() != null) {
+			final File musicVideoFile = filePath.toFile();
+			for (File ignoredFilePath : this.settingsData.getIgnoredFiles()) {
+				try {
+					if (ignoredFilePath.getCanonicalPath().equals(musicVideoFile.getCanonicalPath())) {
+						System.err.println("File is a ignored File! (" + filePath + ")");
+						return false;
+					}
+				} catch (IOException e) {
+					System.err.println("Error");
+					e.printStackTrace();
+				}
+			}
+		}
 
 		// file is a "normal" readable file
 		if (Files.isRegularFile(filePath)) {
@@ -976,6 +1082,32 @@ public class MusicVideoHandler {
 	public void reset() {
 		this.settingsData.resetSettings();
 		// updateMusicVideoList();
+	}
+
+	public File[] getIgnoredFiles() {
+		return this.settingsData.getIgnoredFiles();
+	}
+
+	public void removeFromIgnoredFilesList(File selectedFile) {
+		File[] pathList = this.settingsData.getIgnoredFiles();
+		ArrayList<File> newPathList = new ArrayList<File>();
+
+		for (File path : pathList) {
+			try {
+				if (!Files.isSameFile(path.toPath(), selectedFile.toPath())) {
+					newPathList.add(path);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				newPathList.add(path);
+			}
+		}
+		this.settingsData.setIgnoredFiles(newPathList.toArray(new File[0]));
+
+		// update the music video list now
+		updateMusicVideoList();
+
 	}
 
 }

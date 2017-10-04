@@ -205,6 +205,11 @@ public class MainWindowController {
 	 */
 	@FXML
 	private Button buttonWrongFormattedFiles;
+	/**
+	 * Open the ignored files window button
+	 */
+	@FXML
+	private Button buttonIgnoredFiles;
 
 	@FXML
 	private MenuItem menuButtonSaveConfiguration;
@@ -348,6 +353,7 @@ public class MainWindowController {
 
 		// other buttons
 		buttonWrongFormattedFiles.setGraphic(WindowMethods.createMenuIcon("images/menu/wrongFormattedFiles.png"));
+		buttonIgnoredFiles.setGraphic(WindowMethods.createMenuIcon("images/menu/ignore.png"));
 		buttonAddDirectory.setGraphic(WindowMethods.createMenuIcon("images/menu/add.png"));
 		networkButton.setGraphic(WindowMethods.createMenuIcon("images/menu/network.png"));
 		youTubeButton.setGraphic(WindowMethods.createMenuIcon("images/menu/youTube.png"));
@@ -669,6 +675,51 @@ public class MainWindowController {
 	}
 
 	/**
+	 * Open the wrong formatted files window
+	 */
+	@FXML
+	private void openIgnoredFilesWindow() {
+
+		try {
+			// load the window from file
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getClassLoader().getResource("windows/IgnoredFilesWindow.fxml"));
+
+			// load main element as parent
+			Parent root1 = (Parent) loader.load();
+
+			// create new Stage and scene with the main element as parent
+			Stage stage = new Stage();
+			stage.setScene(new Scene(root1));
+
+			// make it resizable and set minimal widths
+			stage.setResizable(true);
+			stage.setMinWidth(450);
+			stage.setMinHeight(350);
+
+			// try to add a window icon
+			try {
+				stage.getIcons().addAll(WindowMethods.getWindowIcons());
+			} catch (Exception e) {
+				System.err.println("Exception while loding icons");
+			}
+
+			// set a window title
+			stage.setTitle("Ignored Music Video Files");
+
+			// Connection to the Controller from the primary Stage
+			IgnoredFilesWindowController wrongWindowController = loader.getController();
+			wrongWindowController.setWrongFormattedFilesWindow(this.mainWindow, this);
+
+			// show the stage/window
+			stage.show();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Open the server login window
 	 */
 	@FXML
@@ -790,7 +841,7 @@ public class MainWindowController {
 	 * Refresh the music video file table
 	 */
 	@FXML
-	private void refreshMusicVideoFileTable() {
+	public void refreshMusicVideoFileTable() {
 
 		// update the music video data
 		this.mainWindow.getMusicVideohandler().updateMusicVideoList();
@@ -814,7 +865,7 @@ public class MainWindowController {
 	 * Refresh the music video path table
 	 */
 	@FXML
-	private void refreshMusicVideoPathTable() {
+	public void refreshMusicVideoPathTable() {
 
 		// get music video data
 		Path[] listOfPaths = this.mainWindow.getMusicVideohandler().getPathList();
@@ -840,7 +891,10 @@ public class MainWindowController {
 		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
 
 		if (selectedEntry != null) {
-			// TODO
+
+			MusicVideo selectedFile = this.mainWindow.getMusicVideohandler()
+					.getMusicVideoList()[selectedEntry.getIndex() - 1];
+			this.mainWindow.getMusicVideohandler().addIgnoredFileToIgnoredFilesList(selectedFile.getPath());
 		}
 
 		// update the music video list after this

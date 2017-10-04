@@ -1,7 +1,6 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
@@ -28,7 +27,7 @@ import javafx.scene.input.MouseEvent;
  * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
  *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  */
-public class WrongFormattedFilesWindowController {
+public class IgnoredFilesWindowController {
 
 	// FXML views
 
@@ -98,14 +97,20 @@ public class WrongFormattedFilesWindowController {
 	private Main mainWindow;
 
 	/**
+	 * Main controller class
+	 */
+	private MainWindowController mainController;
+
+	/**
 	 * Method to connect the window to use everything from the super class
 	 * 
 	 * @param window
 	 *            (Main)
 	 */
-	public void setWrongFormattedFilesWindow(Main window) {
+	public void setWrongFormattedFilesWindow(Main window, MainWindowController mainController) {
 		this.mainWindow = window;
-		updateWrongFileTable();
+		this.mainController = mainController;
+		updateIgnoredFileTable();
 	}
 
 	/**
@@ -175,20 +180,21 @@ public class WrongFormattedFilesWindowController {
 	/**
 	 * Update the wrong formatted files path table
 	 */
-	private void updateWrongFileTable() {
+	private void updateIgnoredFileTable() {
 
 		// get the current wrong formatted files list
-		Path[] wrongFormattedFiles = this.mainWindow.getMusicVideohandler().getWrongFormattedFiles();
+		File[] ignoredFiles = this.mainWindow.getMusicVideohandler().getIgnoredFiles();
 
 		// overwrite the table with the new list
-		if (wrongFormattedFiles != null) {
+		if (ignoredFiles != null) {
 			// clear the whole table
 			wrongFormattedFilesTableData.clear();
 			// add an entry for every path in the list
-			for (int i = 0; i < wrongFormattedFiles.length; i++) {
-				wrongFormattedFilesTableData.add(new WrongFormattedFilesTableView(wrongFormattedFiles[i].toString()));
+			for (int i = 0; i < ignoredFiles.length; i++) {
+				wrongFormattedFilesTableData.add(new WrongFormattedFilesTableView(ignoredFiles[i].getAbsolutePath()));
 			}
 		}
+		mainController.refreshMusicVideoFileTable();
 	}
 
 	/**
@@ -268,7 +274,7 @@ public class WrongFormattedFilesWindowController {
 			}
 		}
 		// TODO
-		updateWrongFileTable();
+		updateIgnoredFileTable();
 		this.mainWindow.getMusicVideohandler().loadMusicVideoFiles();
 	}
 
@@ -297,20 +303,18 @@ public class WrongFormattedFilesWindowController {
 	 */
 	@FXML
 	private void ignoreFile() {
-
 		// get the currently selected entry in the table
 		WrongFormattedFilesTableView selectedEntry = wrongFormattedFilesTable.getSelectionModel().getSelectedItem();
 
 		// if something is selected
 		if (selectedEntry != null) {
+			// check if the file really exists and isn't a directory
+			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
 
-			this.mainWindow.getMusicVideohandler()
-					.addIgnoredFileToIgnoredFilesList(Paths.get(selectedEntry.getFilePath()));
+			this.mainWindow.getMusicVideohandler().removeFromIgnoredFilesList(selectedFile);
 		}
 
-		// update the music video list after this
 		refreshTable();
-		// TODO
 	}
 
 	/**
@@ -318,6 +322,6 @@ public class WrongFormattedFilesWindowController {
 	 */
 	@FXML
 	private void refreshTable() {
-		updateWrongFileTable();
+		updateIgnoredFileTable();
 	}
 }

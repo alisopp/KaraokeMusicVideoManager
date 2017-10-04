@@ -11,13 +11,13 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.WrongFormattedFilesWindowController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.IgnoredFilesWindowController">
    <children>
       <BorderPane prefHeight="300.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
             <HBox prefWidth="200.0" spacing="20.0" BorderPane.alignment="TOP_RIGHT">
                <children>
-                  <Label fx:id="searchLabel" text="Search for wrong formatted files:">
+                  <Label fx:id="searchLabel" text="Search for ignored files:">
                      <HBox.margin>
                         <Insets top="4.0" />
                      </HBox.margin>
@@ -43,9 +43,9 @@
                <contextMenu>
                   <ContextMenu>
                     <items>
-                      <MenuItem fx:id="contextRename" mnemonicParsing="false" onAction="#renameFile" text="Rename File" />
+                        <MenuItem fx:id="contextIgnore" mnemonicParsing="false" onAction="#ignoreFile" text="Remove from Ignored Files" />
+                      <MenuItem fx:id="contextRename" disable="true" mnemonicParsing="false" onAction="#renameFile" text="Rename File" />
                         <MenuItem fx:id="contextExplorer" mnemonicParsing="false" onAction="#showInDirectory" text="Show Directory of File" />
-                        <MenuItem fx:id="contextIgnore" mnemonicParsing="false" onAction="#ignoreFile" text="Ignore File" />
                         <MenuItem fx:id="contextClear" mnemonicParsing="false" onAction="#clearRowSelection" text="Clear Selection" />
                         <MenuItem fx:id="contextRefresh" mnemonicParsing="false" onAction="#refreshTable" text="Refresh the Table" />
                     </items>
