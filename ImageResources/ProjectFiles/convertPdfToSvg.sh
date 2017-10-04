@@ -1,10 +1,17 @@
 #!/bin/bash
+
+# Converts a from PowerPoint created PDF file into SVG files.
+# (every page get's converted to one SVG file)
 #
-#  Make one PDF per page using PDF toolkit.
-#  Convert this PDF to SVG using inkscape
+# Works only if you have Inkscape and PDFtk installed and in the environment variables!
+#
 #
 # Originally made by Alain Pannetier - https://stackoverflow.com/a/34119481/7827128
 #
+
+
+# change directory into the directory where this script is
+cd $(dirname "$0")
 
 # get the pdf file name over the first given parameter
 inputPdf=$1
@@ -22,8 +29,6 @@ for i in $(seq 1 $pageCnt); do
     inkscape --without-gui "--file=${inputPdf%%.*}_${i}.pdf" "--export-plain-svg=${inputPdf%%.*}_${i}.svg"
     # remove the created pdf file
     rm "${inputPdf%%.*}_${i}.pdf"
-    echo "converting ${inputPdf%%.*}_${i}.svg to ${inputPdf%%.*}_${i}.png..."
-    inkscape --without-gui -f "${inputPdf%%.*}_${i}.svg" -e "${inputPdf%%.*}_${i}.png" --export-width=16 --export-height=16
 done
 
 # Do not close the window -> In case of bugs/failures show the history of everything => Debugging
