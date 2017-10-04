@@ -89,7 +89,7 @@
                   <TextField fx:id="searchBox" onAction="#openTopMusicVideoFile" prefHeight="25.0" prefWidth="103.0" promptText="Search for music videos..." HBox.hgrow="ALWAYS" />
                   <Button fx:id="youTubeButton" mnemonicParsing="false" onAction="#searchOnYouTube" style="-fx-background-color: #ff0000; -fx-text-fill: white; -fx-border-radius: 20; -fx-border-color: none;" text="YouTube" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <Button fx:id="randomButton" mnemonicParsing="false" styleClass="-fx-background-color" text="Random" />
+                  <Button fx:id="randomButton" onAction="#openRandomWindow" mnemonicParsing="false" styleClass="-fx-background-color" text="Random" />
                   <Region HBox.hgrow="ALWAYS" />
                   <ToggleButton fx:id="networkButton" mnemonicParsing="false" onAction="#openServerLoginWindow" text="Network" />
                </children>

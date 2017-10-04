@@ -644,6 +644,53 @@ public class MainWindowController {
 	}
 
 	/**
+	 * Open the server login window
+	 */
+	@FXML
+	private void openRandomWindow() {
+		try {
+
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getClassLoader().getResource("windows/RandomMusicVideoWindow.fxml"));
+
+			Parent root1 = (Parent) loader.load();
+
+			Stage stage = new Stage();
+			stage.setScene(new Scene(root1));
+			stage.setResizable(true);
+			stage.setMinHeight(300);
+			stage.setMinWidth(600);
+
+			stage.setTitle("Random music video files");
+
+			// try to add a window icon
+			try {
+				stage.getIcons().addAll(WindowMethods.getWindowIcons());
+			} catch (Exception e) {
+				System.err.println("Exception while loding icons");
+			}
+
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+				@Override
+				public void handle(WindowEvent event) {
+					checkNetwork();
+				}
+
+			});
+
+			// Connection to the Controller from the primary Stage
+			RandomWindowController aboutWindowController = loader.getController();
+			aboutWindowController.setServerLoginWindow(this.mainWindow, stage);
+
+			stage.show();
+			checkNetwork();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Remove a directory from the path list
 	 */
 	@FXML
