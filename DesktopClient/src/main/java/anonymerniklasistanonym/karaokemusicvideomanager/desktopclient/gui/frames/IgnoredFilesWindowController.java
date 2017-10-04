@@ -282,7 +282,7 @@ public class IgnoredFilesWindowController {
 					this.mainWindow.getMusicVideohandler().addIgnoredFileToIgnoredFilesList(newFilePath);
 
 					updateIgnoredFileTable();
-					this.mainWindow.getMusicVideohandler().loadMusicVideoFiles();
+					this.mainWindow.getMusicVideohandler().updateMusicVideoList();
 				}
 			}
 		}

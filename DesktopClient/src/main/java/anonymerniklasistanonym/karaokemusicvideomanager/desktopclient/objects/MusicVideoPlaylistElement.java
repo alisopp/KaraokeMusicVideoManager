@@ -1,5 +1,8 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
 
+import java.time.Instant;
+import java.util.Date;
+
 /**
  * Properties of every music video element in the playlist
  * 
@@ -24,6 +27,11 @@ public final class MusicVideoPlaylistElement {
 	private String comment;
 
 	/**
+	 * Time the entry was added
+	 */
+	private final long unixTime;
+
+	/**
 	 * Was it locally or online created
 	 */
 	private final boolean createdLocally;
@@ -45,6 +53,7 @@ public final class MusicVideoPlaylistElement {
 		this.author = author;
 		this.comment = comment;
 		this.createdLocally = createdLocally;
+		this.unixTime = Instant.now().getEpochSecond();
 	}
 
 	/**
@@ -64,6 +73,7 @@ public final class MusicVideoPlaylistElement {
 		this.author = author;
 		this.comment = null;
 		this.createdLocally = createdLocally;
+		this.unixTime = Instant.now().getEpochSecond();
 	}
 
 	/**
@@ -77,6 +87,7 @@ public final class MusicVideoPlaylistElement {
 		this.author = null;
 		this.comment = null;
 		this.createdLocally = true;
+		this.unixTime = Instant.now().getEpochSecond();
 	}
 
 	/**
@@ -118,6 +129,14 @@ public final class MusicVideoPlaylistElement {
 	public void edit(String author, String comment) {
 		this.author = author;
 		this.comment = comment;
+	}
+
+	public long getUnixTime() {
+		return this.unixTime;
+	}
+
+	public String getUnixTimeString() {
+		return new Date(this.unixTime).toString();
 	}
 
 }

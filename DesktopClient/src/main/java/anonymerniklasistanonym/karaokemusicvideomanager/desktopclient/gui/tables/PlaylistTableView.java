@@ -11,8 +11,8 @@ public class PlaylistTableView {
 	private final StringProperty author;
 	private final StringProperty comment;
 
-	public PlaylistTableView(String index, String artist, String title, String author, String comment) {
-		this.time = new SimpleStringProperty(index);
+	public PlaylistTableView(String time, String artist, String title, String author, String comment) {
+		this.time = new SimpleStringProperty(time);
 		this.artist = new SimpleStringProperty(artist);
 		this.title = new SimpleStringProperty(title);
 		this.author = new SimpleStringProperty(author);

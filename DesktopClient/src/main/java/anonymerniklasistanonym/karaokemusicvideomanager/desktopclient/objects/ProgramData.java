@@ -3,8 +3,10 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 /**
  * All the settings data of the current running program
@@ -53,7 +55,7 @@ public final class ProgramData {
 	/**
 	 * Files that should be ignored
 	 */
-	private File[] ignoredFileList;
+	private File[] ignoredFilesList;
 
 	/**
 	 * Constructor [empty]
@@ -84,7 +86,7 @@ public final class ProgramData {
 		ipAddressSftp = null;
 		workingDirectorySftp = null;
 		alwaysSaveSettings = false;
-		ignoredFileList = null;
+		ignoredFilesList = null;
 	}
 
 	/**
@@ -127,6 +129,33 @@ public final class ProgramData {
 	}
 
 	/**
+	 * Add a path to the path list
+	 * 
+	 * @param newPath
+	 *            (Path)
+	 */
+	public boolean addPathToPathList(Path newPath) {
+
+		// check if path is null
+		if (newPath == null) {
+			System.out.println(">> Path not added because it's null!");
+			return false;
+		}
+
+		// get old playlist and new element as an array
+		Path[] oldPlaylist = this.pathList;
+		Path[] newPathList = new Path[] { newPath };
+
+		// if there is no old playlist set it to the new array - else concat both
+		if (oldPlaylist == null) {
+			setPathList(newPathList);
+		} else {
+			setPathList(Stream.concat(Arrays.stream(oldPlaylist), Arrays.stream(newPathList)).toArray(Path[]::new));
+		}
+		return true;
+	}
+
+	/**
 	 * Get the language of the program
 	 * 
 	 * @return language (Locale)
@@ -163,7 +192,8 @@ public final class ProgramData {
 					System.err.println("- Found duplicate: " + containedFileType);
 				}
 			}
-
+			// sort the ArrayList
+			Collections.sort(uniqueFileTypes);
 			this.acceptedFileTypes = uniqueFileTypes.toArray(new String[0]);
 
 		} else {
@@ -205,7 +235,7 @@ public final class ProgramData {
 	}
 
 	public File[] getIgnoredFiles() {
-		return this.ignoredFileList;
+		return this.ignoredFilesList;
 	}
 
 	public void setIgnoredFiles(File[] filesToIgnore) {
@@ -215,26 +245,68 @@ public final class ProgramData {
 		if (filesToIgnore != null && filesToIgnore.length != 0) {
 
 			// create ArrayList to contain all non-repeated supported file types
-			ArrayList<File> uniqueFileTypes = new ArrayList<File>();
+			ArrayList<File> uniqueIgnoredFiles = new ArrayList<File>();
 
 			// cycle through the entire array
 			for (File fileToIgnore : filesToIgnore) {
-				// check if the file type is already contained in the ArrayList
-				if (!uniqueFileTypes.contains(fileToIgnore)) {
-					// add it
-					uniqueFileTypes.add(fileToIgnore);
-					System.out.println("+ Added " + fileToIgnore);
+				// check if the file even exists
+				if (fileToIgnore.exists() && fileToIgnore.isFile()) {
+					// check if the file type is already contained in the ArrayList
+					if (!uniqueIgnoredFiles.contains(fileToIgnore)) {
+						// add it
+						uniqueIgnoredFiles.add(fileToIgnore);
+						System.out.println("+ Added " + fileToIgnore);
+					} else {
+						System.err.println("- Found duplicate: " + fileToIgnore);
+					}
 				} else {
-					System.err.println("- Found duplicate: " + fileToIgnore);
+					System.err.println("- File does not exist or is no file: " + fileToIgnore);
 				}
+
 			}
 
-			this.ignoredFileList = uniqueFileTypes.toArray(new File[0]);
+			Collections.sort(uniqueIgnoredFiles);
+			this.ignoredFilesList = uniqueIgnoredFiles.toArray(new File[0]);
 
 		} else {
 			System.out.println("<< ignored files list was empty!");
-			this.ignoredFileList = null;
+			this.ignoredFilesList = null;
 		}
+	}
+
+	/**
+	 * Add a path to the path list
+	 * 
+	 * @param newPath
+	 *            (Path)
+	 */
+	public boolean addFileToIgnoredFilesList(File newFileToIgnore) {
+
+		// check if file is null
+		if (newFileToIgnore == null) {
+			System.err.println(">> File not added because it's null!");
+			return false;
+		}
+
+		// check if file is null
+		if (!newFileToIgnore.exists() || newFileToIgnore.isDirectory()) {
+			System.err.println(">> File not added because it doesn't exist or is a directory!");
+			return false;
+		}
+
+		// get old ignore files list and new element as an array
+		File[] oldIgnoreFileList = this.ignoredFilesList;
+		File[] newIgnoreFileList = new File[] { newFileToIgnore };
+
+		// if there is no old ignore files list set it to the new array - else connect
+		// them
+		if (oldIgnoreFileList == null) {
+			setIgnoredFiles(newIgnoreFileList);
+		} else {
+			setIgnoredFiles(Stream.concat(Arrays.stream(oldIgnoreFileList), Arrays.stream(newIgnoreFileList))
+					.toArray(File[]::new));
+		}
+		return true;
 	}
 
 }

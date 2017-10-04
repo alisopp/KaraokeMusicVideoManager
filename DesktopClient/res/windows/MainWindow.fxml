@@ -137,7 +137,7 @@
                                  <contextMenu>
                                     <ContextMenu>
                                       <items>
-                                          <MenuItem fx:id="contextMusicVideoPlaylist" disable="true" mnemonicParsing="false" onAction="#addVideoToPlaylist" text="Add to Playlist" />
+                                          <MenuItem fx:id="contextMusicVideoPlaylist" mnemonicParsing="false" onAction="#addVideoToPlaylist" text="Add to Playlist" />
                                           <MenuItem fx:id="contextMusicVideoDirectory" mnemonicParsing="false" onAction="#showDirectoryInExplorerMusicVideoList" text="Show Directory" />
                                           <MenuItem fx:id="contextMusicVideoRename" mnemonicParsing="false" onAction="#renameFile" text="Rename File" />
                                           <MenuItem fx:id="contextMusicVideoIgnore" mnemonicParsing="false" onAction="#ignoreMusicVideoFile" text="Ignore File" />

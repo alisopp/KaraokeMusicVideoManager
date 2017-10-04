@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Stream;
 
 import javax.json.JsonObject;
 
@@ -34,20 +33,10 @@ public class MusicVideoHandler {
 	 */
 	private ProgramData settingsData;
 
-	public ProgramData getSettingsData() {
-		return settingsData;
-	}
-
-	public boolean setSettingsData(ProgramData settingsData) {
-
-		if (settingsData != null) {
-			this.settingsData = settingsData;
-			return true;
-		} else {
-			return false;
-		}
-
-	}
+	/**
+	 * Handles the playlist
+	 */
+	private MusicVideoPlaylist playlistHandler;
 
 	/**
 	 * This ArrayList<MusicVideo> contains all the MusicVideo objects and each
@@ -56,40 +45,72 @@ public class MusicVideoHandler {
 	 */
 	private MusicVideo[] musicVideoList;
 
-	public MusicVideo[] getMusicVideoList() {
-		return musicVideoList;
-	}
+	/**
+	 * The default name for the settings file
+	 */
+	private final File settingsFile;
 
-	private final String[] columnNames = new String[] { "#", "Artist", "Title" };
+	/**
+	 * The table column names (needed for export)
+	 */
+	private String[] columnNames;
+
+	// Constructor
 
 	/**
 	 * Constructor that creates an empty/default program data object
 	 */
 	public MusicVideoHandler() {
-		settingsData = new ProgramData();
+		this.settingsData = new ProgramData();
+		this.settingsFile = new File("settings.json");
+		this.columnNames = new String[] { "#", "Artist", "Title" };
+		this.playlistHandler = new MusicVideoPlaylist();
 	}
 
-	private final File settingsFileName = new File("settings.json");
+	// Methods
 
 	/**
-	 * Load settings from "settings.json" file if there is one
+	 * Get the current settings data
+	 * 
+	 * @return settingsData (ProgramData)
 	 */
-	public void loadSettingsFromFile() {
-		if (settingsFileName.exists()) {
-			loadSettings(settingsFileName);
-		} else if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-			File windowsSettingsFile = Paths.get(System.getProperty("user.home") + "\\" + settingsFileName).toFile();
-			if (windowsSettingsFile.exists()) {
-				loadSettings(windowsSettingsFile);
-			}
+	public ProgramData getSettingsData() {
+		return settingsData;
+	}
+
+	/**
+	 * Set the current settings (ProgramData)
+	 * 
+	 * @param settingsData
+	 *            (ProgramData)
+	 * @return true if new settings were applied
+	 */
+	public boolean setSettingsData(ProgramData settingsData) {
+
+		if (settingsData != null) {
+			this.settingsData = settingsData;
+			System.out.println(">> New settings applied");
+			return true;
+		} else {
+			System.out.println(">> New settings were not applied - Settings were null");
+			return false;
 		}
 	}
 
 	/**
-	 * Load settings from "settings.json" file if there is one
+	 * Get the current music video list
+	 * 
+	 * @return musicVideoList (MusicVideo[])
+	 */
+	public MusicVideo[] getMusicVideoList() {
+		return musicVideoList;
+	}
+
+	/**
+	 * Get if a settings file exists or nor
 	 */
 	public boolean settingsFileExist() {
-		if (settingsFileName.exists()) {
+		if (this.settingsFile.exists()) {
 			return true;
 		} else {
 			return false;
@@ -99,37 +120,29 @@ public class MusicVideoHandler {
 	/**
 	 * Load settings from "settings.json" file if there is one
 	 */
-	public void saveSettingsToFile() {
-		saveSettings(settingsFileName);
+	public void loadSettingsFromFile() {
+		if (settingsFileExist()) {
+			loadSettings(settingsFile);
+			// that was follows is beta and should read the files when it's installed like a
+			// real program on windows
+			// TODO
+		} else if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+			File windowsSettingsFile = Paths.get(System.getProperty("user.home") + "\\" + settingsFile).toFile();
+			if (windowsSettingsFile.exists()) {
+				loadSettings(windowsSettingsFile);
+			}
+		}
 	}
 
-	public void loadMusicVideoFiles() {
-
-		if (settingsData == null) {
-			System.err.println("No settings found!");
-			return;
+	/**
+	 * Save settings in the default settings file
+	 */
+	public boolean saveSettingsToFile() {
+		if (saveSettings(settingsFile)) {
+			return true;
+		} else {
+			return false;
 		}
-
-		Path[] allFoldersWithMusicVideos = settingsData.getPathList();
-
-		if (allFoldersWithMusicVideos == null || allFoldersWithMusicVideos.length == 0) {
-			System.err.println("No path list found in settings!");
-			return;
-		}
-
-		int percentCounter = 0;
-		int precentToAdd = allFoldersWithMusicVideos.length / 100;
-
-		for (Path directoryPath : settingsData.getPathList()) {
-
-			addPathToPathList(directoryPath);
-
-			System.out.println(percentCounter);
-			percentCounter += precentToAdd;
-		}
-
-		percentCounter = 100;
-		System.out.println(percentCounter);
 	}
 
 	/**
@@ -141,11 +154,13 @@ public class MusicVideoHandler {
 	 */
 	public boolean addPathToPathList(Path directoryPath) {
 
-		if (settingsData == null) {
+		// check if there is a settings file
+		if (this.settingsData == null) {
 			System.err.println("No settings found!");
 			return false;
 		}
 
+		// check if the path is not null
 		if (directoryPath == null) {
 			System.err.println("Path can't be null!");
 			return false;
@@ -153,41 +168,20 @@ public class MusicVideoHandler {
 
 		System.out.print(">> Add path " + directoryPath.toAbsolutePath() + " to path list.");
 
-		if (!directoryPath.toFile().isDirectory()) {
+		// check if the path exists
+		if (!directoryPath.toFile().exists()) {
+			System.err.println(" << Path doesn't exist!");
+			return false;
+		}
+
+		// check if the path is a directory
+		if (directoryPath.toFile().isFile()) {
 			System.err.println(" << Path is no directory!");
 			return false;
 		}
 
-		try {
-
-			directoryPath = directoryPath.toAbsolutePath();
-
-			Path[] oldPathList = this.settingsData.getPathList();
-
-			if (oldPathList == null) {
-				this.settingsData.setPathList(new Path[] { directoryPath });
-			} else {
-
-				for (Path containedPaths : oldPathList) {
-					if (containedPaths.compareTo(directoryPath) == 0) {
-						System.err.println(" << Path is already in the PathList!");
-						return false;
-					}
-				}
-
-				Path[] newPathList = Stream
-						.concat(Arrays.stream(oldPathList), Arrays.stream(new Path[] { directoryPath }))
-						.toArray(Path[]::new);
-				this.settingsData.setPathList(newPathList);
-			}
-
-			System.out.println(" << Path added to path list.");
-			return true;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+		// the rest does the settings class with the absolute path of the given path
+		return this.settingsData.addPathToPathList(directoryPath.toAbsolutePath());
 
 	}
 
@@ -212,44 +206,20 @@ public class MusicVideoHandler {
 
 		System.out.print(">> Add path " + directoryPath.toAbsolutePath() + " to ignored files list.");
 
+		// check if the path exists
+		if (!directoryPath.toFile().exists()) {
+			System.err.println(" << Path doesn't exist!");
+			return false;
+		}
+
+		// check if the path is a directory
 		if (directoryPath.toFile().isDirectory()) {
-			System.err.println(" << Path can not be a directory!");
+			System.err.println(" << Path is no file!");
 			return false;
 		}
 
-		try {
-
-			File newIgnoredFile = directoryPath.toAbsolutePath().toFile();
-
-			File[] oldIgnoredFilesList = this.settingsData.getIgnoredFiles();
-
-			if (oldIgnoredFilesList == null) {
-				this.settingsData.setIgnoredFiles(new File[] { newIgnoredFile });
-			} else {
-
-				for (File containedIgnoredFiles : oldIgnoredFilesList) {
-					if (containedIgnoredFiles.compareTo(newIgnoredFile) == 0) {
-						System.err.println(" << File is already in the ignored files list!");
-						return false;
-					}
-				}
-
-				File[] newPathList = Stream
-						.concat(Arrays.stream(oldIgnoredFilesList), Arrays.stream(new File[] { newIgnoredFile }))
-						.toArray(File[]::new);
-				Arrays.sort(newPathList);
-
-				this.settingsData.setIgnoredFiles(newPathList);
-			}
-
-			System.out.println(" << Path added to path list.");
-			return true;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-
+		// the rest does the settings class with the absolute path of the given path
+		return this.settingsData.addFileToIgnoredFilesList(directoryPath.toAbsolutePath().toFile());
 	}
 
 	/**
@@ -1048,7 +1018,7 @@ public class MusicVideoHandler {
 	 * @return theyAreTheSame (Boolean)
 	 */
 	public boolean compareSettings() {
-		return ExportImportSettings.compareSettingsFileToCurrent(this.settingsFileName, this.settingsData);
+		return ExportImportSettings.compareSettingsFileToCurrent(this.settingsFile, this.settingsData);
 	}
 
 	public void setAlwaysSave(boolean b) {
@@ -1115,6 +1085,22 @@ public class MusicVideoHandler {
 		// update the music video list now
 		updateMusicVideoList();
 
+	}
+
+	public MusicVideoPlaylist getPlaylistHandler() {
+		return playlistHandler;
+	}
+
+	public void setPlaylistHandler(MusicVideoPlaylist playlistHandler) {
+		this.playlistHandler = playlistHandler;
+	}
+
+	public void addMusicVideoToPlaylist(int index, String author, String comment) {
+		this.playlistHandler.add(this.musicVideoList[index], author, comment);
+	}
+
+	public void removeEnrtryFromPlaylist(int index) {
+		this.playlistHandler.remove(index);
 	}
 
 }

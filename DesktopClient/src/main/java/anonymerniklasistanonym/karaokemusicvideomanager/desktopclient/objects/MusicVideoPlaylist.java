@@ -7,6 +7,14 @@ public class MusicVideoPlaylist {
 
 	private MusicVideoPlaylistElement[] playlistElements;
 
+	public MusicVideoPlaylistElement[] getPlaylistElements() {
+		return playlistElements;
+	}
+
+	public void setPlaylistElements(MusicVideoPlaylistElement[] playlistElements) {
+		this.playlistElements = playlistElements;
+	}
+
 	/**
 	 * Constructor of playlist
 	 */

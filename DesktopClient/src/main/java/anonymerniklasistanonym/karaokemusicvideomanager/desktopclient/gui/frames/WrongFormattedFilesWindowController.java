@@ -266,7 +266,7 @@ public class WrongFormattedFilesWindowController {
 					FileReadWriteModule.rename(selectedFile,
 							Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
 					updateWrongFileTable();
-					this.mainWindow.getMusicVideohandler().loadMusicVideoFiles();
+					this.mainWindow.getMusicVideohandler().updateMusicVideoList();
 				}
 			}
 		}

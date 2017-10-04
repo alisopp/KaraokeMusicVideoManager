@@ -10,10 +10,12 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.DirectoryPathTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoTableView;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.PlaylistTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowMethods;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoPlaylistElement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -78,17 +80,17 @@ public class MainWindowController {
 
 	// the playlist table
 	@FXML
-	private TableView<MusicVideoTableView> playlistTable;
+	private TableView<PlaylistTableView> playlistTable;
 	@FXML
-	private TableColumn<MusicVideoTableView, Number> columnPlaylistTime;
+	private TableColumn<PlaylistTableView, String> columnPlaylistTime;
 	@FXML
-	private TableColumn<MusicVideoTableView, String> columnPlaylistTitle;
+	private TableColumn<PlaylistTableView, String> columnPlaylistTitle;
 	@FXML
-	private TableColumn<MusicVideoTableView, String> columnPlaylistArtist;
+	private TableColumn<PlaylistTableView, String> columnPlaylistArtist;
 	@FXML
-	private TableColumn<MusicVideoTableView, String> columnPlaylistAuthor;
+	private TableColumn<PlaylistTableView, String> columnPlaylistAuthor;
 	@FXML
-	private TableColumn<MusicVideoTableView, String> columnPlaylistComment;
+	private TableColumn<PlaylistTableView, String> columnPlaylistComment;
 
 	// the tabs
 	@FXML
@@ -255,6 +257,11 @@ public class MainWindowController {
 	private ObservableList<MusicVideoTableView> tableDataMusicVideo;
 
 	/**
+	 * table data of the table with the playlist
+	 */
+	private ObservableList<PlaylistTableView> tableDataPlaylist;
+
+	/**
 	 * table data of the table with music video file directories
 	 */
 	private ObservableList<DirectoryPathTableView> tableDataDirectory;
@@ -321,12 +328,16 @@ public class MainWindowController {
 
 		/*
 		 * The following code is mostly copied from the wonderful tutorial by Marco
-		 * Jakob from code.makery and initializes the direectory path table
+		 * Jakob from code.makery and initializes the directory path table
 		 * http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
 		 */
 
 		// 0. Initialize the columns.
-		columnFilePath.setCellValueFactory(cellData -> cellData.getValue().getFilePathProperty());
+		columnPlaylistTime.setCellValueFactory(cellData -> cellData.getValue().getTimeProperty());
+		columnPlaylistTitle.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
+		columnPlaylistArtist.setCellValueFactory(cellData -> cellData.getValue().getArtistProperty());
+		columnPlaylistAuthor.setCellValueFactory(cellData -> cellData.getValue().getAuthorProperty());
+		columnPlaylistComment.setCellValueFactory(cellData -> cellData.getValue().getCommentProperty());
 
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
 		tableDataDirectory = FXCollections.observableArrayList();
@@ -360,6 +371,56 @@ public class MainWindowController {
 
 		// 5. Add sorted (and filtered) data to the table.
 		directoryPathTable.setItems(sortedDataDirectory);
+
+		/*
+		 * The following code is mostly copied from the wonderful tutorial by Marco
+		 * Jakob from code.makery and initializes the playlist table
+		 * http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
+		 */
+
+		// 0. Initialize the columns.
+		columnFilePath.setCellValueFactory(cellData -> cellData.getValue().getFilePathProperty());
+
+		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
+		tableDataPlaylist = FXCollections.observableArrayList();
+		FilteredList<PlaylistTableView> filteredDataParty = new FilteredList<>(tableDataPlaylist, p -> true);
+
+		// 2. Set the filter Predicate whenever the filter changes.
+		searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+			filteredDataParty.setPredicate(directoryPathObject -> {
+				// If filter text is empty, display all persons.
+				if (newValue == null || newValue.isEmpty()) {
+					return true;
+				}
+
+				// Compare first name and last name of every person with filter text.
+				String lowerCaseFilter = newValue.toLowerCase();
+
+				if (directoryPathObject.getTime().toLowerCase().contains(lowerCaseFilter)) {
+					return true;
+				} else if (directoryPathObject.getTitle().toLowerCase().contains(lowerCaseFilter)) {
+					return true;
+				} else if (directoryPathObject.getArtist().toLowerCase().contains(lowerCaseFilter)) {
+					return true;
+				} else if (directoryPathObject.getAuthor().toLowerCase().contains(lowerCaseFilter)) {
+					return true;
+				} else if (directoryPathObject.getComment().toLowerCase().contains(lowerCaseFilter)) {
+					return true;
+				} else {
+					// nothing matches
+					return false;
+				}
+			});
+		});
+
+		// 3. Wrap the FilteredList in a SortedList.
+		SortedList<PlaylistTableView> sortedDataPlaylist = new SortedList<>(filteredDataParty);
+
+		// 4. Bind the SortedList comparator to the TableView comparator.
+		sortedDataPlaylist.comparatorProperty().bind(playlistTable.comparatorProperty());
+
+		// 5. Add sorted (and filtered) data to the table.
+		playlistTable.setItems(sortedDataPlaylist);
 
 		/**
 		 * Set menu icons
@@ -411,6 +472,7 @@ public class MainWindowController {
 
 		refreshMusicVideoFileTable();
 		refreshMusicVideoPathTable();
+		refreshMusicVideoPlaylistTable();
 
 	}
 
@@ -861,6 +923,19 @@ public class MainWindowController {
 
 		if (selectedEntry != null) {
 			// TODO
+			String author = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Enter your name", "",
+					"Enter your name", "Your name:");
+			String comment = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Enter your comment", "",
+					"Enter a comment", "Your comment:");
+			if (author != null) {
+				if (comment == null) {
+					comment = "";
+				}
+				this.mainWindow.getMusicVideohandler().addMusicVideoToPlaylist(selectedEntry.getIndex(), author,
+						comment);
+				refreshMusicVideoPlaylistTable();
+			}
+
 		}
 	}
 
@@ -904,6 +979,29 @@ public class MainWindowController {
 		if (listOfPaths != null) {
 			for (Path directory : listOfPaths) {
 				tableDataDirectory.add(new DirectoryPathTableView(directory.toString()));
+			}
+		}
+	}
+
+	/**
+	 * Refresh the music video playlist table
+	 */
+	@FXML
+	public void refreshMusicVideoPlaylistTable() {
+
+		// get music video data
+		MusicVideoPlaylistElement[] listOfEntries = this.mainWindow.getMusicVideohandler().getPlaylistHandler()
+				.getPlaylistElements();
+
+		// clear table
+		tableDataPlaylist.clear();
+
+		// add music video data
+		if (listOfEntries != null) {
+			for (MusicVideoPlaylistElement element : listOfEntries) {
+				MusicVideo musicVideoFile = element.getMusicVideoFile();
+				tableDataPlaylist.add(new PlaylistTableView(element.getUnixTimeString(), musicVideoFile.getTitle(),
+						musicVideoFile.getArtist(), element.getAuthor(), element.getComment()));
 			}
 		}
 	}
@@ -988,7 +1086,7 @@ public class MainWindowController {
 				"Export music video list to a CSV file - Choose a directory and filename", null,
 				new ExtensionFilter[] { csvFilter }, Dialogs.CHOOSE_ACTION.SAVE);
 
-		if (csvFile != null) {
+		if (csvFile != null && csvFile[0] != null) {
 			this.mainWindow.getMusicVideohandler().saveCsv(csvFile[0].toPath());
 		}
 	}
@@ -1003,7 +1101,7 @@ public class MainWindowController {
 				"Export music video list to a JSON file - Choose a directory and filename", null,
 				new ExtensionFilter[] { jsonFilter }, Dialogs.CHOOSE_ACTION.SAVE);
 
-		if (jsonFile != null) {
+		if (jsonFile != null && jsonFile[0] != null) {
 			this.mainWindow.getMusicVideohandler().saveJson(jsonFile[0].toPath());
 		}
 	}
@@ -1026,7 +1124,7 @@ public class MainWindowController {
 		File[] jsonFile = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(),
 				"Save a Custom Named Configuration File", null, new ExtensionFilter[] { jsonFilter },
 				Dialogs.CHOOSE_ACTION.SAVE);
-		if (jsonFile != null) {
+		if (jsonFile != null && jsonFile[0] != null) {
 			File saveToThis = Paths.get(jsonFile[0].getAbsolutePath() + ".json").toFile();
 			this.mainWindow.getMusicVideohandler().saveSettings(saveToThis);
 		}
@@ -1038,7 +1136,7 @@ public class MainWindowController {
 		File[] jsonFile = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(),
 				"Load a Custom Named Configuration File", null, new ExtensionFilter[] { jsonFilter },
 				Dialogs.CHOOSE_ACTION.NORMAL);
-		if (jsonFile != null) {
+		if (jsonFile != null && jsonFile[0] != null) {
 			this.mainWindow.getMusicVideohandler().loadSettings(jsonFile[0]);
 		}
 		refreshMusicVideoFileTable();
