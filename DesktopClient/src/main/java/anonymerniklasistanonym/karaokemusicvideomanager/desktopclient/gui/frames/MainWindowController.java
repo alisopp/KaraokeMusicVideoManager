@@ -984,8 +984,6 @@ public class MainWindowController {
 	@FXML
 	private void saveConfiguartion() {
 		this.mainWindow.getMusicVideohandler().saveSettingsToFile();
-		refreshMusicVideoFileTable();
-		refreshMusicVideoPathTable();
 	}
 
 	@FXML
@@ -997,17 +995,31 @@ public class MainWindowController {
 
 	@FXML
 	private void saveConfiguartionCustom() {
-		// TODO
+		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
+		File[] jsonFile = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(),
+				"Save a Custom Named Configuration File", null, new ExtensionFilter[] { jsonFilter },
+				Dialogs.CHOOSE_ACTION.SAVE);
+		if (jsonFile != null) {
+			File saveToThis = Paths.get(jsonFile[0].getAbsolutePath() + ".json").toFile();
+			this.mainWindow.getMusicVideohandler().saveSettings(saveToThis);
+		}
 	}
 
 	@FXML
 	private void loadConfiguartionCustom() {
-		// TODO
+		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
+		File[] jsonFile = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(),
+				"Load a Custom Named Configuration File", null, new ExtensionFilter[] { jsonFilter },
+				Dialogs.CHOOSE_ACTION.NORMAL);
+		if (jsonFile != null) {
+			this.mainWindow.getMusicVideohandler().loadSettings(jsonFile[0]);
+		}
+		refreshMusicVideoFileTable();
+		refreshMusicVideoPathTable();
 	}
 
 	@FXML
 	private void resetConfiguartion() {
-		// TODO
 		this.mainWindow.getMusicVideohandler().reset();
 		refreshMusicVideoFileTable();
 		refreshMusicVideoPathTable();
@@ -1039,7 +1051,6 @@ public class MainWindowController {
 						Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
 			}
 		}
-		// TODO
 		refreshMusicVideoFileTable();
 
 	}
