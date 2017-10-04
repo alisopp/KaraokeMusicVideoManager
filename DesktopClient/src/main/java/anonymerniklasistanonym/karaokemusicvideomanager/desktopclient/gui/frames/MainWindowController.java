@@ -627,10 +627,6 @@ public class MainWindowController {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getClassLoader().getResource("windows/WrongFomattedFilesWindow.fxml"));
 
-			// Connection to the Controller from the primary Stage
-			WrongFormattedFilesWindowController wrongWindowController = loader.getController();
-			wrongWindowController.setWrongFormattedFilesWindow(this.mainWindow);
-
 			// load main element as parent
 			Parent root1 = (Parent) loader.load();
 
@@ -652,6 +648,10 @@ public class MainWindowController {
 
 			// set a window title
 			stage.setTitle("Wrong Formatted Files");
+
+			// Connection to the Controller from the primary Stage
+			WrongFormattedFilesWindowController wrongWindowController = loader.getController();
+			wrongWindowController.setWrongFormattedFilesWindow(this.mainWindow);
 
 			// show the stage/window
 			stage.show();
