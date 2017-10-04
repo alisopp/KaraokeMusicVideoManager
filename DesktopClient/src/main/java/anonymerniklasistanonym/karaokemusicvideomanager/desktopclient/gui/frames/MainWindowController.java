@@ -200,6 +200,17 @@ public class MainWindowController {
 	@FXML
 	private Button buttonWrongFormattedFiles;
 
+	@FXML
+	private MenuItem menuButtonSaveConfiguration;
+	@FXML
+	private MenuItem menuButtonLoadConfiguration;
+	@FXML
+	private MenuItem menuButtonSaveConfigurationCustom;
+	@FXML
+	private MenuItem menuButtonLoadConfigurationCustom;
+	@FXML
+	private MenuItem menuButtonResetConfiguration;
+
 	// other
 
 	/**
@@ -335,6 +346,7 @@ public class MainWindowController {
 		youTubeButton.setGraphic(WindowMethods.createMenuIcon("images/menu/youTube.png"));
 		aboutButton.setGraphic(WindowMethods.createMenuIcon("images/menu/about.png"));
 		randomButton.setGraphic(WindowMethods.createMenuIcon("images/menu/random.png"));
+		helpButton.setGraphic(WindowMethods.createMenuIcon("images/menu/help.png"));
 
 		// menu buttons
 		menuButtonWebsites.setGraphic(WindowMethods.createMenuIcon("images/menu/html_static.png"));
@@ -346,6 +358,12 @@ public class MainWindowController {
 
 		// label
 		searchLabel.setGraphic(WindowMethods.createMenuIcon("images/menu/search.png"));
+
+		menuButtonSaveConfiguration.setGraphic(WindowMethods.createMenuIcon("images/menu/save.png"));
+		menuButtonLoadConfiguration.setGraphic(WindowMethods.createMenuIcon("images/menu/load.png"));
+		menuButtonSaveConfigurationCustom.setGraphic(WindowMethods.createMenuIcon("images/menu/save.png"));
+		menuButtonLoadConfigurationCustom.setGraphic(WindowMethods.createMenuIcon("images/menu/load.png"));
+		menuButtonResetConfiguration.setGraphic(WindowMethods.createMenuIcon("images/menu/reset.png"));
 	}
 
 	public void setMainWindow(Main window) {
@@ -896,6 +914,43 @@ public class MainWindowController {
 		if (jsonFile != null) {
 			this.mainWindow.getMusicVideohandler().saveJson(jsonFile[0].toPath());
 		}
+	}
+
+	@FXML
+	private void saveConfiguartion() {
+		this.mainWindow.getMusicVideohandler().saveSettingsToFile();
+		refreshMusicVideoFileTable();
+		refreshMusicVideoPathTable();
+	}
+
+	@FXML
+	private void loadConfiguartion() {
+		this.mainWindow.getMusicVideohandler().loadSettingsFromFile();
+		refreshMusicVideoFileTable();
+		refreshMusicVideoPathTable();
+	}
+
+	@FXML
+	private void saveConfiguartionCustom() {
+		// TODO
+	}
+
+	@FXML
+	private void loadConfiguartionCustom() {
+		// TODO
+	}
+
+	@FXML
+	private void resetConfiguartion() {
+		// TODO
+		this.mainWindow.getMusicVideohandler().reset();
+		refreshMusicVideoFileTable();
+		refreshMusicVideoPathTable();
+	}
+
+	@FXML
+	public void openGitHubHelpLink() {
+		ExternalApplicationHandler.openUrl("https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager");
 	}
 
 }

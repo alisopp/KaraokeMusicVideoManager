@@ -40,7 +40,7 @@
                         <MenuItem fx:id="menuButtonJson" mnemonicParsing="false" onAction="#exportJson" text="JSON" />
                   </items>
                 </Menu>
-                  <Menu mnemonicParsing="false" text="Network">
+                  <Menu disable="true" mnemonicParsing="false" text="Network">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Reconnect" />
                         <MenuItem mnemonicParsing="false" text="Change Login" />
@@ -50,21 +50,31 @@
                   </Menu>
                 <Menu mnemonicParsing="false" text="Save &amp; Restore">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Save Configuration" />
-                        <MenuItem mnemonicParsing="false" text="Load/Restore Configuration" />
-                        <MenuItem mnemonicParsing="false" text="Reset Everything" />
+                    <MenuItem fx:id="menuButtonSaveConfiguration" mnemonicParsing="false" onAction="#saveConfiguartion" text="Save Configuration">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="S" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                    <MenuItem fx:id="menuButtonLoadConfiguration" mnemonicParsing="false" onAction="#loadConfiguartion" text="Load/Restore Configuration">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="L" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem fx:id="menuButtonSaveConfigurationCustom" mnemonicParsing="false" onAction="#saveConfiguartionCustom" text="Save Configuration with Custom Name" />
+                        <MenuItem fx:id="menuButtonLoadConfigurationCustom" mnemonicParsing="false" onAction="#loadConfiguartionCustom" text="Load/Restore Configuration with Custom Name" />
+                        <MenuItem fx:id="menuButtonResetConfiguration" mnemonicParsing="false" onAction="#resetConfiguartion" text="Reset Everything" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Settings">
                   <items>
-                        <MenuItem mnemonicParsing="false" text="Language" />
-                    <MenuItem mnemonicParsing="false" text="Random Songs Number" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Language" />
                   </items>
                 </Menu>
                   <Menu mnemonicParsing="false" text="About">
                     <items>
-                      <MenuItem fx:id="aboutButton" mnemonicParsing="false" onAction="#openAboutWindow" text="About" />
-                        <MenuItem fx:id="helpButton" mnemonicParsing="false" text="Help">
+                      <MenuItem fx:id="aboutButton" mnemonicParsing="false" onAction="#openAboutWindow" text="About">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="A" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem fx:id="helpButton" mnemonicParsing="false" onAction="#openGitHubHelpLink" text="Help">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="H" control="ANY" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
@@ -89,7 +99,7 @@
                   <TextField fx:id="searchBox" onAction="#openTopMusicVideoFile" prefHeight="25.0" prefWidth="103.0" promptText="Search for music videos..." HBox.hgrow="ALWAYS" />
                   <Button fx:id="youTubeButton" mnemonicParsing="false" onAction="#searchOnYouTube" style="-fx-background-color: #ff0000; -fx-text-fill: white; -fx-border-radius: 20; -fx-border-color: none;" text="YouTube" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <Button fx:id="randomButton" onAction="#openRandomWindow" mnemonicParsing="false" styleClass="-fx-background-color" text="Random" />
+                  <Button fx:id="randomButton" mnemonicParsing="false" onAction="#openRandomWindow" styleClass="-fx-background-color" text="Random" />
                   <Region HBox.hgrow="ALWAYS" />
                   <ToggleButton fx:id="networkButton" mnemonicParsing="false" onAction="#openServerLoginWindow" text="Network" />
                </children>

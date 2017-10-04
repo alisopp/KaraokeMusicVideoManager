@@ -972,4 +972,9 @@ public class MusicVideoHandler {
 		updateMusicVideoList();
 	}
 
+	public void reset() {
+		this.settingsData = new ProgramData();
+		updateMusicVideoList();
+	}
+
 }

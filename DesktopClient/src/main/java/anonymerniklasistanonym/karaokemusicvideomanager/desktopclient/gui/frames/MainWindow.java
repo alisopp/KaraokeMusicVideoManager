@@ -74,7 +74,7 @@ public class MainWindow {
 
 	public void onCloseDialog(WindowEvent e) {
 
-		if (this.main.getMusicVideohandler().settingsFileExist()
+		if (!this.main.getMusicVideohandler().settingsFileExist()
 				|| this.main.getMusicVideohandler().getAlwaysSave() == true) {
 			// save changes if nothing is there
 			this.main.getMusicVideohandler().saveSettingsToFile();
