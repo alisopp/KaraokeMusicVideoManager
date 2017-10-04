@@ -2,7 +2,9 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialo
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowMethods;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoHandler;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -10,12 +12,14 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 public class Dialogs {
@@ -75,13 +79,7 @@ public class Dialogs {
 	 * (CHOOSE_ACTION.NORMAL.value => 0, CHOOSE_ACTION.MULTI_FILE.value => 1,...)
 	 */
 	public static enum CHOOSE_ACTION {
-		NORMAL(0), MULTI_FILE(1), SAVE(2);
-
-		private final int value;
-
-		CHOOSE_ACTION(final int newValue) {
-			value = newValue;
-		}
+		NORMAL, MULTI_FILE, SAVE;
 	}
 
 	/**
@@ -133,7 +131,7 @@ public class Dialogs {
 			selectedFiles = new File[] { fileChooser.showSaveDialog(mainStage) };
 		}
 
-		if (selectedFiles != null) {
+		if (selectedFiles != null && selectedFiles[0] != null) {
 			System.out.println("\n");
 			for (File selectedFile : selectedFiles) {
 				System.out.println("<< " + selectedFile.getAbsoluteFile().toPath() + " was selected");
@@ -213,6 +211,7 @@ public class Dialogs {
 		alert.setTitle(title);
 		alert.setHeaderText(header);
 		alert.setContentText(content);
+		alert.initStyle(StageStyle.UTILITY);
 
 		TextArea textArea = new TextArea(stacktrace);
 		textArea.setEditable(false);
@@ -232,6 +231,32 @@ public class Dialogs {
 
 		alert.showAndWait();
 
+	}
+
+	/**
+	 * Text input dialog
+	 */
+	public static String textInputDialog(Stage mainStage, String title, String titleInTextFiel, String header,
+			String labelOfTextField) {
+		TextInputDialog dialog = new TextInputDialog(titleInTextFiel);
+		dialog.setTitle(title);
+		dialog.setHeaderText(header);
+		dialog.setContentText(labelOfTextField);
+		dialog.setResizable(true);
+		dialog.initStyle(StageStyle.UNIFIED);
+
+		// Get the Stage.
+		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+
+		// Add a custom icon.
+		stage.getIcons().addAll(WindowMethods.getWindowIcons());
+
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()) {
+			System.out.println("Input was: \"" + result.get() + "\"");
+			return result.get();
+		}
+		return null;
 	}
 
 }

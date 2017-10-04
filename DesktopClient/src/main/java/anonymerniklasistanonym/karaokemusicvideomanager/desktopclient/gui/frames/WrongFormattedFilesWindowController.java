@@ -5,8 +5,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.WrongFormattedFilesTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowMethods;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -248,8 +250,26 @@ public class WrongFormattedFilesWindowController {
 	 */
 	@FXML
 	private void renameFile() {
+
+		// get the currently selected entry in the table
+		WrongFormattedFilesTableView selectedEntry = wrongFormattedFilesTable.getSelectionModel().getSelectedItem();
+
+		// if something is selected
+		if (selectedEntry != null) {
+			// check if the file really exists and isn't a directory
+			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
+			if (selectedFile.exists() && selectedFile.isFile()) {
+				// show dialog to rename the file
+				String a = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Rename wrong formatted file",
+						selectedFile.getName(), "Rename the file", "Enter a new name:");
+				System.out.println("Got " + a);
+				FileReadWriteModule.rename(selectedFile,
+						Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
+			}
+		}
 		// TODO
 		updateWrongFileTable();
+		this.mainWindow.getMusicVideohandler().loadMusicVideoFiles();
 	}
 
 	/**

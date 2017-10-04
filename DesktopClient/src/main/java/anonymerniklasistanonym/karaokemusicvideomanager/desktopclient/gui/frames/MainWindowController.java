@@ -11,6 +11,7 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialog
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.DirectoryPathTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowMethods;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
 import javafx.collections.FXCollections;
@@ -108,6 +109,11 @@ public class MainWindowController {
 	 */
 	@FXML
 	private MenuItem contextMusicVideoRefresh;
+	/**
+	 * music video file table context menu > rename file
+	 */
+	@FXML
+	private MenuItem contextMusicVideoRename;
 
 	// music video path table context menu
 
@@ -338,6 +344,7 @@ public class MainWindowController {
 		contextPathRemove.setGraphic(WindowMethods.createMenuIcon("images/menu/remove.png"));
 		contextPathClear.setGraphic(WindowMethods.createMenuIcon("images/menu/clear.png"));
 		contextPathRefresh.setGraphic(WindowMethods.createMenuIcon("images/menu/refresh.png"));
+		contextMusicVideoRename.setGraphic(WindowMethods.createMenuIcon("images/menu/rename.png"));
 
 		// other buttons
 		buttonWrongFormattedFiles.setGraphic(WindowMethods.createMenuIcon("images/menu/wrongFormattedFiles.png"));
@@ -951,6 +958,32 @@ public class MainWindowController {
 	@FXML
 	public void openGitHubHelpLink() {
 		ExternalApplicationHandler.openUrl("https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager");
+	}
+
+	@FXML
+	private void renameFile() {
+
+		// get the currently selected entry in the table
+		MusicVideoTableView selectedEntry = musicVideoTable.getSelectionModel().getSelectedItem();
+
+		// if something is selected
+		if (selectedEntry != null) {
+			Path pathOfSelectedFile = this.mainWindow.getMusicVideohandler()
+					.getMusicVideoList()[selectedEntry.getIndex() - 1].getPath();
+			// check if the file really exists and isn't a directory
+			File selectedFile = pathOfSelectedFile.toFile();
+			if (selectedFile.exists() && selectedFile.isFile()) {
+				// show dialog to rename the file
+				String a = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Rename wrong formatted file",
+						selectedFile.getName(), "Rename the file", "Enter a new name:");
+				System.out.println("Got " + a);
+				FileReadWriteModule.rename(selectedFile,
+						Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
+			}
+		}
+		// TODO
+		refreshMusicVideoFileTable();
+
 	}
 
 }

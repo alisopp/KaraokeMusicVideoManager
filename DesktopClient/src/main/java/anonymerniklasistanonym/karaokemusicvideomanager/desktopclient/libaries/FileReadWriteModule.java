@@ -335,4 +335,25 @@ public class FileReadWriteModule {
 		return false;
 	}
 
+	/**
+	 * Rename a file into a new file
+	 * 
+	 * @param oldfile
+	 *            (File)
+	 * @param newfile
+	 *            (File)
+	 * @return true if rename worked
+	 */
+	public static boolean rename(File oldfile, File newfile) {
+
+		if (oldfile.renameTo(newfile)) {
+			System.out.println("Rename succesful");
+			return true;
+		} else {
+			System.out.println("Rename failed");
+		}
+		return false;
+
+	}
+
 }
