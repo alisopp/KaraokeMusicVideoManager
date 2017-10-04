@@ -153,6 +153,33 @@ public class MainWindowController {
 	@FXML
 	private MenuItem contextPathRefresh;
 
+	// context menu playlist
+
+	/**
+	 * music video playlist table context menu > rename file
+	 */
+	@FXML
+	private MenuItem contextPlaylistRemove;
+
+	// music video playlist table context menu
+
+	/**
+	 * music video playlist table context menu > remove the current selected
+	 * directory
+	 */
+	@FXML
+	private MenuItem contextPlaylistEdit;
+	/**
+	 * music video playlist table context menu > clear the current selection
+	 */
+	@FXML
+	private MenuItem contextPlaylistClear;
+	/**
+	 * music video playlist table context menu > refresh the table
+	 */
+	@FXML
+	private MenuItem contextPlaylistRefresh;
+
 	// menu buttons
 
 	/**
@@ -436,6 +463,10 @@ public class MainWindowController {
 		contextPathClear.setGraphic(WindowMethods.createMenuIcon("images/menu/clear.png"));
 		contextPathRefresh.setGraphic(WindowMethods.createMenuIcon("images/menu/refresh.png"));
 		contextMusicVideoRename.setGraphic(WindowMethods.createMenuIcon("images/menu/rename.png"));
+		contextPlaylistRemove.setGraphic(WindowMethods.createMenuIcon("images/menu/remove.png"));
+		contextPlaylistEdit.setGraphic(WindowMethods.createMenuIcon("images/menu/rename.png"));
+		contextPlaylistClear.setGraphic(WindowMethods.createMenuIcon("images/menu/clear.png"));
+		contextPlaylistRefresh.setGraphic(WindowMethods.createMenuIcon("images/menu/refresh.png"));
 
 		// other buttons
 		buttonWrongFormattedFiles.setGraphic(WindowMethods.createMenuIcon("images/menu/wrongFormattedFiles.png"));
@@ -923,6 +954,9 @@ public class MainWindowController {
 
 		if (selectedEntry != null) {
 			// TODO
+			int a = selectedEntry.getIndex();
+			System.out.println(a);
+
 			String author = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Enter your name", "",
 					"Enter your name", "Your name:");
 			String comment = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Enter your comment", "",
@@ -931,8 +965,8 @@ public class MainWindowController {
 				if (comment == null) {
 					comment = "";
 				}
-				this.mainWindow.getMusicVideohandler().addMusicVideoToPlaylist(selectedEntry.getIndex(), author,
-						comment);
+
+				this.mainWindow.getMusicVideohandler().addMusicVideoToPlaylist(a, author, comment);
 				refreshMusicVideoPlaylistTable();
 			}
 
@@ -998,10 +1032,13 @@ public class MainWindowController {
 
 		// add music video data
 		if (listOfEntries != null) {
+			int i = 0;
 			for (MusicVideoPlaylistElement element : listOfEntries) {
 				MusicVideo musicVideoFile = element.getMusicVideoFile();
-				tableDataPlaylist.add(new PlaylistTableView(element.getUnixTimeString(), musicVideoFile.getTitle(),
-						musicVideoFile.getArtist(), element.getAuthor(), element.getComment()));
+				tableDataPlaylist.add(new PlaylistTableView(i, element.getMusicVideoIndex(),
+						element.getUnixTimeString(), musicVideoFile.getTitle(), musicVideoFile.getArtist(),
+						element.getAuthor(), element.getComment()));
+				i++;
 			}
 		}
 	}
@@ -1183,7 +1220,15 @@ public class MainWindowController {
 
 	@FXML
 	private void openMusicVideoPlaylistFileLeftClick() {
-		// TODO
+		if (this.leftMouseKeyWasPressed) {
+			// get the currently selected entry in the table
+			PlaylistTableView selectedEntry = this.playlistTable.getSelectionModel().getSelectedItem();
+
+			// if something is selected
+			if (selectedEntry != null) {
+				this.mainWindow.getMusicVideohandler().openMusicVideo(selectedEntry.getMusicVideoIndex() - 1);
+			}
+		}
 	}
 
 	@FXML
@@ -1197,13 +1242,44 @@ public class MainWindowController {
 	}
 
 	@FXML
-	private void refreshPlaylistTable() {
-		// TODO
+	private void clearSelectionPlaylistTable() {
+		this.playlistTable.getSelectionModel().clearSelection();
 	}
 
 	@FXML
-	private void clearSelectionPlaylistTable() {
-		// TODO
+	private void removeEntry() {
+		// get the currently selected entry in the table
+		PlaylistTableView selectedEntry = this.playlistTable.getSelectionModel().getSelectedItem();
+
+		// if something is selected
+		if (selectedEntry != null) {
+			this.mainWindow.getMusicVideohandler().removeEntryFromPlaylist(selectedEntry.getIndex());
+		}
+		refreshMusicVideoPlaylistTable();
+
+	}
+
+	@FXML
+	private void editEntry() {
+		// get the currently selected entry in the table
+		PlaylistTableView selectedEntry = this.playlistTable.getSelectionModel().getSelectedItem();
+
+		// if something is selected
+		if (selectedEntry != null) {
+			String author = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Enter new name", "",
+					"Enter a new name", "New name:");
+			String comment = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Enter new comment", "",
+					"Enter a new comment", "New comment:");
+			if (author != null) {
+				if (comment == null) {
+					comment = "";
+				}
+				this.mainWindow.getMusicVideohandler().editMusicVideoToPlaylist(selectedEntry.getIndex(), author,
+						comment);
+				refreshMusicVideoPlaylistTable();
+			}
+
+		}
 	}
 
 }

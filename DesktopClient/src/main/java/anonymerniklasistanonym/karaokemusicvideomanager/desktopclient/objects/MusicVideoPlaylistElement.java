@@ -37,6 +37,11 @@ public final class MusicVideoPlaylistElement {
 	private final boolean createdLocally;
 
 	/**
+	 * Playlist integer
+	 */
+	private final int musicVideoIndex;
+
+	/**
 	 * Constructor: All possibilities
 	 * 
 	 * @param musicVideoFile
@@ -48,7 +53,9 @@ public final class MusicVideoPlaylistElement {
 	 * @param createdLocally
 	 *            (Boolean)
 	 */
-	public MusicVideoPlaylistElement(MusicVideo musicVideoFile, String author, String comment, boolean createdLocally) {
+	public MusicVideoPlaylistElement(int musicVideoIndex, MusicVideo musicVideoFile, String author, String comment,
+			boolean createdLocally) {
+		this.musicVideoIndex = musicVideoIndex;
 		this.musicVideoFile = musicVideoFile;
 		this.author = author;
 		this.comment = comment;
@@ -68,7 +75,9 @@ public final class MusicVideoPlaylistElement {
 	 * @param createdLocally
 	 *            (Boolean)
 	 */
-	public MusicVideoPlaylistElement(MusicVideo musicVideoFile, String author, boolean createdLocally) {
+	public MusicVideoPlaylistElement(int musicVideoIndex, MusicVideo musicVideoFile, String author,
+			boolean createdLocally) {
+		this.musicVideoIndex = musicVideoIndex;
 		this.musicVideoFile = musicVideoFile;
 		this.author = author;
 		this.comment = null;
@@ -82,7 +91,8 @@ public final class MusicVideoPlaylistElement {
 	 * @param musicVideoFile
 	 *            (MusicVideo)
 	 */
-	public MusicVideoPlaylistElement(MusicVideo musicVideoFile) {
+	public MusicVideoPlaylistElement(int musicVideoIndex, MusicVideo musicVideoFile) {
+		this.musicVideoIndex = musicVideoIndex;
 		this.musicVideoFile = musicVideoFile;
 		this.author = null;
 		this.comment = null;
@@ -137,6 +147,10 @@ public final class MusicVideoPlaylistElement {
 
 	public String getUnixTimeString() {
 		return new Date(this.unixTime).toString();
+	}
+
+	public int getMusicVideoIndex() {
+		return this.musicVideoIndex;
 	}
 
 }

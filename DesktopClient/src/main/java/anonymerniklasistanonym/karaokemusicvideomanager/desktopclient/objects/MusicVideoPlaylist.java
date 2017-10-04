@@ -39,10 +39,11 @@ public class MusicVideoPlaylist {
 	 * @param comment
 	 *            (String | Comment to entry)
 	 */
-	public void add(MusicVideo musicVideo, String author, String comment) {
+	public void add(int musicVideoIndex, MusicVideo musicVideo, String author, String comment) {
 
 		// create new entry
-		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(musicVideo, author, comment, true);
+		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(musicVideoIndex, musicVideo, author, comment,
+				true);
 
 		MusicVideoPlaylistElement[] oldPlaylist = this.playlistElements;
 		MusicVideoPlaylistElement[] newPlaylist = new MusicVideoPlaylistElement[] { newEntry };

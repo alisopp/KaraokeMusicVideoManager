@@ -5,13 +5,18 @@ import javafx.beans.property.StringProperty;
 
 public class PlaylistTableView {
 
+	private final int index;
+	private final int musicVideoindex;
 	private final StringProperty time;
 	private final StringProperty title;
 	private final StringProperty artist;
 	private final StringProperty author;
 	private final StringProperty comment;
 
-	public PlaylistTableView(String time, String artist, String title, String author, String comment) {
+	public PlaylistTableView(int index, int musicVideoindex, String time, String title, String artist, String author,
+			String comment) {
+		this.index = index;
+		this.musicVideoindex = musicVideoindex;
 		this.time = new SimpleStringProperty(time);
 		this.artist = new SimpleStringProperty(artist);
 		this.title = new SimpleStringProperty(title);
@@ -20,43 +25,51 @@ public class PlaylistTableView {
 	}
 
 	public StringProperty getTimeProperty() {
-		return time;
+		return this.time;
 	}
 
 	public StringProperty getArtistProperty() {
-		return artist;
+		return this.artist;
 	}
 
 	public StringProperty getTitleProperty() {
-		return title;
+		return this.title;
 	}
 
 	public StringProperty getAuthorProperty() {
-		return author;
+		return this.author;
 	}
 
 	public StringProperty getCommentProperty() {
-		return comment;
+		return this.comment;
 	}
 
 	public String getTime() {
-		return time.get();
+		return this.time.get();
 	}
 
 	public String getArtist() {
-		return artist.get();
+		return this.artist.get();
 	}
 
 	public String getTitle() {
-		return title.get();
+		return this.title.get();
 	}
 
 	public String getAuthor() {
-		return author.get();
+		return this.author.get();
 	}
 
 	public String getComment() {
-		return comment.get();
+		return this.comment.get();
+	}
+
+	public int getIndex() {
+		return this.index;
+	}
+
+	public int getMusicVideoIndex() {
+		return this.musicVideoindex;
 	}
 
 }

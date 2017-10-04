@@ -1096,10 +1096,14 @@ public class MusicVideoHandler {
 	}
 
 	public void addMusicVideoToPlaylist(int index, String author, String comment) {
-		this.playlistHandler.add(this.musicVideoList[index], author, comment);
+		this.playlistHandler.add(index, this.musicVideoList[index - 1], author, comment);
 	}
 
-	public void removeEnrtryFromPlaylist(int index) {
+	public void editMusicVideoToPlaylist(int index, String author, String comment) {
+		this.playlistHandler.edit(index, author, comment);
+	}
+
+	public void removeEntryFromPlaylist(int index) {
 		this.playlistHandler.remove(index);
 	}
 

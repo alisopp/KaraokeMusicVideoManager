@@ -166,12 +166,22 @@
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
+                                 <contextMenu>
+                                    <ContextMenu>
+                                      <items>
+                                        <MenuItem fx:id="contextPlaylistRemove" mnemonicParsing="false" onAction="#removeEntry" text="Remove from Playlist" />
+                                          <MenuItem fx:id="contextPlaylistEdit" mnemonicParsing="false" onAction="#editEntry" text="Edit Author and Comment" />
+                                          <MenuItem fx:id="contextPlaylistClear" mnemonicParsing="false" onAction="#clearSelectionPlaylistTable" text="Clear Selection" />
+                                          <MenuItem fx:id="contextPlaylistRefresh" mnemonicParsing="false" onAction="#refreshMusicVideoPlaylistTable" text="Refresh Table" />
+                                      </items>
+                                    </ContextMenu>
+                                 </contextMenu>
                               </TableView>
                               <HBox alignment="TOP_CENTER" minHeight="-Infinity" spacing="20.0">
                                  <children>
                                     <Button fx:id="buttonSavePlaylist" mnemonicParsing="false" onAction="#savePlaylistDialog" text="Save Playlist" />
                                     <Button fx:id="buttonLoadPlaylist" mnemonicParsing="false" onAction="#loadPlaylistDialog" text="Load Playlist" />
-                                    <Button fx:id="buttonRefreshPlaylist" mnemonicParsing="false" onAction="#refreshPlaylistTable" text="Refresh Playlist" />
+                                    <Button fx:id="buttonRefreshPlaylist" mnemonicParsing="false" onAction="#refreshMusicVideoPlaylistTable" text="Refresh Playlist" />
                                  </children>
                                  <padding>
                                     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
