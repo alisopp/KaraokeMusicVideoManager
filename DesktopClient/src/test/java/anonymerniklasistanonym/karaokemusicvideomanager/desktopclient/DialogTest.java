@@ -21,8 +21,7 @@ public class DialogTest extends Application {
 		ex.printStackTrace(printWriter);
 		String exceptionText = stringWriter.toString();
 
-		Dialogs.exceptionDialog(primaryStage, "A exception was thrown!", "short descripton", "detailed descripton",
-				exceptionText);
+		Dialogs.exceptionDialog("A exception was thrown!", "short descripton", "detailed descripton", exceptionText);
 		// System.exit(0);
 	}
 

@@ -3,7 +3,7 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-public class MusicVideoPlaylist {
+public class MusicVideoPlaylistHandler {
 
 	private MusicVideoPlaylistElement[] playlistElements;
 
@@ -12,13 +12,14 @@ public class MusicVideoPlaylist {
 	}
 
 	public void setPlaylistElements(MusicVideoPlaylistElement[] playlistElements) {
+		Arrays.sort(playlistElements, (a, b) -> Long.valueOf(a.getUnixTime()).compareTo(Long.valueOf(b.getUnixTime())));
 		this.playlistElements = playlistElements;
 	}
 
 	/**
 	 * Constructor of playlist
 	 */
-	public MusicVideoPlaylist() {
+	public MusicVideoPlaylistHandler() {
 		reset();
 	}
 
@@ -49,10 +50,10 @@ public class MusicVideoPlaylist {
 		MusicVideoPlaylistElement[] newPlaylist = new MusicVideoPlaylistElement[] { newEntry };
 
 		if (oldPlaylist != null) {
-			this.playlistElements = Stream.concat(Arrays.stream(oldPlaylist), Arrays.stream(newPlaylist))
-					.toArray(MusicVideoPlaylistElement[]::new);
+			setPlaylistElements(Stream.concat(Arrays.stream(oldPlaylist), Arrays.stream(newPlaylist))
+					.toArray(MusicVideoPlaylistElement[]::new));
 		} else {
-			this.playlistElements = newPlaylist;
+			setPlaylistElements(newPlaylist);
 		}
 	}
 

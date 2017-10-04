@@ -7,11 +7,16 @@ import java.util.Optional;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowMethods;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoHandler;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -21,7 +26,18 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+import javafx.util.Pair;
 
+/**
+ * Static methods for JavaFX window dialogs/alerts <br>
+ * <br>
+ * The methods in here mainly can exist because of the great
+ * documentation/explanation from this website: <a href=
+ * "http://code.makery.ch/blog/javafx-dialogs-official/">http://code.makery.ch/blog/javafx-dialogs-official/</a>
+ * 
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
+ *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
+ */
 public class Dialogs {
 
 	/**
@@ -204,8 +220,7 @@ public class Dialogs {
 	 *            <li>exception.printStackTrace(printWriter);</li>
 	 *            <li>String exceptionText = stringWriter.toString();</li>
 	 */
-	public static void exceptionDialog(Stage mainStage, String title, String header, String content,
-			String stacktrace) {
+	public static void exceptionDialog(String title, String header, String content, String stacktrace) {
 
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle(title);
@@ -236,8 +251,7 @@ public class Dialogs {
 	/**
 	 * Text input dialog
 	 */
-	public static String textInputDialog(Stage mainStage, String title, String titleInTextFiel, String header,
-			String labelOfTextField) {
+	public static String textInputDialog(String title, String titleInTextFiel, String header, String labelOfTextField) {
 		TextInputDialog dialog = new TextInputDialog(titleInTextFiel);
 		dialog.setTitle(title);
 		dialog.setHeaderText(header);
@@ -257,6 +271,107 @@ public class Dialogs {
 			return result.get();
 		}
 		return null;
+	}
+
+	/**
+	 * Yes/No dialog
+	 * 
+	 * @param mainStage
+	 * @param title
+	 * @param titleInTextFiel
+	 * @param header
+	 * @param labelOfTextField
+	 * @return
+	 */
+	public static boolean yesNoDialog(String title, String header, String titleInTextFiel, AlertType alertType) {
+		Alert alert = new Alert(alertType);
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+		alert.setContentText(titleInTextFiel);
+
+		alert.initStyle(StageStyle.UNIFIED);
+
+		// Get the Stage.
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+
+		// Add a custom icon.
+		stage.getIcons().addAll(WindowMethods.getWindowIcons());
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Edit author and comment from a playlist entry
+	 * 
+	 * @return
+	 */
+	public static String[] playlistDialog(String author, String comment, String title, String header,
+			String buttonText) {
+		// Create the custom dialog.
+		Dialog<Pair<String, String>> dialog = new Dialog<>();
+		dialog.setTitle(title);
+		dialog.setHeaderText(header);
+
+		// Set the button types.
+		ButtonType editElement = new ButtonType(buttonText, ButtonData.OK_DONE);
+		dialog.getDialogPane().getButtonTypes().addAll(editElement, ButtonType.CANCEL);
+
+		// Create the username and password labels and fields.
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(10, 10, 10, 10));
+
+		TextField newAuthor = new TextField();
+		newAuthor.setPromptText("New author");
+		newAuthor.setText(author);
+		TextField newComment = new TextField();
+		newComment.setPromptText("New Comment");
+		newComment.setText(comment);
+
+		grid.add(new Label("Author:"), 0, 0);
+		grid.add(newAuthor, 1, 0);
+		grid.add(new Label("Comment:"), 0, 1);
+		grid.add(newComment, 1, 1);
+
+		Node loginButton = dialog.getDialogPane().lookupButton(editElement);
+		loginButton.setDisable(true);
+
+		// Do some validation (using the Java 8 lambda syntax).
+		newAuthor.textProperty().addListener((observable, oldValue, newValue) -> {
+			loginButton.setDisable(newValue.trim().isEmpty());
+		});
+
+		dialog.getDialogPane().setContent(grid);
+
+		// Request focus on the username field by default.
+		Platform.runLater(() -> newAuthor.requestFocus());
+
+		// Convert the result to a username-password-pair when the login button is
+		// clicked.
+		dialog.setResultConverter(dialogButton -> {
+			if (dialogButton == editElement) {
+				return new Pair<>(newAuthor.getText(), newComment.getText());
+			}
+			return null;
+		});
+
+		Optional<Pair<String, String>> result = dialog.showAndWait();
+
+		if (result.isPresent()) {
+			System.out.println(
+					"<< Dialog was approvaed with " + result.get().getKey() + " and " + result.get().getValue());
+			return new String[] { result.get().getKey(), result.get().getValue() };
+		} else {
+			System.out.println("<< Dialog was cancelled");
+			return null;
+		}
+
 	}
 
 }

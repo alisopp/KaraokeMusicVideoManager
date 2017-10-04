@@ -1,7 +1,8 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
 
 import java.time.Instant;
-import java.util.Date;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Properties of every music video element in the playlist
@@ -146,7 +147,8 @@ public final class MusicVideoPlaylistElement {
 	}
 
 	public String getUnixTimeString() {
-		return new Date(this.unixTime).toString();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		return Instant.ofEpochSecond(this.unixTime).atZone(ZoneId.systemDefault()).format(formatter);
 	}
 
 	public int getMusicVideoIndex() {

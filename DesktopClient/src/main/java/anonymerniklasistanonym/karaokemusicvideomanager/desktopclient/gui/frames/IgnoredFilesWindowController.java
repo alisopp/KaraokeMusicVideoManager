@@ -267,8 +267,8 @@ public class IgnoredFilesWindowController {
 			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
 			if (selectedFile.exists() && selectedFile.isFile()) {
 				// show dialog to rename the file
-				String a = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Rename wrong formatted file",
-						selectedFile.getName(), "Rename the file", "Enter a new name:");
+				String a = Dialogs.textInputDialog("Rename wrong formatted file", selectedFile.getName(),
+						"Rename the file", "Enter a new name:");
 
 				if (a != null) {
 					// "un"-ignore the file

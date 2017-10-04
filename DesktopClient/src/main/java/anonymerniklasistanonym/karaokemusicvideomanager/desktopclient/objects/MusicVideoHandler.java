@@ -36,7 +36,7 @@ public class MusicVideoHandler {
 	/**
 	 * Handles the playlist
 	 */
-	private MusicVideoPlaylist playlistHandler;
+	private MusicVideoPlaylistHandler playlistHandler;
 
 	/**
 	 * This ArrayList<MusicVideo> contains all the MusicVideo objects and each
@@ -64,7 +64,7 @@ public class MusicVideoHandler {
 		this.settingsData = new ProgramData();
 		this.settingsFile = new File("settings.json");
 		this.columnNames = new String[] { "#", "Artist", "Title" };
-		this.playlistHandler = new MusicVideoPlaylist();
+		this.playlistHandler = new MusicVideoPlaylistHandler();
 	}
 
 	// Methods
@@ -1056,9 +1056,13 @@ public class MusicVideoHandler {
 		updateMusicVideoList();
 	}
 
+	/**
+	 * Reset everything
+	 */
 	public void reset() {
-		this.settingsData.resetSettings();
-		// updateMusicVideoList();
+		this.settingsData.reset();
+		this.playlistHandler.reset();
+		updateMusicVideoList();
 	}
 
 	public File[] getIgnoredFiles() {
@@ -1087,11 +1091,11 @@ public class MusicVideoHandler {
 
 	}
 
-	public MusicVideoPlaylist getPlaylistHandler() {
+	public MusicVideoPlaylistHandler getPlaylistHandler() {
 		return playlistHandler;
 	}
 
-	public void setPlaylistHandler(MusicVideoPlaylist playlistHandler) {
+	public void setPlaylistHandler(MusicVideoPlaylistHandler playlistHandler) {
 		this.playlistHandler = playlistHandler;
 	}
 

@@ -21,7 +21,6 @@ public class MainWindow {
 		this.main = hih;
 		this.setMainWindowStage(hih.getPrimaryStage());
 		createStage();
-
 	}
 
 	private Stage MainWindowStage;

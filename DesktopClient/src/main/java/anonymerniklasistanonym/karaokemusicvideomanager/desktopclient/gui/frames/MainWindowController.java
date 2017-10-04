@@ -25,6 +25,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -953,20 +954,21 @@ public class MainWindowController {
 		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
 
 		if (selectedEntry != null) {
-			// TODO
 			int a = selectedEntry.getIndex();
-			System.out.println(a);
 
-			String author = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Enter your name", "",
-					"Enter your name", "Your name:");
-			String comment = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Enter your comment", "",
-					"Enter a comment", "Your comment:");
-			if (author != null) {
-				if (comment == null) {
-					comment = "";
+			String[] authorComment = Dialogs.playlistDialog("", "", "Create a new Playlist entry",
+					"Add an author and comment", "Add to playlist");
+
+			// String author = Dialogs.textInputDialog("Enter your name", "", "Enter your
+			// name", "Your name:");
+			// String comment = Dialogs.textInputDialog("Enter your comment", "", "Enter a
+			// comment", "Your comment:");
+			if (authorComment != null && authorComment[0] != null) {
+				if (authorComment[1] == null) {
+					authorComment[1] = "";
 				}
 
-				this.mainWindow.getMusicVideohandler().addMusicVideoToPlaylist(a, author, comment);
+				this.mainWindow.getMusicVideohandler().addMusicVideoToPlaylist(a, authorComment[0], authorComment[1]);
 				refreshMusicVideoPlaylistTable();
 			}
 
@@ -1182,9 +1184,14 @@ public class MainWindowController {
 
 	@FXML
 	private void resetConfiguartion() {
-		this.mainWindow.getMusicVideohandler().reset();
-		refreshMusicVideoFileTable();
-		refreshMusicVideoPathTable();
+		if (Dialogs.yesNoDialog("Confirm to Continue", "Reset Everything", "Do you really want to reset EVERYTHING?",
+				AlertType.CONFIRMATION)) {
+			this.mainWindow.getMusicVideohandler().reset();
+			refreshMusicVideoFileTable();
+			refreshMusicVideoPathTable();
+			refreshMusicVideoPlaylistTable();
+		}
+
 	}
 
 	@FXML
@@ -1206,8 +1213,8 @@ public class MainWindowController {
 			File selectedFile = pathOfSelectedFile.toFile();
 			if (selectedFile.exists() && selectedFile.isFile()) {
 				// show dialog to rename the file
-				String a = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Rename wrong formatted file",
-						selectedFile.getName(), "Rename the file", "Enter a new name:");
+				String a = Dialogs.textInputDialog("Rename wrong formatted file", selectedFile.getName(),
+						"Rename the file", "Enter a new name:");
 				if (a != null) {
 					FileReadWriteModule.rename(selectedFile,
 							Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
@@ -1234,6 +1241,7 @@ public class MainWindowController {
 	@FXML
 	private void savePlaylistDialog() {
 		// TODO
+
 	}
 
 	@FXML
@@ -1266,16 +1274,18 @@ public class MainWindowController {
 
 		// if something is selected
 		if (selectedEntry != null) {
-			String author = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Enter new name", "",
-					"Enter a new name", "New name:");
-			String comment = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Enter new comment", "",
-					"Enter a new comment", "New comment:");
-			if (author != null) {
-				if (comment == null) {
-					comment = "";
+			String[] authorComment = Dialogs.playlistDialog(selectedEntry.getAuthor(), selectedEntry.getComment(),
+					"Edit the selected Playlist entry", "Edit author and comment", "Save Changes");
+			// String author = Dialogs.textInputDialog("Enter new name", "", "Enter a new
+			// name", "New name:");
+			// String comment = Dialogs.textInputDialog("Enter new comment", "", "Enter a
+			// new comment", "New comment:");
+			if (authorComment != null && authorComment[0] != null) {
+				if (authorComment[1] == null) {
+					authorComment[1] = "";
 				}
-				this.mainWindow.getMusicVideohandler().editMusicVideoToPlaylist(selectedEntry.getIndex(), author,
-						comment);
+				this.mainWindow.getMusicVideohandler().editMusicVideoToPlaylist(selectedEntry.getIndex(),
+						authorComment[0], authorComment[1]);
 				refreshMusicVideoPlaylistTable();
 			}
 

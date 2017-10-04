@@ -61,7 +61,7 @@ public final class ProgramData {
 	 * Constructor [empty]
 	 */
 	public ProgramData() {
-		resetSettings();
+		reset();
 	}
 
 	/**
@@ -78,7 +78,7 @@ public final class ProgramData {
 	 * 
 	 * @return pathList (Path[])
 	 */
-	public void resetSettings() {
+	public void reset() {
 		pathList = null;
 		language = null;
 		acceptedFileTypes = new String[] { "avi", "mp4", "mkv", "wmv", "mov", "mpg", "mpeg" };
