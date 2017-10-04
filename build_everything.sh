@@ -8,10 +8,10 @@
 ##### Constants
 
 IMG_DIR=ImageResources
-IMG_UPDATE_FILE=create_image_ressources.py
+IMG_UPDATE_FILE=create_image_resources.py
 
 WEB_DIR=WebInterfaces
-WEB_UPDATE_FILE=create_website_page_resources.py
+WEB_UPDATE_FILE=create_website_resources.py
 
 JAVA_DIR=DesktopClient
 JAVA_UPDATE_FILE=build_project.sh

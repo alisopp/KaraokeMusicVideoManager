@@ -77,6 +77,11 @@ public class MusicVideoHandler {
 	public void loadSettingsFromFile() {
 		if (settingsFileName.exists()) {
 			loadSettings(settingsFileName);
+		} else if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+			File windowsSettingsFile = Paths.get(System.getProperty("user.home") + "\\" + settingsFileName).toFile();
+			if (windowsSettingsFile.exists()) {
+				loadSettings(windowsSettingsFile);
+			}
 		}
 	}
 
@@ -232,6 +237,8 @@ public class MusicVideoHandler {
 				File[] newPathList = Stream
 						.concat(Arrays.stream(oldIgnoredFilesList), Arrays.stream(new File[] { newIgnoredFile }))
 						.toArray(File[]::new);
+				Arrays.sort(newPathList);
+
 				this.settingsData.setIgnoredFiles(newPathList);
 			}
 

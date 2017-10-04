@@ -1,6 +1,7 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
@@ -268,14 +269,24 @@ public class IgnoredFilesWindowController {
 				// show dialog to rename the file
 				String a = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Rename wrong formatted file",
 						selectedFile.getName(), "Rename the file", "Enter a new name:");
-				System.out.println("Got " + a);
-				FileReadWriteModule.rename(selectedFile,
-						Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
+
+				if (a != null) {
+					// "un"-ignore the file
+					this.mainWindow.getMusicVideohandler().removeFromIgnoredFilesList(selectedFile);
+
+					// rename the file
+					Path newFilePath = Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a);
+					FileReadWriteModule.rename(selectedFile, newFilePath.toFile());
+
+					// ignore the renamed file
+					this.mainWindow.getMusicVideohandler().addIgnoredFileToIgnoredFilesList(newFilePath);
+
+					updateIgnoredFileTable();
+					this.mainWindow.getMusicVideohandler().loadMusicVideoFiles();
+				}
 			}
 		}
-		// TODO
-		updateIgnoredFileTable();
-		this.mainWindow.getMusicVideohandler().loadMusicVideoFiles();
+
 	}
 
 	/**

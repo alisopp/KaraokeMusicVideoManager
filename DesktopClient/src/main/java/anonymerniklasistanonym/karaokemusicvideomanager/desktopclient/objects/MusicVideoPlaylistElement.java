@@ -16,12 +16,12 @@ public final class MusicVideoPlaylistElement {
 	/**
 	 * Name of the author of the element
 	 */
-	private final String author;
+	private String author;
 
 	/**
 	 * Comment of the author about this element
 	 */
-	private final String comment;
+	private String comment;
 
 	/**
 	 * Was it locally or online created
@@ -113,6 +113,11 @@ public final class MusicVideoPlaylistElement {
 	 */
 	public boolean isCreatedLocally() {
 		return this.createdLocally;
+	}
+
+	public void edit(String author, String comment) {
+		this.author = author;
+		this.comment = comment;
 	}
 
 }

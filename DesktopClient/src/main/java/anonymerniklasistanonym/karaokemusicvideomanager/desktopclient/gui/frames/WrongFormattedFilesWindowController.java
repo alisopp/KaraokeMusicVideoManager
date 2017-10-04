@@ -262,14 +262,14 @@ public class WrongFormattedFilesWindowController {
 				// show dialog to rename the file
 				String a = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Rename wrong formatted file",
 						selectedFile.getName(), "Rename the file", "Enter a new name:");
-				System.out.println("Got " + a);
-				FileReadWriteModule.rename(selectedFile,
-						Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
+				if (a != null) {
+					FileReadWriteModule.rename(selectedFile,
+							Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
+					updateWrongFileTable();
+					this.mainWindow.getMusicVideohandler().loadMusicVideoFiles();
+				}
 			}
 		}
-		// TODO
-		updateWrongFileTable();
-		this.mainWindow.getMusicVideohandler().loadMusicVideoFiles();
 	}
 
 	/**

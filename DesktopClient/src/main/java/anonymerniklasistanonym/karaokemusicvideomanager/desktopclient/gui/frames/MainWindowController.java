@@ -76,11 +76,29 @@ public class MainWindowController {
 	@FXML
 	private TableColumn<DirectoryPathTableView, String> columnFilePath;
 
+	// the playlist table
+	@FXML
+	private TableView<MusicVideoTableView> playlistTable;
+	@FXML
+	private TableColumn<MusicVideoTableView, Number> columnPlaylistTime;
+	@FXML
+	private TableColumn<MusicVideoTableView, String> columnPlaylistTitle;
+	@FXML
+	private TableColumn<MusicVideoTableView, String> columnPlaylistArtist;
+	@FXML
+	private TableColumn<MusicVideoTableView, String> columnPlaylistAuthor;
+	@FXML
+	private TableColumn<MusicVideoTableView, String> columnPlaylistComment;
+
 	// the tabs
 	@FXML
 	private TabPane tabView;
 	@FXML
 	private Tab musicVideoTableTab;
+	@FXML
+	private Tab playlistTab;
+	@FXML
+	private Tab sourceTab;
 
 	// music video files table context menu
 
@@ -210,6 +228,13 @@ public class MainWindowController {
 	 */
 	@FXML
 	private Button buttonIgnoredFiles;
+
+	@FXML
+	private Button buttonSavePlaylist;
+	@FXML
+	private Button buttonLoadPlaylist;
+	@FXML
+	private Button buttonRefreshPlaylist;
 
 	@FXML
 	private MenuItem menuButtonSaveConfiguration;
@@ -360,6 +385,9 @@ public class MainWindowController {
 		aboutButton.setGraphic(WindowMethods.createMenuIcon("images/menu/about.png"));
 		randomButton.setGraphic(WindowMethods.createMenuIcon("images/menu/random.png"));
 		helpButton.setGraphic(WindowMethods.createMenuIcon("images/menu/help.png"));
+		buttonLoadPlaylist.setGraphic(WindowMethods.createMenuIcon("images/menu/load.png"));
+		buttonSavePlaylist.setGraphic(WindowMethods.createMenuIcon("images/menu/save.png"));
+		buttonRefreshPlaylist.setGraphic(WindowMethods.createMenuIcon("images/menu/refresh.png"));
 
 		// menu buttons
 		menuButtonWebsites.setGraphic(WindowMethods.createMenuIcon("images/menu/html_static.png"));
@@ -368,15 +396,14 @@ public class MainWindowController {
 		menuButtonHtmlStatic.setGraphic(WindowMethods.createMenuIcon("images/menu/html_static.png"));
 		menuButtonHtmlSearch.setGraphic(WindowMethods.createMenuIcon("images/menu/html_search.png"));
 		menuButtonHtmlParty.setGraphic(WindowMethods.createMenuIcon("images/menu/html_playlist.png"));
-
-		// label
-		searchLabel.setGraphic(WindowMethods.createMenuIcon("images/menu/search.png"));
-
 		menuButtonSaveConfiguration.setGraphic(WindowMethods.createMenuIcon("images/menu/save.png"));
 		menuButtonLoadConfiguration.setGraphic(WindowMethods.createMenuIcon("images/menu/load.png"));
 		menuButtonSaveConfigurationCustom.setGraphic(WindowMethods.createMenuIcon("images/menu/save.png"));
 		menuButtonLoadConfigurationCustom.setGraphic(WindowMethods.createMenuIcon("images/menu/load.png"));
 		menuButtonResetConfiguration.setGraphic(WindowMethods.createMenuIcon("images/menu/reset.png"));
+
+		// label
+		searchLabel.setGraphic(WindowMethods.createMenuIcon("images/menu/search.png"));
 	}
 
 	public void setMainWindow(Main window) {
@@ -1046,13 +1073,39 @@ public class MainWindowController {
 				// show dialog to rename the file
 				String a = Dialogs.textInputDialog(this.mainWindow.getPrimaryStage(), "Rename wrong formatted file",
 						selectedFile.getName(), "Rename the file", "Enter a new name:");
-				System.out.println("Got " + a);
-				FileReadWriteModule.rename(selectedFile,
-						Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
+				if (a != null) {
+					FileReadWriteModule.rename(selectedFile,
+							Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
+					refreshMusicVideoFileTable();
+				}
 			}
 		}
-		refreshMusicVideoFileTable();
 
+	}
+
+	@FXML
+	private void openMusicVideoPlaylistFileLeftClick() {
+		// TODO
+	}
+
+	@FXML
+	private void savePlaylistDialog() {
+		// TODO
+	}
+
+	@FXML
+	private void loadPlaylistDialog() {
+		// TODO
+	}
+
+	@FXML
+	private void refreshPlaylistTable() {
+		// TODO
+	}
+
+	@FXML
+	private void clearSelectionPlaylistTable() {
+		// TODO
 	}
 
 }
