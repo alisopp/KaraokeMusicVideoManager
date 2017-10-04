@@ -113,7 +113,7 @@
               <tabs>
                 <Tab fx:id="musicVideoTableTab" onSelectionChanged="#clearSearch" text="Music Video List">
                      <content>
-                        <TableView id="my-table" fx:id="musicVideoTable" onMouseClicked="#openMusicVideoFileLeftClick" onMousePressed="#mousePressed" onSort="#unSelectVideoFile" style="-fx-background-color: white;">
+                        <TableView id="my-table" fx:id="musicVideoTable" onMouseClicked="#openMusicVideoFileLeftClick" onMousePressed="#mousePressed" onSort="#clearSelectionMusicVideoFileTable" style="-fx-background-color: white;">
                           <columns>
                             <TableColumn fx:id="columnIndex" editable="false" prefWidth="10.0" style="-fx-alignment: CENTER_RIGHT;" text="#" />
                               <TableColumn fx:id="columnArtist" editable="false" minWidth="90.0" text="Artist" />
@@ -125,9 +125,11 @@
                            <contextMenu>
                               <ContextMenu>
                                 <items>
-                                  <MenuItem fx:id="contextMenuPlay" mnemonicParsing="false" onAction="#openSelectedVideoFile" text="Play Music Video" />
-                                    <MenuItem fx:id="contextMenuPlaylist" mnemonicParsing="false" onAction="#addVideoToPlaylist" text="Add To Playlist" />
-                                    <MenuItem fx:id="contextMenuDirectory" mnemonicParsing="false" onAction="#showDirectoryOfFileInExplorer" text="Show Directory" />
+                                    <MenuItem fx:id="contextMusicVideoPlaylist" disable="true" mnemonicParsing="false" onAction="#addVideoToPlaylist" text="Add to Playlist" />
+                                    <MenuItem fx:id="contextMusicVideoDirectory" mnemonicParsing="false" onAction="#showDirectoryOfFileInExplorer" text="Show Directory" />
+                                    <MenuItem fx:id="contextMusicVideoIgnore" disable="true" mnemonicParsing="false" onAction="#ignoreMusicVideoFile" text="Ignore File" />
+                                    <MenuItem fx:id="contextMusicVideoClear" mnemonicParsing="false" onAction="#clearSelectionMusicVideoFileTable" text="Clear Selection" />
+                                    <MenuItem fx:id="contextMusicVideoRefresh" mnemonicParsing="false" onAction="#refreshMusicVideoFileTable" text="Refresh Table" />
                                 </items>
                               </ContextMenu>
                            </contextMenu>
@@ -151,7 +153,7 @@
                      <content>
                         <VBox>
                            <children>
-                              <TableView fx:id="directoryPathTable" minHeight="150.0" onMouseClicked="#openDirectoryLeftClick" onMousePressed="#mousePressed" onSort="#unSelectDirectoryPath" VBox.vgrow="ALWAYS">
+                              <TableView fx:id="directoryPathTable" minHeight="150.0" onMouseClicked="#openDirectoryLeftClick" onMousePressed="#mousePressed" onSort="#clearSelectionMusicVideoPathTable" VBox.vgrow="ALWAYS">
                                 <columns>
                                   <TableColumn fx:id="columnFilePath" prefWidth="400.0" text="Directory Path" />
                                 </columns>
@@ -161,10 +163,11 @@
                                  <contextMenu>
                                     <ContextMenu>
                                       <items>
-                                        <MenuItem fx:id="pathShowExplorer" mnemonicParsing="false" onAction="#showInExplorer" text="Show in Explorer" />
-                                          <MenuItem fx:id="pathRemove" mnemonicParsing="false" onAction="#removeDirectory" text="Remove Source" />
-                                          <MenuItem fx:id="pathWrongFormatted" mnemonicParsing="false" onAction="#openWrongFormattedFilesWindow" text="Show wrong formatted Files" />
-                                      </items>
+                                          <MenuItem fx:id="contextPathRemove" mnemonicParsing="false" onAction="#removeDirectory" text="Remove Source" />
+                                          <MenuItem fx:id="contextPathWrongFormatted" mnemonicParsing="false" onAction="#openWrongFormattedFilesWindow" text="Show wrong formatted Files" />
+ 										  <MenuItem fx:id="contextPathClear" mnemonicParsing="false" onAction="#clearSelectionMusicVideoPathTable" text="Clear Selection" />
+                                          <MenuItem fx:id="contextPathRefresh" mnemonicParsing="false" onAction="#refreshMusicVideoPathTable" text="Refresh Table" />
+                                </items>
                                     </ContextMenu>
                                  </contextMenu>
                               </TableView>
@@ -172,7 +175,6 @@
                                  <children>
                                     <Button fx:id="addPathButton" mnemonicParsing="false" onAction="#addSourceFolderDialog" text="Add source" />
                                     <Button fx:id="removePathButton" mnemonicParsing="false" onAction="#removeDirectory" text="Remove source" />
-                                    <Button fx:id="showInExplorerButton" mnemonicParsing="false" onAction="#showInExplorer" text="Show in Explorer" />
                                  </children>
                                  <VBox.margin>
                                     <Insets />

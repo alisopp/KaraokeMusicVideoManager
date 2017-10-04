@@ -72,16 +72,42 @@ public class MainWindowController {
 	private Tab musicVideoTableTab;
 
 	// context menu
+
+	/**
+	 * music video files table > add file to the play list
+	 */
 	@FXML
-	private MenuItem contextMenuPlay;
+	private MenuItem contextMusicVideoPlaylist;
+	/**
+	 * music video files table > open directory of file
+	 */
 	@FXML
-	private MenuItem contextMenuPlaylist;
+	private MenuItem contextMusicVideoDirectory;
+	/**
+	 * music video files table > ignore the current file
+	 */
 	@FXML
-	private MenuItem contextMenuDirectory;
+	private MenuItem contextMusicVideoIgnore;
+	/**
+	 * music video files table > clear the current selection
+	 */
 	@FXML
-	private MenuItem pathShowExplorer;
+	private MenuItem contextMusicVideoClear;
+	/**
+	 * music video files table > refresh the table
+	 */
 	@FXML
-	private MenuItem pathRemove;
+	private MenuItem contextMusicVideoRefresh;
+
+	@FXML
+	private MenuItem contextPathRemove;
+	@FXML
+	private MenuItem contextPathWrongFormatted;
+	@FXML
+	private MenuItem contextPathClear;
+	@FXML
+	private MenuItem contextPathRefresh;
+
 	@FXML
 	private MenuItem menuButtonCsv;
 	@FXML
@@ -92,8 +118,6 @@ public class MainWindowController {
 	private MenuItem menuButtonHtmlSearch;
 	@FXML
 	private MenuItem menuButtonHtmlParty;
-	@FXML
-	private MenuItem pathWrongFormatted;
 
 	// menu bar
 	@FXML
@@ -114,10 +138,6 @@ public class MainWindowController {
 	private Button randomButton;
 	@FXML
 	private Button addPathButton;
-	@FXML
-	private Button removePathButton;
-	@FXML
-	private Button showInExplorerButton;
 
 	// Mouse key monitoring
 	private boolean leftMouseKeyWasPressed;
@@ -219,12 +239,15 @@ public class MainWindowController {
 		 */
 
 		// Context menu
-		contextMenuPlay.setGraphic(WindowMethods.createMenuIcon("images/menu/play.png"));
-		contextMenuPlaylist.setGraphic(WindowMethods.createMenuIcon("images/menu/playlist.png"));
-		contextMenuDirectory.setGraphic(WindowMethods.createMenuIcon("images/menu/directory.png"));
-		pathShowExplorer.setGraphic(WindowMethods.createMenuIcon("images/menu/directory.png"));
-		pathRemove.setGraphic(WindowMethods.createMenuIcon("images/menu/remove.png"));
-		pathWrongFormatted.setGraphic(WindowMethods.createMenuIcon("images/menu/wrongFormattedFiles.png"));
+		contextMusicVideoPlaylist.setGraphic(WindowMethods.createMenuIcon("images/menu/playlist.png"));
+		contextMusicVideoDirectory.setGraphic(WindowMethods.createMenuIcon("images/menu/directory.png"));
+		contextMusicVideoIgnore.setGraphic(WindowMethods.createMenuIcon("images/menu/ignore.png"));
+		contextMusicVideoClear.setGraphic(WindowMethods.createMenuIcon("images/menu/clear.png"));
+		contextMusicVideoRefresh.setGraphic(WindowMethods.createMenuIcon("images/menu/refresh.png"));
+		contextPathRemove.setGraphic(WindowMethods.createMenuIcon("images/menu/remove.png"));
+		contextPathWrongFormatted.setGraphic(WindowMethods.createMenuIcon("images/menu/wrongFormattedFiles.png"));
+		contextPathClear.setGraphic(WindowMethods.createMenuIcon("images/menu/clear.png"));
+		contextPathRefresh.setGraphic(WindowMethods.createMenuIcon("images/menu/refresh.png"));
 
 		// other buttons
 		networkButton.setGraphic(WindowMethods.createMenuIcon("images/menu/network.png"));
@@ -232,8 +255,6 @@ public class MainWindowController {
 		aboutButton.setGraphic(WindowMethods.createMenuIcon("images/menu/about.png"));
 		randomButton.setGraphic(WindowMethods.createMenuIcon("images/menu/random.png"));
 		addPathButton.setGraphic(WindowMethods.createMenuIcon("images/menu/add.png"));
-		removePathButton.setGraphic(WindowMethods.createMenuIcon("images/menu/remove.png"));
-		showInExplorerButton.setGraphic(WindowMethods.createMenuIcon("images/menu/directory.png"));
 
 		// menu buttons
 		menuButtonWebsites.setGraphic(WindowMethods.createMenuIcon("images/menu/html_static.png"));
@@ -250,7 +271,7 @@ public class MainWindowController {
 	public void setMainWindow(Main window) {
 		this.mainWindow = window;
 
-		updateMusicVideoListTable();
+		updateMusicVideoFileTable();
 		updateDirectoryPathTable();
 
 	}
@@ -305,7 +326,7 @@ public class MainWindowController {
 	@FXML
 	public void openDirectoryLeftClick() {
 		if (leftMouseKeyWasPressed == true) {
-			showInExplorer();
+			showDirectoryInExplorerPathList();
 		}
 	}
 
@@ -332,7 +353,7 @@ public class MainWindowController {
 			this.directoryPathTable.getSelectionModel().select(0);
 
 			// open the music video that is selected
-			showInExplorer();
+			showDirectoryInExplorerPathList();
 
 			// clear the selection
 			this.directoryPathTable.getSelectionModel().clearSelection();
@@ -340,19 +361,19 @@ public class MainWindowController {
 	}
 
 	/**
-	 * Clears the current selection
+	 * Clears the current row selection of the music video file table
 	 */
 	@FXML
-	private void unSelectVideoFile() {
+	private void clearSelectionMusicVideoFileTable() {
 		// clear the current selection
 		this.musicVideoTable.getSelectionModel().clearSelection();
 	}
 
 	/**
-	 * Clears the current selection
+	 * Clears the current row selection of the music video path table
 	 */
 	@FXML
-	private void unSelectDirectoryPath() {
+	private void clearSelectionMusicVideoPathTable() {
 		// clear the current selection
 		this.directoryPathTable.getSelectionModel().clearSelection();
 	}
@@ -416,7 +437,7 @@ public class MainWindowController {
 			this.mainWindow.getMusicVideohandler().addPathToPathList(directory.toPath());
 			this.mainWindow.getMusicVideohandler().updateMusicVideoList();
 
-			updateMusicVideoListTable();
+			updateMusicVideoFileTable();
 			updateDirectoryPathTable();
 
 		}
@@ -544,7 +565,11 @@ public class MainWindowController {
 	/**
 	 * Update the music video table in the window with the current music video list
 	 */
-	public void updateMusicVideoListTable() {
+	public void updateMusicVideoFileTable() {
+
+		// update the music video data
+		this.mainWindow.getMusicVideohandler().updateMusicVideoList();
+
 		// get music video data
 		MusicVideo[] listOfVideos = this.mainWindow.getMusicVideohandler().getMusicVideoList();
 
@@ -562,6 +587,7 @@ public class MainWindowController {
 	 * Update the directory path table in the window with the current path list
 	 */
 	public void updateDirectoryPathTable() {
+
 		// get music video data
 		Path[] listOfPaths = this.mainWindow.getMusicVideohandler().getPathList();
 
@@ -584,12 +610,15 @@ public class MainWindowController {
 			// open the music video file with the index
 			this.mainWindow.getMusicVideohandler().removeFromPathList(selectedEntry.getFilePath());
 			updateDirectoryPathTable();
-			updateMusicVideoListTable();
+			updateMusicVideoFileTable();
 		}
 	}
 
+	/**
+	 * Show the currently selected directory in the default file manager
+	 */
 	@FXML
-	public void showInExplorer() {
+	public void showDirectoryInExplorerPathList() {
 
 		// get the currently selected entry
 		DirectoryPathTableView selectedEntry = this.directoryPathTable.getSelectionModel().getSelectedItem();
@@ -601,9 +630,40 @@ public class MainWindowController {
 		}
 	}
 
+	/**
+	 * Show the currently selected files directory in the default file manager
+	 */
+	@FXML
+	public void showDirectoryInExplorerMusicVideoList() {
+
+		// get the currently selected entry
+		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
+
+		// if entry isn't null
+		if (selectedEntry != null) {
+
+			// get the path of the music video object over the table index - 1
+			MusicVideo selectedFile = this.mainWindow.getMusicVideohandler()
+					.getMusicVideoList()[selectedEntry.getIndex() - 1];
+
+			// open the selected music video file externally
+			ExternalApplicationHandler.openDirectory(selectedFile.getPath().toFile());
+		}
+	}
+
+	/**
+	 * Add currently selected music video file to playlist
+	 */
 	@FXML
 	public void addVideoToPlaylist() {
-		System.out.println("Later");
+		// TODO
+
+		// get the currently selected entry
+		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
+
+		if (selectedEntry != null) {
+
+		}
 	}
 
 	@FXML
@@ -625,9 +685,41 @@ public class MainWindowController {
 				System.out.println("hi 3");
 				ExternalApplicationHandler.openFile(selectedFile.getParentFile());
 			}
+		}
+	}
+
+	/**
+	 * Refresh the music video file table
+	 */
+	@FXML
+	private void refreshMusicVideoFileTable() {
+		updateMusicVideoFileTable();
+	}
+
+	/**
+	 * Refresh the music video path table
+	 */
+	@FXML
+	private void refreshMusicVideoPathTable() {
+		updateDirectoryPathTable();
+	}
+
+	/**
+	 * Ignore the currently selected music video file
+	 */
+	@FXML
+	private void ignoreMusicVideoFile() {
+		// TODO
+
+		// get the currently selected entry
+		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
+
+		if (selectedEntry != null) {
 
 		}
 
+		// update the music video list after this
+		updateMusicVideoFileTable();
 	}
 
 }

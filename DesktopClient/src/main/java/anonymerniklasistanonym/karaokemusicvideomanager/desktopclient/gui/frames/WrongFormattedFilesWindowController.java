@@ -283,7 +283,7 @@ public class WrongFormattedFilesWindowController {
 	 * Refresh the wrong formatted files path list
 	 */
 	@FXML
-	private void refreshList() {
+	private void refreshTable() {
 		updateWrongFileTable();
 	}
 }

@@ -47,7 +47,7 @@
                         <MenuItem fx:id="contextExplorer" mnemonicParsing="false" onAction="#showInDirectory" text="Show Directory of File" />
                         <MenuItem fx:id="contextIgnore" disable="true" mnemonicParsing="false" onAction="#ignoreFile" text="Ignore File" />
                         <MenuItem fx:id="contextClear" mnemonicParsing="false" onAction="#clearRowSelection" text="Clear Selection" />
-                        <MenuItem fx:id="contextRefresh" mnemonicParsing="false" onAction="#refreshList" text="Refresh the Table" />
+                        <MenuItem fx:id="contextRefresh" mnemonicParsing="false" onAction="#refreshTable" text="Refresh the Table" />
                     </items>
                   </ContextMenu>
                </contextMenu>

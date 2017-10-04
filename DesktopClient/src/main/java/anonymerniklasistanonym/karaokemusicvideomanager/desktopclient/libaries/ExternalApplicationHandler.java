@@ -93,4 +93,36 @@ public class ExternalApplicationHandler {
 		return false;
 	}
 
+	/**
+	 * Opens a directory when the file is one, if not it opens the parent directory
+	 * where the file is within
+	 * 
+	 * @param file
+	 * @return true if everything worked
+	 */
+	public static boolean openDirectory(File file) {
+
+		if (!Desktop.isDesktopSupported()) {
+			System.err.println("Desktop is not supported - the program will not open videos on this computer!");
+			return false;
+		}
+
+		if (file == null) {
+			System.err.println("The file is null!");
+			return false;
+		}
+
+		if (!file.exists()) {
+			System.err.println("The file " + file.getAbsolutePath() + " doesn't exist!");
+			return false;
+		}
+
+		// check if file is a directory or not
+		if (file.isDirectory()) {
+			return openFile(file);
+		} else {
+			return openFile(file.getParentFile());
+		}
+	}
+
 }
