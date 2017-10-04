@@ -1,8 +1,5 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
 
-import java.io.File;
-import java.nio.file.Paths;
-
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowMethods;
@@ -76,16 +73,16 @@ public class MainWindow {
 	}
 
 	public void onCloseDialog(WindowEvent e) {
-		File savedSettings = Paths.get("settings.json").toFile();
 
-		if (!savedSettings.exists() || this.main.getMusicVideohandler().getAlwaysSave() == true) {
+		if (this.main.getMusicVideohandler().settingsFileExist()
+				|| this.main.getMusicVideohandler().getAlwaysSave() == true) {
 			// save changes if nothing is there
-			this.main.getMusicVideohandler().saveSettings(savedSettings);
+			this.main.getMusicVideohandler().saveSettingsToFile();
 			System.out.println("Later...");
 		} else {
 
-			if (!this.main.getMusicVideohandler().compareSettings(savedSettings)) {
-				Dialogs.mainStageClose(e, this.main.getMusicVideohandler(), savedSettings);
+			if (!this.main.getMusicVideohandler().compareSettings()) {
+				Dialogs.mainStageClose(e, this.main.getMusicVideohandler());
 			} else {
 				System.out.println("Settings were the same");
 			}

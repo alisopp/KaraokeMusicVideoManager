@@ -33,10 +33,17 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
+/**
+ * The controller class for the main window
+ * 
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
+ *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
+ */
 public class MainWindowController {
 
 	// FXML Views
@@ -529,8 +536,7 @@ public class MainWindowController {
 			Parent root1 = (Parent) loader.load();
 
 			// Connection to the Controller from the primary Stage
-			AboutWindowController aboutWindowController = loader.getController();
-			aboutWindowController.setAboutWindow(this.mainWindow);
+			loader.getController();
 
 			Stage stage = new Stage();
 			stage.setScene(new Scene(root1));
@@ -774,6 +780,75 @@ public class MainWindowController {
 		// set the network button to connected if a connection was established
 		this.networkButton.setSelected(false);
 
+	}
+
+	/**
+	 * Export the music video list as static HTML table
+	 */
+	@FXML
+	private void exportHtmlStatic() {
+		File htmlFileDestination = Dialogs.chooseDirectory(this.mainWindow.getPrimaryStage(),
+				"Export music video list to static HTML table - Choose a directory", null);
+
+		if (htmlFileDestination != null) {
+			this.mainWindow.getMusicVideohandler().saveHtmlList(htmlFileDestination.toPath(), true);
+		}
+	}
+
+	/**
+	 * Export the music video list as HTML table with a search
+	 */
+	@FXML
+	private void exportHtmlSearch() {
+		File htmlFileDestination = Dialogs.chooseDirectory(this.mainWindow.getPrimaryStage(),
+				"Export music video list to static HTML table - Choose a directory", null);
+
+		if (htmlFileDestination != null) {
+			this.mainWindow.getMusicVideohandler().saveHtmlSearch(htmlFileDestination.toPath(), true);
+		}
+	}
+
+	/**
+	 * Export the music video list as HTML table with a playlist
+	 */
+	@FXML
+	private void exportHtmlParty() {
+		File htmlFileDestination = Dialogs.chooseDirectory(this.mainWindow.getPrimaryStage(),
+				"Export music video list to static HTML table - Choose a directory", null);
+
+		if (htmlFileDestination != null) {
+			this.mainWindow.getMusicVideohandler().saveHtmlParty(htmlFileDestination.toPath(), true);
+		}
+	}
+
+	/**
+	 * Export the music video list as a CSV table
+	 */
+	@FXML
+	private void exportCsv() {
+		ExtensionFilter csvFilter = new ExtensionFilter("Csv File", "*.csv");
+		File[] csvFile = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(),
+				"Export music video list to a CSV file - Choose a directory and filename", null,
+				new ExtensionFilter[] { csvFilter }, Dialogs.CHOOSE_ACTION.SAVE);
+
+		if (csvFile != null) {
+			this.mainWindow.getMusicVideohandler().saveCsv(csvFile[0].toPath());
+		}
+	}
+
+	/**
+	 * Export the music video list as a JSON file
+	 */
+	@FXML
+	private void exportJson() {
+		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
+		File[] jsonFile = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(),
+				"Export music video list to a JSON file - Choose a directory and filename", null,
+				new ExtensionFilter[] { jsonFilter }, Dialogs.CHOOSE_ACTION.SAVE);
+
+		if (jsonFile != null) {
+			this.mainWindow.getMusicVideohandler().saveJson(jsonFile[0].toPath());
+		}
 	}
 
 }

@@ -21,6 +21,12 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.E
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.JsonModule;
 
+/**
+ * Class that handles everything about music video files
+ * 
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
+ *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
+ */
 public class MusicVideoHandler {
 
 	/**
@@ -72,7 +78,24 @@ public class MusicVideoHandler {
 		if (settingsFileName.exists()) {
 			loadSettings(settingsFileName);
 		}
+	}
 
+	/**
+	 * Load settings from "settings.json" file if there is one
+	 */
+	public boolean settingsFileExist() {
+		if (settingsFileName.exists()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Load settings from "settings.json" file if there is one
+	 */
+	public void saveSettingsToFile() {
+		saveSettings(settingsFileName);
 	}
 
 	public void loadMusicVideoFiles() {
@@ -900,6 +923,18 @@ public class MusicVideoHandler {
 	 */
 	public boolean compareSettings(File settingsFilePathNew) {
 		return ExportImportSettings.compareSettingsFileToCurrent(settingsFilePathNew, this.settingsData);
+	}
+
+	/**
+	 * Returns FALSE if the new settings data from the file is different to the
+	 * current settings data. If they aren't the same TRUE will be returned.
+	 * 
+	 * @param settingsFilePathNew
+	 *            (File | File that contains settingsData in JSON format)
+	 * @return theyAreTheSame (Boolean)
+	 */
+	public boolean compareSettings() {
+		return ExportImportSettings.compareSettingsFileToCurrent(this.settingsFileName, this.settingsData);
 	}
 
 	public void setAlwaysSave(boolean b) {

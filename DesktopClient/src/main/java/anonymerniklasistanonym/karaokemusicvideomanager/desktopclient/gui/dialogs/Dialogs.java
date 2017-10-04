@@ -27,8 +27,7 @@ public class Dialogs {
 	 *            (WindowEvent - needed to let the window alive if 'Cancel' get's
 	 *            pressed)
 	 */
-	public static void mainStageClose(WindowEvent mainWindowEvent, MusicVideoHandler saveTheSettings,
-			File settingsFile) {
+	public static void mainStageClose(WindowEvent mainWindowEvent, MusicVideoHandler saveTheSettings) {
 
 		// create a JavaFX Alert pop-up window
 		Alert alert = new Alert(AlertType.WARNING);
@@ -56,13 +55,12 @@ public class Dialogs {
 			// quit the program and do also:
 			if (result == ButtonType.YES) {
 				// save changes in file
-				saveTheSettings.saveSettings(settingsFile);
+				saveTheSettings.saveSettingsToFile();
 			} else if (result == buttonAlways) {
 				// add to config that always the changes should be saved on exit
 				// save changes in file
 				saveTheSettings.setAlwaysSave(true);
-				saveTheSettings.saveSettings(settingsFile);
-				System.out.println("Later...");
+				saveTheSettings.saveSettingsToFile();
 			}
 
 			// close the program without exceptions else
@@ -102,7 +100,7 @@ public class Dialogs {
 	 * @return File[] or null of selected file(s)
 	 */
 	public static File[] chooseFile(Stage mainStage, String title, File initialDirectory,
-			ExtensionFilter[] extensionFilter, Integer whichDialog) {
+			ExtensionFilter[] extensionFilter, CHOOSE_ACTION whichDialog) {
 
 		System.out.print(">> Started file chooser");
 
@@ -124,14 +122,14 @@ public class Dialogs {
 		// create file that we want
 		File[] selectedFiles = null;
 
-		if (whichDialog == CHOOSE_ACTION.NORMAL.value) {
+		if (whichDialog == CHOOSE_ACTION.NORMAL) {
 			selectedFiles = new File[] { fileChooser.showOpenDialog(mainStage) };
-		} else if (whichDialog == CHOOSE_ACTION.MULTI_FILE.value) {
+		} else if (whichDialog == CHOOSE_ACTION.MULTI_FILE) {
 			List<File> tempList = fileChooser.showOpenMultipleDialog(mainStage);
 			if (tempList != null) {
 				selectedFiles = tempList.toArray(new File[0]);
 			}
-		} else if (whichDialog == CHOOSE_ACTION.SAVE.value) {
+		} else if (whichDialog == CHOOSE_ACTION.SAVE) {
 			selectedFiles = new File[] { fileChooser.showSaveDialog(mainStage) };
 		}
 

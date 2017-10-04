@@ -23,7 +23,8 @@ import javafx.scene.input.MouseEvent;
 /**
  * The controller class for the wrong formatted files window
  * 
- * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com>
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
+ *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  */
 public class WrongFormattedFilesWindowController {
 

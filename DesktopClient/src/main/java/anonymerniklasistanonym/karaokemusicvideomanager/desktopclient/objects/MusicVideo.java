@@ -4,11 +4,10 @@ import java.nio.file.Path;
 import java.util.Comparator;
 
 /**
- * The properties of every music video /[karaoke] file
+ * The properties of every music video file
  * 
- * @author Niklas | https://github.com/AnonymerNiklasistanonym
- * @version 1.1 (beta)
- *
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
+ *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  */
 public final class MusicVideo implements Comparator<MusicVideo> {
 
