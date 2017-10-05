@@ -776,24 +776,24 @@ public class MusicVideoHandler {
 		return specialHead.toString();
 	}
 
-	private String generateFaviconLinks() {
+	private String generateFaviconLinks(String getBack) {
 
 		// string builder for all links
 		StringBuilder faviconLinks = new StringBuilder("");
 
 		// firefox svg link
-		faviconLinks.append("<link rel=\"icon\" type=\"image/svg+xml\" href=\"favicons/favicon.svg\">");
+		faviconLinks.append("<link rel=\"icon\" type=\"image/svg+xml\" href=\"" + getBack + "favicons/favicon.svg\">");
 
 		// apple links
-		faviconLinks.append("<link rel=\"apple-touch-icon\" href=\"favicons/favicon-180x180.png\">");
-		faviconLinks.append("<link rel=\"mask-icon\" href=\"favicons/favicon.svg\" color=\"#000000\">");
+		faviconLinks.append("<link rel=\"apple-touch-icon\" href=\"" + getBack + "favicons/favicon-180x180.png\">");
+		faviconLinks.append("<link rel=\"mask-icon\" href=\"" + getBack + "favicons/favicon.svg\" color=\"#000000\">");
 
 		// add all .png images
 		Integer[] sizes = { 16, 32, 48, 64, 94, 128, 160, 180, 194, 256, 512 };
 
 		for (Integer size : sizes) {
-			faviconLinks.append("<link rel=\"icon\" type=\"image/png\" href=\"favicons/favicon-" + size + "x" + size
-					+ ".png\" sizes=\"" + size + "x" + size + "\">");
+			faviconLinks.append("<link rel=\"icon\" type=\"image/png\" href=\"" + getBack + "favicons/favicon-" + size
+					+ "x" + size + ".png\" sizes=\"" + size + "x" + size + "\">");
 		}
 
 		return faviconLinks.toString();
@@ -822,7 +822,7 @@ public class MusicVideoHandler {
 		htmlStatic.append(generateHeadName());
 
 		// add links to all the images
-		htmlStatic.append(generateFaviconLinks());
+		htmlStatic.append(generateFaviconLinks(""));
 
 		// add js
 		htmlStatic.append("<script>");
@@ -841,7 +841,8 @@ public class MusicVideoHandler {
 		htmlStatic.append("</style></head><body>");
 
 		if (party) {
-			htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "floating-button-html_party"));
+			htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "floating-button-html_party")
+					.replace("html_party_live.html", "index.php"));
 		}
 
 		// add section begin
@@ -916,7 +917,7 @@ public class MusicVideoHandler {
 		htmlStatic.append(generateHeadName());
 
 		// add links to all the images
-		htmlStatic.append(generateFaviconLinks());
+		htmlStatic.append(generateFaviconLinks(""));
 
 		// add css
 		htmlStatic.append("<style>");
@@ -939,6 +940,8 @@ public class MusicVideoHandler {
 
 		// add after table data
 		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "after-table-html_static"));
+
+		htmlStatic.append("</body></html>");
 
 		return htmlStatic.toString();
 	}
@@ -969,14 +972,133 @@ public class MusicVideoHandler {
 			copyFavicons(outputDirectory);
 		}
 
+		createPhpDirectoryWithFiles(outputDirectory);
+
 		// now add a folder with the PHP files
 		// + change the PHP link in HTML form
 
 		// replace "html/html_party_live" with "live.html"
 		// export live view as "live.html" next to index.html
 
-		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.html"),
+		// delete old index.html file
+		FileReadWriteModule.deleteFile(new File(outputDirectory.toString() + "/index.html"));
+
+		FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.php"),
+				new String[] { generateHtmlPartyPlaylist() });
+
+		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/list.html"),
 				new String[] { generateHtmlParty() });
+	}
+
+	private void createPhpDirectoryWithFiles(Path outputFolder) {
+
+		if (outputFolder == null) {
+			System.err.println("Path is null!");
+		}
+
+		if (!outputFolder.toFile().exists()) {
+			System.err.println("Folder to copy does not exist!");
+		}
+
+		try {
+
+			outputFolder = outputFolder.toAbsolutePath();
+
+			String phpFolder = outputFolder.toString() + "/php";
+
+			// create the favicon directory
+			FileReadWriteModule.createDirectory(new File(phpFolder));
+
+			// paste process.php
+			FileReadWriteModule.writeTextFile(new File(phpFolder.toString() + "/process.php"),
+					new String[] { generateHtmlPartyProcess() });
+
+			// paste form.php
+			FileReadWriteModule.writeTextFile(new File(phpFolder.toString() + "/form.php"),
+					new String[] { generateHtmlPartyForm() });
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private String generateHtmlPartyForm() {
+		// string builder for the whole site
+		StringBuilder phpForm = new StringBuilder("");
+
+		// json data html file
+		JsonObject htmlJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/html.json")[0]);
+		JsonObject phpJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/php.json")[0]);
+		JsonObject cssJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/css.json")[0]);
+
+		// add php before everything
+		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-html-form"));
+
+		// add default head
+		phpForm.append("<!DOCTYPE html><html><head>");
+		// add generic head
+		phpForm.append(JsonModule.getValueString(htmlJsonContent, "head"));
+		// add custom head for php form
+		phpForm.append(JsonModule.getValueString(phpJsonContent, "custom-head-form"));
+
+		// add title and more
+		phpForm.append(generateHeadName());
+
+		// add links to all the images
+		phpForm.append(generateFaviconLinks("../"));
+
+		// add css
+		phpForm.append("<style>");
+		phpForm.append(JsonModule.getValueString(cssJsonContent, "styles_php_form"));
+
+		// close head and open body
+		phpForm.append("</style></head><body>");
+
+		// add floating button for php form
+		phpForm.append(JsonModule.getValueString(phpJsonContent, "floating-button-form"));
+
+		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-title-form"));
+		phpForm.append("Submit this song to the playlist:");
+		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-artist-form"));
+		phpForm.append("from");
+		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-input-form"));
+		phpForm.append(JsonModule.getValueString(phpJsonContent, "input-form"));
+		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-submit-form"));
+		phpForm.append(JsonModule.getValueString(phpJsonContent, "submit-form"));
+		phpForm.append(JsonModule.getValueString(phpJsonContent, "after-submit-form"));
+
+		phpForm.append("</body></html>");
+
+		// TODO Auto-generated method stub
+		return phpForm.toString();
+	}
+
+	private String generateHtmlPartyProcess() {
+
+		// string builder for the whole site
+		StringBuilder phpProcess = new StringBuilder("");
+
+		JsonObject phpJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/php.json")[0]);
+
+		// add php before everything
+		phpProcess.append(JsonModule.getValueString(phpJsonContent, "before-link-process"));
+		phpProcess.append(JsonModule.getValueString(phpJsonContent, "link-process").replace("html/html_party_live.html",
+				"index.php"));
+		phpProcess.append(JsonModule.getValueString(phpJsonContent, "after-link-process"));
+
+		return phpProcess.toString();
+	}
+
+	private String generateHtmlPartyPlaylist() {
+
+		// TODO
+
+		return null;
 	}
 
 	/**

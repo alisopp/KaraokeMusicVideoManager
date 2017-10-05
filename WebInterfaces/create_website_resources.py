@@ -232,7 +232,7 @@ def php_to_json(output_path):
                     # reset the string when the custom head begins
                     walking_php_string = ""
                 elif "before-artist" in line:
-                    json_php['before-title-' +
+                    json_php['before-artist-' +
                              PHP_FILE_FORM] = walking_php_string
                     # reset the string when the custom head begins
                     walking_php_string = ""
