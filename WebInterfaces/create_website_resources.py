@@ -12,7 +12,7 @@ import json
 import os
 
 PATH_HTML = "html"
-HTML_FILES = ["html_static", "html_party"]
+HTML_FILES = ["html_static", "html_party", "html_party_live"]
 HTML_HEAD = "html_head"
 PATH_PHP = "php"
 PHP_FILE_FORM = "form"
@@ -176,6 +176,9 @@ def html_to_json(output_path):
                         json_html['form-end-' +
                                   html_file] = walking_html_string
                         # reset the string when the the body begins
+                        walking_html_string = ""
+                    elif "demo-playlist-end" in line:
+                        # reset the string when the the demo playlist ends
                         walking_html_string = ""
                     elif "body-end" in line:
                         # save everything after the table to the end of the body

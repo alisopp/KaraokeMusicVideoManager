@@ -1,6 +1,4 @@
-package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
-
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
+package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
 
 public class MusicVideoRandom {
 

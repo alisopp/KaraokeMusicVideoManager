@@ -7,6 +7,7 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialog
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowMethods;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoRandom;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -176,7 +177,7 @@ public class RandomWindowController {
 
 	@FXML
 	public void addVideoAll() {
-		String[] authorComment = Dialogs.playlistDialog("", "", "Create a new Playlist entry",
+		String[] authorComment = Dialogs.playlistDialog("", "", "Create 5 new Playlist entries",
 				"Add an author and comment", "Add to playlist");
 
 		if (authorComment != null && authorComment[0] != null) {

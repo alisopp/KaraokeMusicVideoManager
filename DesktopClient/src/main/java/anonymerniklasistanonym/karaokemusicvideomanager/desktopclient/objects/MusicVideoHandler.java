@@ -842,7 +842,7 @@ public class MusicVideoHandler {
 
 		if (party) {
 			htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "floating-button-html_party")
-					.replace("html_party_live.html", "index.php"));
+					.replace("html_party_live.html", "index.html"));
 		}
 
 		// add section begin
@@ -983,11 +983,13 @@ public class MusicVideoHandler {
 		// delete old index.html file
 		FileReadWriteModule.deleteFile(new File(outputDirectory.toString() + "/index.html"));
 
-		FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.php"),
-				new String[] { generateHtmlPartyPlaylist() });
-
-		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/list.html"),
+		FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/list.html"),
 				new String[] { generateHtmlParty() });
+
+		System.out.println(generateHtmlPartyPlaylist());
+
+		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.html"),
+				new String[] { generateHtmlPartyPlaylist() });
 	}
 
 	private void createPhpDirectoryWithFiles(Path outputFolder) {
@@ -1073,7 +1075,6 @@ public class MusicVideoHandler {
 
 		phpForm.append("</body></html>");
 
-		// TODO Auto-generated method stub
 		return phpForm.toString();
 	}
 
@@ -1088,15 +1089,13 @@ public class MusicVideoHandler {
 		// add php before everything
 		phpProcess.append(JsonModule.getValueString(phpJsonContent, "before-link-process"));
 		phpProcess.append(JsonModule.getValueString(phpJsonContent, "link-process").replace("html/html_party_live.html",
-				"index.php"));
+				"index.html"));
 		phpProcess.append(JsonModule.getValueString(phpJsonContent, "after-link-process"));
 
 		return phpProcess.toString();
 	}
 
 	private String generateHtmlPartyPlaylist() {
-
-		// TODO
 
 		// string builder for the whole site
 		StringBuilder phpPlaylist = new StringBuilder("");
@@ -1106,15 +1105,13 @@ public class MusicVideoHandler {
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/html.json")[0]);
 		JsonObject cssJsonContent = JsonModule
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/css.json")[0]);
-		JsonObject phpJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/php.json")[0]);
 
 		// add default head
 		phpPlaylist.append("<!DOCTYPE html><html><head>");
 		// add generic head
 		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "head"));
 		// add custom head for static
-		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "custom-head-html_party"));
+		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "custom-head-html_party_live"));
 
 		// add title and more
 		phpPlaylist.append(generateHeadName());
@@ -1124,12 +1121,19 @@ public class MusicVideoHandler {
 
 		phpPlaylist.append("<style>");
 		phpPlaylist.append(JsonModule.getValueString(cssJsonContent, "styles_static"));
-		phpPlaylist.append(JsonModule.getValueString(cssJsonContent, "styles_searchable"));
+		phpPlaylist.append(JsonModule.getValueString(cssJsonContent, "styles_party_live"));
 
 		// close head and open body
 		phpPlaylist.append("</style></head><body>");
 
-		return null;
+		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "floating-button-html_party_live")
+				.replace("html_party.html", "list.html"));
+
+		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "section-start-html_party_live"));
+		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "after-table-html_party_live"));
+
+		phpPlaylist.append("</body></html>");
+		return phpPlaylist.toString();
 	}
 
 	/**

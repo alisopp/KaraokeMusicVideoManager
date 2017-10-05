@@ -68,6 +68,7 @@ public class ServerLoginWindowController {
 
 	}
 
+	@FXML
 	public void checkConnectButton() {
 		if ((!userName.getText().equals("") && !userPassword.getText().equals(""))
 				&& (!serverAddress.getText().equals("") && !workingDirectory.getText().equals(""))) {
