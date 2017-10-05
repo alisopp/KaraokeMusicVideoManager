@@ -3,6 +3,7 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frame
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -25,7 +26,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -276,6 +276,17 @@ public class MainWindowController {
 	private MenuItem menuButtonLoadConfigurationCustom;
 	@FXML
 	private MenuItem menuButtonResetConfiguration;
+
+	@FXML
+	private MenuItem menuButtonSftpStatic;
+	@FXML
+	private MenuItem menuButtonSftpSearch;
+	@FXML
+	private MenuItem menuButtonSftpParty;
+	@FXML
+	private MenuItem menuButtonSftpReset;
+	@FXML
+	private Menu menuButtonSftp;
 
 	// other
 
@@ -710,44 +721,60 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void openServerLoginWindow() {
-		try {
 
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getClassLoader().getResource("windows/ServerLoginWindow.fxml"));
-
-			Parent root1 = (Parent) loader.load();
-
-			Stage stage = new Stage();
-			stage.setScene(new Scene(root1));
-			stage.setResizable(false);
-
-			stage.setTitle("Server Login");
-
-			// try to add a window icon
+		if (!this.mainWindow.getMusicVideohandler().sftpConnectionEstablished()) {
+			this.networkButton.setSelected(true);
 			try {
-				stage.getIcons().addAll(WindowMethods.getWindowIcons());
-			} catch (Exception e) {
-				System.err.println("Exception while loding icons");
-			}
 
-			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(getClass().getClassLoader().getResource("windows/ServerLoginWindow.fxml"));
 
-				@Override
-				public void handle(WindowEvent event) {
-					checkNetwork();
+				Parent root1 = (Parent) loader.load();
+
+				Stage stage = new Stage();
+				stage.setScene(new Scene(root1));
+				stage.setResizable(false);
+
+				stage.setTitle("Server Login");
+
+				// try to add a window icon
+				try {
+					stage.getIcons().addAll(WindowMethods.getWindowIcons());
+				} catch (Exception e) {
+					System.err.println("Exception while loding icons");
 				}
 
-			});
+				stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 
-			// Connection to the Controller from the primary Stage
-			ServerLoginWindowController aboutWindowController = loader.getController();
-			aboutWindowController.setServerLoginWindow(this.mainWindow, stage);
+					@Override
+					public void handle(WindowEvent event) {
+						checkNetwork();
+						refreshMusicVideoPlaylistTable();
+					}
 
-			stage.show();
-			checkNetwork();
-		} catch (Exception e) {
-			e.printStackTrace();
+				});
+
+				// Connection to the Controller from the primary Stage
+				ServerLoginWindowController aboutWindowController = loader.getController();
+				aboutWindowController.setServerLoginWindow(this.mainWindow, stage);
+
+				stage.show();
+				checkNetwork();
+				refreshMusicVideoPlaylistTable();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			if (Dialogs.yesNoDialog("Logout?", "Do you want to log out?",
+					"You are already logged in. Click OK to logout.")) {
+				this.mainWindow.getMusicVideohandler().sftpDisconnect();
+				this.networkButton.setSelected(false);
+			} else {
+				this.networkButton.setSelected(true);
+			}
+
 		}
+
 	}
 
 	/**
@@ -881,7 +908,6 @@ public class MainWindowController {
 			aboutWindowController.setServerLoginWindow(this.mainWindow, stage);
 
 			stage.show();
-			checkNetwork();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1036,6 +1062,7 @@ public class MainWindowController {
 		if (listOfEntries != null) {
 			int i = 0;
 			for (MusicVideoPlaylistElement element : listOfEntries) {
+				System.out.println("Refresh and add file by " + element.getAuthor());
 				MusicVideo musicVideoFile = element.getMusicVideoFile();
 				tableDataPlaylist.add(new PlaylistTableView(i, element.getMusicVideoIndex(),
 						element.getUnixTimeString(), musicVideoFile.getTitle(), musicVideoFile.getArtist(),
@@ -1069,10 +1096,15 @@ public class MainWindowController {
 	 * Add network: Check if a working network connection is established
 	 */
 	private void checkNetwork() {
-		// TODO
-
-		// set the network button to connected if a connection was established
-		this.networkButton.setSelected(false);
+		if (this.mainWindow.getMusicVideohandler().sftpConnectionEstablished()) {
+			this.networkButton.setSelected(true);
+			this.mainWindow.getMusicVideohandler().sftpRetrievePlaylist();
+			System.out.println("????");
+			// update the table
+			refreshMusicVideoPlaylistTable();
+		} else {
+			this.networkButton.setSelected(false);
+		}
 
 	}
 
@@ -1082,7 +1114,8 @@ public class MainWindowController {
 	@FXML
 	private void exportHtmlStatic() {
 		File htmlFileDestination = Dialogs.chooseDirectory(this.mainWindow.getPrimaryStage(),
-				"Export music video list to static HTML table - Choose a directory", null);
+				"Export music video list to static HTML table - Choose a directory",
+				FileSystems.getDefault().getPath(".").toFile());
 
 		if (htmlFileDestination != null) {
 			this.mainWindow.getMusicVideohandler().saveHtmlList(htmlFileDestination.toPath(), true);
@@ -1095,7 +1128,8 @@ public class MainWindowController {
 	@FXML
 	private void exportHtmlSearch() {
 		File htmlFileDestination = Dialogs.chooseDirectory(this.mainWindow.getPrimaryStage(),
-				"Export music video list to static HTML table - Choose a directory", null);
+				"Export music video list to static HTML table - Choose a directory",
+				FileSystems.getDefault().getPath(".").toFile());
 
 		if (htmlFileDestination != null) {
 			this.mainWindow.getMusicVideohandler().saveHtmlSearch(htmlFileDestination.toPath(), true);
@@ -1108,7 +1142,8 @@ public class MainWindowController {
 	@FXML
 	private void exportHtmlParty() {
 		File htmlFileDestination = Dialogs.chooseDirectory(this.mainWindow.getPrimaryStage(),
-				"Export music video list to static HTML table - Choose a directory", null);
+				"Export music video list to static HTML table - Choose a directory",
+				FileSystems.getDefault().getPath(".").toFile());
 
 		if (htmlFileDestination != null) {
 			this.mainWindow.getMusicVideohandler().saveHtmlParty(htmlFileDestination.toPath(), true);
@@ -1122,8 +1157,9 @@ public class MainWindowController {
 	private void exportCsv() {
 		ExtensionFilter csvFilter = new ExtensionFilter("Csv File", "*.csv");
 		File[] csvFile = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(),
-				"Export music video list to a CSV file - Choose a directory and filename", null,
-				new ExtensionFilter[] { csvFilter }, Dialogs.CHOOSE_ACTION.SAVE);
+				"Export music video list to a CSV file - Choose a directory and filename",
+				FileSystems.getDefault().getPath(".").toFile(), new ExtensionFilter[] { csvFilter },
+				Dialogs.CHOOSE_ACTION.SAVE);
 
 		if (csvFile != null && csvFile[0] != null) {
 			this.mainWindow.getMusicVideohandler().saveCsv(csvFile[0].toPath());
@@ -1137,8 +1173,9 @@ public class MainWindowController {
 	private void exportJson() {
 		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
 		File[] jsonFile = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(),
-				"Export music video list to a JSON file - Choose a directory and filename", null,
-				new ExtensionFilter[] { jsonFilter }, Dialogs.CHOOSE_ACTION.SAVE);
+				"Export music video list to a JSON file - Choose a directory and filename",
+				FileSystems.getDefault().getPath(".").toFile(), new ExtensionFilter[] { jsonFilter },
+				Dialogs.CHOOSE_ACTION.SAVE);
 
 		if (jsonFile != null && jsonFile[0] != null) {
 			this.mainWindow.getMusicVideohandler().saveJson(jsonFile[0].toPath());
@@ -1161,8 +1198,8 @@ public class MainWindowController {
 	private void saveConfiguartionCustom() {
 		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
 		File[] jsonFile = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(),
-				"Save a Custom Named Configuration File", null, new ExtensionFilter[] { jsonFilter },
-				Dialogs.CHOOSE_ACTION.SAVE);
+				"Save a Custom Named Configuration File", FileSystems.getDefault().getPath(".").toFile(),
+				new ExtensionFilter[] { jsonFilter }, Dialogs.CHOOSE_ACTION.SAVE);
 		if (jsonFile != null && jsonFile[0] != null) {
 			File saveToThis = Paths.get(jsonFile[0].getAbsolutePath() + ".json").toFile();
 			this.mainWindow.getMusicVideohandler().saveSettings(saveToThis);
@@ -1173,8 +1210,8 @@ public class MainWindowController {
 	private void loadConfiguartionCustom() {
 		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
 		File[] jsonFile = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(),
-				"Load a Custom Named Configuration File", null, new ExtensionFilter[] { jsonFilter },
-				Dialogs.CHOOSE_ACTION.NORMAL);
+				"Load a Custom Named Configuration File", FileSystems.getDefault().getPath(".").toFile(),
+				new ExtensionFilter[] { jsonFilter }, Dialogs.CHOOSE_ACTION.NORMAL);
 		if (jsonFile != null && jsonFile[0] != null) {
 			this.mainWindow.getMusicVideohandler().loadSettings(jsonFile[0]);
 		}
@@ -1184,8 +1221,7 @@ public class MainWindowController {
 
 	@FXML
 	private void resetConfiguartion() {
-		if (Dialogs.yesNoDialog("Confirm to Continue", "Reset Everything", "Do you really want to reset EVERYTHING?",
-				AlertType.CONFIRMATION)) {
+		if (Dialogs.yesNoDialog("Confirm to Continue", "Reset Everything", "Do you really want to reset EVERYTHING?")) {
 			this.mainWindow.getMusicVideohandler().reset();
 			refreshMusicVideoFileTable();
 			refreshMusicVideoPathTable();
@@ -1290,6 +1326,26 @@ public class MainWindowController {
 			}
 
 		}
+	}
+
+	@FXML
+	private void sftpReset() {
+		// TODO
+	}
+
+	@FXML
+	private void sftpParty() {
+		// TODO
+	}
+
+	@FXML
+	private void sftpStatic() {
+		// TODO
+	}
+
+	@FXML
+	private void sftpSearch() {
+		// TODO
 	}
 
 }

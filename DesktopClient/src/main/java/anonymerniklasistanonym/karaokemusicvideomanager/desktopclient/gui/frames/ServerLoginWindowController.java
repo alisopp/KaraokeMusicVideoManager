@@ -1,8 +1,9 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.SftpModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -36,25 +37,34 @@ public class ServerLoginWindowController {
 	public void setServerLoginWindow(Main window, Stage a) {
 		this.mainWindow = window;
 		this.a = a;
+		String address = this.mainWindow.getMusicVideohandler().getSftpIpAddress();
+		String directory = this.mainWindow.getMusicVideohandler().getSftpDirectory();
+		String username = this.mainWindow.getMusicVideohandler().getSftpUsername();
+		if (address != null) {
+			this.serverAddress.setText(address);
+		}
+		if (directory != null) {
+			this.workingDirectory.setText(directory);
+		}
+		if (username != null) {
+			this.userName.setText(username);
+		}
+
 	}
 
 	@FXML
 	public void tryToLogin() {
 
-		SftpModule sftpConnect = new SftpModule(userName.getText(), userPassword.getText(), serverAddress.getText());
-
-		sftpConnect.connectSFTP();
-
-		if (sftpConnect.isConnectionEstablished()) {
-			for (String a : sftpConnect.listFiles()) {
-				System.out.println(a);
-			}
-
-			sftpConnect.disconnectSFTP();
+		if (this.mainWindow.getMusicVideohandler().sftpConnect(userName.getText(), userPassword.getText(),
+				serverAddress.getText(), workingDirectory.getText())) {
+			this.mainWindow.getMusicVideohandler().saveSftpLogin(serverAddress.getText(), workingDirectory.getText(),
+					userName.getText());
+			this.mainWindow.getMusicVideohandler().sftpRetrievePlaylist();
 			this.a.close();
+		} else {
+			Dialogs.informationAlert("SFTP connection could not bes established", "Please try to login again",
+					AlertType.INFORMATION);
 		}
-
-		sftpConnect.disconnectSFTP();
 
 	}
 

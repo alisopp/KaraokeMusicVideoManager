@@ -68,6 +68,10 @@ public class SftpModule {
 		return connectionEstablished;
 	}
 
+	public SftpModule() {
+
+	}
+
 	/**
 	 * Setup SFTP source without starting a connection
 	 * 
@@ -102,6 +106,15 @@ public class SftpModule {
 		this.userPassword = userPassword;
 		this.serverAddress = serverAddress;
 		this.currentWorkingDirectory = null;
+	}
+
+	public void connect(String userName, String userPassword, String serverAddress, String serverFilePath) {
+		this.userName = userName;
+		this.userPassword = userPassword;
+		this.serverAddress = serverAddress;
+		this.currentWorkingDirectory = serverFilePath;
+
+		connectSFTP();
 	}
 
 	/**

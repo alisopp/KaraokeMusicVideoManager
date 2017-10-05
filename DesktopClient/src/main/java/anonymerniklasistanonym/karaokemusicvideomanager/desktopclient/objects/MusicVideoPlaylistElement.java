@@ -102,6 +102,28 @@ public final class MusicVideoPlaylistElement {
 	}
 
 	/**
+	 * Constructor: For loading files
+	 * 
+	 * @param musicVideoFile
+	 *            (MusicVideo)
+	 * @param author
+	 *            (String)
+	 * @param comment
+	 *            (String)
+	 * @param createdLocally
+	 *            (Boolean)
+	 */
+	public MusicVideoPlaylistElement(long unixTime, int musicVideoIndex, MusicVideo musicVideoFile, String author,
+			String comment, boolean createdLocally) {
+		this.musicVideoIndex = musicVideoIndex;
+		this.musicVideoFile = musicVideoFile;
+		this.author = author;
+		this.comment = comment;
+		this.createdLocally = createdLocally;
+		this.unixTime = unixTime;
+	}
+
+	/**
 	 * Get MusicVideo object
 	 * 
 	 * @return MusicVideoObject (MusicVideo)

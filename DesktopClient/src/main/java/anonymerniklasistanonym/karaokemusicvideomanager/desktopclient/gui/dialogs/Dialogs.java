@@ -283,8 +283,8 @@ public class Dialogs {
 	 * @param labelOfTextField
 	 * @return
 	 */
-	public static boolean yesNoDialog(String title, String header, String titleInTextFiel, AlertType alertType) {
-		Alert alert = new Alert(alertType);
+	public static boolean yesNoDialog(String title, String header, String titleInTextFiel) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle(title);
 		alert.setHeaderText(header);
 		alert.setContentText(titleInTextFiel);
@@ -372,6 +372,15 @@ public class Dialogs {
 			return null;
 		}
 
+	}
+
+	public static void informationAlert(String title, String text, AlertType alertType) {
+		Alert alert = new Alert(alertType);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(text);
+
+		alert.showAndWait();
 	}
 
 }

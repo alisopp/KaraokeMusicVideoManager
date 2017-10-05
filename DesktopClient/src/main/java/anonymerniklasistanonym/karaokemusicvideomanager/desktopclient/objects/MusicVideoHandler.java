@@ -3,6 +3,7 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,6 +20,7 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.C
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.JsonModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.SftpModule;
 
 /**
  * Class that handles everything about music video files
@@ -55,6 +57,11 @@ public class MusicVideoHandler {
 	 */
 	private String[] columnNames;
 
+	/**
+	 * Handles the SFTP
+	 */
+	private SftpModule sftpController;
+
 	// Constructor
 
 	/**
@@ -65,9 +72,37 @@ public class MusicVideoHandler {
 		this.settingsFile = new File("settings.json");
 		this.columnNames = new String[] { "#", "Artist", "Title" };
 		this.playlistHandler = new MusicVideoPlaylistHandler();
+		this.sftpController = new SftpModule();
 	}
 
 	// Methods
+
+	/**
+	 * Connect to SFTP source
+	 * 
+	 * @param userName
+	 *            (user name | String)
+	 * @param userPassword
+	 *            (password for user name | String)
+	 * @param serverAddress
+	 *            (IP address of server | String)
+	 * @param serverFilePath
+	 *            (working directory | String)
+	 * @return true if connection was established (boolean)
+	 */
+	public boolean sftpConnect(String userName, String userPassword, String serverAddress, String serverFilePath) {
+		this.sftpController.connect(userName, userPassword, serverAddress, serverFilePath);
+		return this.sftpController.isConnectionEstablished();
+	}
+
+	/**
+	 * Get if SFTP connection is established
+	 * 
+	 * @return true if connected (boolean)
+	 */
+	public boolean sftpConnectionEstablished() {
+		return this.sftpController.isConnectionEstablished();
+	}
 
 	/**
 	 * Get the current settings data
@@ -110,6 +145,18 @@ public class MusicVideoHandler {
 	 * Get if a settings file exists or nor
 	 */
 	public boolean settingsFileExist() {
+		if (this.settingsFile.exists()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Get if a settings file exists or nor
+	 */
+	public boolean installedOnWindows() {
+
 		if (this.settingsFile.exists()) {
 			return true;
 		} else {
@@ -1109,6 +1156,78 @@ public class MusicVideoHandler {
 
 	public void removeEntryFromPlaylist(int index) {
 		this.playlistHandler.remove(index);
+	}
+
+	public void sftpDisconnect() {
+		this.sftpController.disconnectSFTP();
+
+	}
+
+	public void sftpRetrievePlaylist() {
+
+		if (sftpConnectionEstablished()) {
+			this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
+			boolean existingPhpDirectory = false;
+			for (String file : this.sftpController.listFiles()) {
+				if (file.equals("php")) {
+					System.out.println("Found php directory");
+					existingPhpDirectory = true;
+				}
+			}
+			if (existingPhpDirectory) {
+				this.sftpController.changeDirectory("php");
+				for (String file : this.sftpController.listFiles(".json")) {
+					this.sftpController.retrieveFile(file, file);
+				}
+				this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
+
+				// get information from retrieved files
+				File folder = FileSystems.getDefault().getPath(".").toFile();
+
+				for (File file : folder.listFiles()) {
+					if (file.isFile()) {
+						if (file.getName().matches("\\d+.json")) {
+							System.out.println(file.getAbsolutePath() + " matched!");
+							loadPlaylistData(file);
+							file.delete();
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public void saveSftpLogin(String ipAddressSftp, String workingDirectorySftp, String usernameSftp) {
+		this.settingsData.setIpAddressSftp(ipAddressSftp);
+		this.settingsData.setUsernameSftp(usernameSftp);
+		this.settingsData.setWorkingDirectorySftp(workingDirectorySftp);
+	}
+
+	public String getSftpIpAddress() {
+		return this.settingsData.getIpAddressSftp();
+	}
+
+	public String getSftpUsername() {
+		return this.settingsData.getUsernameSftp();
+	}
+
+	public String getSftpDirectory() {
+		return this.settingsData.getWorkingDirectorySftp();
+	}
+
+	public void loadPlaylistData(File file) {
+		if (file == null || file.isDirectory()) {
+			System.err.println("Playlist element could not be loaded because the file doesn't exist!");
+			return;
+		}
+		Object[] data = ExportImportSettings.readPlaylistEntryFile(file);
+
+		if (data != null) {
+			this.playlistHandler.load((long) data[0], (int) data[1] + 1, this.musicVideoList[(int) data[1]],
+					(String) data[2], (String) data[3], (boolean) data[4]);
+			return;
+		}
+		System.err.println("Playlist element could not be loaded");
 	}
 
 }

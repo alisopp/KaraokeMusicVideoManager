@@ -84,6 +84,23 @@ public class MusicVideoPlaylistHandler {
 		this.playlistElements = newPlaylist;
 	}
 
+	public void load(long unixTime, int musicVideoIndex, MusicVideo musicVideo, String author, String comment,
+			boolean createdLocally) {
+		// create new entry
+		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(unixTime, musicVideoIndex, musicVideo,
+				author, comment, true);
+
+		MusicVideoPlaylistElement[] oldPlaylist = this.playlistElements;
+		MusicVideoPlaylistElement[] newPlaylist = new MusicVideoPlaylistElement[] { newEntry };
+
+		if (oldPlaylist != null) {
+			setPlaylistElements(Stream.concat(Arrays.stream(oldPlaylist), Arrays.stream(newPlaylist))
+					.toArray(MusicVideoPlaylistElement[]::new));
+		} else {
+			setPlaylistElements(newPlaylist);
+		}
+	}
+
 	/**
 	 * Edit an entry
 	 * 

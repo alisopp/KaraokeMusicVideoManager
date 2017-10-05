@@ -156,7 +156,7 @@ public class JsonModule {
 	}
 
 	/**
-	 * Get the value of a key of a JsonObject as a String
+	 * Get the value of a key of a JsonObject as a Boolean
 	 * 
 	 * @param jsonObject
 	 *            (JsonObject | contains the key or null)
@@ -178,7 +178,7 @@ public class JsonModule {
 			try {
 
 				boolean value = jsonObject.getBoolean(key);
-				System.out.println(" << Key has the String: " + value);
+				System.out.println(" << Key has the Boolean: " + value);
 				return value;
 
 			} catch (NullPointerException notFoundException) {
@@ -193,6 +193,47 @@ public class JsonModule {
 		} else {
 			System.err.println(" << Key does not exist!");
 			return false;
+		}
+	}
+
+	/**
+	 * Get the value of a key of a JsonObject as a Integer
+	 * 
+	 * @param jsonObject
+	 *            (JsonObject | contains the key or null)
+	 * @param key
+	 *            (String | key to the desired value)
+	 * @return stringValueOfTheKey (String)
+	 */
+	public static int getValueInteger(JsonObject jsonObject, String key) {
+
+		if (jsonObject == null || (key == null || key.isEmpty())) {
+			System.err.println("JsonObject or key cannot be empty or null!");
+			return -1;
+		}
+
+		System.out.print(">> Look for the key " + key);
+
+		if (jsonObject.containsKey(key)) {
+
+			try {
+
+				int value = jsonObject.getInt(key);
+				System.out.println(" << Key has the Integer: " + value);
+				return value;
+
+			} catch (NullPointerException notFoundException) {
+				System.err.println(" << Key not found!");
+				return -1;
+
+			} catch (ClassCastException ex) {
+				System.err.println(" << Key value is not anticipated type!");
+				return -1;
+			}
+
+		} else {
+			System.err.println(" << Key does not exist!");
+			return -1;
 		}
 	}
 
