@@ -25,7 +25,7 @@
                         <Region HBox.hgrow="ALWAYS" />
                         <HBox>
                            <children>
-                              <Button fx:id="randomAdd1" disable="true" mnemonicParsing="false" onAction="#addVideo1" text="add" />
+                              <Button fx:id="randomAdd1" mnemonicParsing="false" onAction="#addVideo1" text="add" />
                               <Button fx:id="randomPlay1" mnemonicParsing="false" onAction="#playVideo1" text="play" />
                            </children>
                         </HBox>
@@ -41,7 +41,7 @@
                         <Region HBox.hgrow="ALWAYS" />
                         <HBox>
                            <children>
-                              <Button fx:id="randomAdd2" disable="true" mnemonicParsing="false" onAction="#addVideo2" text="add" />
+                              <Button fx:id="randomAdd2" mnemonicParsing="false" onAction="#addVideo2" text="add" />
                               <Button fx:id="randomPlay2" mnemonicParsing="false" onAction="#playVideo2" text="play" />
                            </children>
                         </HBox>
@@ -57,7 +57,7 @@
                         <Region HBox.hgrow="ALWAYS" />
                         <HBox>
                            <children>
-                              <Button fx:id="randomAdd3" disable="true" mnemonicParsing="false" onAction="#addVideo3" text="add" />
+                              <Button fx:id="randomAdd3" mnemonicParsing="false" onAction="#addVideo3" text="add" />
                               <Button fx:id="randomPlay3" mnemonicParsing="false" onAction="#playVideo3" text="play" />
                            </children>
                         </HBox>
@@ -73,7 +73,7 @@
                         <Region HBox.hgrow="ALWAYS" />
                         <HBox>
                            <children>
-                              <Button fx:id="randomAdd4" disable="true" mnemonicParsing="false" onAction="#addVideo4" text="add" />
+                              <Button fx:id="randomAdd4" mnemonicParsing="false" onAction="#addVideo4" text="add" />
                               <Button fx:id="randomPlay4" mnemonicParsing="false" onAction="#playVideo4" text="play" />
                            </children>
                         </HBox>
@@ -89,7 +89,7 @@
                         <Region HBox.hgrow="ALWAYS" />
                         <HBox>
                            <children>
-                              <Button fx:id="randomAdd5" disable="true" mnemonicParsing="false" onAction="#addVideo5" text="add" />
+                              <Button fx:id="randomAdd5" mnemonicParsing="false" onAction="#addVideo5" text="add" />
                               <Button fx:id="randomPlay5" mnemonicParsing="false" onAction="#playVideo5" text="play" />
                            </children>
                         </HBox>
@@ -104,7 +104,7 @@
          <bottom>
             <HBox alignment="TOP_CENTER" minHeight="-Infinity" spacing="20.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="buttonAddAll" disable="true" mnemonicParsing="false" onAction="#addSourceFolderDialog" text="Add all  to Playlist" />
+                  <Button fx:id="buttonAddAll" mnemonicParsing="false" onAction="#addVideoAll" text="Add all  to Playlist" />
                   <Button fx:id="buttonRefresh" mnemonicParsing="false" onAction="#refreshRandom" text="Refresh" />
                </children>
                <padding>

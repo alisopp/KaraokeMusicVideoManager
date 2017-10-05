@@ -1098,6 +1098,37 @@ public class MusicVideoHandler {
 
 		// TODO
 
+		// string builder for the whole site
+		StringBuilder phpPlaylist = new StringBuilder("");
+
+		// json data html file
+		JsonObject htmlJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/html.json")[0]);
+		JsonObject cssJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/css.json")[0]);
+		JsonObject phpJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/php.json")[0]);
+
+		// add default head
+		phpPlaylist.append("<!DOCTYPE html><html><head>");
+		// add generic head
+		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "head"));
+		// add custom head for static
+		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "custom-head-html_party"));
+
+		// add title and more
+		phpPlaylist.append(generateHeadName());
+
+		// add links to all the images
+		phpPlaylist.append(generateFaviconLinks(""));
+
+		phpPlaylist.append("<style>");
+		phpPlaylist.append(JsonModule.getValueString(cssJsonContent, "styles_static"));
+		phpPlaylist.append(JsonModule.getValueString(cssJsonContent, "styles_searchable"));
+
+		// close head and open body
+		phpPlaylist.append("</style></head><body>");
+
 		return null;
 	}
 

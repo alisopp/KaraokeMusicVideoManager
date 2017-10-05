@@ -19,7 +19,7 @@ PHP_FILE_FORM = "form"
 PHP_FILE_PROCESS = "process"
 PATH_CSS = "css"
 CSS_FILES = ["styles_static", "styles_searchable",
-             "styles_party", "styles_php_form"]
+             "styles_party", "styles_php_form", "styles_party_live"]
 PATH_JS = "js"
 
 
