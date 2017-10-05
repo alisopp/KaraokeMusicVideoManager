@@ -988,7 +988,7 @@ public class MusicVideoHandler {
 
 		System.out.println(generateHtmlPartyPlaylist());
 
-		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.html"),
+		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.php"),
 				new String[] { generateHtmlPartyPlaylist() });
 	}
 
@@ -1089,7 +1089,7 @@ public class MusicVideoHandler {
 		// add php before everything
 		phpProcess.append(JsonModule.getValueString(phpJsonContent, "before-link-process"));
 		phpProcess.append(JsonModule.getValueString(phpJsonContent, "link-process").replace("html/html_party_live.html",
-				"index.html"));
+				"index.php"));
 		phpProcess.append(JsonModule.getValueString(phpJsonContent, "after-link-process"));
 
 		return phpProcess.toString();
@@ -1105,6 +1105,8 @@ public class MusicVideoHandler {
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/html.json")[0]);
 		JsonObject cssJsonContent = JsonModule
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/css.json")[0]);
+		JsonObject phpJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/php.json")[0]);
 
 		// add default head
 		phpPlaylist.append("<!DOCTYPE html><html><head>");
@@ -1130,6 +1132,9 @@ public class MusicVideoHandler {
 				.replace("html_party.html", "list.html"));
 
 		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "section-start-html_party_live"));
+
+		phpPlaylist.append(JsonModule.getValueString(phpJsonContent, "php-data-live"));
+
 		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "after-table-html_party_live"));
 
 		phpPlaylist.append("</body></html>");

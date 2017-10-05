@@ -17,6 +17,7 @@ HTML_HEAD = "html_head"
 PATH_PHP = "php"
 PHP_FILE_FORM = "form"
 PHP_FILE_PROCESS = "process"
+PHP_FILE_LIVE = "live"
 PATH_CSS = "css"
 CSS_FILES = ["styles_static", "styles_searchable",
              "styles_party", "styles_php_form", "styles_party_live"]
@@ -304,6 +305,25 @@ def php_to_json(output_path):
                 walking_php_string += line
 
     json_php['after-link-' + PHP_FILE_PROCESS] = walking_php_string
+
+    walking_php_string = "";
+
+    for line in read_text_file_to_lines(os.path.join(PATH_PHP, PHP_FILE_LIVE + ".php")):
+        # strip whitespaces, tabs and paragraphs from line
+        line = line.strip()
+        # check if the line is neither empty nor a comment
+        if line is not "":
+            if line.startswith('<?php'):
+                if line.startswith('<?php '):
+                    walking_php_string += line
+                else:
+                    walking_php_string += line + "\n"
+            elif line.startswith('?>'):
+                walking_php_string += "\n" + line
+            elif not line.startswith("#"):
+                walking_php_string += line
+
+    json_php['php-data-' + PHP_FILE_LIVE] = walking_php_string
 
     dictonary_to_json(output_path, json_php)
 

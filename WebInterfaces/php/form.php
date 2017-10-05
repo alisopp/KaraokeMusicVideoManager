@@ -2,8 +2,8 @@
 # Place posted information in an array
 $myarray = explode(",", $_REQUEST['index']);
 # 0 = index
-# 1 = title
-# 2 = artist
+# 1 = artist
+# 2 = title
 ?>
 <!-- "before-html"-->
 <!DOCTYPE html>
@@ -42,16 +42,16 @@ $myarray = explode(",", $_REQUEST['index']);
 				<!-- "before-title" -->
 				Submit this song to the playlist:</p>
 				<!-- "after-title" -->
-			<p class="song-title"><?php echo $myarray[1]; ?></p>
+			<p class="song-title"><?php echo $myarray[2]; ?></p>
 			<p class="artist-title">
 				<!-- "before-artist" -->
-				from
+				from&nbsp;
 				<!-- "after-artist" -->
-				<?php echo $myarray[2]; ?></p>
+				<?php echo $myarray[1]; ?></p>
 
 			<input type="hidden" name="song" value="<?php echo $myarray[0]; ?>">
-			<input type="hidden" name="title" value="<?php echo $myarray[1]; ?>">
-			<input type="hidden" name="artist" value="<?php echo $myarray[2]; ?>">
+			<input type="hidden" name="title" value="<?php echo $myarray[2]; ?>">
+			<input type="hidden" name="artist" value="<?php echo $myarray[1]; ?>">
 			<!-- "before-input" -->
 			<input class="requiered-button" type="text" name="author" placeholder="Your name/s..." required><br>
 			<input type="text" name="comment" placeholder="Your comment..."><br>
