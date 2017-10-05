@@ -1,6 +1,7 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -13,6 +14,8 @@ import javax.json.JsonValue;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.JsonModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoPlaylistElement;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.ProgramData;
 
 public class ExportImportSettings {
@@ -290,10 +293,6 @@ public class ExportImportSettings {
 
 	/**
 	 * Read JSON data and extract all settings information.
-	 * 
-	 * @param file
-	 *            (File | file with 'ProgramData')
-	 * @return extracted settings (ProgramData)
 	 */
 	public static Object[] readPlaylistEntryFile(File file) {
 		System.out.println("READ PLAYLIST ENTRY FILE");
@@ -381,6 +380,49 @@ public class ExportImportSettings {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Read JSON data and extract all settings information.
+	 */
+	public static String writePlaylistEntryFile(MusicVideoPlaylistElement playlistElement) {
+		System.out.println("WRITE PLAYLIST ENTRY FILE");
+
+		if (playlistElement == null) {
+			return null;
+		}
+
+		try {
+
+			JsonObjectBuilder mainJsonBuilder = Json.createObjectBuilder();
+
+			// add song number
+			if (playlistElement.getMusicVideoIndex() != -1) {
+				mainJsonBuilder.add("song", BigDecimal.valueOf(playlistElement.getMusicVideoIndex()));
+			}
+
+			// add music video (title, artist)
+			MusicVideo currentFile = playlistElement.getMusicVideoFile();
+
+			if (currentFile != null) {
+				mainJsonBuilder.add("title", currentFile.getTitle());
+				mainJsonBuilder.add("artist", currentFile.getArtist());
+			}
+
+			mainJsonBuilder.add("author", playlistElement.getAuthor());
+			mainJsonBuilder.add("comment", playlistElement.getComment());
+
+			mainJsonBuilder.add("time", playlistElement.getUnixTime());
+
+			mainJsonBuilder.add("created-locally", playlistElement.getCreatedLocally());
+
+			return JsonModule.dumpJsonObjectToString(mainJsonBuilder);
+
+		} catch (
+
+		Exception e) {
 			return null;
 		}
 	}

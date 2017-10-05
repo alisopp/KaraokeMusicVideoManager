@@ -159,9 +159,11 @@ public final class MusicVideoPlaylistElement {
 		return this.createdLocally;
 	}
 
-	public void edit(String author, String comment) {
+	public MusicVideoPlaylistElement edit(String author, String comment) {
 		this.author = author;
 		this.comment = comment;
+
+		return this;
 	}
 
 	public long getUnixTime() {
@@ -175,6 +177,10 @@ public final class MusicVideoPlaylistElement {
 
 	public int getMusicVideoIndex() {
 		return this.musicVideoIndex;
+	}
+
+	public boolean getCreatedLocally() {
+		return this.createdLocally;
 	}
 
 }

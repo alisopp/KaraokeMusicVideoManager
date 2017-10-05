@@ -40,7 +40,7 @@ public class MusicVideoPlaylistHandler {
 	 * @param comment
 	 *            (String | Comment to entry)
 	 */
-	public void add(int musicVideoIndex, MusicVideo musicVideo, String author, String comment) {
+	public MusicVideoPlaylistElement add(int musicVideoIndex, MusicVideo musicVideo, String author, String comment) {
 
 		// create new entry
 		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(musicVideoIndex, musicVideo, author, comment,
@@ -55,6 +55,8 @@ public class MusicVideoPlaylistHandler {
 		} else {
 			setPlaylistElements(newPlaylist);
 		}
+
+		return newEntry;
 	}
 
 	/**
@@ -63,13 +65,14 @@ public class MusicVideoPlaylistHandler {
 	 * @param index
 	 *            (Integer | Index in playlist)
 	 */
-	public void remove(int index) {
+	public MusicVideoPlaylistElement remove(int index) {
 
 		if (index >= this.playlistElements.length || index < 0) {
 			System.err.println("Index is too big/small");
-			return;
+			return null;
 		}
 
+		MusicVideoPlaylistElement elementToRemove = this.playlistElements[index];
 		this.playlistElements[index] = null;
 		MusicVideoPlaylistElement[] newPlaylist = new MusicVideoPlaylistElement[this.playlistElements.length - 1];
 
@@ -82,10 +85,12 @@ public class MusicVideoPlaylistHandler {
 		}
 
 		this.playlistElements = newPlaylist;
+
+		return elementToRemove;
 	}
 
-	public void load(long unixTime, int musicVideoIndex, MusicVideo musicVideo, String author, String comment,
-			boolean createdLocally) {
+	public MusicVideoPlaylistElement load(long unixTime, int musicVideoIndex, MusicVideo musicVideo, String author,
+			String comment, boolean createdLocally) {
 		// create new entry
 		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(unixTime, musicVideoIndex, musicVideo,
 				author, comment, true);
@@ -99,6 +104,8 @@ public class MusicVideoPlaylistHandler {
 		} else {
 			setPlaylistElements(newPlaylist);
 		}
+
+		return newEntry;
 	}
 
 	/**
@@ -111,8 +118,8 @@ public class MusicVideoPlaylistHandler {
 	 * @param comment
 	 *            (String | New comment)
 	 */
-	public void edit(int index, String author, String comment) {
-		this.playlistElements[index].edit(author, comment);
+	public MusicVideoPlaylistElement edit(int index, String author, String comment) {
+		return this.playlistElements[index].edit(author, comment);
 	}
 
 }

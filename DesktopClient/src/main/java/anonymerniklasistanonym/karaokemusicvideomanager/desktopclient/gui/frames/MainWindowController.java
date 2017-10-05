@@ -1051,6 +1051,10 @@ public class MainWindowController {
 	@FXML
 	public void refreshMusicVideoPlaylistTable() {
 
+		this.mainWindow.getMusicVideohandler().clearPlaylist();
+
+		this.mainWindow.getMusicVideohandler().sftpRetrievePlaylist();
+
 		// get music video data
 		MusicVideoPlaylistElement[] listOfEntries = this.mainWindow.getMusicVideohandler().getPlaylistHandler()
 				.getPlaylistElements();

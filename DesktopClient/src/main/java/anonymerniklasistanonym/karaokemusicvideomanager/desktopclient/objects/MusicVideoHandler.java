@@ -1309,15 +1309,31 @@ public class MusicVideoHandler {
 	}
 
 	public void addMusicVideoToPlaylist(int index, String author, String comment) {
-		this.playlistHandler.add(index, this.musicVideoList[index - 1], author, comment);
+
+		MusicVideoPlaylistElement newElement = this.playlistHandler.add(index, this.musicVideoList[index - 1], author,
+				comment);
+		if (sftpController.isConnectionEstablished()) {
+			syncPlaylist(newElement);
+		}
 	}
 
 	public void editMusicVideoToPlaylist(int index, String author, String comment) {
-		this.playlistHandler.edit(index, author, comment);
+
+		MusicVideoPlaylistElement newElement = this.playlistHandler.edit(index, author, comment);
+		if (sftpController.isConnectionEstablished()) {
+			editSyncPlaylist(newElement);
+		}
+
 	}
 
 	public void removeEntryFromPlaylist(int index) {
-		this.playlistHandler.remove(index);
+
+		MusicVideoPlaylistElement newElement = this.playlistHandler.remove(index);
+
+		if (sftpController.isConnectionEstablished()) {
+			deleteSyncPlaylist(newElement);
+		}
+
 	}
 
 	public void sftpDisconnect() {
@@ -1328,6 +1344,7 @@ public class MusicVideoHandler {
 	public void sftpRetrievePlaylist() {
 
 		if (sftpConnectionEstablished()) {
+			FileReadWriteModule.deleteDirectoryWithFiles(new File("php"));
 			this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
 			boolean existingPhpDirectory = false;
 			for (String file : this.sftpController.listFiles()) {
@@ -1337,14 +1354,15 @@ public class MusicVideoHandler {
 				}
 			}
 			if (existingPhpDirectory) {
+				FileReadWriteModule.createDirectory(Paths.get("php").toFile());
 				this.sftpController.changeDirectory("php");
 				for (String file : this.sftpController.listFiles(".json")) {
-					this.sftpController.retrieveFile(file, file);
+					this.sftpController.retrieveFile("php/" + file, file);
 				}
 				this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
 
 				// get information from retrieved files
-				File folder = FileSystems.getDefault().getPath(".").toFile();
+				File folder = FileSystems.getDefault().getPath("php").toFile(); // . for this directory
 
 				for (File file : folder.listFiles()) {
 					if (file.isFile()) {
@@ -1355,6 +1373,8 @@ public class MusicVideoHandler {
 						}
 					}
 				}
+				FileReadWriteModule.deleteDirectoryWithFiles(new File("php"));
+
 			}
 		}
 	}
@@ -1385,11 +1405,51 @@ public class MusicVideoHandler {
 		Object[] data = ExportImportSettings.readPlaylistEntryFile(file);
 
 		if (data != null) {
+
 			this.playlistHandler.load((long) data[0], (int) data[1] + 1, this.musicVideoList[(int) data[1]],
 					(String) data[2], (String) data[3], (boolean) data[4]);
+
 			return;
 		}
 		System.err.println("Playlist element could not be loaded");
+	}
+
+	public void syncPlaylist(MusicVideoPlaylistElement element) {
+		FileReadWriteModule.createDirectory(new File("php"));
+		File whereToWrite = new File("php/" + Long.toString(element.getUnixTime()) + ".json");
+		FileReadWriteModule.writeTextFile(whereToWrite,
+				new String[] { ExportImportSettings.writePlaylistEntryFile(element) });
+		this.sftpController.changeDirectory(this.getSftpDirectory());
+		this.sftpController.changeDirectory("php");
+		this.sftpController.transferFile(whereToWrite.getAbsolutePath());
+		FileReadWriteModule.deleteFile(whereToWrite);
+		FileReadWriteModule.deleteDirectory(new File("php"));
+
+	}
+
+	public void editSyncPlaylist(MusicVideoPlaylistElement element) {
+		this.sftpController.changeDirectory(this.getSftpDirectory());
+		this.sftpController.changeDirectory("php");
+		String fileLocation = Long.toString(element.getUnixTime()) + ".json";
+		this.sftpController.removeFile(fileLocation);
+		FileReadWriteModule.createDirectory(new File("php"));
+		File whereToWrite = new File("php/" + fileLocation);
+		FileReadWriteModule.writeTextFile(whereToWrite,
+				new String[] { ExportImportSettings.writePlaylistEntryFile(element) });
+		this.sftpController.transferFile(whereToWrite.getAbsolutePath());
+		FileReadWriteModule.deleteFile(whereToWrite);
+	}
+
+	public void deleteSyncPlaylist(MusicVideoPlaylistElement element) {
+		this.sftpController.changeDirectory(this.getSftpDirectory());
+		this.sftpController.changeDirectory("php");
+		String fileLocation = Long.toString(element.getUnixTime()) + ".json";
+		this.sftpController.removeFile(fileLocation);
+	}
+
+	public void clearPlaylist() {
+		this.playlistHandler.reset();
+
 	}
 
 }
