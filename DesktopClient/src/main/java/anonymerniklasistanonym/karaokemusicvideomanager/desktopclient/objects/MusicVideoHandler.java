@@ -842,7 +842,7 @@ public class MusicVideoHandler {
 
 		if (party) {
 			htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "floating-button-html_party")
-					.replace("html_party_live.html", "index.html"));
+					.replace("html_party_live.html", "index.php"));
 		}
 
 		// add section begin
