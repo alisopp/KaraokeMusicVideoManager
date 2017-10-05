@@ -1066,7 +1066,7 @@ public class MusicVideoHandler {
 		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-title-form"));
 		phpForm.append("Submit this song to the playlist:");
 		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-artist-form"));
-		phpForm.append("from");
+		phpForm.append("from&nbsp;");
 		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-input-form"));
 		phpForm.append(JsonModule.getValueString(phpJsonContent, "input-form"));
 		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-submit-form"));
@@ -1122,7 +1122,6 @@ public class MusicVideoHandler {
 		phpPlaylist.append(generateFaviconLinks(""));
 
 		phpPlaylist.append("<style>");
-		phpPlaylist.append(JsonModule.getValueString(cssJsonContent, "styles_static"));
 		phpPlaylist.append(JsonModule.getValueString(cssJsonContent, "styles_party_live"));
 
 		// close head and open body
@@ -1254,7 +1253,6 @@ public class MusicVideoHandler {
 					newPathList.add(path);
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				newPathList.add(path);
 			}
@@ -1288,7 +1286,6 @@ public class MusicVideoHandler {
 					newPathList.add(path);
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				newPathList.add(path);
 			}

@@ -1,3 +1,7 @@
+@charset "utf-8";
+
+/* The whole site: */
+
 body {
 	margin: 0;
 	padding: 0;
@@ -6,14 +10,23 @@ body {
 	background: #e2e1e0;
 }
 
+/* The area where all the content (table) is: */
+
+section {
+	/* Maximum site width */
+	max-width: 1200px;
+	/* Center the whole body */
+	margin: auto;
+}
+
 .live-elements {
 	background: #e2e1e0;
 }
 
 .live-element {
 	max-width: 1200px;
-	padding: 0;
-	padding-top: 8px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	margin: auto;
 	margin-bottom: 10px;
 	width: 100%;
@@ -30,7 +43,7 @@ body {
 }
 
 .live-element:hover .scroll-comment {
-	color: white;
+	display: none;
 }
 
 .live-element:hover .upvote-counter {
@@ -41,9 +54,8 @@ body {
 	display: block;
 }
 
-.upvotes {
-	float: right;
-	margin-right: 5px;
+.live-element:hover .text-beta {
+	display: block;
 }
 
 .upvote-counter {
@@ -56,6 +68,23 @@ body {
 	font-weight: 700;
 	padding-right: 6px;
 	font-size: 180%;
+	margin: 20px;
+	margin-top: 0;
+	margin-bottom: 30px;
+	/*
+	float: right;
+	margin-right: 10px;
+	margin-left: 10px;
+	color: #24a204;
+	height: 22px;
+	min-width: 22px;
+	text-align: center;
+	vertical-align: middle;
+	font-weight: 700;
+	padding-right: 15px;
+	margin-bottom: 15px;
+	font-size: 180%;
+	*/
 }
 
 .upvote-button {
@@ -63,6 +92,7 @@ body {
 	float: right;
 	padding-top: 2px;
 	padding-right: 20px;
+	margin: 0 auto;
 }
 
 .upvote-button-button {
@@ -86,7 +116,7 @@ body {
 	/* Round the corners of the button so that they are round */
 	border-radius: 6px;
 	/* Make font a bit bigger */
-	font-size: 13px;
+	font-size: 20px;
 	/* Add animation duration */
 	-webkit-transition-duration: 0.4s;
 	transition-duration: 0.4s;
@@ -103,17 +133,16 @@ body {
 	font-size: 150%;
 }
 
-.number {
+.playlist-number {
 	float: left;
-	padding-right: 10px;
-	padding-top: 5px;
-	font-size: 70%;
-	font-weight: light;
+	margin-right: 10px;
+	font-weight: lighter;
 }
 
 .song-title {
 	float: left;
 	font-weight: bold;
+	margin-right: 7px;
 }
 
 .song-artist {
@@ -126,6 +155,7 @@ body {
 	padding-left: 0;
 	padding-right: 0;
 	display: grid;
+	margin-top: 10px;
 	grid-auto-columns: max-content auto;
 }
 
@@ -148,7 +178,6 @@ body {
 	margin: 0;
 	margin-left: 10px;
 	margin-right: 10px;
-
 }
 
 .scroll-comment {
@@ -166,6 +195,13 @@ body {
 	margin: 0;
 	width: auto;
 	overflow: hidden;
+}
+
+.text-beta {
+	margin-left: 10px;
+	margin-right: 10px;
+	display: none;
+	word-wrap: break-word;
 }
 
 /* Floating button properties: */
@@ -250,4 +286,67 @@ a.floating-button:hover + div.label-container {
 	/* Show the label container */
 	visibility: visible;
 	opacity: 1;
+}
+
+
+@media screen and (max-width: 50em) {
+	.live-element {
+		padding-top: 12px;
+		padding-bottom: 5px;
+		margin-bottom: 0;
+		border-color: grey;
+		border-width: 1px;
+		border-style: solid;
+	}
+	.upvotes {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.upvote-button {
+		margin: 0 auto;
+		text-align: center;
+		margin-top: 15px;
+		margin-bottom: 10px;
+	}
+	.live-element:hover {
+		padding-bottom: 10px;
+	}
+	.song-artist {
+	float: left;
+	margin-bottom: 10px;
+}
+	/* The area where the table is located */
+	section {
+		/* Zero space between the area and the window border */
+		padding: 0;
+	}
+}
+
+
+@media screen and (min-width: 50em) {
+	.live-element {
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+	.upvote-button {
+		float: right;
+		text-align: right;
+	}
+	.upvote-button-button {
+		margin-top: -40px;
+	}
+	.text-beta {
+	margin-right: 100px;
+	}
+	.upvotes {
+	float: right;
+	margin-right: 5px;
+}
+	/* The area where the table is located */
+	section {
+		/* A bit space between the area and the window border */
+		padding: 2rem;
+	}
+
 }
