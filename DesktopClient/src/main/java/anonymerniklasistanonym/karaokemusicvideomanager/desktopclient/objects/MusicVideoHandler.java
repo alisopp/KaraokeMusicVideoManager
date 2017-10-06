@@ -1088,7 +1088,8 @@ public class MusicVideoHandler {
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/php.json")[0]);
 
 		// add php before everything
-		phpProcess.append(JsonModule.getValueString(phpJsonContent, "before-link-process"));
+		phpProcess.append(JsonModule.getValueString(phpJsonContent, "before-link-process")
+				.replaceAll("html/html_party_live.html", "index.php"));
 		phpProcess.append(JsonModule.getValueString(phpJsonContent, "link-process").replace("html/html_party_live.html",
 				"index.php"));
 		phpProcess.append(JsonModule.getValueString(phpJsonContent, "after-link-process"));
