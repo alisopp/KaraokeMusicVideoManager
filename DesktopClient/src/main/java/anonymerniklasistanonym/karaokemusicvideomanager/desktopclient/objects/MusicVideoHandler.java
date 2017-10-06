@@ -1231,8 +1231,8 @@ public class MusicVideoHandler {
 		return ExportImportSettings.compareSettingsFileToCurrent(this.settingsFile, this.settingsData);
 	}
 
-	public void setAlwaysSave(boolean b) {
-		this.settingsData.setAlwaysSaveSettings(b);
+	public boolean setAlwaysSave(boolean b) {
+		return this.settingsData.setAlwaysSaveSettings(b);
 
 	}
 
@@ -1481,20 +1481,16 @@ public class MusicVideoHandler {
 
 			}
 		}
-		// TODO Auto-generated method stub
-
 	}
 
 	public int inMusicVideoPlaylist(Path searchPath) {
 		File fileToFind = searchPath.toFile();
 		try {
 			for (int i = 0; i < this.musicVideoList.length; i++) {
-				File f1 = this.musicVideoList[i].getPath().toFile(); // different capitalization ...
-
-				if (f1.getCanonicalPath().equals(fileToFind.getCanonicalPath())) {
+				if (this.musicVideoList[i].getPath().toFile().getCanonicalPath()
+						.equals(fileToFind.getCanonicalPath())) {
 					return i;
 				}
-
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

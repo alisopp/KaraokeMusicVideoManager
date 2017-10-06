@@ -115,15 +115,15 @@ public class ExportMusicVideoData {
 	 * 
 	 * @return Object[][] ([][#, artist, title])
 	 */
-	public static Object[][] musicVideoListToObjectArray(MusicVideo[] musicVideoList, Integer rowNumber) {
+	public static Object[][] musicVideoListToObjectArray(MusicVideo[] musicVideoList) {
 
 		// create a array of objects with a object that has 3 entries
-		Object[][] tableData = new Object[musicVideoList.length][rowNumber];
+		Object[][] tableData = new Object[musicVideoList.length][3];
 
-		for (int a = 0; a < musicVideoList.length; a++) {
-			tableData[a][0] = a + 1;
-			tableData[a][1] = musicVideoList[a].getArtist();
-			tableData[a][2] = musicVideoList[a].getTitle();
+		for (int i = 0; i < musicVideoList.length; i++) {
+			tableData[i][0] = i + 1;
+			tableData[i][1] = musicVideoList[i].getArtist();
+			tableData[i][2] = musicVideoList[i].getTitle();
 		}
 
 		return tableData;
@@ -136,24 +136,19 @@ public class ExportMusicVideoData {
 	 */
 	public static String generateCsvContent(MusicVideo[] musicVideoList, String[] columns) {
 
-		int columnNumber = columns.length;
-		int rowNumber = musicVideoList.length;
-
-		Object[][] csvData = musicVideoListToObjectArray(musicVideoList, columnNumber);
-
 		// save everything in one string
 		StringBuilder csvDataString = new StringBuilder("");
 
-		for (int a = 0; a < columnNumber - 1; a++) {
-			csvDataString.append(columns[a] + ",");
-		}
-		csvDataString.append(columns[columnNumber - 1] + "\n");
+		// add the table head
+		csvDataString.append(columns[0] + ",");
+		csvDataString.append(columns[1] + ",");
+		csvDataString.append(columns[2] + "\n");
 
-		for (int a = 0; a < rowNumber; a++) {
-			for (int b = 0; b < columnNumber - 1; b++) {
-				csvDataString.append(csvData[a][b].toString() + ",");
-			}
-			csvDataString.append(csvData[a][columnNumber - 1].toString() + "\n");
+		// add the table content
+		for (Object[] musicVideo : musicVideoListToObjectArray(musicVideoList)) {
+			csvDataString.append(musicVideo[0] + ",");
+			csvDataString.append(musicVideo[1] + ",");
+			csvDataString.append(musicVideo[2] + "\n");
 		}
 
 		return csvDataString.toString();
@@ -166,15 +161,12 @@ public class ExportMusicVideoData {
 	 */
 	public static String generateJsonContentTable(MusicVideo[] musicVideoList, String[] columns) {
 
-		int columnNumber = columns.length;
-		int rowNumber = musicVideoList.length;
-
-		Object[][] csvData = musicVideoListToObjectArray(musicVideoList, columnNumber);
+		Object[][] csvData = musicVideoListToObjectArray(musicVideoList);
 
 		// the whole object
 		JsonObjectBuilder jsonObject = Json.createObjectBuilder();
 
-		// add the columns
+		// the table head object
 		JsonArrayBuilder tableHead = Json.createArrayBuilder();
 
 		for (String column : columns) {
@@ -183,14 +175,14 @@ public class ExportMusicVideoData {
 
 		jsonObject.add("table-head", tableHead);
 
-		// add the data
+		// the table body object
 		JsonArrayBuilder tableBody = Json.createArrayBuilder();
 
-		for (int a = 0; a < rowNumber; a++) {
+		// every entry as element of an array
+		for (Object[] entry : csvData) {
 			JsonArrayBuilder tableRow = Json.createArrayBuilder();
-			tableRow.add((Integer) csvData[a][0]);
-			tableRow.add(csvData[a][1].toString());
-			tableRow.add(csvData[a][2].toString());
+			tableRow.add(entry[1].toString());
+			tableRow.add(entry[2].toString());
 			tableBody.add(tableRow);
 		}
 
@@ -213,20 +205,20 @@ public class ExportMusicVideoData {
 		// the whole object
 		JsonObjectBuilder jsonObject = Json.createObjectBuilder();
 
-		// add the data
-		JsonArrayBuilder tableBody = Json.createArrayBuilder();
+		// the playlist entries object
+		JsonArrayBuilder playlist = Json.createArrayBuilder();
 
 		for (MusicVideoPlaylistElement entry : playList) {
 			JsonObjectBuilder entryArray = Json.createObjectBuilder();
-			entryArray.add("file-path", entry.getMusicVideoFile().getPath().toAbsolutePath().toString());
+			entryArray.add("file-path", entry.getMusicVideoFile().getPath().toString());
 			entryArray.add("author", entry.getAuthor());
 			entryArray.add("comment", entry.getComment());
 			entryArray.add("time", entry.getUnixTime());
 			entryArray.add("created-locally", entry.getCreatedLocally());
-			tableBody.add(entryArray);
+			playlist.add(entryArray);
 		}
 
-		jsonObject.add("playlist", tableBody);
+		jsonObject.add("playlist", playlist);
 
 		return JsonModule.dumpJsonObjectToString(jsonObject);
 	}

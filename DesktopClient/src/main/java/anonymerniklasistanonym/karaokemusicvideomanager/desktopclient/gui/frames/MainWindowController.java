@@ -27,6 +27,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -288,6 +289,9 @@ public class MainWindowController {
 	@FXML
 	private Menu menuButtonSftp;
 
+	@FXML
+	private CheckMenuItem menuButtonAlwaysSave;
+
 	// other
 
 	/**
@@ -517,6 +521,7 @@ public class MainWindowController {
 		refreshMusicVideoPathTable();
 		refreshMusicVideoPlaylistTable();
 
+		this.menuButtonAlwaysSave.setSelected(this.mainWindow.getMusicVideohandler().getAlwaysSave());
 	}
 
 	/**
@@ -751,7 +756,6 @@ public class MainWindowController {
 						checkNetwork();
 						refreshMusicVideoPlaylistTable();
 					}
-
 				});
 
 				// Connection to the Controller from the primary Stage
@@ -1104,7 +1108,6 @@ public class MainWindowController {
 		if (this.mainWindow.getMusicVideohandler().sftpConnectionEstablished()) {
 			this.networkButton.setSelected(true);
 			this.mainWindow.getMusicVideohandler().sftpRetrievePlaylist();
-			System.out.println("????");
 			// update the table
 			refreshMusicVideoPlaylistTable();
 		} else {
@@ -1330,7 +1333,7 @@ public class MainWindowController {
 
 		// if something is selected
 		if (selectedEntry != null) {
-			String[] authorComment = Dialogs.playlistDialog(selectedEntry.getAuthor(), selectedEntry.getComment(),
+			String[] authorComment = Dialogs.playlistEditDialog(selectedEntry.getAuthor(), selectedEntry.getComment(),
 					"Edit the selected Playlist entry", "Edit author and comment", "Save Changes");
 			// String author = Dialogs.textInputDialog("Enter new name", "", "Enter a new
 			// name", "New name:");
@@ -1368,4 +1371,11 @@ public class MainWindowController {
 		// TODO
 	}
 
+	@FXML
+	public void changeAlwaysSave() {
+		System.out.println(this.mainWindow.getMusicVideohandler());
+		this.menuButtonAlwaysSave.setSelected(this.mainWindow.getMusicVideohandler()
+				.setAlwaysSave(!this.mainWindow.getMusicVideohandler().getAlwaysSave()));
+		System.out.println(this.mainWindow.getMusicVideohandler());
+	}
 }

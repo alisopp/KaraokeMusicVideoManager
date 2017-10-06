@@ -230,8 +230,8 @@ public final class ProgramData {
 		return alwaysSaveSettings;
 	}
 
-	public void setAlwaysSaveSettings(boolean alwaysSaveSettings) {
-		this.alwaysSaveSettings = alwaysSaveSettings;
+	public boolean setAlwaysSaveSettings(boolean alwaysSaveSettings) {
+		return this.alwaysSaveSettings = alwaysSaveSettings;
 	}
 
 	public File[] getIgnoredFiles() {

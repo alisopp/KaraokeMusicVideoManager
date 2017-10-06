@@ -56,6 +56,11 @@ public class Dialogs {
 		alert.setTitle("Save changes?");
 		alert.setHeaderText("Do you want to save your changes?");
 
+		// Get the Stage.
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+		// Add a custom icon.
+		stage.getIcons().addAll(WindowMethods.getWindowIcons());
+
 		// with the following buttons
 		alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 		final ButtonType buttonAlways = new ButtonType("Always", ButtonData.RIGHT);
@@ -317,6 +322,11 @@ public class Dialogs {
 		dialog.setTitle(title);
 		dialog.setHeaderText(header);
 
+		// Get the Stage.
+		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+		// Add a custom icon.
+		stage.getIcons().addAll(WindowMethods.getWindowIcons());
+
 		// Set the button types.
 		ButtonType editElement = new ButtonType(buttonText, ButtonData.OK_DONE);
 		dialog.getDialogPane().getButtonTypes().addAll(editElement, ButtonType.CANCEL);
@@ -344,6 +354,7 @@ public class Dialogs {
 
 		// Do some validation (using the Java 8 lambda syntax).
 		newAuthor.textProperty().addListener((observable, oldValue, newValue) -> {
+			// disable the button as long as the author field is empty
 			loginButton.setDisable(newValue.trim().isEmpty());
 		});
 
@@ -365,13 +376,90 @@ public class Dialogs {
 
 		if (result.isPresent()) {
 			System.out.println(
-					"<< Dialog was approvaed with " + result.get().getKey() + " and " + result.get().getValue());
+					"<< Dialog was approved with " + result.get().getKey() + " and " + result.get().getValue());
 			return new String[] { result.get().getKey(), result.get().getValue() };
 		} else {
 			System.out.println("<< Dialog was cancelled");
 			return null;
 		}
 
+	}
+
+	/**
+	 * Edit author and comment from a playlist entry
+	 * 
+	 * @return
+	 */
+	public static String[] playlistEditDialog(String author, String comment, String title, String header,
+			String buttonText) {
+		// Create the custom dialog.
+		Dialog<Pair<String, String>> dialog = new Dialog<>();
+		dialog.setTitle(title);
+		dialog.setHeaderText(header);
+
+		// Get the Stage.
+		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+		// Add a custom icon.
+		stage.getIcons().addAll(WindowMethods.getWindowIcons());
+
+		// Set the button types.
+		ButtonType editElement = new ButtonType(buttonText, ButtonData.OK_DONE);
+		dialog.getDialogPane().getButtonTypes().addAll(editElement, ButtonType.CANCEL);
+
+		// Create the username and password labels and fields.
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(10, 10, 10, 10));
+
+		TextField newAuthor = new TextField();
+		newAuthor.setPromptText("New author");
+		newAuthor.setText(author);
+		TextField newComment = new TextField();
+		newComment.setPromptText("New Comment");
+		newComment.setText(comment);
+
+		grid.add(new Label("Author:"), 0, 0);
+		grid.add(newAuthor, 1, 0);
+		grid.add(new Label("Comment:"), 0, 1);
+		grid.add(newComment, 1, 1);
+
+		Node loginButton = dialog.getDialogPane().lookupButton(editElement);
+		loginButton.setDisable(true);
+
+		// Do some validation (using the Java 8 lambda syntax).
+		// enable button only if the input is different to the input before
+		newAuthor.textProperty().addListener((observable, oldValue, newValue) -> {
+			loginButton.setDisable(newAuthor.getText().equals(author) && newComment.getText().equals(comment));
+		});
+		newComment.textProperty().addListener((observable, oldValue, newValue) -> {
+			loginButton.setDisable(newAuthor.getText().equals(author) && newComment.getText().equals(comment));
+		});
+
+		dialog.getDialogPane().setContent(grid);
+
+		// Request focus on the username field by default.
+		Platform.runLater(() -> newAuthor.requestFocus());
+
+		// Convert the result to a username-password-pair when the login button is
+		// clicked.
+		dialog.setResultConverter(dialogButton -> {
+			if (dialogButton == editElement) {
+				return new Pair<>(newAuthor.getText(), newComment.getText());
+			}
+			return null;
+		});
+
+		Optional<Pair<String, String>> result = dialog.showAndWait();
+
+		if (result.isPresent()) {
+			System.out.println(
+					"<< Dialog was approved with " + result.get().getKey() + " and " + result.get().getValue());
+			return new String[] { result.get().getKey(), result.get().getValue() };
+		} else {
+			System.out.println("<< Dialog was cancelled");
+			return null;
+		}
 	}
 
 	public static void informationAlert(String title, String text, AlertType alertType) {

@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * The controller class for the server login window
@@ -61,6 +62,8 @@ public class ServerLoginWindowController {
 					userName.getText());
 			this.mainWindow.getMusicVideohandler().sftpRetrievePlaylist();
 			this.a.close();
+
+			this.a.fireEvent(new WindowEvent(this.a, WindowEvent.WINDOW_CLOSE_REQUEST));
 		} else {
 			Dialogs.informationAlert("SFTP connection could not bes established", "Please try to login again",
 					AlertType.INFORMATION);
