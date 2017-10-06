@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import javax.json.JsonObject;
+import javax.json.JsonValue;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions.ExportImportSettings;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions.ExportMusicVideoData;
@@ -1173,7 +1174,7 @@ public class MusicVideoHandler {
 		}
 
 		return FileReadWriteModule.writeTextFile(whereToWriteTheFile.toFile(),
-				new String[] { ExportMusicVideoData.generateJsonContent(this.musicVideoList, this.columnNames) });
+				new String[] { ExportMusicVideoData.generateJsonContentTable(this.musicVideoList, this.columnNames) });
 	}
 
 	/**
@@ -1447,6 +1448,57 @@ public class MusicVideoHandler {
 	public void clearPlaylist() {
 		this.playlistHandler.reset();
 
+	}
+
+	public void savePlaylist(File filePath) {
+		FileReadWriteModule.writeTextFile(filePath, new String[] {
+				ExportMusicVideoData.generateJsonContentPlaylist(this.playlistHandler.getPlaylistElements()) });
+	}
+
+	public void loadPlaylist(File file) {
+		String[] playlistTextContent = FileReadWriteModule.readTextFile(file);
+
+		if (playlistTextContent != null) {
+			this.playlistHandler.reset();
+			JsonObject playlist = JsonModule.loadJsonFromString(playlistTextContent[0]);
+			for (JsonValue jsonObject : playlist.getJsonArray("playlist")) {
+				Path pathToFile = Paths.get(jsonObject.asJsonObject().getString("file-path"));
+
+				int indexInList = inMusicVideoPlaylist(pathToFile);
+				if (indexInList != -1) {
+					System.out.println("File was recognized");
+					String author = jsonObject.asJsonObject().getString("author");
+					String comment = jsonObject.asJsonObject().getString("comment");
+					long unixTime = Long.parseLong(jsonObject.asJsonObject().get("time").toString());
+					boolean createdLocally = jsonObject.asJsonObject().getBoolean("created-locally");
+
+					this.playlistHandler.load(unixTime, indexInList + 1, this.musicVideoList[indexInList], author,
+							comment, createdLocally);
+				} else {
+					System.err.println("Playlist entry file not found in music video list!");
+				}
+
+			}
+		}
+		// TODO Auto-generated method stub
+
+	}
+
+	public int inMusicVideoPlaylist(Path searchPath) {
+		File fileToFind = searchPath.toFile();
+		try {
+			for (int i = 0; i < this.musicVideoList.length; i++) {
+				File f1 = this.musicVideoList[i].getPath().toFile(); // different capitalization ...
+
+				if (f1.getCanonicalPath().equals(fileToFind.getCanonicalPath())) {
+					return i;
+				}
+
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 
 }

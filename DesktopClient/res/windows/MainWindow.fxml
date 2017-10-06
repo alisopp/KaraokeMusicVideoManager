@@ -183,8 +183,8 @@
                               </TableView>
                               <HBox alignment="TOP_CENTER" minHeight="-Infinity" spacing="20.0">
                                  <children>
-                                    <Button fx:id="buttonSavePlaylist" disable="true" mnemonicParsing="false" onAction="#savePlaylistDialog" text="Save Playlist" />
-                                    <Button fx:id="buttonLoadPlaylist" disable="true" mnemonicParsing="false" onAction="#loadPlaylistDialog" text="Load Playlist" />
+                                    <Button fx:id="buttonSavePlaylist" mnemonicParsing="false" onAction="#savePlaylistDialog" text="Save Playlist" />
+                                    <Button fx:id="buttonLoadPlaylist" mnemonicParsing="false" onAction="#loadPlaylistDialog" text="Load Playlist" />
                                     <Button fx:id="buttonRefreshPlaylist" mnemonicParsing="false" onAction="#refreshMusicVideoPlaylistTable" text="Refresh Playlist" />
                                  </children>
                                  <padding>

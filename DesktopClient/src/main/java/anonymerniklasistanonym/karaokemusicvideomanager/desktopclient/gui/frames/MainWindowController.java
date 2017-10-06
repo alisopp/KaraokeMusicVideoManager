@@ -1281,13 +1281,28 @@ public class MainWindowController {
 
 	@FXML
 	private void savePlaylistDialog() {
-		// TODO
-
+		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
+		File[] fileName = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(), "Save current playlist",
+				FileSystems.getDefault().getPath(".").toFile(), new ExtensionFilter[] { jsonFilter },
+				Dialogs.CHOOSE_ACTION.SAVE);
+		if (fileName != null && fileName[0] != null) {
+			File realFileName = new File(fileName[0].getParent() + "/" + fileName[0].getName());
+			this.tableDataPlaylist.clear();
+			this.refreshMusicVideoPlaylistTable();
+			this.mainWindow.getMusicVideohandler().savePlaylist(realFileName);
+		}
 	}
 
 	@FXML
 	private void loadPlaylistDialog() {
-		// TODO
+		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
+		File[] fileName = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(), "Load a saved playlist",
+				FileSystems.getDefault().getPath(".").toFile(), new ExtensionFilter[] { jsonFilter },
+				Dialogs.CHOOSE_ACTION.NORMAL);
+		if (fileName != null && fileName[0] != null) {
+			this.mainWindow.getMusicVideohandler().loadPlaylist(fileName[0]);
+		}
+		refreshMusicVideoPlaylistTable();
 	}
 
 	@FXML

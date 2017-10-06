@@ -6,6 +6,7 @@ import javax.json.JsonObjectBuilder;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.JsonModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoPlaylistElement;
 
 public class ExportMusicVideoData {
 
@@ -161,9 +162,9 @@ public class ExportMusicVideoData {
 	/**
 	 * Generate JSON table content
 	 * 
-	 * @return content (String[])
+	 * @return content (String)
 	 */
-	public static String generateJsonContent(MusicVideo[] musicVideoList, String[] columns) {
+	public static String generateJsonContentTable(MusicVideo[] musicVideoList, String[] columns) {
 
 		int columnNumber = columns.length;
 		int rowNumber = musicVideoList.length;
@@ -194,6 +195,38 @@ public class ExportMusicVideoData {
 		}
 
 		jsonObject.add("table-body", tableBody);
+
+		return JsonModule.dumpJsonObjectToString(jsonObject);
+	}
+
+	/**
+	 * Generate JSON for a music video playlist
+	 * 
+	 * @return content (String)
+	 */
+	public static String generateJsonContentPlaylist(MusicVideoPlaylistElement[] playList) {
+
+		if (playList == null) {
+			return null;
+		}
+
+		// the whole object
+		JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+
+		// add the data
+		JsonArrayBuilder tableBody = Json.createArrayBuilder();
+
+		for (MusicVideoPlaylistElement entry : playList) {
+			JsonObjectBuilder entryArray = Json.createObjectBuilder();
+			entryArray.add("file-path", entry.getMusicVideoFile().getPath().toAbsolutePath().toString());
+			entryArray.add("author", entry.getAuthor());
+			entryArray.add("comment", entry.getComment());
+			entryArray.add("time", entry.getUnixTime());
+			entryArray.add("created-locally", entry.getCreatedLocally());
+			tableBody.add(entryArray);
+		}
+
+		jsonObject.add("playlist", tableBody);
 
 		return JsonModule.dumpJsonObjectToString(jsonObject);
 	}
