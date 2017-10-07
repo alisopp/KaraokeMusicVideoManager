@@ -15,6 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -79,6 +80,12 @@ public class IgnoredFilesWindowController {
 	 */
 	@FXML
 	private TableColumn<WrongFormattedFilesTableView, String> columnFilePath;
+
+	/**
+	 * Button which removes all paths from the ignored files list
+	 */
+	@FXML
+	private Button buttonClearList;
 
 	// other
 
@@ -174,6 +181,9 @@ public class IgnoredFilesWindowController {
 		contextClear.setGraphic(WindowMethods.createMenuIcon("images/menu/clear.png"));
 		contextRefresh.setGraphic(WindowMethods.createMenuIcon("images/menu/refresh.png"));
 
+		// button
+		buttonClearList.setGraphic(WindowMethods.createMenuIcon("images/menu/ignore.png"));
+
 		// label
 		searchLabel.setGraphic(WindowMethods.createMenuIcon("images/menu/search.png"));
 	}
@@ -181,21 +191,24 @@ public class IgnoredFilesWindowController {
 	/**
 	 * Update the wrong formatted files path table
 	 */
+	@FXML
 	private void updateIgnoredFileTable() {
 
 		// get the current wrong formatted files list
 		File[] ignoredFiles = this.mainWindow.getMusicVideohandler().getIgnoredFiles();
 
-		// overwrite the table with the new list
+		// clear the whole table
+		wrongFormattedFilesTableData.clear();
+
+		// overwrite the table with the new list (if there is one)
 		if (ignoredFiles != null) {
-			// clear the whole table
-			wrongFormattedFilesTableData.clear();
 			// add an entry for every path in the list
-			for (int i = 0; i < ignoredFiles.length; i++) {
-				wrongFormattedFilesTableData.add(new WrongFormattedFilesTableView(ignoredFiles[i].getAbsolutePath()));
+			for (File ignoredFile : ignoredFiles) {
+				wrongFormattedFilesTableData.add(new WrongFormattedFilesTableView(ignoredFile.getAbsolutePath()));
 			}
 		}
 		mainController.refreshMusicVideoTable();
+		mainController.refreshMusicVideoPlaylistTable();
 	}
 
 	/**
@@ -325,14 +338,15 @@ public class IgnoredFilesWindowController {
 			this.mainWindow.getMusicVideohandler().removeFromIgnoredFilesList(selectedFile);
 		}
 
-		refreshTable();
+		updateIgnoredFileTable();
 	}
 
 	/**
-	 * Refresh the wrong formatted files path list
+	 * Remove all ignored files from the ignored files list
 	 */
 	@FXML
-	private void refreshTable() {
+	private void clearList() {
+		this.mainWindow.getMusicVideohandler().clearIgnoredFilesList();
 		updateIgnoredFileTable();
 	}
 }

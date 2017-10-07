@@ -834,7 +834,7 @@ public class MainWindowController {
 
 			// >> load the controller to the window and give him the main window
 			WrongFormattedFilesWindowController windowController = loader.getController();
-			windowController.setWindowController(this.mainWindow);
+			windowController.setWindowController(this.mainWindow, this);
 
 			// create a stage
 			Stage stage = new Stage(StageStyle.DECORATED);
@@ -934,7 +934,7 @@ public class MainWindowController {
 			}
 
 			// Connection to the Controller from the primary Stage
-			windowController.setWindowController(this.mainWindow, stage);
+			windowController.setWindowController(this.mainWindow, stage, this);
 
 			stage.show();
 
@@ -1099,11 +1099,19 @@ public class MainWindowController {
 			int i = 0;
 			for (MusicVideoPlaylistElement element : listOfEntries) {
 				System.out.println("Refresh and add file by " + element.getAuthor());
-				MusicVideo musicVideoFile = element.getMusicVideoFile();
-				tableDataPlaylist.add(new PlaylistTableView(i, element.getMusicVideoIndex(),
-						element.getUnixTimeString(), musicVideoFile.getTitle(), musicVideoFile.getArtist(),
-						element.getAuthor(), element.getComment()));
-				i++;
+				MusicVideo a = this.mainWindow.getMusicVideohandler()
+						.getMusicVideoOfPlaylistItem(element.getMusicVideoFile().getPath());
+
+				if (a != null) {
+					tableDataPlaylist
+							.add(new PlaylistTableView(i, element.getMusicVideoIndex(), element.getUnixTimeString(),
+									a.getTitle(), a.getArtist(), element.getAuthor(), element.getComment()));
+					i++;
+				} else {
+					System.err.println(
+							"File not added because it's either ignored or not in the current music video list!");
+				}
+
 			}
 		}
 	}

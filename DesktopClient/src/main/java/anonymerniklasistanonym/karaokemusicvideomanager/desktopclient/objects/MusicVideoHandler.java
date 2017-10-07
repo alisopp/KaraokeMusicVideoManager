@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 
 import javax.json.JsonObject;
@@ -382,43 +381,53 @@ public class MusicVideoHandler {
 	 */
 	public ArrayList<MusicVideo> scanDirectory(Path path) {
 
-		if (path == null || !path.toFile().isDirectory()) {
-			System.err.println("Path is null or no directory!");
-			return null;
-		}
-
-		// get all files in the directory
-		Collection<Path> filesInDirectory = new ArrayList<Path>();
-		try (DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
-
-			System.out.print(">> Scan " + path + " for files");
-			for (Path child : ds) {
-				filesInDirectory.add(child);
-			}
-			System.out.println(" << Scan finished.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println(" << Problem while searching for Files!");
-			return null;
-		}
-
 		ArrayList<MusicVideo> musicvideosinFolder = new ArrayList<MusicVideo>();
 
 		System.out.println(">> Finding MusicVideo files");
 
-		for (Path filePath : filesInDirectory) {
+		for (Path filePath : scanDirectoryForFiles(path)) {
 
 			MusicVideo musicVideoFile = isFileMusicVideo(filePath);
 
 			if (musicVideoFile != null) {
 				musicvideosinFolder.add(musicVideoFile);
 			}
-
 		}
 
-		// return sorted Array
+		// return ArrayList with music video files
 		return musicvideosinFolder;
 
+	}
+
+	private ArrayList<Path> scanDirectoryForFiles(Path path) {
+
+		// check if path is a real existing directory
+		if (path == null || path.toFile().isFile()) {
+			System.err.println("Path is null or no directory!");
+			return null;
+		}
+
+		// get all files in the directory by saving it in this list
+		ArrayList<Path> filesInDirectory = new ArrayList<Path>();
+
+		// and collecting it from this stream
+		try (DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
+
+			System.out.print(">> Scan " + path + " for files");
+			for (Path child : ds) {
+				// if the file is a "regular" file -> no directory/link/etc.
+				if (Files.isRegularFile(child)) {
+					filesInDirectory.add(child);
+				}
+			}
+			System.out.println(" << Scan finished.");
+
+			return filesInDirectory;
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println(" << Problem while searching for Files!");
+			return null;
+		}
 	}
 
 	/**
@@ -429,39 +438,17 @@ public class MusicVideoHandler {
 	 */
 	public ArrayList<Path> scanDirectoryForWrongFiles(Path path) {
 
-		if (path == null || !path.toFile().isDirectory()) {
-			System.err.println("Path is null or no directory!");
-			return null;
-		}
-
-		// get all files in the directory
-		Collection<Path> filesInDirectory = new ArrayList<Path>();
-		try (DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
-
-			System.out.print(">> Scan " + path + " for wrong files");
-			for (Path child : ds) {
-				filesInDirectory.add(child);
-			}
-			System.out.println(" << Scan finished.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println(" << Problem while searching for Files!");
-			return null;
-		}
-
 		ArrayList<Path> wrongFormattedFiles = new ArrayList<Path>();
 
 		System.out.println(">> Finding wrong formatted files");
 
-		for (Path filePath : filesInDirectory) {
-
+		for (Path filePath : scanDirectoryForFiles(path)) {
 			if (isFileMusicVideoButWrong(filePath)) {
 				wrongFormattedFiles.add(filePath);
 			}
-
 		}
 
-		// return sorted Array
+		// return ArrayList with wrong files
 		return wrongFormattedFiles;
 
 	}
@@ -471,28 +458,34 @@ public class MusicVideoHandler {
 	 * 
 	 * @return
 	 */
-	public void updateMusicVideoList() {
+	public MusicVideo[] updateMusicVideoList() {
 
+		// check if there even is a path list
 		if (this.settingsData.getPathList() == null) {
-			this.musicVideoList = null;
 			System.out.println("There are no paths!");
-			return;
+			this.musicVideoList = null;
+			return this.musicVideoList;
 		}
 
-		ArrayList<MusicVideo> newMusicVideoList = new ArrayList<MusicVideo>();
+		// collect music video files with an ArrayList
+		ArrayList<MusicVideo> collectMusicVideos = new ArrayList<MusicVideo>();
 
+		// by iterating over the path list
 		for (Path directory : this.settingsData.getPathList()) {
-			newMusicVideoList.addAll(scanDirectory(directory));
+			collectMusicVideos.addAll(scanDirectory(directory));
 		}
 
-		MusicVideo[] newList = new MusicVideo[newMusicVideoList.size()];
-		newList = newMusicVideoList.toArray(newList);
+		// convert then the ArrayList to a normal Array
+		MusicVideo[] newMusicVideoList = collectMusicVideos.toArray(new MusicVideo[0]);
 
-		// sort array over implemented comparator
-		Arrays.sort(newList, new MusicVideo());
+		// sort it
+		Arrays.sort(newMusicVideoList, new MusicVideo());
 
-		this.musicVideoList = newList;
+		// set it as a class variable
+		this.musicVideoList = newMusicVideoList;
 
+		// and return it
+		return this.musicVideoList;
 	}
 
 	/**
@@ -502,6 +495,7 @@ public class MusicVideoHandler {
 	 */
 	public Path[] getWrongFormattedFiles() {
 
+		// check if there even is a path list
 		if (this.settingsData.getPathList() == null) {
 			System.err.println("There are no paths!");
 			return null;
@@ -513,9 +507,13 @@ public class MusicVideoHandler {
 			newMusicVideoList.addAll(scanDirectoryForWrongFiles(directory));
 		}
 
+		// convert ArrayList to a normal Array
 		Path[] newList = newMusicVideoList.toArray(new Path[0]);
+
+		// sort all paths
 		Arrays.sort(newList);
 
+		// return sorted array with all paths to wrong files
 		return newList;
 
 	}
@@ -568,53 +566,38 @@ public class MusicVideoHandler {
 	 */
 	private MusicVideo isFileMusicVideo(Path filePath) {
 
+		// check if the file is already in the list
 		if (this.settingsData.getIgnoredFiles() != null) {
-			final File musicVideoFile = filePath.toFile();
-			for (File ignoredFilePath : this.settingsData.getIgnoredFiles()) {
-				try {
+			try {
+				final File musicVideoFile = filePath.toFile();
+				for (File ignoredFilePath : this.settingsData.getIgnoredFiles()) {
 					if (ignoredFilePath.getCanonicalPath().equals(musicVideoFile.getCanonicalPath())) {
 						System.err.println("File is a ignored File! (" + filePath + ")");
 						return null;
 					}
-				} catch (IOException e) {
-					System.err.println("Error");
-					e.printStackTrace();
 				}
+			} catch (IOException e) {
+				System.err.println("Error by comparing the file to the ignored files");
+				e.printStackTrace();
 			}
 		}
 
-		// file is a "normal" readable file
-		if (Files.isRegularFile(filePath))
+		final String pathOfFile = filePath.getFileName().toString();
+		final int lastIndexOfPoint = pathOfFile.lastIndexOf('.');
 
-		{
+		if (lastIndexOfPoint > 0 && pathOfFile.contains(" - ")) {
 
-			String fileType = null, pathOfFile = filePath.getFileName().toString();
-			String[] artistAndTitle = null;
-
-			int lastIndexOfPoint = pathOfFile.lastIndexOf('.');
-			boolean containsArtistAndTitle = pathOfFile.contains(" - ");
-
-			if (lastIndexOfPoint > 0 && containsArtistAndTitle) {
-
-				fileType = pathOfFile.substring(lastIndexOfPoint + 1);
-				artistAndTitle = pathOfFile.substring(0, lastIndexOfPoint).split(" - ", 2);
-
-			} else {
-				// -1 if '.' is not found or file doesn't have " - " for support of artist/title
-				System.err.println("Incompatible filename! (" + filePath + ")");
-				return null;
-			}
+			final String fileType = pathOfFile.substring(lastIndexOfPoint + 1);
+			final String[] artistAndTitle = pathOfFile.substring(0, lastIndexOfPoint).split(" - ", 2);
 
 			// now we compare it to our allowed extension array
 			for (String supportedFileTypes : this.settingsData.getAcceptedFileTypes()) {
 				if (supportedFileTypes.equalsIgnoreCase(fileType)) {
 
-					// finally add the newMusicVideoObject to our
-					// musicVideosList
+					// finally add the newMusicVideoObject to our musicVideosList
 					return new MusicVideo(filePath, artistAndTitle[1], artistAndTitle[0]);
 				}
 			}
-
 		}
 		return null;
 	}
@@ -643,34 +626,30 @@ public class MusicVideoHandler {
 			}
 		}
 
-		// file is a "normal" readable file
-		if (Files.isRegularFile(filePath)) {
+		String fileType = null, pathOfFile = filePath.getFileName().toString();
 
-			String fileType = null, pathOfFile = filePath.getFileName().toString();
+		int lastIndexOfPoint = pathOfFile.lastIndexOf('.');
+		boolean containsArtistAndTitle = pathOfFile.contains(" - ");
 
-			int lastIndexOfPoint = pathOfFile.lastIndexOf('.');
-			boolean containsArtistAndTitle = pathOfFile.contains(" - ");
+		boolean rightFileEnd = false;
 
-			boolean rightFileEnd = false;
-
-			if (lastIndexOfPoint > 0) {
-				fileType = pathOfFile.substring(lastIndexOfPoint + 1);
-			} else {
-				return false;
-			}
-
-			for (String supportedFileTypes : this.settingsData.getAcceptedFileTypes()) {
-				if (supportedFileTypes.equalsIgnoreCase(fileType)) {
-
-					rightFileEnd = true;
-				}
-			}
-
-			if (rightFileEnd && !containsArtistAndTitle) {
-				return true;
-			}
-
+		if (lastIndexOfPoint > 0) {
+			fileType = pathOfFile.substring(lastIndexOfPoint + 1);
+		} else {
+			return false;
 		}
+
+		for (String supportedFileTypes : this.settingsData.getAcceptedFileTypes()) {
+			if (supportedFileTypes.equalsIgnoreCase(fileType)) {
+
+				rightFileEnd = true;
+			}
+		}
+
+		if (rightFileEnd && !containsArtistAndTitle) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -680,33 +659,7 @@ public class MusicVideoHandler {
 	 * @return Object[][] ([][#, artist, title])
 	 */
 	public Object[][] musicVideoListToTable() {
-
-		if (this.musicVideoList == null) {
-			System.err.println("The music video list is null!");
-			return null;
-		}
-
-		if (this.musicVideoList.length == 0) {
-			System.err.println("The music video list is empty!");
-			return null;
-		}
-
-		Object[][] tableData = new Object[this.musicVideoList.length][this.columnNames.length];
-
-		System.out.println("New updated table:");
-		for (int i = 0; i < this.musicVideoList.length; i++) {
-			// set data to Object[][]
-			tableData[i][0] = i + 1;
-			tableData[i][1] = this.musicVideoList[i].getArtist();
-			tableData[i][2] = this.musicVideoList[i].getTitle();
-
-			// check it right now
-			// System.out.print("#: " + tableData[a][0]);
-			// System.out.print("\tArtist: " + tableData[a][1]);
-			// System.out.println("\tTitle: " + tableData[a][2]);
-		}
-
-		return tableData;
+		return ExportMusicVideoData.musicVideoListToObjectArray(this.musicVideoList);
 	}
 
 	/**
@@ -849,18 +802,14 @@ public class MusicVideoHandler {
 		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "section-start-html_party"));
 
 		// add the overlay / table header
-		String tableHeader = JsonModule.getValueString(htmlJsonContent, "overlay-html_party");
-		tableHeader = tableHeader.replaceFirst("#", this.columnNames[0]);
-		tableHeader = tableHeader.replaceFirst("Artist", this.columnNames[1]);
-		tableHeader = tableHeader.replaceFirst("Title", this.columnNames[2]);
-		htmlStatic.append(tableHeader);
+		htmlStatic.append(
+				JsonModule.getValueString(htmlJsonContent, "overlay-html_party").replaceFirst("#", this.columnNames[0])
+						.replaceFirst("Artist", this.columnNames[1]).replaceFirst("Title", this.columnNames[2]));
 
 		// add the second table header (for print)
-		String tableHeader2 = JsonModule.getValueString(htmlJsonContent, "table-header-html_party");
-		tableHeader2 = tableHeader2.replaceFirst("#", this.columnNames[0]);
-		tableHeader2 = tableHeader2.replaceFirst("Artist", this.columnNames[1]);
-		tableHeader2 = tableHeader2.replaceFirst("Title", this.columnNames[2]);
-		htmlStatic.append(tableHeader2);
+		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "table-header-html_party")
+				.replaceFirst("#", this.columnNames[0]).replaceFirst("Artist", this.columnNames[1])
+				.replaceFirst("Title", this.columnNames[2]));
 
 		if (party) {
 			htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "form-start-html_party"));
@@ -977,7 +926,7 @@ public class MusicVideoHandler {
 		// now add a folder with the PHP files
 		// + change the PHP link in HTML form
 
-		// replace "html/html_party_live" with "live.html"
+		// replace "HTML/html_party_live" with "live.html"
 		// export live view as "live.html" next to index.html
 
 		// delete old index.html file
@@ -1029,7 +978,7 @@ public class MusicVideoHandler {
 		// string builder for the whole site
 		StringBuilder phpForm = new StringBuilder("");
 
-		// json data html file
+		// JSON data HTML file
 		JsonObject htmlJsonContent = JsonModule
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/html.json")[0]);
 		JsonObject phpJsonContent = JsonModule
@@ -1037,7 +986,7 @@ public class MusicVideoHandler {
 		JsonObject cssJsonContent = JsonModule
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/css.json")[0]);
 
-		// add php before everything
+		// add PHP before everything
 		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-html-form"));
 
 		// add default head
@@ -1230,9 +1179,8 @@ public class MusicVideoHandler {
 		return ExportImportSettings.compareSettingsFileToCurrent(this.settingsFile, this.settingsData);
 	}
 
-	public boolean setAlwaysSave(boolean b) {
-		return this.settingsData.setAlwaysSaveSettings(b);
-
+	public boolean setAlwaysSave(boolean newValue) {
+		return this.settingsData.setAlwaysSaveSettings(newValue);
 	}
 
 	public boolean getAlwaysSave() {
@@ -1244,20 +1192,21 @@ public class MusicVideoHandler {
 	}
 
 	public void removeFromPathList(String filePathToRemove) {
-		Path[] pathList = this.settingsData.getPathList();
-		ArrayList<Path> newPathList = new ArrayList<Path>();
 
-		for (Path path : pathList) {
-			Path filePathToRemovePath = Paths.get(filePathToRemove);
+		// new path list that has the capacity of the old one - 1
+		ArrayList<Path> newPathList = new ArrayList<Path>(this.settingsData.getPathList().length - 1);
+
+		for (Path path : this.settingsData.getPathList()) {
 			try {
-				if (!Files.isSameFile(path, filePathToRemovePath)) {
+				if (!Files.isSameFile(path, Paths.get(filePathToRemove))) {
 					newPathList.add(path);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				newPathList.add(path);
 			}
 		}
+
+		// convert path list array list to array without sorting (not needed)
 		this.settingsData.setPathList(newPathList.toArray(new Path[0]));
 
 		// update the music video list now
@@ -1278,10 +1227,11 @@ public class MusicVideoHandler {
 	}
 
 	public void removeFromIgnoredFilesList(File selectedFile) {
-		File[] pathList = this.settingsData.getIgnoredFiles();
-		ArrayList<File> newPathList = new ArrayList<File>();
 
-		for (File path : pathList) {
+		// new ignored files list that has the capacity of the old one - 1
+		ArrayList<File> newPathList = new ArrayList<File>(this.settingsData.getIgnoredFiles().length - 1);
+
+		for (File path : this.settingsData.getIgnoredFiles()) {
 			try {
 				if (!Files.isSameFile(path.toPath(), selectedFile.toPath())) {
 					newPathList.add(path);
@@ -1300,10 +1250,6 @@ public class MusicVideoHandler {
 
 	public MusicVideoPlaylistHandler getPlaylistHandler() {
 		return playlistHandler;
-	}
-
-	public void setPlaylistHandler(MusicVideoPlaylistHandler playlistHandler) {
-		this.playlistHandler = playlistHandler;
 	}
 
 	public void addMusicVideoToPlaylist(int index, String author, String comment) {
@@ -1495,6 +1441,31 @@ public class MusicVideoHandler {
 			e.printStackTrace();
 		}
 		return -1;
+	}
+
+	public MusicVideo getMusicVideoOfPlaylistItem(Path pathOfMusicVideo) {
+
+		if (this.musicVideoList == null) {
+			return null;
+		}
+
+		try {
+			for (MusicVideo musicVideoElement : this.musicVideoList) {
+				if (Files.isSameFile(musicVideoElement.getPath(), pathOfMusicVideo)) {
+					return musicVideoElement;
+				}
+			}
+		} catch (IOException e) {
+
+		}
+		return null;
+	}
+
+	public void clearIgnoredFilesList() {
+		this.settingsData.resetIgnoredFilesList();
+		// update the music video list now
+		updateMusicVideoList();
+
 	}
 
 }

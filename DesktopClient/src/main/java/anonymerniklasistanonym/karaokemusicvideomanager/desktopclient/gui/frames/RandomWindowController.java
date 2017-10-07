@@ -62,10 +62,12 @@ public class RandomWindowController {
 
 	private Main mainWindow;
 	private Stage a;
+	private MainWindowController b;
 
-	public void setWindowController(Main window, Stage a) {
+	public void setWindowController(Main window, Stage a, MainWindowController b) {
 		this.mainWindow = window;
 		this.a = a;
+		this.b = b;
 
 		refreshRandom();
 	}
@@ -138,6 +140,7 @@ public class RandomWindowController {
 
 			this.mainWindow.getMusicVideohandler().addMusicVideoToPlaylist(labelContent[position].getIndex(),
 					authorComment[0], authorComment[1]);
+			b.refreshMusicVideoPlaylistTable();
 		}
 
 	}
@@ -189,7 +192,7 @@ public class RandomWindowController {
 				this.mainWindow.getMusicVideohandler().addMusicVideoToPlaylist(labelContent[i].getIndex(),
 						authorComment[0], authorComment[1]);
 			}
-
+			b.refreshMusicVideoPlaylistTable();
 		}
 
 	}

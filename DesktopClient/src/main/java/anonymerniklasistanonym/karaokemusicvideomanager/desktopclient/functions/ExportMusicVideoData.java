@@ -117,6 +117,11 @@ public class ExportMusicVideoData {
 	 */
 	public static Object[][] musicVideoListToObjectArray(MusicVideo[] musicVideoList) {
 
+		if (musicVideoList == null) {
+			System.err.println("Given list was null!");
+			return null;
+		}
+
 		// create a array of objects with a object that has 3 entries
 		Object[][] tableData = new Object[musicVideoList.length][3];
 

@@ -29,7 +29,7 @@ public class MainWindow {
 
 	private String windowTitle = "Karaoke Desktop Client [Beta]";
 	private int[] normalWindowSize = { 600, 600 };
-	private int[] minimalWindowSize = { 520, 450 };
+	private int[] minimalWindowSize = { 540, 450 };
 
 	public void createStage() {
 		try {

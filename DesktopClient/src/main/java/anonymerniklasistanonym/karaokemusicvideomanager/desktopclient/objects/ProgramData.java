@@ -309,4 +309,11 @@ public final class ProgramData {
 		return true;
 	}
 
+	/**
+	 * Reset the ignored files list
+	 */
+	public void resetIgnoredFilesList() {
+		this.ignoredFilesList = null;
+	}
+
 }

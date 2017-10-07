@@ -96,6 +96,7 @@ public class WrongFormattedFilesWindowController {
 	 * Main class
 	 */
 	private Main mainWindow;
+	private MainWindowController controller;
 
 	/**
 	 * Method to connect the window to use everything from the super class
@@ -103,8 +104,9 @@ public class WrongFormattedFilesWindowController {
 	 * @param window
 	 *            (Main)
 	 */
-	public void setWindowController(Main window) {
+	public void setWindowController(Main window, MainWindowController controller) {
 		this.mainWindow = window;
+		this.controller = controller;
 		updateWrongFileTable();
 	}
 
@@ -266,7 +268,8 @@ public class WrongFormattedFilesWindowController {
 					FileReadWriteModule.rename(selectedFile,
 							Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
 					updateWrongFileTable();
-					this.mainWindow.getMusicVideohandler().updateMusicVideoList();
+					controller.refreshMusicVideoTable();
+					controller.refreshMusicVideoPlaylistTable();
 				}
 			}
 		}
@@ -309,8 +312,9 @@ public class WrongFormattedFilesWindowController {
 		}
 
 		// update the music video list after this
-		refreshTable();
-		// TODO
+		updateWrongFileTable();
+		controller.refreshMusicVideoTable();
+		controller.refreshMusicVideoPlaylistTable();
 	}
 
 	/**
