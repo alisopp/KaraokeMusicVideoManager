@@ -148,7 +148,7 @@
                                           <MenuItem fx:id="contextMusicVideoRename" mnemonicParsing="false" onAction="#renameFile" text="Rename File" />
                                           <MenuItem fx:id="contextMusicVideoIgnore" mnemonicParsing="false" onAction="#ignoreMusicVideoFile" text="Ignore File" />
                                           <MenuItem fx:id="contextMusicVideoClear" mnemonicParsing="false" onAction="#clearSelectionMusicVideoFileTable" text="Clear Selection" />
-                                          <MenuItem fx:id="contextMusicVideoRefresh" mnemonicParsing="false" onAction="#refreshMusicVideoFileTable" text="Refresh Table" />
+                                          <MenuItem fx:id="contextMusicVideoRefresh" mnemonicParsing="false" onAction="#refreshMusicVideoTable" text="Refresh Table" />
                                       </items>
                                     </ContextMenu>
                                  </contextMenu>
@@ -214,7 +214,7 @@
                                       <items>
                                           <MenuItem fx:id="contextPathRemove" mnemonicParsing="false" onAction="#removeDirectory" text="Remove Source" />
  										  <MenuItem fx:id="contextPathClear" mnemonicParsing="false" onAction="#clearSelectionMusicVideoPathTable" text="Clear Selection" />
-                                          <MenuItem fx:id="contextPathRefresh" mnemonicParsing="false" onAction="#refreshMusicVideoPathTable" text="Refresh Table" />
+                                          <MenuItem fx:id="contextPathRefresh" mnemonicParsing="false" onAction="#refreshMusicVideoDirectoryTable" text="Refresh Table" />
                                 </items>
                                     </ContextMenu>
                                  </contextMenu>

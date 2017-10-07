@@ -103,7 +103,7 @@ public class WrongFormattedFilesWindowController {
 	 * @param window
 	 *            (Main)
 	 */
-	public void setWrongFormattedFilesWindow(Main window) {
+	public void setWindowController(Main window) {
 		this.mainWindow = window;
 		updateWrongFileTable();
 	}

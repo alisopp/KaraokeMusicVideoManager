@@ -513,10 +513,9 @@ public class MusicVideoHandler {
 			newMusicVideoList.addAll(scanDirectoryForWrongFiles(directory));
 		}
 
-		Path[] newList = new Path[newMusicVideoList.size()];
-		newList = newMusicVideoList.toArray(newList);
-
+		Path[] newList = newMusicVideoList.toArray(new Path[0]);
 		Arrays.sort(newList);
+
 		return newList;
 
 	}

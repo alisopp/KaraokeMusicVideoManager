@@ -166,27 +166,18 @@ public class ExportMusicVideoData {
 		// the whole object
 		JsonObjectBuilder jsonObject = Json.createObjectBuilder();
 
-		// the table head object
-		JsonArrayBuilder tableHead = Json.createArrayBuilder();
-
-		for (String column : columns) {
-			tableHead.add(column);
-		}
-
-		jsonObject.add("table-head", tableHead);
-
-		// the table body object
+		// the table data
 		JsonArrayBuilder tableBody = Json.createArrayBuilder();
 
 		// every entry as element of an array
 		for (Object[] entry : csvData) {
-			JsonArrayBuilder tableRow = Json.createArrayBuilder();
-			tableRow.add(entry[1].toString());
-			tableRow.add(entry[2].toString());
+			JsonObjectBuilder tableRow = Json.createObjectBuilder();
+
+			tableRow.add("artist", entry[1].toString());
+			tableRow.add("title", entry[2].toString());
 			tableBody.add(tableRow);
 		}
-
-		jsonObject.add("table-body", tableBody);
+		jsonObject.add("music-videos", tableBody);
 
 		return JsonModule.dumpJsonObjectToString(jsonObject);
 	}

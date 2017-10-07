@@ -63,7 +63,7 @@ public class RandomWindowController {
 	private Main mainWindow;
 	private Stage a;
 
-	public void setServerLoginWindow(Main window, Stage a) {
+	public void setWindowController(Main window, Stage a) {
 		this.mainWindow = window;
 		this.a = a;
 

@@ -295,8 +295,11 @@ a.floating-button:hover + div.label-container {
 		padding-top: 12px;
 		padding-bottom: 5px;
 		margin-bottom: 0;
-		border-top: 2px solid grey;
-		border-bottom: 2px solid grey;
+		border-radius: 0;
+		border-top: 4px solid grey;
+	}
+	.live-element:first-child {
+		border-top: 0px solid grey;
 	}
 	.upvotes {
 		display: flex;

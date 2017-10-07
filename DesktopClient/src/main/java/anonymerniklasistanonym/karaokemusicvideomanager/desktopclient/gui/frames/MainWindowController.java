@@ -521,8 +521,8 @@ public class MainWindowController {
 	public void setMainWindow(Main window) {
 		this.mainWindow = window;
 
-		refreshMusicVideoFileTable();
-		refreshMusicVideoPathTable();
+		refreshMusicVideoTable();
+		refreshMusicVideoDirectoryTable();
 		refreshMusicVideoPlaylistTable();
 
 		this.menuButtonAlwaysSave.setSelected(this.mainWindow.getMusicVideohandler().getAlwaysSave());
@@ -578,7 +578,7 @@ public class MainWindowController {
 	@FXML
 	private void openDirectoryLeftClick() {
 		if (leftMouseKeyWasPressed == true) {
-			showDirectoryInExplorerPathList();
+			showSelectedDirectoryInExplorer();
 		}
 	}
 
@@ -588,34 +588,41 @@ public class MainWindowController {
 	@FXML
 	private void openTopMusicVideoFile() {
 
-		// if the musicVideoTable is selected
-		if (tabView.getSelectionModel().getSelectedItem() == musicVideoTableTab) {
+		// get the selected tab
+		Tab selectedTab = tabView.getSelectionModel().getSelectedItem();
+
+		if (selectedTab == musicVideoTableTab) {
+
 			// select the top item
 			this.musicVideoTable.getSelectionModel().select(0);
 
-			// open the music video that is selected
+			// open the selected item externally
 			openSelectedVideoFile();
 
 			// clear the selection
 			this.musicVideoTable.getSelectionModel().clearSelection();
-		} else if (tabView.getSelectionModel().getSelectedItem() == sourceTab) {
-			// select the top item
-			this.directoryPathTable.getSelectionModel().select(0);
 
-			// open the music video that is selected
-			showDirectoryInExplorerPathList();
+		} else if (selectedTab == playlistTab) {
 
-			// clear the selection
-			this.directoryPathTable.getSelectionModel().clearSelection();
-		} else if (tabView.getSelectionModel().getSelectedItem() == playlistTab) {
 			// select the top item
 			this.playlistTable.getSelectionModel().select(0);
 
-			// open the music video that is selected
-			openTopMusicVideoPlaylist();
+			// open the selected item externally
+			openSelectedPlaylistVideoFile();
 
 			// clear the selection
 			this.playlistTable.getSelectionModel().clearSelection();
+
+		} else if (selectedTab == sourceTab) {
+
+			// select the top item
+			this.directoryPathTable.getSelectionModel().select(0);
+
+			// open the selected directory entry externally
+			showSelectedDirectoryInExplorer();
+
+			// clear the selection
+			this.directoryPathTable.getSelectionModel().clearSelection();
 		}
 	}
 
@@ -642,16 +649,20 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void clearSearch() {
-		// clear the current selection
+
+		// clear the text in the search box
 		this.searchBox.setText("");
 
-		// change the text in the search box
-		if (tabView.getSelectionModel().getSelectedItem() == musicVideoTableTab) {
+		// get the selected tab
+		Tab selectedTab = tabView.getSelectionModel().getSelectedItem();
+
+		// change the text in the search box respective to the selected tab
+		if (selectedTab == musicVideoTableTab) {
 			this.searchBox.setPromptText("Search for music videos...");
-		} else if (tabView.getSelectionModel().getSelectedItem() == sourceTab) {
-			this.searchBox.setPromptText("Search for directories...");
-		} else {
+		} else if (selectedTab == playlistTab) {
 			this.searchBox.setPromptText("Search for playlist entries...");
+		} else if (selectedTab == sourceTab) {
+			this.searchBox.setPromptText("Search for directories...");
 		}
 
 	}
@@ -694,15 +705,23 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void addSourceFolderDialog() {
+
+		// get a directory
 		File directory = Dialogs.chooseDirectory(this.mainWindow.getPrimaryStage(), "Add a path", null);
 
-		if (directory != null && (directory.exists() && directory.isDirectory())) {
+		// if the directory isn't null
+		if (directory != null) {
+
+			// add it to the path list
 			this.mainWindow.getMusicVideohandler().addPathToPathList(directory.toPath());
+
+			// update the music video table list
 			this.mainWindow.getMusicVideohandler().updateMusicVideoList();
 
-			refreshMusicVideoFileTable();
-			refreshMusicVideoPathTable();
-
+			// update all JavaFx tables
+			refreshMusicVideoTable();
+			refreshMusicVideoPlaylistTable();
+			refreshMusicVideoDirectoryTable();
 		}
 	}
 
@@ -713,24 +732,25 @@ public class MainWindowController {
 	private void openAboutWindow() {
 		try {
 
+			// load the whole FXML window
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getClassLoader().getResource("windows/AboutWindow.fxml"));
 
+			// >> load the window itself
 			Parent root1 = (Parent) loader.load();
 
-			// Connection to the Controller from the primary Stage
+			// >> load the controller to the window
 			loader.getController();
 
-			Stage stage = new Stage();
+			// create a stage
+			Stage stage = new Stage(StageStyle.UTILITY);
 			stage.setScene(new Scene(root1));
 			stage.setResizable(false);
-
 			stage.setTitle("About");
 
-			// only a exit button will be shown
-			stage.initStyle(StageStyle.UTILITY);
-
+			// show the stage
 			stage.show();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -746,15 +766,20 @@ public class MainWindowController {
 			this.networkButton.setSelected(true);
 			try {
 
+				// load the whole FXML window
 				FXMLLoader loader = new FXMLLoader();
 				loader.setLocation(getClass().getClassLoader().getResource("windows/ServerLoginWindow.fxml"));
 
+				// >> load the window itself
 				Parent root1 = (Parent) loader.load();
 
-				Stage stage = new Stage();
+				// >> load the controller to the window
+				loader.getController();
+
+				// create a stage
+				Stage stage = new Stage(StageStyle.DECORATED);
 				stage.setScene(new Scene(root1));
 				stage.setResizable(false);
-
 				stage.setTitle("Server Login");
 
 				// try to add a window icon
@@ -764,6 +789,7 @@ public class MainWindowController {
 					System.err.println("Exception while loding icons");
 				}
 
+				// do this on a close request
 				stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 
 					@Override
@@ -773,13 +799,9 @@ public class MainWindowController {
 					}
 				});
 
-				// Connection to the Controller from the primary Stage
-				ServerLoginWindowController aboutWindowController = loader.getController();
-				aboutWindowController.setServerLoginWindow(this.mainWindow, stage);
-
+				// show the stage
 				stage.show();
-				checkNetwork();
-				refreshMusicVideoPlaylistTable();
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -801,23 +823,26 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void openWrongFormattedFilesWindow() {
-
 		try {
-			// load the window from file
+
+			// load the whole FXML window
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getClassLoader().getResource("windows/WrongFomattedFilesWindow.fxml"));
 
-			// load main element as parent
+			// >> load the window itself
 			Parent root1 = (Parent) loader.load();
 
-			// create new Stage and scene with the main element as parent
-			Stage stage = new Stage();
-			stage.setScene(new Scene(root1));
+			// >> load the controller to the window and give him the main window
+			WrongFormattedFilesWindowController windowController = loader.getController();
+			windowController.setWindowController(this.mainWindow);
 
-			// make it resizable and set minimal widths
+			// create a stage
+			Stage stage = new Stage(StageStyle.DECORATED);
+			stage.setScene(new Scene(root1));
 			stage.setResizable(true);
 			stage.setMinWidth(450);
 			stage.setMinHeight(350);
+			stage.setTitle("Wrong Formatted Files");
 
 			// try to add a window icon
 			try {
@@ -825,13 +850,6 @@ public class MainWindowController {
 			} catch (Exception e) {
 				System.err.println("Exception while loding icons");
 			}
-
-			// set a window title
-			stage.setTitle("Wrong Formatted Files");
-
-			// Connection to the Controller from the primary Stage
-			WrongFormattedFilesWindowController wrongWindowController = loader.getController();
-			wrongWindowController.setWrongFormattedFilesWindow(this.mainWindow);
 
 			// show the stage/window
 			stage.show();
@@ -846,23 +864,26 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void openIgnoredFilesWindow() {
-
 		try {
-			// load the window from file
+
+			// load the whole FXML window
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getClassLoader().getResource("windows/IgnoredFilesWindow.fxml"));
 
-			// load main element as parent
+			// >> load the window itself
 			Parent root1 = (Parent) loader.load();
 
-			// create new Stage and scene with the main element as parent
-			Stage stage = new Stage();
-			stage.setScene(new Scene(root1));
+			// >> load the controller to the window and give him the main window
+			IgnoredFilesWindowController windowController = loader.getController();
+			windowController.setWindowController(this.mainWindow, this);
 
-			// make it resizable and set minimal widths
+			// create a stage
+			Stage stage = new Stage(StageStyle.DECORATED);
+			stage.setScene(new Scene(root1));
 			stage.setResizable(true);
 			stage.setMinWidth(450);
 			stage.setMinHeight(350);
+			stage.setTitle("Ignored Music Video Files");
 
 			// try to add a window icon
 			try {
@@ -870,13 +891,6 @@ public class MainWindowController {
 			} catch (Exception e) {
 				System.err.println("Exception while loding icons");
 			}
-
-			// set a window title
-			stage.setTitle("Ignored Music Video Files");
-
-			// Connection to the Controller from the primary Stage
-			IgnoredFilesWindowController wrongWindowController = loader.getController();
-			wrongWindowController.setWrongFormattedFilesWindow(this.mainWindow, this);
 
 			// show the stage/window
 			stage.show();
@@ -893,12 +907,18 @@ public class MainWindowController {
 	private void openRandomWindow() {
 		try {
 
+			// load the whole FXML window
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getClassLoader().getResource("windows/RandomMusicVideoWindow.fxml"));
 
+			// >> load the window itself
 			Parent root1 = (Parent) loader.load();
 
-			Stage stage = new Stage();
+			// >> load the controller to the window and give him the main window
+			RandomWindowController windowController = loader.getController();
+
+			// create a stage
+			Stage stage = new Stage(StageStyle.DECORATED);
 			stage.setScene(new Scene(root1));
 			stage.setResizable(true);
 			stage.setMinHeight(300);
@@ -913,20 +933,11 @@ public class MainWindowController {
 				System.err.println("Exception while loding icons");
 			}
 
-			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-
-				@Override
-				public void handle(WindowEvent event) {
-					checkNetwork();
-				}
-
-			});
-
 			// Connection to the Controller from the primary Stage
-			RandomWindowController aboutWindowController = loader.getController();
-			aboutWindowController.setServerLoginWindow(this.mainWindow, stage);
+			windowController.setWindowController(this.mainWindow, stage);
 
 			stage.show();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -947,8 +958,8 @@ public class MainWindowController {
 			this.mainWindow.getMusicVideohandler().removeFromPathList(selectedEntry.getFilePath());
 
 			// update now both tables
-			refreshMusicVideoPathTable();
-			refreshMusicVideoFileTable();
+			refreshMusicVideoDirectoryTable();
+			refreshMusicVideoTable();
 		}
 	}
 
@@ -956,7 +967,7 @@ public class MainWindowController {
 	 * Show the currently selected directory in the default file manager
 	 */
 	@FXML
-	private void showDirectoryInExplorerPathList() {
+	private void showSelectedDirectoryInExplorer() {
 
 		// get the currently selected entry
 		DirectoryPathTableView selectedEntry = this.directoryPathTable.getSelectionModel().getSelectedItem();
@@ -998,16 +1009,17 @@ public class MainWindowController {
 		// get the currently selected entry
 		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
 
+		// if entry not null
 		if (selectedEntry != null) {
+
+			// get the table index
 			int a = selectedEntry.getIndex();
 
+			// dialog to get author and optional a comment
 			String[] authorComment = Dialogs.playlistDialog("", "", "Create a new Playlist entry",
 					"Add an author and comment", "Add to playlist");
 
-			// String author = Dialogs.textInputDialog("Enter your name", "", "Enter your
-			// name", "Your name:");
-			// String comment = Dialogs.textInputDialog("Enter your comment", "", "Enter a
-			// comment", "Your comment:");
+			// if author not null add it to the playlist
 			if (authorComment != null && authorComment[0] != null) {
 				if (authorComment[1] == null) {
 					authorComment[1] = "";
@@ -1024,7 +1036,7 @@ public class MainWindowController {
 	 * Refresh the music video file table
 	 */
 	@FXML
-	public void refreshMusicVideoFileTable() {
+	public void refreshMusicVideoTable() {
 
 		// update the music video data
 		this.mainWindow.getMusicVideohandler().updateMusicVideoList();
@@ -1048,7 +1060,7 @@ public class MainWindowController {
 	 * Refresh the music video path table
 	 */
 	@FXML
-	public void refreshMusicVideoPathTable() {
+	public void refreshMusicVideoDirectoryTable() {
 
 		// get music video data
 		Path[] listOfPaths = this.mainWindow.getMusicVideohandler().getPathList();
@@ -1113,7 +1125,7 @@ public class MainWindowController {
 		}
 
 		// update the music video list after this
-		refreshMusicVideoFileTable();
+		refreshMusicVideoTable();
 	}
 
 	/**
@@ -1213,8 +1225,8 @@ public class MainWindowController {
 	@FXML
 	private void loadConfiguartion() {
 		this.mainWindow.getMusicVideohandler().loadSettingsFromFile();
-		refreshMusicVideoFileTable();
-		refreshMusicVideoPathTable();
+		refreshMusicVideoTable();
+		refreshMusicVideoDirectoryTable();
 	}
 
 	@FXML
@@ -1238,16 +1250,16 @@ public class MainWindowController {
 		if (jsonFile != null && jsonFile[0] != null) {
 			this.mainWindow.getMusicVideohandler().loadSettings(jsonFile[0]);
 		}
-		refreshMusicVideoFileTable();
-		refreshMusicVideoPathTable();
+		refreshMusicVideoTable();
+		refreshMusicVideoDirectoryTable();
 	}
 
 	@FXML
 	private void resetConfiguartion() {
 		if (Dialogs.yesNoDialog("Confirm to Continue", "Reset Everything", "Do you really want to reset EVERYTHING?")) {
 			this.mainWindow.getMusicVideohandler().reset();
-			refreshMusicVideoFileTable();
-			refreshMusicVideoPathTable();
+			refreshMusicVideoTable();
+			refreshMusicVideoDirectoryTable();
 			refreshMusicVideoPlaylistTable();
 		}
 
@@ -1277,7 +1289,7 @@ public class MainWindowController {
 				if (a != null) {
 					FileReadWriteModule.rename(selectedFile,
 							Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
-					refreshMusicVideoFileTable();
+					refreshMusicVideoTable();
 				}
 			}
 		}
@@ -1287,11 +1299,11 @@ public class MainWindowController {
 	@FXML
 	private void openMusicVideoPlaylistFileLeftClick() {
 		if (this.leftMouseKeyWasPressed) {
-			openTopMusicVideoPlaylist();
+			openSelectedPlaylistVideoFile();
 		}
 	}
 
-	private void openTopMusicVideoPlaylist() {
+	private void openSelectedPlaylistVideoFile() {
 
 		// get the currently selected entry in the table
 		PlaylistTableView selectedEntry = this.playlistTable.getSelectionModel().getSelectedItem();
@@ -1365,10 +1377,7 @@ public class MainWindowController {
 		if (selectedEntry != null) {
 			String[] authorComment = Dialogs.playlistEditDialog(selectedEntry.getAuthor(), selectedEntry.getComment(),
 					"Edit the selected Playlist entry", "Edit author and comment", "Save Changes");
-			// String author = Dialogs.textInputDialog("Enter new name", "", "Enter a new
-			// name", "New name:");
-			// String comment = Dialogs.textInputDialog("Enter new comment", "", "Enter a
-			// new comment", "New comment:");
+
 			if (authorComment != null && authorComment[0] != null) {
 				if (authorComment[1] == null) {
 					authorComment[1] = "";

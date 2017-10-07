@@ -108,7 +108,7 @@ public class IgnoredFilesWindowController {
 	 * @param window
 	 *            (Main)
 	 */
-	public void setWrongFormattedFilesWindow(Main window, MainWindowController mainController) {
+	public void setWindowController(Main window, MainWindowController mainController) {
 		this.mainWindow = window;
 		this.mainController = mainController;
 		updateIgnoredFileTable();
@@ -195,7 +195,7 @@ public class IgnoredFilesWindowController {
 				wrongFormattedFilesTableData.add(new WrongFormattedFilesTableView(ignoredFiles[i].getAbsolutePath()));
 			}
 		}
-		mainController.refreshMusicVideoFileTable();
+		mainController.refreshMusicVideoTable();
 	}
 
 	/**
