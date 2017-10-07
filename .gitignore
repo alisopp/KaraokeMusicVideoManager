@@ -16,3 +16,4 @@ demo_files
 # beta - testing automated script to compile the project without eclipse
 target
 DesktopClient/settings.json
+settings.json

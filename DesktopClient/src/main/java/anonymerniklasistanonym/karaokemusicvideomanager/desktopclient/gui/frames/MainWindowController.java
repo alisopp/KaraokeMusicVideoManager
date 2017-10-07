@@ -26,6 +26,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
@@ -266,6 +267,8 @@ public class MainWindowController {
 	private Button buttonLoadPlaylist;
 	@FXML
 	private Button buttonRefreshPlaylist;
+	@FXML
+	private Button buttonClearPlaylist;
 
 	@FXML
 	private MenuItem menuButtonSaveConfiguration;
@@ -496,6 +499,7 @@ public class MainWindowController {
 		buttonLoadPlaylist.setGraphic(WindowMethods.createMenuIcon("images/menu/load.png"));
 		buttonSavePlaylist.setGraphic(WindowMethods.createMenuIcon("images/menu/save.png"));
 		buttonRefreshPlaylist.setGraphic(WindowMethods.createMenuIcon("images/menu/refresh.png"));
+		buttonClearPlaylist.setGraphic(WindowMethods.createMenuIcon("images/menu/remove.png"));
 
 		// menu buttons
 		menuButtonWebsites.setGraphic(WindowMethods.createMenuIcon("images/menu/html_static.png"));
@@ -584,8 +588,6 @@ public class MainWindowController {
 	@FXML
 	private void openTopMusicVideoFile() {
 
-		System.out.println("hi");
-
 		// if the musicVideoTable is selected
 		if (tabView.getSelectionModel().getSelectedItem() == musicVideoTableTab) {
 			// select the top item
@@ -596,7 +598,7 @@ public class MainWindowController {
 
 			// clear the selection
 			this.musicVideoTable.getSelectionModel().clearSelection();
-		} else {
+		} else if (tabView.getSelectionModel().getSelectedItem() == sourceTab) {
 			// select the top item
 			this.directoryPathTable.getSelectionModel().select(0);
 
@@ -605,6 +607,15 @@ public class MainWindowController {
 
 			// clear the selection
 			this.directoryPathTable.getSelectionModel().clearSelection();
+		} else if (tabView.getSelectionModel().getSelectedItem() == playlistTab) {
+			// select the top item
+			this.playlistTable.getSelectionModel().select(0);
+
+			// open the music video that is selected
+			openTopMusicVideoPlaylist();
+
+			// clear the selection
+			this.playlistTable.getSelectionModel().clearSelection();
 		}
 	}
 
@@ -633,10 +644,14 @@ public class MainWindowController {
 	private void clearSearch() {
 		// clear the current selection
 		this.searchBox.setText("");
+
+		// change the text in the search box
 		if (tabView.getSelectionModel().getSelectedItem() == musicVideoTableTab) {
 			this.searchBox.setPromptText("Search for music videos...");
-		} else {
+		} else if (tabView.getSelectionModel().getSelectedItem() == sourceTab) {
 			this.searchBox.setPromptText("Search for directories...");
+		} else {
+			this.searchBox.setPromptText("Search for playlist entries...");
 		}
 
 	}
@@ -1272,40 +1287,55 @@ public class MainWindowController {
 	@FXML
 	private void openMusicVideoPlaylistFileLeftClick() {
 		if (this.leftMouseKeyWasPressed) {
-			// get the currently selected entry in the table
-			PlaylistTableView selectedEntry = this.playlistTable.getSelectionModel().getSelectedItem();
-
-			// if something is selected
-			if (selectedEntry != null) {
-				this.mainWindow.getMusicVideohandler().openMusicVideo(selectedEntry.getMusicVideoIndex() - 1);
-			}
+			openTopMusicVideoPlaylist();
 		}
+	}
+
+	private void openTopMusicVideoPlaylist() {
+
+		// get the currently selected entry in the table
+		PlaylistTableView selectedEntry = this.playlistTable.getSelectionModel().getSelectedItem();
+
+		// if something is selected
+		if (selectedEntry != null) {
+			this.mainWindow.getMusicVideohandler().openMusicVideo(selectedEntry.getMusicVideoIndex() - 1);
+		}
+
 	}
 
 	@FXML
 	private void savePlaylistDialog() {
-		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
-		File[] fileName = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(), "Save current playlist",
-				FileSystems.getDefault().getPath(".").toFile(), new ExtensionFilter[] { jsonFilter },
-				Dialogs.CHOOSE_ACTION.SAVE);
-		if (fileName != null && fileName[0] != null) {
-			File realFileName = new File(fileName[0].getParent() + "/" + fileName[0].getName());
-			this.tableDataPlaylist.clear();
-			this.refreshMusicVideoPlaylistTable();
-			this.mainWindow.getMusicVideohandler().savePlaylist(realFileName);
+		if (this.tableDataPlaylist.isEmpty()) {
+			Dialogs.informationAlert("Operation failed", "There is no playlist!", AlertType.ERROR);
+		} else {
+			ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
+			File[] fileName = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(), "Save current playlist",
+					FileSystems.getDefault().getPath(".").toFile(), new ExtensionFilter[] { jsonFilter },
+					Dialogs.CHOOSE_ACTION.SAVE);
+			if (fileName != null && fileName[0] != null) {
+				File realFileName = new File(fileName[0].getParent() + "/" + fileName[0].getName());
+				this.tableDataPlaylist.clear();
+				this.refreshMusicVideoPlaylistTable();
+				this.mainWindow.getMusicVideohandler().savePlaylist(realFileName);
+			}
 		}
+
 	}
 
 	@FXML
 	private void loadPlaylistDialog() {
-		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
-		File[] fileName = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(), "Load a saved playlist",
-				FileSystems.getDefault().getPath(".").toFile(), new ExtensionFilter[] { jsonFilter },
-				Dialogs.CHOOSE_ACTION.NORMAL);
-		if (fileName != null && fileName[0] != null) {
-			this.mainWindow.getMusicVideohandler().loadPlaylist(fileName[0]);
+		if (this.tableDataPlaylist.isEmpty() || Dialogs.yesNoDialog("This action has consequences",
+				"Do you really want to clear your current playlist?",
+				"The current playlist will be cleared if you continue")) {
+			ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
+			File[] fileName = Dialogs.chooseFile(this.mainWindow.getPrimaryStage(), "Load a saved playlist",
+					FileSystems.getDefault().getPath(".").toFile(), new ExtensionFilter[] { jsonFilter },
+					Dialogs.CHOOSE_ACTION.NORMAL);
+			if (fileName != null && fileName[0] != null) {
+				this.mainWindow.getMusicVideohandler().loadPlaylist(fileName[0]);
+			}
+			refreshMusicVideoPlaylistTable();
 		}
-		refreshMusicVideoPlaylistTable();
 	}
 
 	@FXML
@@ -1378,4 +1408,16 @@ public class MainWindowController {
 				.setAlwaysSave(!this.mainWindow.getMusicVideohandler().getAlwaysSave()));
 		System.out.println(this.mainWindow.getMusicVideohandler());
 	}
+
+	@FXML
+	private void clearMusicVideoPlaylistTable() {
+		if (!this.tableDataPlaylist.isEmpty()
+				&& Dialogs.yesNoDialog("Clear the playlist", "Do you really want to clear the playlist?",
+						"If you enter yes all playlist elements will be removed!")) {
+			this.mainWindow.getMusicVideohandler().getPlaylistHandler().reset();
+			this.tableDataPlaylist.clear();
+		}
+
+	}
+
 }

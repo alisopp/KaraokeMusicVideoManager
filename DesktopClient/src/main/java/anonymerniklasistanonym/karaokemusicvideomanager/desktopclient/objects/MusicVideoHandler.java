@@ -813,7 +813,7 @@ public class MusicVideoHandler {
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/js.json")[0]);
 
 		// add default head
-		htmlStatic.append("<!DOCTYPE html><html><head>");
+		htmlStatic.append("<!DOCTYPE html><html lang=\"en\"><head>");
 		// add generic head
 		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "head"));
 		// add custom head for static
@@ -908,7 +908,7 @@ public class MusicVideoHandler {
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/css.json")[0]);
 
 		// add default head
-		htmlStatic.append("<!DOCTYPE html><html><head>");
+		htmlStatic.append("<!DOCTYPE html><html lang=\"en\"><head>");
 		// add generic head
 		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "head"));
 		// add custom head for static
@@ -1042,7 +1042,7 @@ public class MusicVideoHandler {
 		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-html-form"));
 
 		// add default head
-		phpForm.append("<!DOCTYPE html><html><head>");
+		phpForm.append("<!DOCTYPE html><html lang=\"en\"><head>");
 		// add generic head
 		phpForm.append(JsonModule.getValueString(htmlJsonContent, "head"));
 		// add custom head for php form
@@ -1111,7 +1111,7 @@ public class MusicVideoHandler {
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/php.json")[0]);
 
 		// add default head
-		phpPlaylist.append("<!DOCTYPE html><html><head>");
+		phpPlaylist.append("<!DOCTYPE html><html lang=\"en\"><head>");
 		// add generic head
 		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "head"));
 		// add custom head for static
