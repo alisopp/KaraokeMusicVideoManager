@@ -112,7 +112,8 @@ def create_installer_icons(icon_directory_path, source_file):
 
     print("- \"" + output_path_png + "\" was converted to " + output_path_ico_2)
 
-    os.remove(output_path_png)
+    if os.path.exists(output_path_png):
+        os.remove(output_path_png)
 
 
 def create_installer_pages(pages_directory_path, source_file):
@@ -149,24 +150,26 @@ def create_installer_pages(pages_directory_path, source_file):
 def create_program_icon(icon_directory_path, source_file):
     """Creates all the ico icons."""
 
-    # create the directory if there is no such directory
-    if not os.path.exists(icon_directory_path):
-        os.makedirs(icon_directory_path)
+    if os.path.exists(source_file):
+        # create the directory if there is no such directory
+        if not os.path.exists(icon_directory_path):
+            os.makedirs(icon_directory_path)
 
-    output_name = "icon"
-    output_path_png = os.path.abspath(os.path.join(
-        icon_directory_path, output_name + ".png"))
-    output_path_ico = os.path.abspath(os.path.join(
-        icon_directory_path, output_name + ".ico"))
+        output_name = "icon"
+        output_path_png = os.path.abspath(os.path.join(
+            icon_directory_path, output_name + ".png"))
+        output_path_ico = os.path.abspath(os.path.join(
+            icon_directory_path, output_name + ".ico"))
 
-    convert_svg_2_png(source_file, output_path_png, 255, 255)
+        convert_svg_2_png(source_file, output_path_png, 255, 255)
 
-    img = Image.open(output_path_png)
-    img.save(output_path_ico)
+        img = Image.open(output_path_png)
+        img.save(output_path_ico)
 
-    print("- \"" + output_path_png + "\" was converted to " + output_path_ico)
+        print("- \"" + output_path_png +
+              "\" was converted to " + output_path_ico)
 
-    os.remove(output_path_png)
+        os.remove(output_path_png)
 
 
 def make_grey(source_image):
@@ -209,13 +212,14 @@ def create_menu_icons(destination_directory, source_file_directory):
 
 if __name__ == '__main__':
 
-    create_png_favicons(r"..\DesktopClient\res\websites\favicons", "logo.svg")
+    create_png_favicons(r"..\DesktopClient\res\images\favicons", "logo.svg")
     create_installer_pages(
         r"..\WindowsInstaller\pictures", "installer.svg")
     create_installer_icons(r"..\WindowsInstaller\icons", "logo.svg")
-    create_program_icon(r"..\DesktopClient\res\websites\favicons", "logo.svg")
+    create_program_icon(
+        r"..\DesktopClient\res\images\favicons\favicon", "logo.svg")
     copy_svg_icon(
-        r"..\DesktopClient\res\websites\favicons\favicon.svg", "logo.svg")
-    create_menu_icons(r"..\DesktopClient\res\images\menu", "menu")
+        r"..\DesktopClient\res\images\favicons\favicon.svg", "logo.svg")
+    create_menu_icons(r"..\DesktopClient\res\images\icons", "menu")
 
     print("Ready!")

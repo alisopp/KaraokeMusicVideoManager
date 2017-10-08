@@ -360,7 +360,11 @@ if __name__ == '__main__':
 
     # main output path for website data
     MAIN_OUTPUT_DIRECTORY = os.path.join(
-        os.pardir, "DesktopClient/res/websites")
+        os.pardir, "DesktopClient/res/websiteData")
+
+    # create the directory if there is no such directory
+    if not os.path.exists(MAIN_OUTPUT_DIRECTORY):
+        os.makedirs(MAIN_OUTPUT_DIRECTORY)
 
     # css website data to json
     CSS_OUTPUT_PATH = os.path.join(MAIN_OUTPUT_DIRECTORY, "css.json")

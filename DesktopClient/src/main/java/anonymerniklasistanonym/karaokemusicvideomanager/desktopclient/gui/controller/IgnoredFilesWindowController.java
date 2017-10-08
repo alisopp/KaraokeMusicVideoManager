@@ -175,17 +175,17 @@ public class IgnoredFilesWindowController {
 		 */
 
 		// Context menu
-		contextRename.setGraphic(WindowModule.createMenuIcon("images/menu/rename.png"));
-		contextExplorer.setGraphic(WindowModule.createMenuIcon("images/menu/directory.png"));
-		contextIgnore.setGraphic(WindowModule.createMenuIcon("images/menu/ignore.png"));
-		contextClear.setGraphic(WindowModule.createMenuIcon("images/menu/clear.png"));
-		contextRefresh.setGraphic(WindowModule.createMenuIcon("images/menu/refresh.png"));
+		contextRename.setGraphic(WindowModule.createMenuIcon("rename"));
+		contextExplorer.setGraphic(WindowModule.createMenuIcon("directory"));
+		contextIgnore.setGraphic(WindowModule.createMenuIcon("ignore"));
+		contextClear.setGraphic(WindowModule.createMenuIcon("clear"));
+		contextRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
 
 		// button
-		buttonClearList.setGraphic(WindowModule.createMenuIcon("images/menu/ignore.png"));
+		buttonClearList.setGraphic(WindowModule.createMenuIcon("ignore"));
 
 		// label
-		searchLabel.setGraphic(WindowModule.createMenuIcon("images/menu/search.png"));
+		searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
 	}
 
 	/**

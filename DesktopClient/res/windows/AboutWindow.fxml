@@ -9,8 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller.AboutWindowController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller.AboutWindowController">
    <children>
       <BorderPane style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <right>
@@ -41,7 +40,7 @@
          <left>
             <ImageView fitHeight="128.0" fitWidth="128.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                <image>
-                  <Image url="@../websites/favicons/favicon-128x128.png" />
+                  <Image url="@../images/favicons/favicon-128x128.png" />
                </image>
                <BorderPane.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

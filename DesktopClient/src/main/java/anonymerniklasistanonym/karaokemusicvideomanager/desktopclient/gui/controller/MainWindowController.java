@@ -475,49 +475,49 @@ public class MainWindowController {
 		 */
 
 		// Context menu
-		contextMusicVideoPlaylist.setGraphic(WindowModule.createMenuIcon("images/menu/playlist.png"));
-		contextMusicVideoDirectory.setGraphic(WindowModule.createMenuIcon("images/menu/directory.png"));
-		contextMusicVideoIgnore.setGraphic(WindowModule.createMenuIcon("images/menu/ignore.png"));
-		contextMusicVideoClear.setGraphic(WindowModule.createMenuIcon("images/menu/clear.png"));
-		contextMusicVideoRefresh.setGraphic(WindowModule.createMenuIcon("images/menu/refresh.png"));
-		contextPathRemove.setGraphic(WindowModule.createMenuIcon("images/menu/remove.png"));
-		contextPathClear.setGraphic(WindowModule.createMenuIcon("images/menu/clear.png"));
-		contextPathRefresh.setGraphic(WindowModule.createMenuIcon("images/menu/refresh.png"));
-		contextMusicVideoRename.setGraphic(WindowModule.createMenuIcon("images/menu/rename.png"));
-		contextPlaylistRemove.setGraphic(WindowModule.createMenuIcon("images/menu/remove.png"));
-		contextPlaylistEdit.setGraphic(WindowModule.createMenuIcon("images/menu/rename.png"));
-		contextPlaylistClear.setGraphic(WindowModule.createMenuIcon("images/menu/clear.png"));
-		contextPlaylistRefresh.setGraphic(WindowModule.createMenuIcon("images/menu/refresh.png"));
+		contextMusicVideoPlaylist.setGraphic(WindowModule.createMenuIcon("playlist"));
+		contextMusicVideoDirectory.setGraphic(WindowModule.createMenuIcon("directory"));
+		contextMusicVideoIgnore.setGraphic(WindowModule.createMenuIcon("ignore"));
+		contextMusicVideoClear.setGraphic(WindowModule.createMenuIcon("clear"));
+		contextMusicVideoRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
+		contextPathRemove.setGraphic(WindowModule.createMenuIcon("remove"));
+		contextPathClear.setGraphic(WindowModule.createMenuIcon("clear"));
+		contextPathRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
+		contextMusicVideoRename.setGraphic(WindowModule.createMenuIcon("rename"));
+		contextPlaylistRemove.setGraphic(WindowModule.createMenuIcon("remove"));
+		contextPlaylistEdit.setGraphic(WindowModule.createMenuIcon("rename"));
+		contextPlaylistClear.setGraphic(WindowModule.createMenuIcon("clear"));
+		contextPlaylistRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
 
 		// other buttons
-		buttonWrongFormattedFiles.setGraphic(WindowModule.createMenuIcon("images/menu/wrongFormattedFiles.png"));
-		buttonIgnoredFiles.setGraphic(WindowModule.createMenuIcon("images/menu/ignore.png"));
-		buttonAddDirectory.setGraphic(WindowModule.createMenuIcon("images/menu/add.png"));
-		networkButton.setGraphic(WindowModule.createMenuIcon("images/menu/network.png"));
-		youTubeButton.setGraphic(WindowModule.createMenuIcon("images/menu/youTube.png"));
-		aboutButton.setGraphic(WindowModule.createMenuIcon("images/menu/about.png"));
-		randomButton.setGraphic(WindowModule.createMenuIcon("images/menu/random.png"));
-		helpButton.setGraphic(WindowModule.createMenuIcon("images/menu/help.png"));
-		buttonLoadPlaylist.setGraphic(WindowModule.createMenuIcon("images/menu/load.png"));
-		buttonSavePlaylist.setGraphic(WindowModule.createMenuIcon("images/menu/save.png"));
-		buttonRefreshPlaylist.setGraphic(WindowModule.createMenuIcon("images/menu/refresh.png"));
-		buttonClearPlaylist.setGraphic(WindowModule.createMenuIcon("images/menu/remove.png"));
+		buttonWrongFormattedFiles.setGraphic(WindowModule.createMenuIcon("wrongFormattedFiles"));
+		buttonIgnoredFiles.setGraphic(WindowModule.createMenuIcon("ignore"));
+		buttonAddDirectory.setGraphic(WindowModule.createMenuIcon("add"));
+		networkButton.setGraphic(WindowModule.createMenuIcon("network"));
+		youTubeButton.setGraphic(WindowModule.createMenuIcon("youTube"));
+		aboutButton.setGraphic(WindowModule.createMenuIcon("about"));
+		randomButton.setGraphic(WindowModule.createMenuIcon("random"));
+		helpButton.setGraphic(WindowModule.createMenuIcon("help"));
+		buttonLoadPlaylist.setGraphic(WindowModule.createMenuIcon("load"));
+		buttonSavePlaylist.setGraphic(WindowModule.createMenuIcon("save"));
+		buttonRefreshPlaylist.setGraphic(WindowModule.createMenuIcon("refresh"));
+		buttonClearPlaylist.setGraphic(WindowModule.createMenuIcon("remove"));
 
 		// menu buttons
-		menuButtonWebsites.setGraphic(WindowModule.createMenuIcon("images/menu/html_static.png"));
-		menuButtonCsv.setGraphic(WindowModule.createMenuIcon("images/menu/csv.png"));
-		menuButtonJson.setGraphic(WindowModule.createMenuIcon("images/menu/json.png"));
-		menuButtonHtmlStatic.setGraphic(WindowModule.createMenuIcon("images/menu/html_static.png"));
-		menuButtonHtmlSearch.setGraphic(WindowModule.createMenuIcon("images/menu/html_search.png"));
-		menuButtonHtmlParty.setGraphic(WindowModule.createMenuIcon("images/menu/html_playlist.png"));
-		menuButtonSaveConfiguration.setGraphic(WindowModule.createMenuIcon("images/menu/save.png"));
-		menuButtonLoadConfiguration.setGraphic(WindowModule.createMenuIcon("images/menu/load.png"));
-		menuButtonSaveConfigurationCustom.setGraphic(WindowModule.createMenuIcon("images/menu/save.png"));
-		menuButtonLoadConfigurationCustom.setGraphic(WindowModule.createMenuIcon("images/menu/load.png"));
-		menuButtonResetConfiguration.setGraphic(WindowModule.createMenuIcon("images/menu/reset.png"));
+		menuButtonWebsites.setGraphic(WindowModule.createMenuIcon("html_static"));
+		menuButtonCsv.setGraphic(WindowModule.createMenuIcon("csv"));
+		menuButtonJson.setGraphic(WindowModule.createMenuIcon("json"));
+		menuButtonHtmlStatic.setGraphic(WindowModule.createMenuIcon("html_static"));
+		menuButtonHtmlSearch.setGraphic(WindowModule.createMenuIcon("html_search"));
+		menuButtonHtmlParty.setGraphic(WindowModule.createMenuIcon("html_playlist"));
+		menuButtonSaveConfiguration.setGraphic(WindowModule.createMenuIcon("save"));
+		menuButtonLoadConfiguration.setGraphic(WindowModule.createMenuIcon("load"));
+		menuButtonSaveConfigurationCustom.setGraphic(WindowModule.createMenuIcon("save"));
+		menuButtonLoadConfigurationCustom.setGraphic(WindowModule.createMenuIcon("load"));
+		menuButtonResetConfiguration.setGraphic(WindowModule.createMenuIcon("reset"));
 
 		// label
-		searchLabel.setGraphic(WindowModule.createMenuIcon("images/menu/search.png"));
+		searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
 	}
 
 	public void setMainWindow(Main window) {

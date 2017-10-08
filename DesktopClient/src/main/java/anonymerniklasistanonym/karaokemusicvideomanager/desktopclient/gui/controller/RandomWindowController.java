@@ -82,21 +82,21 @@ public class RandomWindowController {
 		 * Set menu icons
 		 */
 
-		randomAdd1.setGraphic(WindowModule.createMenuIcon("images/menu/add.png"));
-		randomAdd2.setGraphic(WindowModule.createMenuIcon("images/menu/add.png"));
-		randomAdd3.setGraphic(WindowModule.createMenuIcon("images/menu/add.png"));
-		randomAdd4.setGraphic(WindowModule.createMenuIcon("images/menu/add.png"));
-		randomAdd5.setGraphic(WindowModule.createMenuIcon("images/menu/add.png"));
+		randomAdd1.setGraphic(WindowModule.createMenuIcon("add"));
+		randomAdd2.setGraphic(WindowModule.createMenuIcon("add"));
+		randomAdd3.setGraphic(WindowModule.createMenuIcon("add"));
+		randomAdd4.setGraphic(WindowModule.createMenuIcon("add"));
+		randomAdd5.setGraphic(WindowModule.createMenuIcon("add"));
 
-		buttonAddAll.setGraphic(WindowModule.createMenuIcon("images/menu/add.png"));
+		buttonAddAll.setGraphic(WindowModule.createMenuIcon("add"));
 
-		randomPlay1.setGraphic(WindowModule.createMenuIcon("images/menu/play.png"));
-		randomPlay2.setGraphic(WindowModule.createMenuIcon("images/menu/play.png"));
-		randomPlay3.setGraphic(WindowModule.createMenuIcon("images/menu/play.png"));
-		randomPlay4.setGraphic(WindowModule.createMenuIcon("images/menu/play.png"));
-		randomPlay5.setGraphic(WindowModule.createMenuIcon("images/menu/play.png"));
+		randomPlay1.setGraphic(WindowModule.createMenuIcon("play"));
+		randomPlay2.setGraphic(WindowModule.createMenuIcon("play"));
+		randomPlay3.setGraphic(WindowModule.createMenuIcon("play"));
+		randomPlay4.setGraphic(WindowModule.createMenuIcon("play"));
+		randomPlay5.setGraphic(WindowModule.createMenuIcon("play"));
 
-		buttonRefresh.setGraphic(WindowModule.createMenuIcon("images/menu/refresh.png"));
+		buttonRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
 	}
 
 	public void aha() {

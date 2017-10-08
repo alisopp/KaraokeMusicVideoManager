@@ -692,17 +692,17 @@ public class MusicVideoHandler {
 			Integer[] sizes = { 16, 32, 48, 64, 94, 128, 160, 180, 194, 256, 512 };
 
 			for (Integer size : sizes) {
-				String inputPath = "websites/favicons/favicon-" + size + "x" + size + ".png";
+				String inputPath = "images/favicons/favicon-" + size + "x" + size + ".png";
 				Path outpuPath = Paths.get(faviconFolder + "/favicon-" + size + "x" + size + ".png");
 				FileReadWriteModule.copy(ClassResourceReaderModule.getInputStream(inputPath), outpuPath);
 			}
 
 			// copy .svg image
-			FileReadWriteModule.copy(ClassResourceReaderModule.getInputStream("websites/favicons/favicon.svg"),
+			FileReadWriteModule.copy(ClassResourceReaderModule.getInputStream("images/favicons/favicon.svg"),
 					Paths.get(faviconFolder + "/favicon.svg"));
 
 			// copy .ico image
-			FileReadWriteModule.copy(ClassResourceReaderModule.getInputStream("websites/favicons/icon.ico"),
+			FileReadWriteModule.copy(ClassResourceReaderModule.getInputStream("images/favicons/icon.ico"),
 					Paths.get(faviconFolder + "/icon.ico"));
 
 			return true;
@@ -757,11 +757,11 @@ public class MusicVideoHandler {
 
 		// json data html file
 		JsonObject htmlJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/html.json")[0]);
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/html.json")[0]);
 		JsonObject cssJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/css.json")[0]);
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/css.json")[0]);
 		JsonObject jsJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/js.json")[0]);
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/js.json")[0]);
 
 		// add default head
 		htmlStatic.append("<!DOCTYPE html><html lang=\"en\"><head>");
@@ -850,9 +850,9 @@ public class MusicVideoHandler {
 
 		// json data html file
 		JsonObject htmlJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/html.json")[0]);
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/html.json")[0]);
 		JsonObject cssJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/css.json")[0]);
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/css.json")[0]);
 
 		// add default head
 		htmlStatic.append("<!DOCTYPE html><html lang=\"en\"><head>");
@@ -979,11 +979,11 @@ public class MusicVideoHandler {
 
 		// JSON data HTML file
 		JsonObject htmlJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/html.json")[0]);
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/html.json")[0]);
 		JsonObject phpJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/php.json")[0]);
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/php.json")[0]);
 		JsonObject cssJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/css.json")[0]);
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/css.json")[0]);
 
 		// add PHP before everything
 		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-html-form"));
@@ -1032,7 +1032,7 @@ public class MusicVideoHandler {
 		StringBuilder phpProcess = new StringBuilder("");
 
 		JsonObject phpJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/php.json")[0]);
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/php.json")[0]);
 
 		// add php before everything
 		phpProcess.append(JsonModule.getValueString(phpJsonContent, "before-link-process")
@@ -1051,11 +1051,11 @@ public class MusicVideoHandler {
 
 		// json data html file
 		JsonObject htmlJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/html.json")[0]);
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/html.json")[0]);
 		JsonObject cssJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/css.json")[0]);
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/css.json")[0]);
 		JsonObject phpJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websites/php.json")[0]);
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/php.json")[0]);
 
 		// add default head
 		phpPlaylist.append("<!DOCTYPE html><html lang=\"en\"><head>");

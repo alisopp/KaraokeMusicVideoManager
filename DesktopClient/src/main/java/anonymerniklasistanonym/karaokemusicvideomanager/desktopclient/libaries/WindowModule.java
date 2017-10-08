@@ -27,7 +27,7 @@ public class WindowModule {
 
 			// save all images in the newly created array
 			for (int i = 0; i < supportedSizes.length; i++) {
-				String filePath = "websites/favicons/favicon-" + supportedSizes[i] + "x" + supportedSizes[i];
+				String filePath = "images/favicons/favicon-" + supportedSizes[i] + "x" + supportedSizes[i];
 				icons[i] = new Image(ClassResourceReaderModule.getInputStream(filePath + ".png"));
 			}
 
@@ -46,7 +46,7 @@ public class WindowModule {
 	 * @return ImageView object
 	 */
 	public static ImageView createMenuIcon(String pathToImage) {
-		return createMenuIcon(pathToImage, 15);
+		return createMenuIcon("images/icons/" + pathToImage + ".png", 15);
 	}
 
 	/**
