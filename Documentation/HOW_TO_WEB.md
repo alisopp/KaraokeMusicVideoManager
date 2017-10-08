@@ -10,7 +10,7 @@ Instruction on how you can edit/create the website data of this project from the
 
 To view the documents for editing you could use your default text editor and open the `.html` file with your default web browser.
 
-The recommended workflow is though to install the Open Source editor [brackets](http://brackets.io/) and open with it the folder [`html`](..\WebInterfaces\html).
+The recommended workflow is though to install the Open Source editor [brackets](http://brackets.io/) and open with it the folder [`html`](../WebInterfaces/html).
 
 Now you cannot only automatically auto format the `.html`/`.css` files on save thanks to a Plugin named *Beautify* (click on the Lego icon on the upper right of the window) but also live view your changes in your browser while editing by clicking the flash icon on the upper right of the window.
 
@@ -28,15 +28,15 @@ You can also visit the `.html` file with the demo party song list and get when y
 
 ### Edit `CSS`
 
-In the folder [`css`](..\WebInterfaces\css) are all styles for every `html` counter part document.
+In the folder [`css`](../WebInterfaces/css) are all styles for every `html` counter part document.
 
 ### Edit `HTML`
 
-In the folder [`html`](..\WebInterfaces\html) are all `html` documents.
+In the folder [`html`](../WebInterfaces/html) are all `html` documents.
 
 ### Edit `PHP`
 
-In the folder [`php`](..\WebInterfaces\php) are all `php` documents.
+In the folder [`php`](../WebInterfaces/php) are all `php` documents.
 
 <br>
 

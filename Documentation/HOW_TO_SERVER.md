@@ -218,4 +218,3 @@ Write everything on a paper and you can start:
 | IP address   | Username                   | Password                                 |
 | ------------ | -------------------------- | ---------------------------------------- |
 | 192.168.0.42 | your just jet created user | the password to your just jet created user |
-
