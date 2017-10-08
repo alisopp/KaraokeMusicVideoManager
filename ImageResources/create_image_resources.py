@@ -220,6 +220,6 @@ if __name__ == '__main__':
         r"..\DesktopClient\res\images\favicons\favicon", "logo.svg")
     copy_svg_icon(
         r"..\DesktopClient\res\images\favicons\favicon.svg", "logo.svg")
-    create_menu_icons(r"..\DesktopClient\res\images\icons", "menu")
+    create_menu_icons(r"..\DesktopClient\res\images\icons", "icons")
 
     print("Ready!")

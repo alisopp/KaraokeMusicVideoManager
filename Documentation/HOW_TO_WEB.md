@@ -4,6 +4,22 @@ Coming soon
 
 <br>
 
+How to view the web interfaces?
+
+<br>
+
+How to edit the web interfaces?
+
+<br>
+
+How to edit the web interface images?
+
+<br>
+
+How to edit the web interfaces?
+
+<br>
+
 ### I am on Windows and can't test the `.php` files in my browser
 
 Not really important on which operating system you are a simple server can be installed on every one.

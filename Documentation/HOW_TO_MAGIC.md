@@ -47,13 +47,13 @@ You need to have installed:
   * Now open the extracted folder `apache-maven-x.x.x` (3.5.0 at this time)
   * Open the folder `bin`
   * Copy the file path of this folder
-  * Search (On Windows) for `environment variables` and click enter
+  * Search (on Windows) for `environment variables` and click enter
   * Click the button at the bottom right named `Environment Variables ... `
   * Click below the bottom table the button `Edit` after you have selected the row that starts with `Path`
   * Click in the new window the button `New`
   * Enter in the new row your copied path to the `bin` folder
   * Click OK (3 times)
-  * Open a console and enter `mvn -v` to test if maven can be used (reload the console if it was opened)
+  * Open a console and enter `mvn -v` to test if maven can be used (reload the console if it was opened or restart your computer)
 
 #### [>> Learn more about the Java compiler script here](HOW_TO_JAVA.md)
 
