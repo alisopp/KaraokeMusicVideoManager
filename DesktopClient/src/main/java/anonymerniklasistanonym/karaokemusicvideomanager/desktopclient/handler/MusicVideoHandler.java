@@ -1151,7 +1151,7 @@ public class MusicVideoHandler {
 	 * @return saveOperationSuccsessful (Boolean)
 	 */
 	public boolean saveSettings(File settingsFilePath) {
-		return ProgramDataHandler.writeSettings(settingsFilePath, this.settingsData);
+		return this.settingsData.writeSettings(settingsFilePath);
 	}
 
 	/**
@@ -1163,7 +1163,7 @@ public class MusicVideoHandler {
 	 * @return theyAreTheSame (Boolean)
 	 */
 	public boolean compareSettings(File settingsFilePathNew) {
-		return ProgramDataHandler.compareSettingsFileToCurrent(settingsFilePathNew, this.settingsData);
+		return this.settingsData.compareSettingsFileToCurrent(settingsFilePathNew);
 	}
 
 	/**
@@ -1175,7 +1175,7 @@ public class MusicVideoHandler {
 	 * @return theyAreTheSame (Boolean)
 	 */
 	public boolean compareSettings() {
-		return ProgramDataHandler.compareSettingsFileToCurrent(this.settingsFile, this.settingsData);
+		return this.settingsData.compareSettingsFileToCurrent(this.settingsFile);
 	}
 
 	public boolean setAlwaysSave(boolean newValue) {

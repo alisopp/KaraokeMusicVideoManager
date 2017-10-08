@@ -280,14 +280,14 @@ public final class ProgramDataHandler {
 	 *            saved)
 	 * @return writePrcoessSuccessful (true if successful)
 	 */
-	public static boolean writeSettings(File file, ProgramDataHandler settingsData) {
+	public boolean writeSettings(File file) {
 
-		if (file == null || settingsData == null) {
+		if (file == null) {
 			return false;
 		}
 
 		try {
-			String content = createSettings(settingsData);
+			String content = createSettings();
 
 			if (FileReadWriteModule.writeTextFile(file, new String[] { content })) {
 				return true;
@@ -301,50 +301,46 @@ public final class ProgramDataHandler {
 
 	}
 
-	public static String createSettings(ProgramDataHandler settingsData) {
-
-		if (settingsData == null) {
-			return null;
-		}
+	public String createSettings() {
 
 		try {
 
-			if (settingsData.getPathList() != null) {
+			if (this.settings.getPathList() != null) {
 				JsonObjectBuilder mainJsonBuilder = Json.createObjectBuilder();
 
 				JsonArrayBuilder pathListArray = Json.createArrayBuilder();
-				for (Path line : settingsData.getPathList()) {
+				for (Path line : this.settings.getPathList()) {
 					pathListArray.add(line.toString());
 				}
 				mainJsonBuilder.add("path-list", pathListArray);
 
-				if (settingsData.getUsernameSftp() != null && settingsData.getIpAddressSftp() != null) {
+				if (this.settings.getUserNameSftp() != null && this.settings.getIpAddressSftp() != null) {
 					JsonObjectBuilder sftpLogin = Json.createObjectBuilder();
-					sftpLogin.add("username", settingsData.getUsernameSftp());
-					sftpLogin.add("ip-address", settingsData.getIpAddressSftp());
-					if (settingsData.getWorkingDirectorySftp() != null) {
-						sftpLogin.add("directory", settingsData.getWorkingDirectorySftp());
+					sftpLogin.add("username", this.settings.getUserNameSftp());
+					sftpLogin.add("ip-address", this.settings.getIpAddressSftp());
+					if (this.settings.getWorkingDirectorySftp() != null) {
+						sftpLogin.add("directory", this.settings.getWorkingDirectorySftp());
 					}
 					mainJsonBuilder.add("sftp-login", sftpLogin);
 				}
 
-				if (settingsData.getAcceptedFileTypes() != null) {
+				if (this.settings.getAcceptedFileTypes() != null) {
 					JsonArrayBuilder acceptedFileTypesArray = Json.createArrayBuilder();
-					for (String fileType : settingsData.getAcceptedFileTypes()) {
+					for (String fileType : this.settings.getAcceptedFileTypes()) {
 						acceptedFileTypesArray.add(fileType);
 					}
 					mainJsonBuilder.add("file-types", acceptedFileTypesArray);
 				}
 
-				if (settingsData.getIgnoredFiles() != null) {
+				if (this.settings.getIgnoredFilesList() != null) {
 					JsonArrayBuilder ignoredFileList = Json.createArrayBuilder();
-					for (File ignoredFile : settingsData.getIgnoredFiles()) {
+					for (File ignoredFile : this.settings.getIgnoredFilesList()) {
 						ignoredFileList.add(ignoredFile.getAbsolutePath());
 					}
 					mainJsonBuilder.add("ignored-files", ignoredFileList);
 				}
 
-				if (settingsData.getAlwaysSaveSettings() != false) {
+				if (this.settings.getAlwaysSaveSettings() != false) {
 					mainJsonBuilder.add("always-save", Boolean.TRUE);
 				}
 
@@ -511,23 +507,10 @@ public final class ProgramDataHandler {
 
 	}
 
-	public static boolean compareSettings(File oldSettingsFile, File newSettingsFile) {
-
-		String[] oldFile = FileReadWriteModule.readTextFile(oldSettingsFile);
-		String[] newFile = FileReadWriteModule.readTextFile(newSettingsFile);
-
-		if (oldFile != null && newFile != null) {
-			return JsonModule.compareJsonStrings(oldFile.toString(), newFile.toString());
-		} else {
-			return false;
-		}
-
-	}
-
-	public static boolean compareSettingsFileToCurrent(File oldSettingsFile, ProgramDataHandler newSettingsFile) {
+	public boolean compareSettingsFileToCurrent(File oldSettingsFile) {
 
 		String oldFile = FileReadWriteModule.readTextFile(oldSettingsFile)[0];
-		String newFile = createSettings(newSettingsFile);
+		String newFile = createSettings();
 
 		if (oldFile != null && newFile != null) {
 			System.out.println("old file:");
