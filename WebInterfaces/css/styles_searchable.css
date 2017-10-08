@@ -27,7 +27,10 @@
 	/* Font size a bit bigger than normal */
 	font-size: 16px;
 	/* A search icon */
-	background: url(data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3Csvg%20width%3D%2254.98%22%20height%3D%2254.98%22%20fill%3D%22%23000000%22%20version%3D%221.1%22%20viewBox%3D%220%200%2027.49%2027.49%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Acc%3D%22http%3A//creativecommons.org/ns%23%22%20xmlns%3Adc%3D%22http%3A//purl.org/dc/elements/1.1/%22%20xmlns%3Ardf%3D%22http%3A//www.w3.org/1999/02/22-rdf-syntax-ns%23%22%3E%0A%20%3Cmetadata%3E%0A%20%20%3Crdf%3ARDF%3E%0A%20%20%20%3Ccc%3AWork%20rdf%3Aabout%3D%22%22%3E%0A%20%20%20%20%3Cdc%3Aformat%3Eimage/svg+xml%3C/dc%3Aformat%3E%0A%20%20%20%20%3Cdc%3Atype%20rdf%3Aresource%3D%22http%3A//purl.org/dc/dcmitype/StillImage%22/%3E%0A%20%20%20%20%3Cdc%3Atitle/%3E%0A%20%20%20%3C/cc%3AWork%3E%0A%20%20%3C/rdf%3ARDF%3E%0A%20%3C/metadata%3E%0A%20%3Cpath%20d%3D%22m17.5%2016h-0.79l-0.28-0.27c0.98-1.14%201.57-2.62%201.57-4.23%200-3.59-2.91-6.5-6.5-6.5s-6.5%202.91-6.5%206.5%202.91%206.5%206.5%206.5c1.61%200%203.09-0.59%204.23-1.57l0.27%200.28v0.79l5%204.99%201.49-1.49zm-6%200c-2.49%200-4.5-2.01-4.5-4.5s2.01-4.5%204.5-4.5%204.5%202.01%204.5%204.5-2.01%204.5-4.5%204.5z%22%20fill%3D%22%23616161%22/%3E%0A%20%3Cpath%20d%3D%22m2%202h24v24h-24z%22%20fill%3D%22none%22/%3E%0A%3C/svg%3E%0A) no-repeat 8px;
+	/* The image is from material.io (https://material.io/icons/#ic_search - 24dp) */
+	/* and was decoded with this tool from yoksel: https://codepen.io/yoksel/details/JDqvs */
+	/* [I changed the default color #000000 to #616161] */
+	background: url(data:image/svg+xml,%3Csvg%20fill%3D%22%23616161%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M15.5%2014h-.79l-.28-.27C15.41%2012.59%2016%2011.11%2016%209.5%2016%205.91%2013.09%203%209.5%203S3%205.91%203%209.5%205.91%2016%209.5%2016c1.61%200%203.09-.59%204.23-1.57l.27.28v.79l5%204.99L20.49%2019l-4.99-5zm-6%200C7.01%2014%205%2011.99%205%209.5S7.01%205%209.5%205%2014%207.01%2014%209.5%2011.99%2014%209.5%2014z%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%200h24v24H0z%22%20fill%3D%22none%22/%3E%0A%3C/svg%3E) no-repeat 8px;
 	/* Position the icon at the right */
 	background-size: auto 100%;
 }

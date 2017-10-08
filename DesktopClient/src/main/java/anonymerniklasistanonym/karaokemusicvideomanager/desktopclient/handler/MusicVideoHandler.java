@@ -1248,7 +1248,7 @@ public class MusicVideoHandler {
 	}
 
 	public MusicVideoPlaylistHandler getPlaylistHandler() {
-		return playlistHandler;
+		return this.playlistHandler;
 	}
 
 	public void addMusicVideoToPlaylist(int index, String author, String comment) {
