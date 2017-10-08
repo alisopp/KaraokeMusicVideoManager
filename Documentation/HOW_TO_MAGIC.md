@@ -34,9 +34,11 @@ Here the software/the steps that are needed to do each part/thing:
 . build_everything.sh
 ```
 
-* Install Python 3.* from https://www.python.org/downloads/
-  * No special packages are needed
-  * In Windows automatic addition to the environment variables
+You need to have installed:
+
+- Python 3.* from https://www.python.org/downloads/
+  - No special packages are needed
+
 * Install Maven
   * Download the `Binary zip archieve` from https://maven.apache.org/download.cgi
   * Extract the `.zip` file to a directory of your computer
@@ -51,30 +53,7 @@ Here the software/the steps that are needed to do each part/thing:
   * Click OK (3 times)
   * Open a console and enter `mvn -v` to test if maven can be used (reload the console if it was opened)
 
-#### Do only this outside of the master shell script:
-
-Go into the cloned repository folder and open the folder `DesktopClient`:
-
-* Double click / or execute with the terminal the shell script [build_project.sh](../DesktopClient/build_project.sh)
-
----
-
-:warning:
-
-IF you get a notification like `probably you run a JRE -> Compile error` you have no Java JDK or you have not activated it:
-
-1. Download and Install it from here if you haven't already:
-   http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
-2. After that open once again the environment variables if you are on Windows
-   - Select below the bottom table the button `New`
-     - Enter the variable name `JAVA_HOME`
-     - Then click the button `Browse Directory...`
-       - Browse to the directory of the installed `jdk` folder
-         (This was the place on my hard drive: `C:\Program Files\Java\jdk1.8.0_144`)
-       - Click OK (3 times)
-3. Run the script again (after a restart of all terminals and eventually of the whole computer).
-
----
+#### [>> Learn more about the Java compiler script here](/HOW_TO_JAVA.md)
 
 ### Update the Images and Icons too
 
@@ -82,26 +61,13 @@ IF you get a notification like `probably you run a JRE -> Compile error` you hav
 . build_everything.sh img
 ```
 
-- Install Python 3.* packages
-  - Image manipulation with `pip install Pillow`
-- Install Inkscape
-  - Download the installer from https://inkscape.org/en/release/0.92.2/
-  - After the installation should Inkscape already be usable over the command line without adding it to the environment variables
+You need to have installed:
 
-#### Do only this outside of the master shell script:
+- Python 3.* from https://www.python.org/downloads/
+  - Install additional the Python Imaging Library Pillow  with `$ pip install Pillow`
+- Inkscape from https://inkscape.org/en/release/0.92.2/
 
-Run the script [create_image_ressources.py](../ImageResources/create_image_ressources.py) in the `ImageResources` folder.
-*(Wait some seconds -> Inkscape needs it's time)*
-
-------
-
-⚠
-
-IF you get any problems with Inkscape add the path to the `bin` folder of the `Inkscape` folder in `ProgramFiles` to the Windows environment variables.
-
-Also be sure to use the newest available version of Inkscape because the old one had bugs and could not handle command line use very well on Windows.
-
----
+#### [>> Learn more about the images and icons creator script here](/HOW_TO_WEB.md)
 
 ### Update all Web Interfaces too
 
@@ -109,11 +75,12 @@ Also be sure to use the newest available version of Inkscape because the old one
 . build_everything.sh web
 ```
 
-Not much more needed - Python handles everything in seconds.
+You need to have installed:
 
-#### Do only this outside of the main shell script:
+- Python 3.* from https://www.python.org/downloads/
+  - No special packages are needed
 
-Run the script [create_website_page_resources.py](../WebInterfaces/create_website_page_resources.py) in the `WebInterfaces` folder.
+#### [>> Learn more about the web interface data creator script here](/HOW_TO_WEB.md)
 
 ### Create a Windows installer too
 
@@ -121,14 +88,15 @@ Run the script [create_website_page_resources.py](../WebInterfaces/create_websit
 . build_everything.sh win
 ```
 
-- Install NSIS
-  - Download and install NSIS from here http://nsis.sourceforge.net/Download
-  - After installing it open once again the Windows environment variables
-  - Add to the `Path` entry in the upper table with clicking the button `Edit` after selecting it the path to the `bin` folder of NSIS (for me this was `C:\Program Files (x86)\NSIS\Bin`)
+You need to have installed:
 
-#### Do only this outside of the master shell script:
+* Python 3.* from https://www.python.org/downloads/
+  - No special packages are needed
+* NSIS from http://nsis.sourceforge.net/Download
+  * Add the NSIS function to the command line if they not already can be used (check the command `makensis`) with adding it to the [Windows] environment variables
+  * Add to the `Path` entry in the upper table of the window with clicking the button `Edit` after selecting it the path to the `bin` folder of NSIS (for me this was `C:\Program Files (x86)\NSIS\Bin`)
 
-Run the script [build_windows_installer.py](../WindowsInstaller/build_windows_installer.py) in the folder `WindowsInstaller`.
+#### [>> Learn more about the Windows installer creator script here](/HOW_TO_NSIS.md)
 
 <br>
 
@@ -136,9 +104,11 @@ Run the script [build_windows_installer.py](../WindowsInstaller/build_windows_in
 
 :warning:
 
-If you have any problems with just set environmental variables (Maven, NSIS was it for me) please restart your computer.
+If a command can't be used check before you ask a question if you really can not find the program folder of the command in the environmental variables.
 
-In my case this worked two times. After the restart everything works great and commands like `makensis` and `mvn` get instantly recognized!
+If you have any problems with just set environmental variables (NSIS, Inkscape and Maven was it for me) please restart your computer.
+
+In my case this worked on two of two devices. After the restart everything works great and commands like `makensis`, `inkscape` and `mvn` get instantly recognized!
 
 ---
 
