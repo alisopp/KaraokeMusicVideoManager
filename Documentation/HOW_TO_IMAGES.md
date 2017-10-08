@@ -1,6 +1,6 @@
 # IMAGE RECOURCES
 
-Instruction on how you can use the edit/create every image of this project from the source vector graphics (and how to change them).
+Instruction on how you can edit/create every image of this project from the source vector graphics (and how to change them).
 
 <br>
 
@@ -26,7 +26,7 @@ You need to have installed:
 
 To create or update all images for the project there is one Python script in which everything is contained (menu icons, installer icons, web favicons):
 
-Run the script [`create_image_ressources.py`](../ImageResources/create_image_ressources.py) in the [`ImageResources`](../ImageResources) folder.
+Run the script [`create_image_resources.py`](../ImageResources/create_image_resources.py) in the [`ImageResources`](../ImageResources) folder.
 
 *(Wait some seconds -> Inkscape needs it's time)*
 
@@ -74,4 +74,4 @@ If you want to edit the images you also can just edit them with a vector graphic
 
 ## How to change locations add another source?
 
-If you want to do this you need to edit the Python 3 script [`create_image_ressources.py`](../ImageResources/create_image_ressources.py).
+If you want to do this you need to edit the Python 3 script [`create_image_resources.py`](../ImageResources/create_image_resources.py).
