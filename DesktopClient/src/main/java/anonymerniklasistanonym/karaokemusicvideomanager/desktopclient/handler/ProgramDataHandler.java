@@ -1,4 +1,4 @@
-package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
+package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -15,7 +15,7 @@ import java.util.stream.Stream;
  * @version 1.1 (beta)
  *
  */
-public final class ProgramData {
+public final class ProgramDataHandler {
 
 	/**
 	 * All the paths to music video files
@@ -60,7 +60,7 @@ public final class ProgramData {
 	/**
 	 * Constructor [empty]
 	 */
-	public ProgramData() {
+	public ProgramDataHandler() {
 		reset();
 	}
 

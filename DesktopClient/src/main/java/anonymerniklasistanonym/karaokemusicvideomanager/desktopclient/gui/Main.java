@@ -1,7 +1,7 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.MainWindow;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.MusicVideoHandler;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

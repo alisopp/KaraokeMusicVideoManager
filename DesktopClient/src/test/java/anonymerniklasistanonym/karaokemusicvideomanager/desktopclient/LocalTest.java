@@ -3,7 +3,7 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient;
 import java.io.File;
 import java.nio.file.Paths;
 
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.MusicVideoHandler;
 
 public class LocalTest {
 

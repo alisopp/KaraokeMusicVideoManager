@@ -1,7 +1,10 @@
-package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
+package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
+
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoPlaylistElement;
 
 public class MusicVideoPlaylistHandler {
 

@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -21,7 +21,7 @@ public class DialogTest extends Application {
 		ex.printStackTrace(printWriter);
 		String exceptionText = stringWriter.toString();
 
-		Dialogs.exceptionDialog("A exception was thrown!", "short descripton", "detailed descripton", exceptionText);
+		DialogModule.exceptionDialog("A exception was thrown!", "short descripton", "detailed descripton", exceptionText);
 		// System.exit(0);
 	}
 

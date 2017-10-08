@@ -1,15 +1,15 @@
-package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
+package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.WrongFormattedFilesTableView;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowMethods;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -175,17 +175,17 @@ public class IgnoredFilesWindowController {
 		 */
 
 		// Context menu
-		contextRename.setGraphic(WindowMethods.createMenuIcon("images/menu/rename.png"));
-		contextExplorer.setGraphic(WindowMethods.createMenuIcon("images/menu/directory.png"));
-		contextIgnore.setGraphic(WindowMethods.createMenuIcon("images/menu/ignore.png"));
-		contextClear.setGraphic(WindowMethods.createMenuIcon("images/menu/clear.png"));
-		contextRefresh.setGraphic(WindowMethods.createMenuIcon("images/menu/refresh.png"));
+		contextRename.setGraphic(WindowModule.createMenuIcon("images/menu/rename.png"));
+		contextExplorer.setGraphic(WindowModule.createMenuIcon("images/menu/directory.png"));
+		contextIgnore.setGraphic(WindowModule.createMenuIcon("images/menu/ignore.png"));
+		contextClear.setGraphic(WindowModule.createMenuIcon("images/menu/clear.png"));
+		contextRefresh.setGraphic(WindowModule.createMenuIcon("images/menu/refresh.png"));
 
 		// button
-		buttonClearList.setGraphic(WindowMethods.createMenuIcon("images/menu/ignore.png"));
+		buttonClearList.setGraphic(WindowModule.createMenuIcon("images/menu/ignore.png"));
 
 		// label
-		searchLabel.setGraphic(WindowMethods.createMenuIcon("images/menu/search.png"));
+		searchLabel.setGraphic(WindowModule.createMenuIcon("images/menu/search.png"));
 	}
 
 	/**
@@ -224,7 +224,7 @@ public class IgnoredFilesWindowController {
 			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
 			if (selectedFile.exists() && selectedFile.isFile()) {
 				// if yes then open the parent of the file (the directory it is in)
-				ExternalApplicationHandler.openFile(selectedFile);
+				ExternalApplicationModule.openFile(selectedFile);
 			}
 		}
 	}
@@ -280,7 +280,7 @@ public class IgnoredFilesWindowController {
 			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
 			if (selectedFile.exists() && selectedFile.isFile()) {
 				// show dialog to rename the file
-				String a = Dialogs.textInputDialog("Rename wrong formatted file", selectedFile.getName(),
+				String a = DialogModule.textInputDialog("Rename wrong formatted file", selectedFile.getName(),
 						"Rename the file", "Enter a new name:");
 
 				if (a != null) {
@@ -317,7 +317,7 @@ public class IgnoredFilesWindowController {
 			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
 			if (selectedFile.exists() && !selectedFile.isDirectory()) {
 				// if yes then open the parent of the file (the directory it is in)
-				ExternalApplicationHandler.openFile(selectedFile.getParentFile());
+				ExternalApplicationModule.openFile(selectedFile.getParentFile());
 			}
 		}
 	}

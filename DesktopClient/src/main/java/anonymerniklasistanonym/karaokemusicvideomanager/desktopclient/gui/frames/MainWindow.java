@@ -1,8 +1,9 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowMethods;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller.MainWindowController;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -52,7 +53,7 @@ public class MainWindow {
 
 			// try to add a window icon
 			try {
-				getMainWindowStage().getIcons().addAll(WindowMethods.getWindowIcons());
+				getMainWindowStage().getIcons().addAll(WindowModule.getWindowIcons());
 			} catch (Exception e) {
 				System.err.println("Exception while loding icons");
 			}
@@ -81,7 +82,7 @@ public class MainWindow {
 		} else {
 
 			if (!this.main.getMusicVideohandler().compareSettings()) {
-				Dialogs.mainStageClose(e, this.main.getMusicVideohandler());
+				DialogModule.mainStageClose(e, this.main.getMusicVideohandler());
 			} else {
 				System.out.println("Settings were the same");
 			}

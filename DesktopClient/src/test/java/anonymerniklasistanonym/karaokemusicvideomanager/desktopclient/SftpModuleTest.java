@@ -4,13 +4,13 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.SftpHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.SftpModule;
 
 public class SftpModuleTest {
 
 	public static void main(String[] args) {
-		SftpModule test = new SftpModule("username", "1234", "192.168.0.192");
+		SftpHandler test = new SftpHandler("username", "1234", "192.168.0.192");
 
 		test.connectSFTP();
 

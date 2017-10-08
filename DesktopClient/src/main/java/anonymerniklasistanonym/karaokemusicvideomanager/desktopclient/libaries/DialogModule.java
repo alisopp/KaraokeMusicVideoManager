@@ -1,11 +1,10 @@
-package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs;
+package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries;
 
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowMethods;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.MusicVideoHandler;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -38,7 +37,7 @@ import javafx.util.Pair;
  * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
  *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  */
-public class Dialogs {
+public class DialogModule {
 
 	/**
 	 * Dialog that asks if changes should be saved.
@@ -59,7 +58,7 @@ public class Dialogs {
 		// Get the Stage.
 		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 		// Add a custom icon.
-		stage.getIcons().addAll(WindowMethods.getWindowIcons());
+		stage.getIcons().addAll(WindowModule.getWindowIcons());
 
 		// with the following buttons
 		alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
@@ -268,7 +267,7 @@ public class Dialogs {
 		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
 
 		// Add a custom icon.
-		stage.getIcons().addAll(WindowMethods.getWindowIcons());
+		stage.getIcons().addAll(WindowModule.getWindowIcons());
 
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()) {
@@ -300,7 +299,7 @@ public class Dialogs {
 		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 
 		// Add a custom icon.
-		stage.getIcons().addAll(WindowMethods.getWindowIcons());
+		stage.getIcons().addAll(WindowModule.getWindowIcons());
 
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK) {
@@ -325,7 +324,7 @@ public class Dialogs {
 		// Get the Stage.
 		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
 		// Add a custom icon.
-		stage.getIcons().addAll(WindowMethods.getWindowIcons());
+		stage.getIcons().addAll(WindowModule.getWindowIcons());
 
 		// Set the button types.
 		ButtonType editElement = new ButtonType(buttonText, ButtonData.OK_DONE);
@@ -400,7 +399,7 @@ public class Dialogs {
 		// Get the Stage.
 		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
 		// Add a custom icon.
-		stage.getIcons().addAll(WindowMethods.getWindowIcons());
+		stage.getIcons().addAll(WindowModule.getWindowIcons());
 
 		// Set the button types.
 		ButtonType editElement = new ButtonType(buttonText, ButtonData.OK_DONE);

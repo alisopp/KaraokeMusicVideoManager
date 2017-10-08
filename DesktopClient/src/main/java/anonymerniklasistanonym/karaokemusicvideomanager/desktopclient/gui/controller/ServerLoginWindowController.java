@@ -1,7 +1,7 @@
-package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
+package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -65,7 +65,7 @@ public class ServerLoginWindowController {
 
 			this.a.fireEvent(new WindowEvent(this.a, WindowEvent.WINDOW_CLOSE_REQUEST));
 		} else {
-			Dialogs.informationAlert("SFTP connection could not bes established", "Please try to login again",
+			DialogModule.informationAlert("SFTP connection could not bes established", "Please try to login again",
 					AlertType.INFORMATION);
 		}
 

@@ -11,7 +11,7 @@ import javafx.beans.property.StringProperty;
  * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
  *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  */
-public class DirectoryPathTableView {
+public class MusicVideoSourceDirectoriesTableView {
 
 	/**
 	 * directory path as a String
@@ -22,7 +22,7 @@ public class DirectoryPathTableView {
 	 * @param filePath
 	 *            (String | absolute path to directory)
 	 */
-	public DirectoryPathTableView(String filePath) {
+	public MusicVideoSourceDirectoriesTableView(String filePath) {
 		this.filePath = new SimpleStringProperty(filePath);
 	}
 
@@ -30,7 +30,7 @@ public class DirectoryPathTableView {
 	 * @param filePath
 	 *            (Path | absolute path to directory)
 	 */
-	public DirectoryPathTableView(Path filePath) {
+	public MusicVideoSourceDirectoriesTableView(Path filePath) {
 		this.filePath = new SimpleStringProperty(filePath.toString());
 	}
 

@@ -1,4 +1,4 @@
-package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions;
+package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -16,9 +16,8 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.F
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.JsonModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoPlaylistElement;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.ProgramData;
 
-public class ExportImportSettings {
+public class ProgramDataHandler2 {
 
 	/**
 	 * Write Json file with all the settings data
@@ -30,7 +29,7 @@ public class ExportImportSettings {
 	 *            saved)
 	 * @return writePrcoessSuccessful (true if successful)
 	 */
-	public static boolean writeSettings(File file, ProgramData settingsData) {
+	public static boolean writeSettings(File file, ProgramDataHandler settingsData) {
 
 		if (file == null || settingsData == null) {
 			return false;
@@ -51,7 +50,7 @@ public class ExportImportSettings {
 
 	}
 
-	public static String createSettings(ProgramData settingsData) {
+	public static String createSettings(ProgramDataHandler settingsData) {
 
 		if (settingsData == null) {
 			return null;
@@ -133,7 +132,7 @@ public class ExportImportSettings {
 	 *            (File | file with 'ProgramData')
 	 * @return extracted settings (ProgramData)
 	 */
-	public static ProgramData readSettings(File file) {
+	public static ProgramDataHandler readSettings(File file) {
 
 		System.out.println("READ SETTINGS");
 
@@ -160,7 +159,7 @@ public class ExportImportSettings {
 			JsonObject jsonObject = JsonModule.loadJsonFromString(strBuilder.toString());
 
 			// create an 'empty' settings data file
-			ProgramData settingsData = new ProgramData();
+			ProgramDataHandler settingsData = new ProgramDataHandler();
 
 			// -> (try to) get path list
 			JsonArray keyValuePathList = (JsonArray) JsonModule.getValue(jsonObject, "path-list");
@@ -274,7 +273,7 @@ public class ExportImportSettings {
 
 	}
 
-	public static boolean compareSettingsFileToCurrent(File oldSettingsFile, ProgramData newSettingsFile) {
+	public static boolean compareSettingsFileToCurrent(File oldSettingsFile, ProgramDataHandler newSettingsFile) {
 
 		String oldFile = FileReadWriteModule.readTextFile(oldSettingsFile)[0];
 		String newFile = createSettings(newSettingsFile);

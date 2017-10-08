@@ -3,7 +3,7 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.table
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class PlaylistTableView {
+public class MusicVideoPlaylistTableView {
 
 	private final int index;
 	private final int musicVideoindex;
@@ -13,7 +13,7 @@ public class PlaylistTableView {
 	private final StringProperty author;
 	private final StringProperty comment;
 
-	public PlaylistTableView(int index, int musicVideoindex, String time, String title, String artist, String author,
+	public MusicVideoPlaylistTableView(int index, int musicVideoindex, String time, String title, String artist, String author,
 			String comment) {
 		this.index = index;
 		this.musicVideoindex = musicVideoindex;

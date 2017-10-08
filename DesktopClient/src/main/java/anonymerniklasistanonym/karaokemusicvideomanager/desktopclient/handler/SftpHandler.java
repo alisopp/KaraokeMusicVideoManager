@@ -1,4 +1,4 @@
-package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries;
+package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -25,7 +25,7 @@ import com.jcraft.jsch.SftpException;
  * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
  *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  */
-public class SftpModule {
+public class SftpHandler {
 
 	/**
 	 * SFTP user name for login
@@ -68,7 +68,7 @@ public class SftpModule {
 		return connectionEstablished;
 	}
 
-	public SftpModule() {
+	public SftpHandler() {
 
 	}
 
@@ -84,7 +84,7 @@ public class SftpModule {
 	 * @param serverFilePath
 	 *            (working directory | String)
 	 */
-	public SftpModule(String userName, String userPassword, String serverAddress, String serverFilePath) {
+	public SftpHandler(String userName, String userPassword, String serverAddress, String serverFilePath) {
 		this.userName = userName;
 		this.userPassword = userPassword;
 		this.serverAddress = serverAddress;
@@ -101,7 +101,7 @@ public class SftpModule {
 	 * @param serverAddress
 	 *            (IP address of server | String)
 	 */
-	public SftpModule(String userName, String userPassword, String serverAddress) {
+	public SftpHandler(String userName, String userPassword, String serverAddress) {
 		this.userName = userName;
 		this.userPassword = userPassword;
 		this.serverAddress = serverAddress;

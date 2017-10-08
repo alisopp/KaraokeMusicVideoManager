@@ -1,6 +1,6 @@
-package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
+package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller;
 
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationModule;
 import javafx.fxml.FXML;
 
 /**
@@ -20,12 +20,12 @@ public class AboutWindowController {
 
 	@FXML
 	public void openGitHubLinkRepository() {
-		ExternalApplicationHandler.openUrl("https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager");
+		ExternalApplicationModule.openUrl("https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager");
 	}
 
 	@FXML
 	public void openGitHubLinkProfile() {
-		ExternalApplicationHandler.openUrl("https://github.com/AnonymerNiklasistanonym");
+		ExternalApplicationModule.openUrl("https://github.com/AnonymerNiklasistanonym");
 	}
 
 }

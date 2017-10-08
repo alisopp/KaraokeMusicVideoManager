@@ -12,7 +12,7 @@ import java.net.URISyntaxException;
  * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
  *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  */
-public class ExternalApplicationHandler {
+public class ExternalApplicationModule {
 
 	/**
 	 * Open any String in the default web browser of the system:

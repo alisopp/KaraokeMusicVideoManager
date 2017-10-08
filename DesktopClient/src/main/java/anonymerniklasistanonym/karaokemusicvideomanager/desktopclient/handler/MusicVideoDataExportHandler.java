@@ -1,4 +1,4 @@
-package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.functions;
+package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -8,7 +8,7 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.J
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoPlaylistElement;
 
-public class ExportMusicVideoData {
+public class MusicVideoDataExportHandler {
 
 	/**
 	 * Generate a HTML table string for the static site

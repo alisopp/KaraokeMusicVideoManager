@@ -1,12 +1,12 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
 
-public class MusicVideoRandom {
+public class MusicVideoRandomElement {
 
 	private MusicVideo musicVideo;
 
 	private int index;
 
-	public MusicVideoRandom(MusicVideo musicVideo, int index) {
+	public MusicVideoRandomElement(MusicVideo musicVideo, int index) {
 		this.musicVideo = musicVideo;
 		this.index = index;
 	}

@@ -1,13 +1,13 @@
-package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
+package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller;
 
 import java.util.Random;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationHandler;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowMethods;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoRandom;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoRandomElement;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -58,7 +58,7 @@ public class RandomWindowController {
 	@FXML
 	private Button buttonRefresh;
 
-	private MusicVideoRandom[] labelContent;
+	private MusicVideoRandomElement[] labelContent;
 
 	private Main mainWindow;
 	private Stage a;
@@ -82,21 +82,21 @@ public class RandomWindowController {
 		 * Set menu icons
 		 */
 
-		randomAdd1.setGraphic(WindowMethods.createMenuIcon("images/menu/add.png"));
-		randomAdd2.setGraphic(WindowMethods.createMenuIcon("images/menu/add.png"));
-		randomAdd3.setGraphic(WindowMethods.createMenuIcon("images/menu/add.png"));
-		randomAdd4.setGraphic(WindowMethods.createMenuIcon("images/menu/add.png"));
-		randomAdd5.setGraphic(WindowMethods.createMenuIcon("images/menu/add.png"));
+		randomAdd1.setGraphic(WindowModule.createMenuIcon("images/menu/add.png"));
+		randomAdd2.setGraphic(WindowModule.createMenuIcon("images/menu/add.png"));
+		randomAdd3.setGraphic(WindowModule.createMenuIcon("images/menu/add.png"));
+		randomAdd4.setGraphic(WindowModule.createMenuIcon("images/menu/add.png"));
+		randomAdd5.setGraphic(WindowModule.createMenuIcon("images/menu/add.png"));
 
-		buttonAddAll.setGraphic(WindowMethods.createMenuIcon("images/menu/add.png"));
+		buttonAddAll.setGraphic(WindowModule.createMenuIcon("images/menu/add.png"));
 
-		randomPlay1.setGraphic(WindowMethods.createMenuIcon("images/menu/play.png"));
-		randomPlay2.setGraphic(WindowMethods.createMenuIcon("images/menu/play.png"));
-		randomPlay3.setGraphic(WindowMethods.createMenuIcon("images/menu/play.png"));
-		randomPlay4.setGraphic(WindowMethods.createMenuIcon("images/menu/play.png"));
-		randomPlay5.setGraphic(WindowMethods.createMenuIcon("images/menu/play.png"));
+		randomPlay1.setGraphic(WindowModule.createMenuIcon("images/menu/play.png"));
+		randomPlay2.setGraphic(WindowModule.createMenuIcon("images/menu/play.png"));
+		randomPlay3.setGraphic(WindowModule.createMenuIcon("images/menu/play.png"));
+		randomPlay4.setGraphic(WindowModule.createMenuIcon("images/menu/play.png"));
+		randomPlay5.setGraphic(WindowModule.createMenuIcon("images/menu/play.png"));
 
-		buttonRefresh.setGraphic(WindowMethods.createMenuIcon("images/menu/refresh.png"));
+		buttonRefresh.setGraphic(WindowModule.createMenuIcon("images/menu/refresh.png"));
 	}
 
 	public void aha() {
@@ -130,7 +130,7 @@ public class RandomWindowController {
 
 	private void addVideo(int position) {
 
-		String[] authorComment = Dialogs.playlistDialog("", "", "Create a new Playlist entry",
+		String[] authorComment = DialogModule.playlistDialog("", "", "Create a new Playlist entry",
 				"Add an author and comment", "Add to playlist");
 
 		if (authorComment != null && authorComment[0] != null) {
@@ -147,7 +147,7 @@ public class RandomWindowController {
 
 	private void playVideo(int position) {
 		try {
-			ExternalApplicationHandler.openFile(labelContent[position].getMusicVideo().getPath().toFile());
+			ExternalApplicationModule.openFile(labelContent[position].getMusicVideo().getPath().toFile());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -180,7 +180,7 @@ public class RandomWindowController {
 
 	@FXML
 	public void addVideoAll() {
-		String[] authorComment = Dialogs.playlistDialog("", "", "Create 5 new Playlist entries",
+		String[] authorComment = DialogModule.playlistDialog("", "", "Create 5 new Playlist entries",
 				"Add an author and comment", "Add to playlist");
 
 		if (authorComment != null && authorComment[0] != null) {
@@ -203,12 +203,12 @@ public class RandomWindowController {
 
 		Label[] allLabels = { randomLable1, randomLable2, randomLable3, randomLable4, randomLable5 };
 
-		labelContent = new MusicVideoRandom[allLabels.length];
+		labelContent = new MusicVideoRandomElement[allLabels.length];
 
 		Random randomGenerator = new Random();
 		for (int i = 0; i < allLabels.length; i++) {
 			int randomNumber = randomGenerator.nextInt(allFiles.length);
-			labelContent[i] = new MusicVideoRandom(allFiles[randomNumber], randomNumber);
+			labelContent[i] = new MusicVideoRandomElement(allFiles[randomNumber], randomNumber);
 		}
 		for (int i = 0; i < allLabels.length; i++) {
 			allLabels[i].setText(labelContent[i].getMusicVideo().getTitle() + " from "
