@@ -11,7 +11,6 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.Mu
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
 
 /**
  * The controller class for the random music video window
@@ -61,13 +60,11 @@ public class RandomWindowController {
 	private MusicVideoRandomElement[] labelContent;
 
 	private Main mainWindow;
-	private Stage a;
-	private MainWindowController b;
+	private MainWindowController mainWindowController;
 
-	public void setWindowController(Main window, Stage a, MainWindowController b) {
+	public void setWindowController(Main window, MainWindowController mainWindowController) {
 		this.mainWindow = window;
-		this.a = a;
-		this.b = b;
+		this.mainWindowController = mainWindowController;
 
 		refreshRandom();
 	}
@@ -97,10 +94,6 @@ public class RandomWindowController {
 		randomPlay5.setGraphic(WindowModule.createMenuIcon("play"));
 
 		buttonRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
-	}
-
-	public void aha() {
-		this.a.close();
 	}
 
 	@FXML
@@ -140,7 +133,7 @@ public class RandomWindowController {
 
 			this.mainWindow.getMusicVideohandler().addMusicVideoToPlaylist(labelContent[position].getIndex(),
 					authorComment[0], authorComment[1]);
-			b.refreshMusicVideoPlaylistTable();
+			mainWindowController.refreshMusicVideoPlaylistTable();
 		}
 
 	}
@@ -192,7 +185,7 @@ public class RandomWindowController {
 				this.mainWindow.getMusicVideohandler().addMusicVideoToPlaylist(labelContent[i].getIndex(),
 						authorComment[0], authorComment[1]);
 			}
-			b.refreshMusicVideoPlaylistTable();
+			mainWindowController.refreshMusicVideoPlaylistTable();
 		}
 
 	}

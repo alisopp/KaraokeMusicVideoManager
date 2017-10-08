@@ -490,6 +490,42 @@ public class SftpHandler {
 	 * 
 	 * @param pathLocalFile
 	 */
+	public void transferFile(FileInputStream fileInputStream, File file) {
+
+		if (!connectionEstablished) {
+			System.out.println("You need first to establish a connection!");
+			return;
+		}
+
+		System.out.println(">>> Transfer " + file.getName() + " to " + this.currentWorkingDirectory + file.getParent());
+
+		String oldWorkingDirectory = this.currentWorkingDirectory;
+
+		if (file != null && fileInputStream != null) {
+
+			try {
+				changeDirectory(file.getParent());
+
+				this.channelSftp.put(fileInputStream, file.getName());
+
+				System.out.println("<<< file succsessfully transferred");
+
+			} catch (Exception ex) {
+				System.err.println("Exception found while transfer the response.");
+				ex.printStackTrace();
+			} finally {
+
+				changeDirectory(oldWorkingDirectory);
+
+			}
+		}
+	}
+
+	/**
+	 * Transfer files with paths to working directory
+	 * 
+	 * @param pathLocalFile
+	 */
 	public void transferFile(Path pathLocalFile) {
 		transferFile(pathLocalFile.toString(), "");
 	}

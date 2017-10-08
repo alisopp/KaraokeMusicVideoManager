@@ -2,7 +2,10 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import javax.json.Json;
@@ -30,7 +33,21 @@ public class MusicVideoPlaylistHandler {
 		} else {
 			Arrays.sort(playlistElements,
 					(a, b) -> Long.valueOf(a.getUnixTime()).compareTo(Long.valueOf(b.getUnixTime())));
-			this.playlistElements = playlistElements;
+
+			Arrays.stream(playlistElements).forEach(x -> System.out.println(x.getUnixTimeString()));
+
+			Set<Long> set = new HashSet<Long>();
+			ArrayList<MusicVideoPlaylistElement> newList = new ArrayList<MusicVideoPlaylistElement>(
+					playlistElements.length);
+
+			for (int i = 0; i < playlistElements.length; i++) {
+				if (set.add(playlistElements[i].getUnixTime())) {
+					newList.add(playlistElements[i]);
+				}
+			}
+			Arrays.stream(newList.toArray(new MusicVideoPlaylistElement[0]))
+					.forEach(x -> System.out.println(x.getUnixTimeString()));
+			this.playlistElements = newList.toArray(new MusicVideoPlaylistElement[0]);
 		}
 
 	}

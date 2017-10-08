@@ -775,9 +775,6 @@ public class MainWindowController {
 				// >> load the window itself
 				Parent root1 = (Parent) loader.load();
 
-				// >> load the controller to the window
-				loader.getController();
-
 				// create a stage
 				Stage stage = new Stage(StageStyle.DECORATED);
 				stage.setScene(new Scene(root1));
@@ -800,6 +797,10 @@ public class MainWindowController {
 						refreshMusicVideoPlaylistTable();
 					}
 				});
+
+				// Connection to the Controller to the stage
+				ServerLoginWindowController aboutWindowController = loader.getController();
+				aboutWindowController.setServerLoginWindow(this.mainWindow, stage);
 
 				// show the stage
 				stage.show();
@@ -918,6 +919,7 @@ public class MainWindowController {
 
 			// >> load the controller to the window and give him the main window
 			RandomWindowController windowController = loader.getController();
+			windowController.setWindowController(this.mainWindow, this);
 
 			// create a stage
 			Stage stage = new Stage(StageStyle.DECORATED);
@@ -934,9 +936,6 @@ public class MainWindowController {
 			} catch (Exception e) {
 				System.err.println("Exception while loding icons");
 			}
-
-			// Connection to the Controller from the primary Stage
-			windowController.setWindowController(this.mainWindow, stage, this);
 
 			stage.show();
 
@@ -1086,17 +1085,17 @@ public class MainWindowController {
 	@FXML
 	public void refreshMusicVideoPlaylistTable() {
 
+		// clear the table
+		this.tableDataPlaylist.clear();
+
 		if (this.mainWindow.getMusicVideohandler().sftpConnectionEstablished()) {
-			this.mainWindow.getMusicVideohandler().clearPlaylist();
+			// retrieve SFTP playlist
 			this.mainWindow.getMusicVideohandler().sftpRetrievePlaylist();
 		}
 
 		// get music video data
 		MusicVideoPlaylistElement[] listOfEntries = this.mainWindow.getMusicVideohandler().getPlaylistHandler()
 				.getPlaylistElements();
-
-		// clear table
-		tableDataPlaylist.clear();
 
 		// add music video data
 		if (listOfEntries != null) {

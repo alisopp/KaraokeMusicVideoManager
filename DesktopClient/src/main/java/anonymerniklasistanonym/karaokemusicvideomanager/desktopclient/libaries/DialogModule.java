@@ -80,6 +80,7 @@ public class DialogModule {
 			if (result == ButtonType.YES) {
 				// save changes in file
 				saveTheSettings.saveSettingsToFile();
+
 			} else if (result == buttonAlways) {
 				// add to config that always the changes should be saved on exit
 				// save changes in file

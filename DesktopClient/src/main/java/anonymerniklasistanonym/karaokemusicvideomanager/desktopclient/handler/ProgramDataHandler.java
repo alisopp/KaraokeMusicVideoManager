@@ -406,7 +406,7 @@ public final class ProgramDataHandler {
 			JsonObject jsonObject = JsonModule.loadJsonFromString(strBuilder.toString());
 
 			// create an 'empty' settings data file
-			ProgramDataHandler settingsData = new ProgramDataHandler();
+			ProgramDataHandler newSettingsData = new ProgramDataHandler();
 
 			// -> (try to) get path list
 			JsonArray keyValuePathList = (JsonArray) JsonModule.getValue(jsonObject, "path-list");
@@ -420,7 +420,7 @@ public final class ProgramDataHandler {
 					newPathList[i] = Paths.get(keyValuePathList.getString(i));
 				}
 
-				settingsData.setPathList(newPathList);
+				newSettingsData.setPathList(newPathList);
 
 			} else {
 				System.err.println(" << No saved paths");
@@ -433,21 +433,21 @@ public final class ProgramDataHandler {
 
 				try {
 					String usernameValue = JsonModule.getValueString(keyValueSftpLogin, "username").toString();
-					settingsData.setUsernameSftp(usernameValue);
+					newSettingsData.setUsernameSftp(usernameValue);
 				} catch (Exception e) {
 					System.out.println("No Sftp username");
 				}
 
 				try {
 					String ipAddressValue = JsonModule.getValueString(keyValueSftpLogin, "ip-address").toString();
-					settingsData.setIpAddressSftp(ipAddressValue);
+					newSettingsData.setIpAddressSftp(ipAddressValue);
 				} catch (Exception e) {
 					System.out.println("No Sftp Ip address");
 				}
 
 				try {
 					String workingDirectoryValue = JsonModule.getValueString(keyValueSftpLogin, "directory").toString();
-					settingsData.setWorkingDirectorySftp(workingDirectoryValue);
+					newSettingsData.setWorkingDirectorySftp(workingDirectoryValue);
 				} catch (Exception e) {
 					System.out.println("No Sftp Ip address");
 				}
@@ -467,7 +467,7 @@ public final class ProgramDataHandler {
 					newAcceptedFileTypes[i] = keyValueFileTypes.getString(i);
 				}
 
-				settingsData.setAcceptedFileTypes(newAcceptedFileTypes);
+				newSettingsData.setAcceptedFileTypes(newAcceptedFileTypes);
 			} else {
 				System.err.println(" << No accepted file types");
 			}
@@ -484,7 +484,7 @@ public final class ProgramDataHandler {
 					newAcceptedFileTypes[i] = Paths.get(keyValueIgnoredFiles.getString(i)).toFile();
 				}
 
-				settingsData.setIgnoredFiles(newAcceptedFileTypes);
+				newSettingsData.setIgnoredFiles(newAcceptedFileTypes);
 			} else {
 				System.err.println(" << No accepted file types");
 			}
@@ -493,12 +493,12 @@ public final class ProgramDataHandler {
 			boolean keyValueAlwaysSave = JsonModule.getValueBoolean(jsonObject, "always-save");
 
 			if (keyValueAlwaysSave != false) {
-				settingsData.setAlwaysSaveSettings(true);
+				newSettingsData.setAlwaysSaveSettings(true);
 			} else {
 				System.err.println(" << No always save setting");
 			}
 
-			return settingsData;
+			return newSettingsData;
 
 		} catch (Exception e) {
 			e.printStackTrace();

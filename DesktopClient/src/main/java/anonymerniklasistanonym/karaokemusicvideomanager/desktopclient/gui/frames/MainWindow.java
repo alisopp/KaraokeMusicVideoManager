@@ -4,6 +4,7 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller.MainWindowController;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -78,13 +79,15 @@ public class MainWindow {
 				|| this.main.getMusicVideohandler().getAlwaysSave() == true) {
 			// save changes if nothing is there
 			this.main.getMusicVideohandler().saveSettingsToFile();
-			System.out.println("Later...");
+
+			Platform.exit();
 		} else {
 
 			if (!this.main.getMusicVideohandler().compareSettings()) {
 				DialogModule.mainStageClose(e, this.main.getMusicVideohandler());
 			} else {
 				System.out.println("Settings were the same");
+				Platform.exit();
 			}
 
 		}

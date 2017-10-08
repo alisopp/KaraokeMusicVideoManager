@@ -6,7 +6,7 @@ Instruction on how you can use the ***master*** shell script to compile and upda
 
 ## The *master* script that does it all
 
-The script that compiles everything [build_everything.sh](../build_everything.sh) (which is really the *master* script) can be simply controlled with the script [build_run_configuration.sh](../build_run_configuration.sh) or over the command line as followed:
+The script that compiles everything [`build_everything.sh`](../build_everything.sh) (which is really the *master* script) can be simply controlled with the script [`build_run_configuration.sh`](../build_run_configuration.sh) or over the command line as followed:
 
 ```shell
 # Setup your own build run configuration.
@@ -18,7 +18,7 @@ The script that compiles everything [build_everything.sh](../build_everything.sh
 . build_everything.sh img web win
 ```
 
-Change the parameter in the last line (or in your command line) to the things you want to compile on executing/double clicking of the [build_run_configuration.sh](../build_run_configuration.sh).
+Change the parameter in the last line (or in your command line) to the things you want to compile on executing/double clicking of the [`build_run_configuration.sh`](../build_run_configuration.sh).
 
 If you just want to get the runnable `.jar` file remove all parameter (`img web win`).
 

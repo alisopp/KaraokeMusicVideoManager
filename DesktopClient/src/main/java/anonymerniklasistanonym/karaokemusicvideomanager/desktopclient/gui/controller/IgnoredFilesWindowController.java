@@ -295,7 +295,6 @@ public class IgnoredFilesWindowController {
 					this.mainWindow.getMusicVideohandler().addIgnoredFileToIgnoredFilesList(newFilePath);
 
 					updateIgnoredFileTable();
-					this.mainWindow.getMusicVideohandler().updateMusicVideoList();
 				}
 			}
 		}
@@ -336,9 +335,11 @@ public class IgnoredFilesWindowController {
 			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
 
 			this.mainWindow.getMusicVideohandler().removeFromIgnoredFilesList(selectedFile);
+
+			// update all tables
+			updateIgnoredFileTable();
 		}
 
-		updateIgnoredFileTable();
 	}
 
 	/**

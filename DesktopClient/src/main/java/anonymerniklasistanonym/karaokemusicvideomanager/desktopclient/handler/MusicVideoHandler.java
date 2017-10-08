@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 
@@ -100,7 +101,12 @@ public class MusicVideoHandler {
 	 * @return true if connected (boolean)
 	 */
 	public boolean sftpConnectionEstablished() {
-		return this.sftpController.isConnectionEstablished();
+
+		if (this.sftpController != null && this.sftpController.isConnectionEstablished()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -1253,18 +1259,35 @@ public class MusicVideoHandler {
 
 	public void addMusicVideoToPlaylist(int index, String author, String comment) {
 
+		// add MusicVideoPlaylistElement to the playlist
 		MusicVideoPlaylistElement newElement = this.playlistHandler.add(index, this.musicVideoList[index - 1], author,
 				comment);
-		if (sftpController.isConnectionEstablished()) {
-			syncPlaylist(newElement);
+		if (sftpConnectionEstablished()) {
+			uploadPlaylistEntry(newElement);
 		}
+	}
+
+	private void addMusicVideoToPlaylist(long unixTime, int index, MusicVideo musicVideo, String author, String comment,
+			boolean createdLocally) {
+		MusicVideoPlaylistElement newElement = this.playlistHandler.load(unixTime, index, musicVideo, author, comment,
+				createdLocally);
+
+		if (sftpConnectionEstablished()) {
+			uploadPlaylistEntry(newElement);
+		}
+
 	}
 
 	public void editMusicVideoToPlaylist(int index, String author, String comment) {
 
 		MusicVideoPlaylistElement newElement = this.playlistHandler.edit(index, author, comment);
-		if (sftpController.isConnectionEstablished()) {
-			editSyncPlaylist(newElement);
+		if (sftpConnectionEstablished()) {
+
+			// remove the old playlist entry
+			deletePlaylistEntrySftp(newElement);
+
+			// then upload the edited playlist entry
+			uploadPlaylistEntry(newElement);
 		}
 
 	}
@@ -1273,8 +1296,8 @@ public class MusicVideoHandler {
 
 		MusicVideoPlaylistElement newElement = this.playlistHandler.remove(index);
 
-		if (sftpController.isConnectionEstablished()) {
-			deleteSyncPlaylist(newElement);
+		if (sftpConnectionEstablished()) {
+			deletePlaylistEntrySftp(newElement);
 		}
 
 	}
@@ -1329,6 +1352,7 @@ public class MusicVideoHandler {
 	}
 
 	public String getSftpIpAddress() {
+		System.out.println(this.settingsData.getIpAddressSftp());
 		return this.settingsData.getIpAddressSftp();
 	}
 
@@ -1340,88 +1364,177 @@ public class MusicVideoHandler {
 		return this.settingsData.getWorkingDirectorySftp();
 	}
 
-	public void syncPlaylist(MusicVideoPlaylistElement element) {
+	/**
+	 * Upload a playlist entry to SFTP server
+	 * 
+	 * @param element
+	 */
+	public void uploadPlaylistEntry(MusicVideoPlaylistElement element) {
+
+		// create the locally the file
 		FileReadWriteModule.createDirectory(new File("php"));
 		File whereToWrite = new File("php/" + Long.toString(element.getUnixTime()) + ".json");
 		FileReadWriteModule.writeTextFile(whereToWrite,
 				new String[] { this.playlistHandler.writePlaylistEntryFile(element) });
-		this.sftpController.changeDirectory(this.getSftpDirectory());
+
+		// then upload the file
+		this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
 		this.sftpController.changeDirectory("php");
 		this.sftpController.transferFile(whereToWrite.getAbsolutePath());
+
+		// then delete the local file again
 		FileReadWriteModule.deleteFile(whereToWrite);
 		FileReadWriteModule.deleteDirectory(new File("php"));
 
 	}
 
-	public void editSyncPlaylist(MusicVideoPlaylistElement element) {
-		this.sftpController.changeDirectory(this.getSftpDirectory());
-		this.sftpController.changeDirectory("php");
-		String fileLocation = Long.toString(element.getUnixTime()) + ".json";
-		this.sftpController.removeFile(fileLocation);
-		FileReadWriteModule.createDirectory(new File("php"));
-		File whereToWrite = new File("php/" + fileLocation);
-		FileReadWriteModule.writeTextFile(whereToWrite,
-				new String[] { this.playlistHandler.writePlaylistEntryFile(element) });
-		this.sftpController.transferFile(whereToWrite.getAbsolutePath());
-		FileReadWriteModule.deleteFile(whereToWrite);
+	public void uploadEditedPlaylistEntry(MusicVideoPlaylistElement element) {
+
+		// remove the old playlist entry
+		deletePlaylistEntrySftp(element);
+
+		// then upload the edited playlist entry
+		uploadPlaylistEntry(element);
 	}
 
-	public void deleteSyncPlaylist(MusicVideoPlaylistElement element) {
-		this.sftpController.changeDirectory(this.getSftpDirectory());
+	public void deletePlaylistEntrySftp(MusicVideoPlaylistElement element) {
+		this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
 		this.sftpController.changeDirectory("php");
 		String fileLocation = Long.toString(element.getUnixTime()) + ".json";
 		this.sftpController.removeFile(fileLocation);
 	}
 
+	/**
+	 * Clear the playlist
+	 */
 	public void clearPlaylist() {
-		this.playlistHandler.setPlaylistElements(null);
+
+		// check if there is even a playlist and if there are even entries
+		if (this.playlistHandler != null && this.playlistHandler.getPlaylistElements() != null) {
+
+			// clear local playlist
+			this.playlistHandler.setPlaylistElements(null);
+
+			// clear network playlist if a connection is established
+			if (this.sftpController != null && this.sftpController.isConnectionEstablished()) {
+
+				// change the directory to the one with all the playlist JSON files
+				this.sftpController.changeDirectory(this.getSftpDirectory());
+				this.sftpController.changeDirectory("php");
+
+				// get all JSON files and remove the ones that are playlist files
+				for (String file : this.sftpController.listFiles(".json")) {
+					if (file.matches("\\d+.json")) {
+						this.sftpController.removeFile(file);
+					}
+				}
+			}
+		}
 	}
 
-	public void savePlaylist(File filePath) {
-		FileReadWriteModule.writeTextFile(filePath, new String[] {
+	/**
+	 * Save the current playlist in a JSON file
+	 * 
+	 * @param filePath
+	 *            (File | Destination of the file)
+	 */
+	public boolean savePlaylist(File filePath) {
+		return FileReadWriteModule.writeTextFile(filePath, new String[] {
 				MusicVideoDataExportHandler.generateJsonContentPlaylist(this.playlistHandler.getPlaylistElements()) });
 	}
 
-	public void loadPlaylist(File file) {
-		String[] playlistTextContent = FileReadWriteModule.readTextFile(file);
+	/**
+	 * Load a playlist
+	 * 
+	 * @param file
+	 */
+	public boolean loadPlaylist(File file) {
 
+		// read the given file
+		final String[] playlistTextContent = FileReadWriteModule.readTextFile(file);
+
+		// check if the content is not null
 		if (playlistTextContent != null) {
-			this.playlistHandler.setPlaylistElements(null);
-			JsonObject playlist = JsonModule.loadJsonFromString(playlistTextContent[0]);
-			for (JsonValue jsonObject : playlist.getJsonArray("playlist")) {
-				Path pathToFile = Paths.get(jsonObject.asJsonObject().getString("file-path"));
 
-				int indexInList = inMusicVideoPlaylist(pathToFile);
-				if (indexInList != -1) {
-					System.out.println("File was recognized");
-					String author = jsonObject.asJsonObject().getString("author");
-					String comment = jsonObject.asJsonObject().getString("comment");
-					long unixTime = Long.parseLong(jsonObject.asJsonObject().get("time").toString());
-					boolean createdLocally = jsonObject.asJsonObject().getBoolean("created-locally");
+			// load JSON data from given text
+			final JsonObject playlist = JsonModule.loadJsonFromString(playlistTextContent[0]);
 
-					this.playlistHandler.load(unixTime, indexInList + 1, this.musicVideoList[indexInList], author,
-							comment, createdLocally);
-				} else {
-					System.err.println("Playlist entry file not found in music video list!");
+			// check if the JSON data exists
+			if (playlist != null) {
+
+				// load all the playlist entries
+				final JsonArray playlistContent = playlist.getJsonArray("playlist");
+
+				// check if the JSON holds content
+				if (playlistContent != null) {
+
+					// clear the current playlist
+					clearPlaylist();
+
+					// for every playlist entry
+					for (JsonValue jsonObject : playlistContent) {
+
+						// check if the saved paths is in the music video list
+						final String pathToFile = jsonObject.asJsonObject().getString("file-path");
+
+						// check if the path exists and isn't null
+						if (pathToFile != null && Paths.get(pathToFile).toFile().exists()) {
+
+							// get the index of the file in the music video list
+							final int indexInList = inMusicVideoPlaylist(Paths.get(pathToFile));
+
+							// if a index was found
+							if (indexInList != -1) {
+
+								// get the content of the playlist entry
+								final String author = jsonObject.asJsonObject().getString("author");
+								final String comment = jsonObject.asJsonObject().getString("comment");
+								final long unixTime = Long.parseLong(jsonObject.asJsonObject().get("time").toString());
+								final boolean createdLocally = jsonObject.asJsonObject().getBoolean("created-locally");
+
+								// then add the music video to the playlist
+								addMusicVideoToPlaylist(unixTime, indexInList + 1, this.musicVideoList[indexInList],
+										author, comment, createdLocally);
+
+							}
+						}
+
+					}
+
+					System.out.println("Playlist was loaded");
+					return true;
 				}
-
 			}
 		}
+
+		System.err.println("Playlist could not be loaded!");
+		return false;
 	}
 
+	/**
+	 * Search if a given path points to a file from the music video list
+	 * 
+	 * @param searchPath
+	 *            (Path to a MusicVideo file)
+	 * @return -1 if not found else a index of the MusicVideoFile (Integer)
+	 */
 	public int inMusicVideoPlaylist(Path searchPath) {
-		File fileToFind = searchPath.toFile();
+
 		try {
+			// convert path to file
+			final String fileToFind = searchPath.toFile().getCanonicalPath();
+
 			for (int i = 0; i < this.musicVideoList.length; i++) {
-				if (this.musicVideoList[i].getPath().toFile().getCanonicalPath()
-						.equals(fileToFind.getCanonicalPath())) {
+				if (this.musicVideoList[i].getPath().toFile().getCanonicalPath().equals(fileToFind)) {
 					return i;
 				}
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 		return -1;
+
 	}
 
 	public MusicVideo getMusicVideoOfPlaylistItem(Path pathOfMusicVideo) {
@@ -1442,11 +1555,20 @@ public class MusicVideoHandler {
 		return null;
 	}
 
+	/**
+	 * Remove all ignored files from the ignored files list
+	 */
 	public void clearIgnoredFilesList() {
-		this.settingsData.resetIgnoredFilesList();
-		// update the music video list now
-		updateMusicVideoList();
 
+		// if the list is not already empty
+		if (this.settingsData.getIgnoredFiles() != null) {
+
+			// clear the ignored files list
+			this.settingsData.setIgnoredFiles(null);
+
+			// update the music video list
+			updateMusicVideoList();
+		}
 	}
 
 }
