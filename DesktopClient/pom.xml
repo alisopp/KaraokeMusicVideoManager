@@ -70,8 +70,8 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			<!--<plugin>
-				Delete if no solution will be found: We want to compile through a script
+			<!--<plugin> 
+				Compile jar without dependencies (dependencies are neeeded!! because of SFTP libary and JavaFx)
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>3.0.2</version>
@@ -82,7 +82,7 @@
 						<index>true</index>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.App</mainClass>
+							<mainClass>anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main</mainClass>
 						</manifest>
 						<manifestEntries>
 							<mode>development</mode>

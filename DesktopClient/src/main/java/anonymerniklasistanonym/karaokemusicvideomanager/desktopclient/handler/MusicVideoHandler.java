@@ -1,11 +1,8 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -1270,6 +1267,16 @@ public class MusicVideoHandler {
 		}
 	}
 
+	public void addMusicVideoToPlaylistRandom(int number, int index, String author, String comment) {
+
+		// add MusicVideoPlaylistElement to the playlist
+		MusicVideoPlaylistElement newElement = this.playlistHandler.addRandom(number, index,
+				this.musicVideoList[index - 1], author, comment);
+		if (sftpConnectionEstablished()) {
+			uploadPlaylistEntry(newElement);
+		}
+	}
+
 	private void addMusicVideoToPlaylist(long unixTime, int index, MusicVideo musicVideo, String author, String comment,
 			boolean createdLocally) {
 		MusicVideoPlaylistElement newElement = this.playlistHandler.load(unixTime, index, musicVideo, author, comment,
@@ -1312,9 +1319,13 @@ public class MusicVideoHandler {
 
 	public void sftpRetrievePlaylist() {
 
+		// check if a connection was established
 		if (sftpConnectionEstablished()) {
-			FileReadWriteModule.deleteDirectoryWithFiles(new File("php"));
+
+			// go into the default directory
 			this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
+
+			// then check if a directory named php exists
 			boolean existingPhpDirectory = false;
 			for (String file : this.sftpController.listFiles()) {
 				if (file.equals("php")) {
@@ -1322,19 +1333,35 @@ public class MusicVideoHandler {
 					existingPhpDirectory = true;
 				}
 			}
+
+			// if yes
 			if (existingPhpDirectory) {
-				FileReadWriteModule.createDirectory(Paths.get("php").toFile());
+
+				// go into it
 				this.sftpController.changeDirectory("php");
+
+				// now clean the list
+				this.playlistHandler.setPlaylistElements(null);
+
+				// and collect all files
 				for (String file : this.sftpController.listFiles(".json")) {
+
+					// if the file has the format of a playlist entry file
 					if (file.matches("\\d+.json")) {
+
 						System.out.println("Found a playlist file (" + file + ")");
+
+						// get the content of the file
 						String contentOfFile = this.sftpController.retrieveFileInputStreamString(file);
 
+						// and convert the data to a playlist entry
 						Object[] contentData = this.playlistHandler.readPlaylistEntryFile(contentOfFile);
 						if (contentData != null) {
-
-							this.playlistHandler.load((long) contentData[0], (int) contentData[1] + 1,
-									musicVideoList[(int) contentData[1]], (String) contentData[2],
+							System.out.println("Musicvideolist length: " + this.musicVideoList.length);
+							System.out.println("number: " + contentData[1]);
+							// last but not least import it to the playlist
+							this.playlistHandler.load((long) contentData[0], (int) contentData[1],
+									musicVideoList[(int) contentData[1] - 1], (String) contentData[2],
 									(String) contentData[3], (boolean) contentData[4]);
 						}
 					}
@@ -1371,30 +1398,20 @@ public class MusicVideoHandler {
 	 */
 	public void uploadPlaylistEntry(MusicVideoPlaylistElement element) {
 
-		// create the locally the file
-		// FileReadWriteModule.createDirectory(new File("php"));
-		File whereToWrite = new File("php/" + Long.toString(element.getUnixTime()) + ".json");
-		// FileReadWriteModule.writeTextFile(whereToWrite, new String[] {
-		// this.playlistHandler.writePlaylistEntryFile(element) });
+		// create filename
+		final String fileName = Long.toString(element.getUnixTime()) + ".json";
 
-		// then upload the file
+		// then change into the php directory
 		this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
 		this.sftpController.changeDirectory("php");
-		// this.sftpController.transferFile(whereToWrite.getAbsolutePath());
 
-		try {
-			InputStream stream = new ByteArrayInputStream(
-					this.playlistHandler.writePlaylistEntryFile(element).getBytes(StandardCharsets.UTF_8.name()));
-			this.sftpController.transferFile(stream, whereToWrite.getName());
+		// then transfer the new file
+		// by crating an input stream of the content string
+		final InputStream stream = FileReadWriteModule
+				.stringToInputStream(this.playlistHandler.writePlaylistEntryFile(element));
 
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// then delete the local file again
-		// FileReadWriteModule.deleteFile(whereToWrite);
-		// FileReadWriteModule.deleteDirectory(new File("php"));
+		// and then sending it with a filename to the server
+		this.sftpController.transferFile(stream, fileName);
 
 	}
 
@@ -1449,8 +1466,8 @@ public class MusicVideoHandler {
 	 *            (File | Destination of the file)
 	 */
 	public boolean savePlaylist(File filePath) {
-		return FileReadWriteModule.writeTextFile(filePath, new String[] {
-				MusicVideoDataExportHandler.generateJsonContentPlaylist(this.playlistHandler.getPlaylistElements()) });
+		return FileReadWriteModule.writeTextFile(filePath,
+				MusicVideoDataExportHandler.generateJsonContentPlaylist(this.playlistHandler.getPlaylistElements()));
 	}
 
 	/**
@@ -1530,37 +1547,48 @@ public class MusicVideoHandler {
 	 */
 	public int inMusicVideoPlaylist(Path searchPath) {
 
-		try {
-			// convert path to file
-			final String fileToFind = searchPath.toFile().getCanonicalPath();
-
-			for (int i = 0; i < this.musicVideoList.length; i++) {
-				if (this.musicVideoList[i].getPath().toFile().getCanonicalPath().equals(fileToFind)) {
-					return i;
+		// if there is a music video list
+		if (this.musicVideoList != null && searchPath != null) {
+			try {
+				// check now for every element in the list if it points to the same File
+				for (int i = 0; i < this.musicVideoList.length; i++) {
+					// and check for every element if the path points to the same file
+					if (Files.isSameFile(this.musicVideoList[i].getPath(), searchPath)) {
+						// return the found file
+						return i;
+					}
 				}
+			} catch (IOException e1) {
+				e1.printStackTrace();
 			}
-
-		} catch (IOException e1) {
-			e1.printStackTrace();
 		}
 		return -1;
 
 	}
 
+	/**
+	 * Search the music video list for a MusicVideo object
+	 * 
+	 * @param pathOfMusicVideo
+	 *            (Path to a music video file)
+	 * @return MusicVideo object if found or null (MusicVideo)
+	 */
 	public MusicVideo getMusicVideoOfPlaylistItem(Path pathOfMusicVideo) {
 
-		if (this.musicVideoList == null) {
-			return null;
-		}
-
-		try {
-			for (MusicVideo musicVideoElement : this.musicVideoList) {
-				if (Files.isSameFile(musicVideoElement.getPath(), pathOfMusicVideo)) {
-					return musicVideoElement;
+		// if there is a music video list
+		if (this.musicVideoList != null && pathOfMusicVideo != null) {
+			try {
+				// iterate through all elements
+				for (int i = 0; i < this.musicVideoList.length; i++) {
+					// and check for every element if the path points to the same file
+					if (Files.isSameFile(this.musicVideoList[i].getPath(), pathOfMusicVideo)) {
+						// return the found file
+						return this.musicVideoList[i];
+					}
 				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-
 		}
 		return null;
 	}
@@ -1579,6 +1607,86 @@ public class MusicVideoHandler {
 			// update the music video list
 			updateMusicVideoList();
 		}
+	}
+
+	public void resetSftp() {
+		if (sftpConnectionEstablished()) {
+			this.sftpController.disconnectSFTP();
+		}
+		this.settingsData.setIpAddressSftp(null);
+		this.settingsData.setUsernameSftp(null);
+		this.settingsData.setWorkingDirectorySftp(null);
+
+	}
+
+	public static enum TYPE_OF_HTML {
+		STATIC, SEARCH, PARTY;
+	}
+
+	public void transferHtmlMain(boolean favicons, TYPE_OF_HTML type) {
+
+		if (sftpConnectionEstablished()) {
+
+			this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
+
+			// remove top files
+			this.sftpController.removeFile("index.html");
+			this.sftpController.removeFile("index.php");
+
+			// add icons
+			if (favicons) {
+				this.sftpController.makeDirectory("favicons");
+				this.sftpController.changeDirectory("favicons");
+
+				Integer[] sizes = { 16, 32, 48, 64, 94, 128, 160, 180, 194, 256, 512 };
+
+				for (Integer size : sizes) {
+					final String inputPath = "images/favicons/favicon-" + size + "x" + size + ".png";
+					final String outputPath = "favicon-" + size + "x" + size + ".png";
+					this.sftpController.transferFile(ClassResourceReaderModule.getInputStream(inputPath), outputPath);
+				}
+
+				final String inputPath = "images/favicons/favicon.svg";
+				final String outputPath = "favicon.svg";
+				this.sftpController.transferFile(ClassResourceReaderModule.getInputStream(inputPath), outputPath);
+
+				final String inputPath2 = "images/favicons/icon.ico";
+				final String outputPath2 = "icon.ico";
+				this.sftpController.transferFile(ClassResourceReaderModule.getInputStream(inputPath2), outputPath2);
+			}
+
+			this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
+
+			if (type == TYPE_OF_HTML.STATIC) {
+
+				final InputStream stream = FileReadWriteModule.stringToInputStream(generateHtmlStatic());
+				this.sftpController.transferFile(stream, "index.html");
+
+			} else if (type == TYPE_OF_HTML.SEARCH) {
+
+				final InputStream stream = FileReadWriteModule.stringToInputStream(generateHtmlSearch());
+				this.sftpController.transferFile(stream, "index.html");
+
+			} else if (type == TYPE_OF_HTML.PARTY) {
+
+				final InputStream stream = FileReadWriteModule.stringToInputStream(generateHtmlParty());
+				this.sftpController.transferFile(stream, "list.html");
+				final InputStream stream2 = FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist());
+				this.sftpController.transferFile(stream2, "index.php");
+			}
+		}
+	}
+
+	public void transferHtmlParty() {
+		transferHtmlMain(true, TYPE_OF_HTML.PARTY);
+	}
+
+	public void transferHtmlStatic() {
+		transferHtmlMain(true, TYPE_OF_HTML.STATIC);
+	}
+
+	public void transferHtmlSearch() {
+		transferHtmlMain(true, TYPE_OF_HTML.SEARCH);
 	}
 
 }

@@ -1,12 +1,15 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -130,6 +133,19 @@ public class FileReadWriteModule {
 			return false;
 		}
 
+	}
+
+	/**
+	 * Creates a text file and writes content into it
+	 * 
+	 * @param file
+	 *            (File | filename + path to save)
+	 * @param content
+	 *            (String[] | content that should be saved into it)
+	 * @return writeFileSuccssessfull (Boolean)
+	 */
+	public static boolean writeTextFile(File file, String content) {
+		return writeTextFile(file, new String[] { content });
 	}
 
 	/**
@@ -400,6 +416,15 @@ public class FileReadWriteModule {
 			return false;
 		}
 
+	}
+
+	public static InputStream stringToInputStream(String textFileContent) {
+		try {
+			return new ByteArrayInputStream(textFileContent.getBytes(StandardCharsets.UTF_8.name()));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

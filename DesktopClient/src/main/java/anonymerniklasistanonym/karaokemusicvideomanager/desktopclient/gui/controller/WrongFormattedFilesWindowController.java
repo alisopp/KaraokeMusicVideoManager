@@ -1,11 +1,10 @@
-package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
+package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller.MainWindowController;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.WrongFormattedFilesTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationModule;

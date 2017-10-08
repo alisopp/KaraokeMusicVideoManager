@@ -41,9 +41,9 @@
                         <MenuItem fx:id="menuButtonJson" mnemonicParsing="false" onAction="#exportJson" text="JSON" />
                   </items>
                 </Menu>
-                  <Menu disable="true" mnemonicParsing="false" text="Network">
+                  <Menu mnemonicParsing="false" text="Network">
                     <items>
-                        <Menu fx:id="menuButtonSftp" mnemonicParsing="false" text="Setup The Server">
+                        <Menu fx:id="menuButtonSftp" disable="true" mnemonicParsing="false" text="Setup The Server">
                           <items>
                             <MenuItem fx:id="menuButtonSftpStatic" mnemonicParsing="false" onAction="#sftpStatic" text="Static List" />
                               <MenuItem fx:id="menuButtonSftpSearch" mnemonicParsing="false" onAction="#sftpSearch" text="Searchable List" />

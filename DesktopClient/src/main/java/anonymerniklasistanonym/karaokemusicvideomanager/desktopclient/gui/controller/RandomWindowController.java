@@ -182,7 +182,7 @@ public class RandomWindowController {
 			}
 
 			for (int i = 0; i < 5; i++) {
-				this.mainWindow.getMusicVideohandler().addMusicVideoToPlaylist(labelContent[i].getIndex(),
+				this.mainWindow.getMusicVideohandler().addMusicVideoToPlaylistRandom(i, labelContent[i].getIndex(),
 						authorComment[0], authorComment[1]);
 			}
 			mainWindowController.refreshMusicVideoPlaylistTable();

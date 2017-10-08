@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.WrongFormattedFilesWindowController;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoPlaylistTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoSourceDirectoriesTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoTableView;
@@ -515,9 +514,16 @@ public class MainWindowController {
 		menuButtonSaveConfigurationCustom.setGraphic(WindowModule.createMenuIcon("save"));
 		menuButtonLoadConfigurationCustom.setGraphic(WindowModule.createMenuIcon("load"));
 		menuButtonResetConfiguration.setGraphic(WindowModule.createMenuIcon("reset"));
+		menuButtonSftp.setGraphic(WindowModule.createMenuIcon("network"));
+		menuButtonSftpReset.setGraphic(WindowModule.createMenuIcon("remove"));
+		menuButtonSftpStatic.setGraphic(WindowModule.createMenuIcon("html_static"));
+		menuButtonSftpSearch.setGraphic(WindowModule.createMenuIcon("html_search"));
+		menuButtonSftpParty.setGraphic(WindowModule.createMenuIcon("html_playlist"));
 
 		// label
 		searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
+
+		this.menuButtonSftp.setDisable(true);
 	}
 
 	public void setMainWindow(Main window) {
@@ -765,48 +771,56 @@ public class MainWindowController {
 	private void openServerLoginWindow() {
 
 		if (!this.mainWindow.getMusicVideohandler().sftpConnectionEstablished()) {
-			this.networkButton.setSelected(true);
-			try {
 
-				// load the whole FXML window
-				FXMLLoader loader = new FXMLLoader();
-				loader.setLocation(getClass().getClassLoader().getResource("windows/ServerLoginWindow.fxml"));
+			if ((this.mainWindow.getMusicVideohandler().getPlaylistHandler() != null
+					&& this.mainWindow.getMusicVideohandler().getPlaylistHandler().getPlaylistElements() == null)
+					|| DialogModule.yesNoDialog("You really want to continue?",
+							"If you login to the server you will lose your current playlist!",
+							"If you do not want to loose this playlist save it before you logg yourself in. Load it after the connection was established to overwrite the server data.")) {
 
-				// >> load the window itself
-				Parent root1 = (Parent) loader.load();
-
-				// create a stage
-				Stage stage = new Stage(StageStyle.DECORATED);
-				stage.setScene(new Scene(root1));
-				stage.setResizable(false);
-				stage.setTitle("Server Login");
-
-				// try to add a window icon
+				this.networkButton.setSelected(true);
 				try {
-					stage.getIcons().addAll(WindowModule.getWindowIcons());
-				} catch (Exception e) {
-					System.err.println("Exception while loding icons");
-				}
 
-				// do this on a close request
-				stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+					// load the whole FXML window
+					FXMLLoader loader = new FXMLLoader();
+					loader.setLocation(getClass().getClassLoader().getResource("windows/ServerLoginWindow.fxml"));
 
-					@Override
-					public void handle(WindowEvent event) {
-						checkNetwork();
-						refreshMusicVideoPlaylistTable();
+					// >> load the window itself
+					Parent root1 = (Parent) loader.load();
+
+					// create a stage
+					Stage stage = new Stage(StageStyle.DECORATED);
+					stage.setScene(new Scene(root1));
+					stage.setResizable(false);
+					stage.setTitle("Server Login");
+
+					// try to add a window icon
+					try {
+						stage.getIcons().addAll(WindowModule.getWindowIcons());
+					} catch (Exception e) {
+						System.err.println("Exception while loding icons");
 					}
-				});
 
-				// Connection to the Controller to the stage
-				ServerLoginWindowController aboutWindowController = loader.getController();
-				aboutWindowController.setServerLoginWindow(this.mainWindow, stage);
+					// do this on a close request
+					stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 
-				// show the stage
-				stage.show();
+						@Override
+						public void handle(WindowEvent event) {
+							checkNetwork();
+							refreshMusicVideoPlaylistTable();
+						}
+					});
 
-			} catch (Exception e) {
-				e.printStackTrace();
+					// Connection to the Controller to the stage
+					ServerLoginWindowController aboutWindowController = loader.getController();
+					aboutWindowController.setServerLoginWindow(this.mainWindow, stage);
+
+					// show the stage
+					stage.show();
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		} else {
 			if (DialogModule.yesNoDialog("Logout?", "Do you want to log out?",
@@ -1146,10 +1160,12 @@ public class MainWindowController {
 		if (this.mainWindow.getMusicVideohandler().sftpConnectionEstablished()) {
 			this.networkButton.setSelected(true);
 			this.mainWindow.getMusicVideohandler().sftpRetrievePlaylist();
+			this.menuButtonSftp.setDisable(false);
 			// update the table
 			refreshMusicVideoPlaylistTable();
 		} else {
 			this.networkButton.setSelected(false);
+			this.menuButtonSftp.setDisable(true);
 		}
 
 	}
@@ -1405,22 +1421,23 @@ public class MainWindowController {
 
 	@FXML
 	private void sftpReset() {
-		// TODO
+		this.mainWindow.getMusicVideohandler().resetSftp();
+		checkNetwork();
 	}
 
 	@FXML
 	private void sftpParty() {
-		// TODO
+		this.mainWindow.getMusicVideohandler().transferHtmlParty();
 	}
 
 	@FXML
 	private void sftpStatic() {
-		// TODO
+		this.mainWindow.getMusicVideohandler().transferHtmlStatic();
 	}
 
 	@FXML
 	private void sftpSearch() {
-		// TODO
+		this.mainWindow.getMusicVideohandler().transferHtmlSearch();
 	}
 
 	@FXML

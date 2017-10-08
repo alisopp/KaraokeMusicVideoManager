@@ -2,6 +2,7 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -124,6 +125,25 @@ public class MusicVideoPlaylistHandler {
 		// create new entry
 		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(unixTime, musicVideoIndex, musicVideo,
 				author, comment, true);
+
+		MusicVideoPlaylistElement[] oldPlaylist = this.playlistElements;
+		MusicVideoPlaylistElement[] newPlaylist = new MusicVideoPlaylistElement[] { newEntry };
+
+		if (oldPlaylist != null) {
+			setPlaylistElements(Stream.concat(Arrays.stream(oldPlaylist), Arrays.stream(newPlaylist))
+					.toArray(MusicVideoPlaylistElement[]::new));
+		} else {
+			setPlaylistElements(newPlaylist);
+		}
+
+		return newEntry;
+	}
+
+	public MusicVideoPlaylistElement addRandom(int number, int musicVideoIndex, MusicVideo musicVideo, String author,
+			String comment) {
+		// create new entry
+		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(Instant.now().getEpochSecond() + number,
+				musicVideoIndex, musicVideo, author, comment, true);
 
 		MusicVideoPlaylistElement[] oldPlaylist = this.playlistElements;
 		MusicVideoPlaylistElement[] newPlaylist = new MusicVideoPlaylistElement[] { newEntry };
