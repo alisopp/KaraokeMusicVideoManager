@@ -50,18 +50,34 @@ You also need to install the Python image library Pillow via `pip install Pillow
 
 <br>
 
+## How to use NSIS over the command line?
+
+You can use NSIS over the command line either by default or if it does not work:
+
+- After installing it open the [Windows] environment variables
+- Add to the `Path` entry in the upper table with clicking the button `Edit` after selecting it the path to the `bin` folder of NSIS (for me this was `C:\Program Files (x86)\NSIS\Bin`)
+
+:arrow_right_hook: Now you should be able to run the script [build_windows_installer.py](../WindowsInstaller/build_windows_installer.py) (install Python 3.* therefore obviously too - instructions above this paragraph) in the folder `WindowsInstaller` or do anything else with NSIS over the command line.
+
+<br>
+
 ## Summary
 
 If you want to make changes you need to edit/look into:
 
 * [`create_windows_installer.nsi`](../WindowsInstaller/create_windows_installer.nsi)
   to change parts of the installer (pages/behavior)
+
 * [`create_image_ressources.py`](../ImageResources/create_image_ressources.py)
   to change to a different un/install icon/ un/installer page image
   * [`installer.svg`](../ImageResources/installer.svg)
     installer page image
   * [`logo.svg`](../ImageResources/logo.svg)
     icon image
+
+* [`build_windows_installer.py`](../ImageResources/create_image_ressources.py)
+
+  to compile the before created jar file and add after the export (with`makensis create_windows_installer.nsi`) a version number to the installer
 
 Documentation of NSIS script language:
 
