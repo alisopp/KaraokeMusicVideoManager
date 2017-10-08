@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="500.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.MainWindowController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="500.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller.MainWindowController">
    <top>
       <VBox prefHeight="73.0" prefWidth="427.0" BorderPane.alignment="CENTER">
          <children>

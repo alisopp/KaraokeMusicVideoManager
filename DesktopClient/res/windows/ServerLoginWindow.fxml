@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="260.0" prefWidth="350.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.ServerLoginWindowController">
+<StackPane prefHeight="260.0" prefWidth="350.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller.ServerLoginWindowController">
   <children>
     <StackPane style="-fx-background-color: white;">
       <children>

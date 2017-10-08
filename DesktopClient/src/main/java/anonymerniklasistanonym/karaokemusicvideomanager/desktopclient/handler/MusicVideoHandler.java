@@ -1121,8 +1121,8 @@ public class MusicVideoHandler {
 			return false;
 		}
 
-		return FileReadWriteModule.writeTextFile(whereToWriteTheFile.toFile(),
-				new String[] { MusicVideoDataExportHandler.generateJsonContentTable(this.musicVideoList, this.columnNames) });
+		return FileReadWriteModule.writeTextFile(whereToWriteTheFile.toFile(), new String[] {
+				MusicVideoDataExportHandler.generateJsonContentTable(this.musicVideoList, this.columnNames) });
 	}
 
 	/**
@@ -1135,7 +1135,7 @@ public class MusicVideoHandler {
 	public boolean loadSettings(File settingsFilePath) {
 
 		// read the settingsData
-		if (setSettingsData(ProgramDataHandler2.readSettings(settingsFilePath))) {
+		if (setSettingsData(this.settingsData.readSettings(settingsFilePath))) {
 			updateMusicVideoList();
 			return true;
 		} else {
@@ -1151,7 +1151,7 @@ public class MusicVideoHandler {
 	 * @return saveOperationSuccsessful (Boolean)
 	 */
 	public boolean saveSettings(File settingsFilePath) {
-		return ProgramDataHandler2.writeSettings(settingsFilePath, this.settingsData);
+		return ProgramDataHandler.writeSettings(settingsFilePath, this.settingsData);
 	}
 
 	/**
@@ -1163,7 +1163,7 @@ public class MusicVideoHandler {
 	 * @return theyAreTheSame (Boolean)
 	 */
 	public boolean compareSettings(File settingsFilePathNew) {
-		return ProgramDataHandler2.compareSettingsFileToCurrent(settingsFilePathNew, this.settingsData);
+		return ProgramDataHandler.compareSettingsFileToCurrent(settingsFilePathNew, this.settingsData);
 	}
 
 	/**
@@ -1175,7 +1175,7 @@ public class MusicVideoHandler {
 	 * @return theyAreTheSame (Boolean)
 	 */
 	public boolean compareSettings() {
-		return ProgramDataHandler2.compareSettingsFileToCurrent(this.settingsFile, this.settingsData);
+		return ProgramDataHandler.compareSettingsFileToCurrent(this.settingsFile, this.settingsData);
 	}
 
 	public boolean setAlwaysSave(boolean newValue) {
@@ -1216,8 +1216,8 @@ public class MusicVideoHandler {
 	 * Reset everything
 	 */
 	public void reset() {
-		this.settingsData.reset();
-		this.playlistHandler.reset();
+		this.settingsData = new ProgramDataHandler();
+		this.playlistHandler = new MusicVideoPlaylistHandler();
 		updateMusicVideoList();
 	}
 
@@ -1311,7 +1311,7 @@ public class MusicVideoHandler {
 					if (file.isFile()) {
 						if (file.getName().matches("\\d+.json")) {
 							System.out.println(file.getAbsolutePath() + " matched!");
-							loadPlaylistData(file);
+							this.playlistHandler.loadPlaylistData(file, this.musicVideoList);
 							file.delete();
 						}
 					}
@@ -1340,28 +1340,11 @@ public class MusicVideoHandler {
 		return this.settingsData.getWorkingDirectorySftp();
 	}
 
-	public void loadPlaylistData(File file) {
-		if (file == null || file.isDirectory()) {
-			System.err.println("Playlist element could not be loaded because the file doesn't exist!");
-			return;
-		}
-		Object[] data = ProgramDataHandler2.readPlaylistEntryFile(file);
-
-		if (data != null) {
-
-			this.playlistHandler.load((long) data[0], (int) data[1] + 1, this.musicVideoList[(int) data[1]],
-					(String) data[2], (String) data[3], (boolean) data[4]);
-
-			return;
-		}
-		System.err.println("Playlist element could not be loaded");
-	}
-
 	public void syncPlaylist(MusicVideoPlaylistElement element) {
 		FileReadWriteModule.createDirectory(new File("php"));
 		File whereToWrite = new File("php/" + Long.toString(element.getUnixTime()) + ".json");
 		FileReadWriteModule.writeTextFile(whereToWrite,
-				new String[] { ProgramDataHandler2.writePlaylistEntryFile(element) });
+				new String[] { this.playlistHandler.writePlaylistEntryFile(element) });
 		this.sftpController.changeDirectory(this.getSftpDirectory());
 		this.sftpController.changeDirectory("php");
 		this.sftpController.transferFile(whereToWrite.getAbsolutePath());
@@ -1378,7 +1361,7 @@ public class MusicVideoHandler {
 		FileReadWriteModule.createDirectory(new File("php"));
 		File whereToWrite = new File("php/" + fileLocation);
 		FileReadWriteModule.writeTextFile(whereToWrite,
-				new String[] { ProgramDataHandler2.writePlaylistEntryFile(element) });
+				new String[] { this.playlistHandler.writePlaylistEntryFile(element) });
 		this.sftpController.transferFile(whereToWrite.getAbsolutePath());
 		FileReadWriteModule.deleteFile(whereToWrite);
 	}
@@ -1391,8 +1374,7 @@ public class MusicVideoHandler {
 	}
 
 	public void clearPlaylist() {
-		this.playlistHandler.reset();
-
+		this.playlistHandler.setPlaylistElements(null);
 	}
 
 	public void savePlaylist(File filePath) {
@@ -1404,7 +1386,7 @@ public class MusicVideoHandler {
 		String[] playlistTextContent = FileReadWriteModule.readTextFile(file);
 
 		if (playlistTextContent != null) {
-			this.playlistHandler.reset();
+			this.playlistHandler.setPlaylistElements(null);
 			JsonObject playlist = JsonModule.loadJsonFromString(playlistTextContent[0]);
 			for (JsonValue jsonObject : playlist.getJsonArray("playlist")) {
 				Path pathToFile = Paths.get(jsonObject.asJsonObject().getString("file-path"));

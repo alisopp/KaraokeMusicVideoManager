@@ -1,8 +1,17 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler;
 
+import java.io.File;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
+
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.JsonModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoPlaylistElement;
 
@@ -15,21 +24,21 @@ public class MusicVideoPlaylistHandler {
 	}
 
 	public void setPlaylistElements(MusicVideoPlaylistElement[] playlistElements) {
-		Arrays.sort(playlistElements, (a, b) -> Long.valueOf(a.getUnixTime()).compareTo(Long.valueOf(b.getUnixTime())));
-		this.playlistElements = playlistElements;
+
+		if (playlistElements == null) {
+			this.playlistElements = null;
+		} else {
+			Arrays.sort(playlistElements,
+					(a, b) -> Long.valueOf(a.getUnixTime()).compareTo(Long.valueOf(b.getUnixTime())));
+			this.playlistElements = playlistElements;
+		}
+
 	}
 
 	/**
 	 * Constructor of playlist
 	 */
 	public MusicVideoPlaylistHandler() {
-		reset();
-	}
-
-	/**
-	 * Reset the playlist
-	 */
-	public void reset() {
 		this.playlistElements = null;
 	}
 
@@ -123,6 +132,159 @@ public class MusicVideoPlaylistHandler {
 	 */
 	public MusicVideoPlaylistElement edit(int index, String author, String comment) {
 		return this.playlistElements[index].edit(author, comment);
+	}
+
+	/**
+	 * Read JSON data and extract all settings information.
+	 */
+	public static Object[] readPlaylistEntryFile(File file) {
+		System.out.println("READ PLAYLIST ENTRY FILE");
+
+		if (file == null) {
+			System.err.println("<< File is null!");
+			return null;
+		}
+
+		try {
+
+			String[] contentOfFile = FileReadWriteModule.readTextFile(file);
+
+			if (contentOfFile == null) {
+
+				return null;
+			}
+
+			int playlistElementDataSongIndex;
+			long playlistElementDataUnixTime;
+			String playlistElementDataAuthor;
+			String playlistElementDataComment;
+			boolean playlistElementPlaceCreated;
+
+			// read settings to one string
+			StringBuilder strBuilder = new StringBuilder();
+			for (String line : contentOfFile)
+				strBuilder.append(line);
+
+			// convert string to a JSON object
+			JsonObject jsonObject = JsonModule.loadJsonFromString(strBuilder.toString());
+
+			// -> (try to) get the song index
+			int keyValueSongIndex = JsonModule.getValueInteger(jsonObject, "song");
+
+			if (keyValueSongIndex != -1) {
+
+				playlistElementDataSongIndex = keyValueSongIndex;
+			} else {
+				System.err.println(" << No index found");
+				return null;
+			}
+
+			// -> (try to) get the author
+			String keyValueAuthor = JsonModule.getValueString(jsonObject, "author");
+
+			if (keyValueAuthor != null && !keyValueAuthor.equals("")) {
+
+				playlistElementDataAuthor = keyValueAuthor;
+			} else {
+				System.err.println(" << No author found");
+				return null;
+			}
+
+			// -> (try to) get the comment
+			String keyValueComment = JsonModule.getValueString(jsonObject, "comment");
+
+			if (keyValueComment != null) {
+
+				playlistElementDataComment = keyValueComment;
+			} else {
+				System.err.println(" << No comment found");
+				playlistElementDataComment = "";
+			}
+
+			// -> (try to) get the song index
+			JsonValue keyValueTime = JsonModule.getValue(jsonObject, "time");
+
+			if (keyValueTime != null) {
+
+				playlistElementDataUnixTime = Long.parseLong(keyValueTime.toString());
+
+			} else {
+				System.err.println(" << No time found");
+				return null;
+			}
+
+			// -> (try to) get if always the changes should be saved
+			boolean keyValuePlaceCreated = JsonModule.getValueBoolean(jsonObject, "created-locally");
+
+			playlistElementPlaceCreated = keyValuePlaceCreated;
+
+			return new Object[] { playlistElementDataUnixTime, playlistElementDataSongIndex, playlistElementDataAuthor,
+					playlistElementDataComment, playlistElementPlaceCreated };
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Read JSON data and extract all settings information.
+	 */
+	public String writePlaylistEntryFile(MusicVideoPlaylistElement playlistElement) {
+		System.out.println("WRITE PLAYLIST ENTRY FILE");
+
+		if (playlistElement == null) {
+			return null;
+		}
+
+		try {
+
+			JsonObjectBuilder mainJsonBuilder = Json.createObjectBuilder();
+
+			// add song number
+			if (playlistElement.getMusicVideoIndex() != -1) {
+				mainJsonBuilder.add("song", BigDecimal.valueOf(playlistElement.getMusicVideoIndex()));
+			}
+
+			// add music video (title, artist)
+			MusicVideo currentFile = playlistElement.getMusicVideoFile();
+
+			if (currentFile != null) {
+				mainJsonBuilder.add("title", currentFile.getTitle());
+				mainJsonBuilder.add("artist", currentFile.getArtist());
+			}
+
+			mainJsonBuilder.add("author", playlistElement.getAuthor());
+			mainJsonBuilder.add("comment", playlistElement.getComment());
+
+			mainJsonBuilder.add("time", playlistElement.getUnixTime());
+
+			mainJsonBuilder.add("created-locally", playlistElement.getCreatedLocally());
+
+			return JsonModule.dumpJsonObjectToString(mainJsonBuilder);
+
+		} catch (
+
+		Exception e) {
+			return null;
+		}
+	}
+
+	public void loadPlaylistData(File file, MusicVideo[] musicVideoList) {
+		if (file == null || file.isDirectory()) {
+			System.err.println("Playlist element could not be loaded because the file doesn't exist!");
+			return;
+		}
+		Object[] data = readPlaylistEntryFile(file);
+
+		if (data != null) {
+
+			load((long) data[0], (int) data[1] + 1, musicVideoList[(int) data[1]], (String) data[2], (String) data[3],
+					(boolean) data[4]);
+
+			return;
+		}
+		System.err.println("Playlist element could not be loaded");
 	}
 
 }

@@ -9,9 +9,9 @@ import java.nio.file.Paths;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.WrongFormattedFilesWindowController;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoPlaylistTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoSourceDirectoriesTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoTableView;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoPlaylistTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
@@ -388,7 +388,8 @@ public class MainWindowController {
 
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
 		tableDataDirectory = FXCollections.observableArrayList();
-		FilteredList<MusicVideoSourceDirectoriesTableView> filteredDataDirectory = new FilteredList<>(tableDataDirectory, p -> true);
+		FilteredList<MusicVideoSourceDirectoriesTableView> filteredDataDirectory = new FilteredList<>(
+				tableDataDirectory, p -> true);
 
 		// 2. Set the filter Predicate whenever the filter changes.
 		searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -951,7 +952,8 @@ public class MainWindowController {
 	private void removeDirectory() {
 
 		// get the currently selected directory/path
-		MusicVideoSourceDirectoriesTableView selectedEntry = this.directoryPathTable.getSelectionModel().getSelectedItem();
+		MusicVideoSourceDirectoriesTableView selectedEntry = this.directoryPathTable.getSelectionModel()
+				.getSelectedItem();
 
 		// if something was selected
 		if (selectedEntry != null) {
@@ -971,7 +973,8 @@ public class MainWindowController {
 	private void showSelectedDirectoryInExplorer() {
 
 		// get the currently selected entry
-		MusicVideoSourceDirectoriesTableView selectedEntry = this.directoryPathTable.getSelectionModel().getSelectedItem();
+		MusicVideoSourceDirectoriesTableView selectedEntry = this.directoryPathTable.getSelectionModel()
+				.getSelectedItem();
 
 		// if entry isn't null
 		if (selectedEntry != null) {
@@ -1104,9 +1107,9 @@ public class MainWindowController {
 						.getMusicVideoOfPlaylistItem(element.getMusicVideoFile().getPath());
 
 				if (a != null) {
-					tableDataPlaylist
-							.add(new MusicVideoPlaylistTableView(i, element.getMusicVideoIndex(), element.getUnixTimeString(),
-									a.getTitle(), a.getArtist(), element.getAuthor(), element.getComment()));
+					tableDataPlaylist.add(new MusicVideoPlaylistTableView(i, element.getMusicVideoIndex(),
+							element.getUnixTimeString(), a.getTitle(), a.getArtist(), element.getAuthor(),
+							element.getComment()));
 					i++;
 				} else {
 					System.err.println(
@@ -1265,7 +1268,8 @@ public class MainWindowController {
 
 	@FXML
 	private void resetConfiguartion() {
-		if (DialogModule.yesNoDialog("Confirm to Continue", "Reset Everything", "Do you really want to reset EVERYTHING?")) {
+		if (DialogModule.yesNoDialog("Confirm to Continue", "Reset Everything",
+				"Do you really want to reset EVERYTHING?")) {
 			this.mainWindow.getMusicVideohandler().reset();
 			refreshMusicVideoTable();
 			refreshMusicVideoDirectoryTable();
@@ -1384,8 +1388,9 @@ public class MainWindowController {
 
 		// if something is selected
 		if (selectedEntry != null) {
-			String[] authorComment = DialogModule.playlistEditDialog(selectedEntry.getAuthor(), selectedEntry.getComment(),
-					"Edit the selected Playlist entry", "Edit author and comment", "Save Changes");
+			String[] authorComment = DialogModule.playlistEditDialog(selectedEntry.getAuthor(),
+					selectedEntry.getComment(), "Edit the selected Playlist entry", "Edit author and comment",
+					"Save Changes");
 
 			if (authorComment != null && authorComment[0] != null) {
 				if (authorComment[1] == null) {
@@ -1421,10 +1426,8 @@ public class MainWindowController {
 
 	@FXML
 	public void changeAlwaysSave() {
-		System.out.println(this.mainWindow.getMusicVideohandler());
 		this.menuButtonAlwaysSave.setSelected(this.mainWindow.getMusicVideohandler()
 				.setAlwaysSave(!this.mainWindow.getMusicVideohandler().getAlwaysSave()));
-		System.out.println(this.mainWindow.getMusicVideohandler());
 	}
 
 	@FXML
@@ -1432,7 +1435,7 @@ public class MainWindowController {
 		if (!this.tableDataPlaylist.isEmpty()
 				&& DialogModule.yesNoDialog("Clear the playlist", "Do you really want to clear the playlist?",
 						"If you enter yes all playlist elements will be removed!")) {
-			this.mainWindow.getMusicVideohandler().getPlaylistHandler().reset();
+			this.mainWindow.getMusicVideohandler().clearPlaylist();
 			this.tableDataPlaylist.clear();
 		}
 
