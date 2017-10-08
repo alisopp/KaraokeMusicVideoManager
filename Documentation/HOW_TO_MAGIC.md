@@ -55,7 +55,7 @@ You need to have installed:
   * Click OK (3 times)
   * Open a console and enter `mvn -v` to test if maven can be used (reload the console if it was opened)
 
-#### [>> Learn more about the Java compiler script here](Documentation/HOW_TO_JAVA.md)
+#### [>> Learn more about the Java compiler script here](HOW_TO_JAVA.md)
 
 ### Update the Images and Icons too
 
@@ -69,7 +69,7 @@ You need to have installed:
   - Install additional the Python Imaging Library Pillow  with `$ pip install Pillow`
 - Inkscape from https://inkscape.org/en/release/0.92.2/
 
-#### [>> Learn more about the images and icons creator script here](Documentation/HOW_TO_IMAGES.md)
+#### [>> Learn more about the images and icons creator script here](HOW_TO_IMAGES.md)
 
 ### Update all Web Interfaces too
 
@@ -82,7 +82,7 @@ You need to have installed:
 - Python 3.* from https://www.python.org/downloads/
   - No special packages are needed
 
-#### [>> Learn more about the web interface data creator script here](Documentation/HOW_TO_WEB.md)
+#### [>> Learn more about the web interface data creator script here](HOW_TO_WEB.md)
 
 ### Create a Windows installer too
 
@@ -98,7 +98,7 @@ You need to have installed:
   * Add the NSIS function to the command line if they not already can be used (check the command `makensis`) with adding it to the [Windows] environment variables
   * Add to the `Path` entry in the upper table of the window with clicking the button `Edit` after selecting it the path to the `bin` folder of NSIS (for me this was `C:\Program Files (x86)\NSIS\Bin`)
 
-#### [>> Learn more about the Windows installer creator script here](Documentation/HOW_TO_NSIS.md)
+#### [>> Learn more about the Windows installer creator script here](HOW_TO_NSIS.md)
 
 <br>
 

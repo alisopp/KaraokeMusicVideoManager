@@ -42,3 +42,15 @@ I try to use mostly cross platform and free programs - this means with a high pe
 | `.svg` (Vector Graphics)                | [Inkscape](https://inkscape.org/en/)     | [Chrome](https://www.google.com/chrome/index.html) as graphics viewer | This program is also used when converting the vector graphics to `.ico`, `.png` and `.bmp` files + compressing the `.svg` file. |
 | `.sh` (Shell)                           | [GitShell](https://git-scm.com/downloads) to run | [Visual Studio Code](https://code.visualstudio.com/) to edit |                                          |
 | `.pptx` (PowerPoint)                    | [PowerPoint](https://products.office.com/en/powerpoint) |                                          | This software is not needed and not free -> I just used it to create the logo and installer images. You can simply edit the already exported `.svg` vector graphics. |
+
+<br>
+
+## Server
+
+My test server is a Raspberry Pi 3 with 32GB Flash (class 10) storage and [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) (flash it on the MicroSD card with [Etcher](https://etcher.io/)). [Network connection works both via integrated WLAN and LAN port]
+
+To control it I use SSH over [Putty](http://www.putty.org/) or on my Android device [ConnectBot](https://play.google.com/store/apps/details?id=org.connectbot&hl=en).
+
+To transfer files I mainly use [Filezilla](https://filezilla-project.org/).
+
+To get graphical remote access I use [Microsoft Remote Desktop](https://www.microsoft.com/en-us/store/p/microsoft-remote-desktop/9wzdncrfj3ps) on Windows and on Android [Microsoft Remote Desktop](https://play.google.com/store/apps/details?id=com.microsoft.rdc.android&hl=en).
