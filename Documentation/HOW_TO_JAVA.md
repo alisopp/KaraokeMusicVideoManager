@@ -74,3 +74,22 @@ To do this you need to have installed Maven:
 Now you can compile the whole Java project by using the command `mvn clean install` in the folder [`DesktopClient`](../DesktopClient) or run the shell script [`build_project.sh`](../DesktopClient/build_project.sh) which also correctly renames the exported `jar` file. (Python 3 is therefore needed).
 
 To change how and what get's exported you need to edit the maven [`pom.xml`](../DesktopClient/pom.xml) file.
+
+---
+
+ :warning:
+
+IF you get a notification like `probably you run a JRE -> Compile error` you have no Java JDK installed or even an old one or you have not activated it:
+
+1. Download and Install it from here if you haven't already:
+   - http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+2. After that open the environment variables if you are on Windows
+   - Select below the bottom table the button `New`
+    undefinedEnter the variable name `JAVA_HOME`
+    undefinedThen click the button `Browse Directory...`
+    undefinedBrowse to the directory of the installed `jdk` folder
+    undefined(This was the place on my hard drive: `C:\Program Files\Java\jdk1.8.0_144`)
+    undefinedClick OK (3 times)
+ undefinedRun the script again (after a restart of all terminals and eventually of the whole computer).
+
+---
