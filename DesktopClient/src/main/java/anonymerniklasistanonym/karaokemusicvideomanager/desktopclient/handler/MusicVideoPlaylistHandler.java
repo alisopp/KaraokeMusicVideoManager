@@ -34,7 +34,8 @@ public class MusicVideoPlaylistHandler {
 			Arrays.sort(playlistElements,
 					(a, b) -> Long.valueOf(a.getUnixTime()).compareTo(Long.valueOf(b.getUnixTime())));
 
-			Arrays.stream(playlistElements).forEach(x -> System.out.println(x.getUnixTimeString()));
+			// Arrays.stream(playlistElements).forEach(x ->
+			// System.out.println(x.getUnixTimeString()));
 
 			Set<Long> set = new HashSet<Long>();
 			ArrayList<MusicVideoPlaylistElement> newList = new ArrayList<MusicVideoPlaylistElement>(
@@ -45,8 +46,8 @@ public class MusicVideoPlaylistHandler {
 					newList.add(playlistElements[i]);
 				}
 			}
-			Arrays.stream(newList.toArray(new MusicVideoPlaylistElement[0]))
-					.forEach(x -> System.out.println(x.getUnixTimeString()));
+			// Arrays.stream(newList.toArray(new MusicVideoPlaylistElement[0])).forEach(x ->
+			// System.out.println(x.getUnixTimeString()));
 			this.playlistElements = newList.toArray(new MusicVideoPlaylistElement[0]);
 		}
 
@@ -302,6 +303,89 @@ public class MusicVideoPlaylistHandler {
 			return;
 		}
 		System.err.println("Playlist element could not be loaded");
+	}
+
+	/**
+	 * Read JSON data and extract all settings information.
+	 */
+	public Object[] readPlaylistEntryFile(String contentOfFile) {
+		System.out.println("READ PLAYLIST ENTRY FILE");
+
+		if (contentOfFile == null) {
+			System.err.println("<< Content is null!");
+			return null;
+		}
+
+		System.out.println(contentOfFile);
+
+		try {
+
+			int playlistElementDataSongIndex;
+			long playlistElementDataUnixTime;
+			String playlistElementDataAuthor;
+			String playlistElementDataComment;
+			boolean playlistElementPlaceCreated;
+
+			// convert string to a JSON object
+			JsonObject jsonObject = JsonModule.loadJsonFromString(contentOfFile);
+
+			// -> (try to) get the song index
+			int keyValueSongIndex = JsonModule.getValueInteger(jsonObject, "song");
+
+			if (keyValueSongIndex != -1) {
+
+				playlistElementDataSongIndex = keyValueSongIndex;
+			} else {
+				System.err.println(" << No index found");
+				return null;
+			}
+
+			// -> (try to) get the author
+			String keyValueAuthor = JsonModule.getValueString(jsonObject, "author");
+
+			if (keyValueAuthor != null && !keyValueAuthor.equals("")) {
+
+				playlistElementDataAuthor = keyValueAuthor;
+			} else {
+				System.err.println(" << No author found");
+				return null;
+			}
+
+			// -> (try to) get the comment
+			String keyValueComment = JsonModule.getValueString(jsonObject, "comment");
+
+			if (keyValueComment != null) {
+
+				playlistElementDataComment = keyValueComment;
+			} else {
+				System.err.println(" << No comment found");
+				playlistElementDataComment = "";
+			}
+
+			// -> (try to) get the song index
+			JsonValue keyValueTime = JsonModule.getValue(jsonObject, "time");
+
+			if (keyValueTime != null) {
+
+				playlistElementDataUnixTime = Long.parseLong(keyValueTime.toString());
+
+			} else {
+				System.err.println(" << No time found");
+				return null;
+			}
+
+			// -> (try to) get if always the changes should be saved
+			boolean keyValuePlaceCreated = JsonModule.getValueBoolean(jsonObject, "created-locally");
+
+			playlistElementPlaceCreated = keyValuePlaceCreated;
+
+			return new Object[] { playlistElementDataUnixTime, playlistElementDataSongIndex, playlistElementDataAuthor,
+					playlistElementDataComment, playlistElementPlaceCreated };
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

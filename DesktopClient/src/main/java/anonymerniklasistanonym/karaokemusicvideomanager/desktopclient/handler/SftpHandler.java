@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.LinkedList;
@@ -490,23 +491,20 @@ public class SftpHandler {
 	 * 
 	 * @param pathLocalFile
 	 */
-	public void transferFile(FileInputStream fileInputStream, File file) {
+	public void transferFile(InputStream fileInputStream, String filename) {
 
 		if (!connectionEstablished) {
 			System.out.println("You need first to establish a connection!");
 			return;
 		}
 
-		System.out.println(">>> Transfer " + file.getName() + " to " + this.currentWorkingDirectory + file.getParent());
+		System.out.println(">>> Transfer " + filename + " to " + this.currentWorkingDirectory);
 
-		String oldWorkingDirectory = this.currentWorkingDirectory;
-
-		if (file != null && fileInputStream != null) {
+		if (filename != null && fileInputStream != null) {
 
 			try {
-				changeDirectory(file.getParent());
 
-				this.channelSftp.put(fileInputStream, file.getName());
+				this.channelSftp.put(fileInputStream, filename);
 
 				System.out.println("<<< file succsessfully transferred");
 
@@ -514,8 +512,6 @@ public class SftpHandler {
 				System.err.println("Exception found while transfer the response.");
 				ex.printStackTrace();
 			} finally {
-
-				changeDirectory(oldWorkingDirectory);
 
 			}
 		}
@@ -549,5 +545,43 @@ public class SftpHandler {
 			transferFile(fileInDirectory.getAbsolutePath(), directoryString);
 
 		}
+	}
+
+	/**
+	 * Retrieves remote file and writes it to a local file
+	 * 
+	 * @param localFile
+	 *            (String | path to local new file)
+	 * @param remoteFile
+	 *            (String | path to remote to copy file)
+	 * @return everythingWorked (Boolean)
+	 */
+	public String retrieveFileInputStreamString(String remoteFile) {
+
+		if (!connectionEstablished) {
+			System.out.println("You need first to establish a connection!");
+			return null;
+		}
+
+		if (remoteFile == null || remoteFile.isEmpty()) {
+			System.err.println("File could not be written because of it's null or empty!");
+			return null;
+		}
+
+		System.out.print(">> Retrieve file " + remoteFile);
+
+		try {
+
+			java.util.Scanner s = new java.util.Scanner(channelSftp.get(remoteFile)).useDelimiter("\\A");
+			String content = s.hasNext() ? s.next() : "";
+			s.close();
+			System.out.println("Content");
+			return content;
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+
 	}
 }

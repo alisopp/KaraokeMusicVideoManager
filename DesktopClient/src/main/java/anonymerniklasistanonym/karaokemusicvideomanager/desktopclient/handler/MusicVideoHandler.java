@@ -1,9 +1,12 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -1323,23 +1326,20 @@ public class MusicVideoHandler {
 				FileReadWriteModule.createDirectory(Paths.get("php").toFile());
 				this.sftpController.changeDirectory("php");
 				for (String file : this.sftpController.listFiles(".json")) {
-					this.sftpController.retrieveFile("php/" + file, file);
-				}
-				this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
+					if (file.matches("\\d+.json")) {
+						System.out.println("Found a playlist file (" + file + ")");
+						String contentOfFile = this.sftpController.retrieveFileInputStreamString(file);
 
-				// get information from retrieved files
-				File folder = FileSystems.getDefault().getPath("php").toFile(); // . for this directory
+						Object[] contentData = this.playlistHandler.readPlaylistEntryFile(contentOfFile);
+						if (contentData != null) {
 
-				for (File file : folder.listFiles()) {
-					if (file.isFile()) {
-						if (file.getName().matches("\\d+.json")) {
-							System.out.println(file.getAbsolutePath() + " matched!");
-							this.playlistHandler.loadPlaylistData(file, this.musicVideoList);
-							file.delete();
+							this.playlistHandler.load((long) contentData[0], (int) contentData[1] + 1,
+									musicVideoList[(int) contentData[1]], (String) contentData[2],
+									(String) contentData[3], (boolean) contentData[4]);
 						}
 					}
+
 				}
-				FileReadWriteModule.deleteDirectoryWithFiles(new File("php"));
 
 			}
 		}
@@ -1372,19 +1372,29 @@ public class MusicVideoHandler {
 	public void uploadPlaylistEntry(MusicVideoPlaylistElement element) {
 
 		// create the locally the file
-		FileReadWriteModule.createDirectory(new File("php"));
+		// FileReadWriteModule.createDirectory(new File("php"));
 		File whereToWrite = new File("php/" + Long.toString(element.getUnixTime()) + ".json");
-		FileReadWriteModule.writeTextFile(whereToWrite,
-				new String[] { this.playlistHandler.writePlaylistEntryFile(element) });
+		// FileReadWriteModule.writeTextFile(whereToWrite, new String[] {
+		// this.playlistHandler.writePlaylistEntryFile(element) });
 
 		// then upload the file
 		this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
 		this.sftpController.changeDirectory("php");
-		this.sftpController.transferFile(whereToWrite.getAbsolutePath());
+		// this.sftpController.transferFile(whereToWrite.getAbsolutePath());
+
+		try {
+			InputStream stream = new ByteArrayInputStream(
+					this.playlistHandler.writePlaylistEntryFile(element).getBytes(StandardCharsets.UTF_8.name()));
+			this.sftpController.transferFile(stream, whereToWrite.getName());
+
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// then delete the local file again
-		FileReadWriteModule.deleteFile(whereToWrite);
-		FileReadWriteModule.deleteDirectory(new File("php"));
+		// FileReadWriteModule.deleteFile(whereToWrite);
+		// FileReadWriteModule.deleteDirectory(new File("php"));
 
 	}
 
