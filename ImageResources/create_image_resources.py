@@ -182,6 +182,7 @@ def make_grey(source_image):
 
 
 def copy_svg_icon(destination_file, source_file):
+    """Copies svg icon to images."""
 
     # check if the source exists
     if os.path.exists(source_file):
@@ -191,6 +192,7 @@ def copy_svg_icon(destination_file, source_file):
 
 
 def create_menu_icons(destination_directory, source_file_directory):
+    """Creates all menu icon images (.png)."""
 
     # check if the source exists
     if os.path.exists(source_file_directory):
@@ -208,9 +210,18 @@ def create_menu_icons(destination_directory, source_file_directory):
                     convert_svg_2_png(file, os.path.join(
                         destination_directory, ntpath.basename(filename) + ".png"), 15, 15)
     print("All menu icons were created")
+	
+	
+def create_preload_image(destination_path, source_file):
+    """Creates preload image (.png)."""
+
+    if os.path.exists(source_file):
+        convert_svg_2_png(source_file, destination_path, 500, 350)
+        print("Preloader image was created")
 
 
 if __name__ == '__main__':
+    """Creates all images."""
 
     create_png_favicons(r"..\DesktopClient\res\images\favicons", "logo.svg")
     create_installer_pages(
@@ -221,5 +232,6 @@ if __name__ == '__main__':
     copy_svg_icon(
         r"..\DesktopClient\res\images\favicons\favicon.svg", "logo.svg")
     create_menu_icons(r"..\DesktopClient\res\images\icons", "icons")
+    create_preload_image(r"..\DesktopClient\res\images\preload.png", "preloader.svg")
 
     print("Ready!")
