@@ -807,7 +807,6 @@ public class MainWindowController {
 						@Override
 						public void handle(WindowEvent event) {
 							checkNetwork();
-							refreshMusicVideoPlaylistTable();
 						}
 					});
 
@@ -971,7 +970,7 @@ public class MainWindowController {
 		// if something was selected
 		if (selectedEntry != null) {
 			// remove this entry from the path list
-			this.mainWindow.getMusicVideohandler().removeFromPathList(selectedEntry.getFilePath());
+			this.mainWindow.getMusicVideohandler().removeFromPathList(Paths.get(selectedEntry.getFilePath()));
 
 			// update now both tables
 			refreshMusicVideoDirectoryTable();
@@ -1159,10 +1158,10 @@ public class MainWindowController {
 	private void checkNetwork() {
 		if (this.mainWindow.getMusicVideohandler().sftpConnectionEstablished()) {
 			this.networkButton.setSelected(true);
-			this.mainWindow.getMusicVideohandler().sftpRetrievePlaylist();
 			this.menuButtonSftp.setDisable(false);
 			// update the table
 			refreshMusicVideoPlaylistTable();
+
 		} else {
 			this.networkButton.setSelected(false);
 			this.menuButtonSftp.setDisable(true);

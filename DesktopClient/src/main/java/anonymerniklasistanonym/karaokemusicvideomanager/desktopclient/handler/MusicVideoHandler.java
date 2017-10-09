@@ -33,7 +33,7 @@ public class MusicVideoHandler {
 	/**
 	 * All the important data about music video files and more is in here
 	 */
-	private ProgramDataHandler settingsData;
+	private ProgramDataHandler programDataHandler;
 
 	/**
 	 * Handles the playlist
@@ -58,6 +58,11 @@ public class MusicVideoHandler {
 	private String[] columnNames;
 
 	/**
+	 * The sizes of the browser icons
+	 */
+	private int[] faviconSizes;
+
+	/**
 	 * Handles the SFTP
 	 */
 	private SftpHandler sftpController;
@@ -68,11 +73,12 @@ public class MusicVideoHandler {
 	 * Constructor that creates an empty/default program data object
 	 */
 	public MusicVideoHandler() {
-		this.settingsData = new ProgramDataHandler();
+		this.programDataHandler = new ProgramDataHandler();
 		this.settingsFile = new File("settings.json");
 		this.columnNames = new String[] { "#", "Artist", "Title" };
 		this.playlistHandler = new MusicVideoPlaylistHandler();
 		this.sftpController = new SftpHandler();
+		this.faviconSizes = new int[] { 16, 32, 48, 64, 94, 128, 160, 180, 194, 256, 512 };
 	}
 
 	// Methods
@@ -115,7 +121,7 @@ public class MusicVideoHandler {
 	 * @return settingsData (ProgramData)
 	 */
 	public ProgramDataHandler getSettingsData() {
-		return settingsData;
+		return programDataHandler;
 	}
 
 	/**
@@ -128,7 +134,7 @@ public class MusicVideoHandler {
 	public boolean setSettingsData(ProgramDataHandler settingsData) {
 
 		if (settingsData != null) {
-			this.settingsData = settingsData;
+			this.programDataHandler = settingsData;
 			System.out.println(">> New settings applied");
 			return true;
 		} else {
@@ -207,7 +213,7 @@ public class MusicVideoHandler {
 	public boolean addPathToPathList(Path directoryPath) {
 
 		// check if there is a settings file
-		if (this.settingsData == null) {
+		if (this.programDataHandler == null) {
 			System.err.println("No settings found!");
 			return false;
 		}
@@ -233,7 +239,7 @@ public class MusicVideoHandler {
 		}
 
 		// the rest does the settings class with the absolute path of the given path
-		return this.settingsData.addPathToPathList(directoryPath.toAbsolutePath());
+		return this.programDataHandler.addPathToPathList(directoryPath.toAbsolutePath());
 
 	}
 
@@ -246,7 +252,7 @@ public class MusicVideoHandler {
 	 */
 	public boolean addIgnoredFileToIgnoredFilesList(Path directoryPath) {
 
-		if (settingsData == null) {
+		if (programDataHandler == null) {
 			System.err.println("No settings found!");
 			return false;
 		}
@@ -271,7 +277,7 @@ public class MusicVideoHandler {
 		}
 
 		// the rest does the settings class with the absolute path of the given path
-		return this.settingsData.addFileToIgnoredFilesList(directoryPath.toAbsolutePath().toFile());
+		return this.programDataHandler.addFileToIgnoredFilesList(directoryPath.toAbsolutePath().toFile());
 	}
 
 	/**
@@ -332,7 +338,7 @@ public class MusicVideoHandler {
 	}
 
 	/**
-	 * Print the music video list to the console in a table
+	 * Print the wrong formatted music video files to the console in a table
 	 */
 	public void printWrongFormattedFiles() {
 
@@ -390,9 +396,10 @@ public class MusicVideoHandler {
 
 		System.out.println(">> Finding MusicVideo files");
 
-		for (Path filePath : scanDirectoryForFiles(path)) {
+		Path[] filesInDirectory = scanDirectoryForFiles(path);
+		for (int i = 0; i < filesInDirectory.length; i++) {
 
-			MusicVideo musicVideoFile = isFileMusicVideo(filePath);
+			MusicVideo musicVideoFile = isFileMusicVideo(filesInDirectory[i]);
 
 			if (musicVideoFile != null) {
 				musicvideosinFolder.add(musicVideoFile);
@@ -404,7 +411,14 @@ public class MusicVideoHandler {
 
 	}
 
-	private ArrayList<Path> scanDirectoryForFiles(Path path) {
+	/**
+	 * Scan a directory for files (paths)
+	 * 
+	 * @param path
+	 *            (Path | Path of directory)
+	 * @return list of files in this directory or null (ArrayList<Path>)
+	 */
+	private Path[] scanDirectoryForFiles(Path path) {
 
 		// check if path is a real existing directory
 		if (path == null || path.toFile().isFile()) {
@@ -427,7 +441,7 @@ public class MusicVideoHandler {
 			}
 			System.out.println(" << Scan finished.");
 
-			return filesInDirectory;
+			return filesInDirectory.toArray(new Path[0]);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println(" << Problem while searching for Files!");
@@ -466,7 +480,7 @@ public class MusicVideoHandler {
 	public MusicVideo[] updateMusicVideoList() {
 
 		// check if there even is a path list
-		if (this.settingsData.getPathList() == null) {
+		if (this.programDataHandler.getPathList() == null) {
 			System.out.println("There are no paths!");
 			this.musicVideoList = null;
 			return this.musicVideoList;
@@ -476,8 +490,9 @@ public class MusicVideoHandler {
 		ArrayList<MusicVideo> collectMusicVideos = new ArrayList<MusicVideo>();
 
 		// by iterating over the path list
-		for (Path directory : this.settingsData.getPathList()) {
-			collectMusicVideos.addAll(scanDirectory(directory));
+		final Path[] pathList = this.programDataHandler.getPathList();
+		for (int i = 0; i < pathList.length; i++) {
+			collectMusicVideos.addAll(scanDirectory(pathList[i]));
 		}
 
 		// convert then the ArrayList to a normal Array
@@ -501,14 +516,14 @@ public class MusicVideoHandler {
 	public Path[] getWrongFormattedFiles() {
 
 		// check if there even is a path list
-		if (this.settingsData.getPathList() == null) {
+		if (this.programDataHandler.getPathList() == null) {
 			System.err.println("There are no paths!");
 			return null;
 		}
 
 		ArrayList<Path> newMusicVideoList = new ArrayList<Path>();
 
-		for (Path directory : this.settingsData.getPathList()) {
+		for (Path directory : this.programDataHandler.getPathList()) {
 			newMusicVideoList.addAll(scanDirectoryForWrongFiles(directory));
 		}
 
@@ -572,10 +587,10 @@ public class MusicVideoHandler {
 	private MusicVideo isFileMusicVideo(Path filePath) {
 
 		// check if the file is already in the list
-		if (this.settingsData.getIgnoredFiles() != null) {
+		if (this.programDataHandler.getIgnoredFiles() != null) {
 			try {
 				final File musicVideoFile = filePath.toFile();
-				for (File ignoredFilePath : this.settingsData.getIgnoredFiles()) {
+				for (File ignoredFilePath : this.programDataHandler.getIgnoredFiles()) {
 					if (ignoredFilePath.getCanonicalPath().equals(musicVideoFile.getCanonicalPath())) {
 						System.err.println("File is a ignored File! (" + filePath + ")");
 						return null;
@@ -596,7 +611,7 @@ public class MusicVideoHandler {
 			final String[] artistAndTitle = pathOfFile.substring(0, lastIndexOfPoint).split(" - ", 2);
 
 			// now we compare it to our allowed extension array
-			for (String supportedFileTypes : this.settingsData.getAcceptedFileTypes()) {
+			for (String supportedFileTypes : this.programDataHandler.getAcceptedFileTypes()) {
 				if (supportedFileTypes.equalsIgnoreCase(fileType)) {
 
 					// finally add the newMusicVideoObject to our musicVideosList
@@ -616,9 +631,9 @@ public class MusicVideoHandler {
 	 */
 	private boolean isFileMusicVideoButWrong(Path filePath) {
 
-		if (this.settingsData.getIgnoredFiles() != null) {
+		if (this.programDataHandler.getIgnoredFiles() != null) {
 			final File musicVideoFile = filePath.toFile();
-			for (File ignoredFilePath : this.settingsData.getIgnoredFiles()) {
+			for (File ignoredFilePath : this.programDataHandler.getIgnoredFiles()) {
 				try {
 					if (ignoredFilePath.getCanonicalPath().equals(musicVideoFile.getCanonicalPath())) {
 						System.err.println("File is a ignored File! (" + filePath + ")");
@@ -644,7 +659,7 @@ public class MusicVideoHandler {
 			return false;
 		}
 
-		for (String supportedFileTypes : this.settingsData.getAcceptedFileTypes()) {
+		for (String supportedFileTypes : this.programDataHandler.getAcceptedFileTypes()) {
 			if (supportedFileTypes.equalsIgnoreCase(fileType)) {
 
 				rightFileEnd = true;
@@ -1127,8 +1142,8 @@ public class MusicVideoHandler {
 			return false;
 		}
 
-		return FileReadWriteModule.writeTextFile(whereToWriteTheFile.toFile(), new String[] {
-				MusicVideoDataExportHandler.generateJsonContentTable(this.musicVideoList, this.columnNames) });
+		return FileReadWriteModule.writeTextFile(whereToWriteTheFile.toFile(),
+				MusicVideoDataExportHandler.generateJsonContentTable(this.musicVideoList));
 	}
 
 	/**
@@ -1141,7 +1156,7 @@ public class MusicVideoHandler {
 	public boolean loadSettings(File settingsFilePath) {
 
 		// read the settingsData
-		if (setSettingsData(this.settingsData.readSettings(settingsFilePath))) {
+		if (setSettingsData(this.programDataHandler.readSettings(settingsFilePath))) {
 			updateMusicVideoList();
 			return true;
 		} else {
@@ -1157,7 +1172,7 @@ public class MusicVideoHandler {
 	 * @return saveOperationSuccsessful (Boolean)
 	 */
 	public boolean saveSettings(File settingsFilePath) {
-		return this.settingsData.writeSettings(settingsFilePath);
+		return this.programDataHandler.writeSettings(settingsFilePath);
 	}
 
 	/**
@@ -1169,7 +1184,7 @@ public class MusicVideoHandler {
 	 * @return theyAreTheSame (Boolean)
 	 */
 	public boolean compareSettings(File settingsFilePathNew) {
-		return this.settingsData.compareSettingsFileToCurrent(settingsFilePathNew);
+		return this.programDataHandler.compareSettingsFileToCurrent(settingsFilePathNew);
 	}
 
 	/**
@@ -1181,40 +1196,49 @@ public class MusicVideoHandler {
 	 * @return theyAreTheSame (Boolean)
 	 */
 	public boolean compareSettings() {
-		return this.settingsData.compareSettingsFileToCurrent(this.settingsFile);
+		return this.programDataHandler.compareSettingsFileToCurrent(this.settingsFile);
 	}
 
+	/**
+	 * Set always save option
+	 * 
+	 * @param newValue
+	 *            (boolean)
+	 * @return new value (boolean)
+	 */
 	public boolean setAlwaysSave(boolean newValue) {
-		return this.settingsData.setAlwaysSaveSettings(newValue);
+		return this.programDataHandler.setAlwaysSaveSettings(newValue);
 	}
 
+	/**
+	 * Get always save option
+	 * 
+	 * @return value (boolean)
+	 */
 	public boolean getAlwaysSave() {
-		return this.settingsData.getAlwaysSaveSettings();
+		return this.programDataHandler.getAlwaysSaveSettings();
 	}
 
+	/**
+	 * Get the current path list
+	 * 
+	 * @return path list (Path[])
+	 */
 	public Path[] getPathList() {
-		return this.settingsData.getPathList();
+		return this.programDataHandler.getPathList();
 	}
 
-	public void removeFromPathList(String filePathToRemove) {
+	/**
+	 * Remove a path from the path list
+	 * 
+	 * @param filePathToRemove
+	 */
+	public void removeFromPathList(Path filePathToRemove) {
 
-		// new path list that has the capacity of the old one - 1
-		ArrayList<Path> newPathList = new ArrayList<Path>(this.settingsData.getPathList().length - 1);
+		// remove the path
+		this.programDataHandler.removeFromPathList(filePathToRemove);
 
-		for (Path path : this.settingsData.getPathList()) {
-			try {
-				if (!Files.isSameFile(path, Paths.get(filePathToRemove))) {
-					newPathList.add(path);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		// convert path list array list to array without sorting (not needed)
-		this.settingsData.setPathList(newPathList.toArray(new Path[0]));
-
-		// update the music video list now
+		// update the music video list
 		updateMusicVideoList();
 	}
 
@@ -1222,31 +1246,24 @@ public class MusicVideoHandler {
 	 * Reset everything
 	 */
 	public void reset() {
-		this.settingsData = new ProgramDataHandler();
+		this.programDataHandler = new ProgramDataHandler();
 		this.playlistHandler = new MusicVideoPlaylistHandler();
 		updateMusicVideoList();
 	}
 
+	/**
+	 * Get the ignored files in a list
+	 * 
+	 * @return ignored files list
+	 */
 	public File[] getIgnoredFiles() {
-		return this.settingsData.getIgnoredFiles();
+		return this.programDataHandler.getIgnoredFiles();
 	}
 
-	public void removeFromIgnoredFilesList(File selectedFile) {
+	public void removeFromIgnoredFilesList(Path selectedFile) {
 
-		// new ignored files list that has the capacity of the old one - 1
-		ArrayList<File> newPathList = new ArrayList<File>(this.settingsData.getIgnoredFiles().length - 1);
-
-		for (File path : this.settingsData.getIgnoredFiles()) {
-			try {
-				if (!Files.isSameFile(path.toPath(), selectedFile.toPath())) {
-					newPathList.add(path);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				newPathList.add(path);
-			}
-		}
-		this.settingsData.setIgnoredFiles(newPathList.toArray(new File[0]));
+		// remove the file
+		this.programDataHandler.removeFromIgnoredFilesList(selectedFile);
 
 		// update the music video list now
 		updateMusicVideoList();
@@ -1314,7 +1331,6 @@ public class MusicVideoHandler {
 
 	public void sftpDisconnect() {
 		this.sftpController.disconnectSFTP();
-
 	}
 
 	public void sftpRetrievePlaylist() {
@@ -1323,7 +1339,7 @@ public class MusicVideoHandler {
 		if (sftpConnectionEstablished()) {
 
 			// go into the default directory
-			this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
+			this.sftpController.changeDirectory(this.programDataHandler.getWorkingDirectorySftp());
 
 			// then check if a directory named php exists
 			boolean existingPhpDirectory = false;
@@ -1361,7 +1377,7 @@ public class MusicVideoHandler {
 							System.out.println("number: " + contentData[1]);
 							// last but not least import it to the playlist
 							this.playlistHandler.load((long) contentData[0], (int) contentData[1],
-									musicVideoList[(int) contentData[1] - 1], (String) contentData[2],
+									this.musicVideoList[(int) contentData[1] - 1], (String) contentData[2],
 									(String) contentData[3], (boolean) contentData[4]);
 						}
 					}
@@ -1373,28 +1389,29 @@ public class MusicVideoHandler {
 	}
 
 	public void saveSftpLogin(String ipAddressSftp, String workingDirectorySftp, String usernameSftp) {
-		this.settingsData.setIpAddressSftp(ipAddressSftp);
-		this.settingsData.setUsernameSftp(usernameSftp);
-		this.settingsData.setWorkingDirectorySftp(workingDirectorySftp);
+		this.programDataHandler.setIpAddressSftp(ipAddressSftp);
+		this.programDataHandler.setUsernameSftp(usernameSftp);
+		this.programDataHandler.setWorkingDirectorySftp(workingDirectorySftp);
 	}
 
 	public String getSftpIpAddress() {
-		System.out.println(this.settingsData.getIpAddressSftp());
-		return this.settingsData.getIpAddressSftp();
+		System.out.println(this.programDataHandler.getIpAddressSftp());
+		return this.programDataHandler.getIpAddressSftp();
 	}
 
 	public String getSftpUsername() {
-		return this.settingsData.getUsernameSftp();
+		return this.programDataHandler.getUsernameSftp();
 	}
 
 	public String getSftpDirectory() {
-		return this.settingsData.getWorkingDirectorySftp();
+		return this.programDataHandler.getWorkingDirectorySftp();
 	}
 
 	/**
 	 * Upload a playlist entry to SFTP server
 	 * 
 	 * @param element
+	 *            (MusicVideoPlaylistElement)
 	 */
 	public void uploadPlaylistEntry(MusicVideoPlaylistElement element) {
 
@@ -1402,7 +1419,7 @@ public class MusicVideoHandler {
 		final String fileName = Long.toString(element.getUnixTime()) + ".json";
 
 		// then change into the php directory
-		this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
+		this.sftpController.changeDirectory(this.programDataHandler.getWorkingDirectorySftp());
 		this.sftpController.changeDirectory("php");
 
 		// then transfer the new file
@@ -1415,6 +1432,12 @@ public class MusicVideoHandler {
 
 	}
 
+	/**
+	 * Upload a edited playlist entry
+	 * 
+	 * @param element
+	 *            (MusicVideoPlaylistElement)
+	 */
 	public void uploadEditedPlaylistEntry(MusicVideoPlaylistElement element) {
 
 		// remove the old playlist entry
@@ -1424,8 +1447,16 @@ public class MusicVideoHandler {
 		uploadPlaylistEntry(element);
 	}
 
+	/**
+	 * Delete a playlist entry
+	 * 
+	 * @param element
+	 *            (MusicVideoPlaylistElement)
+	 */
 	public void deletePlaylistEntrySftp(MusicVideoPlaylistElement element) {
-		this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
+
+		// go into the playlist directory
+		this.sftpController.changeDirectory(this.programDataHandler.getWorkingDirectorySftp());
 		this.sftpController.changeDirectory("php");
 		String fileLocation = Long.toString(element.getUnixTime()) + ".json";
 		this.sftpController.removeFile(fileLocation);
@@ -1522,18 +1553,14 @@ public class MusicVideoHandler {
 								// then add the music video to the playlist
 								addMusicVideoToPlaylist(unixTime, indexInList + 1, this.musicVideoList[indexInList],
 										author, comment, createdLocally);
-
 							}
 						}
-
 					}
-
 					System.out.println("Playlist was loaded");
 					return true;
 				}
 			}
 		}
-
 		System.err.println("Playlist could not be loaded!");
 		return false;
 	}
@@ -1599,10 +1626,10 @@ public class MusicVideoHandler {
 	public void clearIgnoredFilesList() {
 
 		// if the list is not already empty
-		if (this.settingsData.getIgnoredFiles() != null) {
+		if (this.programDataHandler.getIgnoredFiles() != null) {
 
 			// clear the ignored files list
-			this.settingsData.setIgnoredFiles(null);
+			this.programDataHandler.setIgnoredFiles(null);
 
 			// update the music video list
 			updateMusicVideoList();
@@ -1613,9 +1640,9 @@ public class MusicVideoHandler {
 		if (sftpConnectionEstablished()) {
 			this.sftpController.disconnectSFTP();
 		}
-		this.settingsData.setIpAddressSftp(null);
-		this.settingsData.setUsernameSftp(null);
-		this.settingsData.setWorkingDirectorySftp(null);
+		this.programDataHandler.setIpAddressSftp(null);
+		this.programDataHandler.setUsernameSftp(null);
+		this.programDataHandler.setWorkingDirectorySftp(null);
 
 	}
 
@@ -1623,11 +1650,22 @@ public class MusicVideoHandler {
 		STATIC, SEARCH, PARTY;
 	}
 
+	/**
+	 * Main method to transfer HTML documents (collections) directly to a server
+	 * into a specific directory (the main directory)
+	 * 
+	 * @param favicons
+	 *            (boolean | should icons be transfered too)
+	 * @param type
+	 *            (TYPE_OF_HTML | which kind of collection should be transfered)
+	 */
 	public void transferHtmlMain(boolean favicons, TYPE_OF_HTML type) {
 
+		// check if there even is a connection
 		if (sftpConnectionEstablished()) {
 
-			this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
+			// change into default directory from login
+			this.sftpController.changeDirectory(this.programDataHandler.getWorkingDirectorySftp());
 
 			// remove top files
 			this.sftpController.removeFile("index.html");
@@ -1635,56 +1673,84 @@ public class MusicVideoHandler {
 
 			// add icons
 			if (favicons) {
+
+				// create a directory for the icons and change into it
 				this.sftpController.makeDirectory("favicons");
 				this.sftpController.changeDirectory("favicons");
 
-				Integer[] sizes = { 16, 32, 48, 64, 94, 128, 160, 180, 194, 256, 512 };
-
-				for (Integer size : sizes) {
-					final String inputPath = "images/favicons/favicon-" + size + "x" + size + ".png";
-					final String outputPath = "favicon-" + size + "x" + size + ".png";
-					this.sftpController.transferFile(ClassResourceReaderModule.getInputStream(inputPath), outputPath);
+				// copy all PNG icons
+				for (int i = 0; i < this.faviconSizes.length; i++) {
+					final String nameEnd = this.faviconSizes[i] + "x" + this.faviconSizes[i] + ".png";
+					this.sftpController.transferFile(
+							ClassResourceReaderModule.getInputStream("images/favicons/favicon-" + nameEnd),
+							"favicon-" + nameEnd);
 				}
 
-				final String inputPath = "images/favicons/favicon.svg";
-				final String outputPath = "favicon.svg";
-				this.sftpController.transferFile(ClassResourceReaderModule.getInputStream(inputPath), outputPath);
+				// copy the vector graphic icon
+				this.sftpController.transferFile(
+						ClassResourceReaderModule.getInputStream("images/favicons/favicon.svg"), "favicon.svg");
 
-				final String inputPath2 = "images/favicons/icon.ico";
-				final String outputPath2 = "icon.ico";
-				this.sftpController.transferFile(ClassResourceReaderModule.getInputStream(inputPath2), outputPath2);
+				// open the "Windows" graphic icon
+				this.sftpController.transferFile(ClassResourceReaderModule.getInputStream("images/favicons/icon.ico"),
+						"icon.ico");
+
+				// change into default directory from login
+				this.sftpController.changeDirectory("..");
 			}
 
-			this.sftpController.changeDirectory(this.settingsData.getWorkingDirectorySftp());
-
+			// transfer the document files respective to the given TYPE_OF_HTML
 			if (type == TYPE_OF_HTML.STATIC) {
 
-				final InputStream stream = FileReadWriteModule.stringToInputStream(generateHtmlStatic());
-				this.sftpController.transferFile(stream, "index.html");
+				// list with all music video elements
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlStatic()),
+						"index.html");
 
 			} else if (type == TYPE_OF_HTML.SEARCH) {
 
-				final InputStream stream = FileReadWriteModule.stringToInputStream(generateHtmlSearch());
-				this.sftpController.transferFile(stream, "index.html");
+				// search list with all music video elements
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlSearch()),
+						"index.html");
 
 			} else if (type == TYPE_OF_HTML.PARTY) {
 
-				final InputStream stream = FileReadWriteModule.stringToInputStream(generateHtmlParty());
-				this.sftpController.transferFile(stream, "list.html");
-				final InputStream stream2 = FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist());
-				this.sftpController.transferFile(stream2, "index.php");
+				// search list with all music video elements and post buttons
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlParty()),
+						"list.html");
+				// playlist view PHP list
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist()),
+						"index.php");
+
+				// create a directory for the PHP documents and change into it
+				this.sftpController.makeDirectory("php");
+				this.sftpController.changeDirectory("php");
+
+				// PHP music video submit form
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlPartyForm()),
+						"form.php");
+				// PHP process document to add a submit to the playlist
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlPartyProcess()),
+						"process.php");
 			}
 		}
 	}
 
+	/**
+	 * Transfer website collection for party setup (PHP list with playlist)
+	 */
 	public void transferHtmlParty() {
 		transferHtmlMain(true, TYPE_OF_HTML.PARTY);
 	}
 
+	/**
+	 * Transfer website collection for list setup (static list)
+	 */
 	public void transferHtmlStatic() {
 		transferHtmlMain(true, TYPE_OF_HTML.STATIC);
 	}
 
+	/**
+	 * Transfer website collection for search setup (search list)
+	 */
 	public void transferHtmlSearch() {
 		transferHtmlMain(true, TYPE_OF_HTML.SEARCH);
 	}

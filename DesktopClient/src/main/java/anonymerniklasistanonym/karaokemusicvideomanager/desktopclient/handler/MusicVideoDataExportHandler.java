@@ -164,9 +164,7 @@ public class MusicVideoDataExportHandler {
 	 * 
 	 * @return content (String)
 	 */
-	public static String generateJsonContentTable(MusicVideo[] musicVideoList, String[] columns) {
-
-		Object[][] csvData = musicVideoListToObjectArray(musicVideoList);
+	public static String generateJsonContentTable(MusicVideo[] musicVideoList) {
 
 		// the whole object
 		JsonObjectBuilder jsonObject = Json.createObjectBuilder();
@@ -174,16 +172,23 @@ public class MusicVideoDataExportHandler {
 		// the table data
 		JsonArrayBuilder tableBody = Json.createArrayBuilder();
 
-		// every entry as element of an array
-		for (Object[] entry : csvData) {
-			JsonObjectBuilder tableRow = Json.createObjectBuilder();
+		// every music video
+		for (int i = 0; i < musicVideoList.length; i++) {
 
-			tableRow.add("artist", entry[1].toString());
-			tableRow.add("title", entry[2].toString());
+			// a music video element
+			JsonObjectBuilder tableRow = Json.createObjectBuilder();
+			tableRow.add("artist", musicVideoList[i].getArtist());
+			tableRow.add("title", musicVideoList[i].getTitle());
+			tableRow.add("path", musicVideoList[i].getPath().toString());
+
+			// add entry to table data
 			tableBody.add(tableRow);
 		}
+
+		// add table data to the whole object
 		jsonObject.add("music-videos", tableBody);
 
+		// return the whole object
 		return JsonModule.dumpJsonObjectToString(jsonObject);
 	}
 

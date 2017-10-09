@@ -20,7 +20,7 @@ public class WindowModule {
 		try {
 
 			// all the image sizes that are there
-			Integer[] supportedSizes = { 16, 32, 48, 64, 128, 194, 256, 512 };
+			Integer[] supportedSizes = { 16, 32, 64, 128, 256 };
 
 			// create an array of the same length in which all images will be saved
 			Image[] icons = new Image[supportedSizes.length];

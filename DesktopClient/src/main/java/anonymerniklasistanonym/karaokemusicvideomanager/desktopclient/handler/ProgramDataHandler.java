@@ -1,6 +1,8 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -19,11 +21,10 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.J
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.ProgramData;
 
 /**
- * All the settings data of the current running program
+ * Handler for all the settings data of the current running program
  * 
- * @author AnonymerNiklasistanonym
- * @version 1.1 (beta)
- *
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
+ *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  */
 public final class ProgramDataHandler {
 
@@ -289,7 +290,7 @@ public final class ProgramDataHandler {
 		try {
 			String content = createSettings();
 
-			if (FileReadWriteModule.writeTextFile(file, new String[] { content })) {
+			if (FileReadWriteModule.writeTextFile(file, content)) {
 				return true;
 			} else {
 				return false;
@@ -346,30 +347,11 @@ public final class ProgramDataHandler {
 
 				return JsonModule.dumpJsonObjectToString(mainJsonBuilder);
 
-			} else {
-				return null;
 			}
-
-			// JsonArrayBuilder pathListArray = Json.createArrayBuilder();
-			// pathListArray.add("String 1");
-			// pathListArray.add("String 2");
-			// pathListArray.add("String 3");
-			// pathListArray.add("String 4");
-			// mainJsonBuilder.add("path-list", pathListArray);
-
-			// JsonObjectBuilder sftpLogin = Json.createObjectBuilder();
-			// sftpLogin.add("username", "pi");
-			// sftpLogin.add("address", "192.168.0.192");
-			// mainJsonBuilder.add("sftp-login", sftpLogin);
-
-			// mainJsonBuilder.add("name", "Falco#*äüö");
-			// mainJsonBuilder.add("age", BigDecimal.valueOf(3));
-			// mainJsonBuilder.add("biteable", Boolean.FALSE);
-
 		} catch (Exception e) {
-			return null;
+			e.printStackTrace();
 		}
-
+		return null;
 	}
 
 	/**
@@ -521,6 +503,46 @@ public final class ProgramDataHandler {
 		} else {
 			return false;
 		}
+
+	}
+
+	public void removeFromPathList(Path filePathToRemove) {
+		// new path list that has the capacity of the old one - 1
+		ArrayList<Path> newPathList = new ArrayList<Path>(getPathList().length - 1);
+
+		for (Path path : getPathList()) {
+			try {
+				if (!Files.isSameFile(path, filePathToRemove)) {
+					newPathList.add(path);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// convert path list array list to array without sorting (not needed)
+		setPathList(newPathList.toArray(new Path[0]));
+
+	}
+
+	public void removeFromIgnoredFilesList(Path selectedFile) {
+
+		// new ignored files list that has the capacity of the old one - 1
+		ArrayList<File> newPathList = new ArrayList<File>(getIgnoredFiles().length - 1);
+
+		for (File path : getIgnoredFiles()) {
+			try {
+				if (!Files.isSameFile(path.toPath(), selectedFile)) {
+					newPathList.add(path);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+				newPathList.add(path);
+			}
+		}
+
+		// convert ignored files list array list to array
+		setIgnoredFiles(newPathList.toArray(new File[0]));
 
 	}
 

@@ -285,8 +285,7 @@ public class IgnoredFilesWindowController {
 
 				if (a != null) {
 					// "un"-ignore the file
-					this.mainWindow.getMusicVideohandler().removeFromIgnoredFilesList(selectedFile);
-
+					this.mainWindow.getMusicVideohandler().removeFromIgnoredFilesList(selectedFile.toPath());
 					// rename the file
 					Path newFilePath = Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a);
 					FileReadWriteModule.rename(selectedFile, newFilePath.toFile());
@@ -332,7 +331,7 @@ public class IgnoredFilesWindowController {
 		// if something is selected
 		if (selectedEntry != null) {
 			// check if the file really exists and isn't a directory
-			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
+			Path selectedFile = Paths.get(selectedEntry.getFilePath());
 
 			this.mainWindow.getMusicVideohandler().removeFromIgnoredFilesList(selectedFile);
 

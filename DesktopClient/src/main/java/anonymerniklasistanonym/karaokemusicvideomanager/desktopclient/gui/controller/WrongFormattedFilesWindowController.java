@@ -164,14 +164,14 @@ public class WrongFormattedFilesWindowController {
 		 */
 
 		// Context menu
-		contextRename.setGraphic(WindowModule.createMenuIcon("images/menu/rename.png"));
-		contextExplorer.setGraphic(WindowModule.createMenuIcon("images/menu/directory.png"));
-		contextIgnore.setGraphic(WindowModule.createMenuIcon("images/menu/ignore.png"));
-		contextClear.setGraphic(WindowModule.createMenuIcon("images/menu/clear.png"));
-		contextRefresh.setGraphic(WindowModule.createMenuIcon("images/menu/refresh.png"));
+		contextRename.setGraphic(WindowModule.createMenuIcon("rename"));
+		contextExplorer.setGraphic(WindowModule.createMenuIcon("directory"));
+		contextIgnore.setGraphic(WindowModule.createMenuIcon("ignore"));
+		contextClear.setGraphic(WindowModule.createMenuIcon("clear"));
+		contextRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
 
 		// label
-		searchLabel.setGraphic(WindowModule.createMenuIcon("images/menu/search.png"));
+		searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
 	}
 
 	/**
