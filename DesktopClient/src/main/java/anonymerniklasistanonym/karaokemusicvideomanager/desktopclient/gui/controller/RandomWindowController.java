@@ -58,13 +58,18 @@ public class RandomWindowController {
 	private Button buttonRefresh;
 
 	private MusicVideoRandomElement[] labelContent;
+	private Label[] allLabels;
 
-	private Main mainWindow;
+	private Main mainClass;
 	private MainWindowController mainWindowController;
 
-	public void setWindowController(Main window, MainWindowController mainWindowController) {
-		this.mainWindow = window;
+	public void setWindowController(Main mainClass, MainWindowController mainWindowController) {
+		this.mainClass = mainClass;
 		this.mainWindowController = mainWindowController;
+
+		this.allLabels = new Label[] { this.randomLable1, this.randomLable2, this.randomLable3, this.randomLable4,
+				this.randomLable5 };
+		this.labelContent = new MusicVideoRandomElement[allLabels.length];
 
 		refreshRandom();
 	}
@@ -123,24 +128,27 @@ public class RandomWindowController {
 
 	private void addVideo(int position) {
 
-		String[] authorComment = DialogModule.playlistDialog("", "", "Create a new Playlist entry",
-				"Add an author and comment", "Add to playlist");
+		final String[] authorComment = DialogModule.playlistDialog(this.mainWindowController.getLastName(), "",
+				"Create a new Playlist entry", "Add an author and comment", "Add to playlist");
 
 		if (authorComment != null && authorComment[0] != null) {
+
+			this.mainWindowController.setLastName(authorComment[0]);
+
 			if (authorComment[1] == null) {
 				authorComment[1] = "";
 			}
 
-			this.mainWindow.getMusicVideohandler().addMusicVideoToPlaylist(labelContent[position].getIndex(),
+			this.mainClass.getMusicVideohandler().addMusicVideoToPlaylist(this.labelContent[position].getIndex(),
 					authorComment[0], authorComment[1]);
-			mainWindowController.refreshMusicVideoPlaylistTable();
+			this.mainWindowController.refreshMusicVideoPlaylistTable();
 		}
 
 	}
 
 	private void playVideo(int position) {
 		try {
-			ExternalApplicationModule.openFile(labelContent[position].getMusicVideo().getPath().toFile());
+			ExternalApplicationModule.openFile(this.labelContent[position].getMusicVideo().getPath().toFile());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -173,40 +181,41 @@ public class RandomWindowController {
 
 	@FXML
 	public void addVideoAll() {
-		String[] authorComment = DialogModule.playlistDialog("", "", "Create 5 new Playlist entries",
-				"Add an author and comment", "Add to playlist");
+
+		final String[] authorComment = DialogModule.playlistDialog(this.mainWindowController.getLastName(), "",
+				"Create 5 new Playlist entries", "Add an author and comment", "Add to playlist");
 
 		if (authorComment != null && authorComment[0] != null) {
+
+			this.mainWindowController.setLastName(authorComment[0]);
+
 			if (authorComment[1] == null) {
 				authorComment[1] = "";
 			}
 
 			for (int i = 0; i < 5; i++) {
-				this.mainWindow.getMusicVideohandler().addMusicVideoToPlaylistRandom(i, labelContent[i].getIndex(),
+				this.mainClass.getMusicVideohandler().addMusicVideoToPlaylistRandom(i, this.labelContent[i].getIndex(),
 						authorComment[0], authorComment[1]);
 			}
-			mainWindowController.refreshMusicVideoPlaylistTable();
+			this.mainWindowController.refreshMusicVideoPlaylistTable();
 		}
 
 	}
 
 	@FXML
 	public void refreshRandom() {
-		MusicVideo[] allFiles = this.mainWindow.getMusicVideohandler().getMusicVideoList();
 
-		Label[] allLabels = { randomLable1, randomLable2, randomLable3, randomLable4, randomLable5 };
+		final MusicVideo[] allFiles = this.mainClass.getMusicVideohandler().getMusicVideoList();
 
-		labelContent = new MusicVideoRandomElement[allLabels.length];
+		final Random randomGenerator = new Random();
 
-		Random randomGenerator = new Random();
-		for (int i = 0; i < allLabels.length; i++) {
-			int randomNumber = randomGenerator.nextInt(allFiles.length);
-			labelContent[i] = new MusicVideoRandomElement(allFiles[randomNumber], randomNumber);
+		for (int i = 0; i < this.allLabels.length; i++) {
+			final int randomNumber = randomGenerator.nextInt(allFiles.length);
+			this.labelContent[i] = new MusicVideoRandomElement(allFiles[randomNumber], randomNumber);
+			this.allLabels[i].setText(this.labelContent[i].getMusicVideo().getTitle() + " from "
+					+ this.labelContent[i].getMusicVideo().getArtist());
 		}
-		for (int i = 0; i < allLabels.length; i++) {
-			allLabels[i].setText(labelContent[i].getMusicVideo().getTitle() + " from "
-					+ labelContent[i].getMusicVideo().getArtist());
-		}
+
 	}
 
 }

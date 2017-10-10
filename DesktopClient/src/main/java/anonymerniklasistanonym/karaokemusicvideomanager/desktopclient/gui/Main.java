@@ -15,6 +15,7 @@ import javafx.stage.Stage;
  *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  * @version 2.0.0
  */
+@SuppressWarnings("restriction")
 public class Main extends Application {
 
 	/**
@@ -37,7 +38,6 @@ public class Main extends Application {
 	 * window get's created/shown
 	 */
 	@Override
-	@SuppressWarnings("restriction")
 	public void init() throws Exception {
 
 		System.out.println(">> App initalisation started");
@@ -85,7 +85,6 @@ public class Main extends Application {
 	/**
 	 * ---------------------- MAIN METHOD ----------------------
 	 */
-	@SuppressWarnings("restriction")
 	public static void main(String[] args) {
 
 		// start JavaFx with a preloader

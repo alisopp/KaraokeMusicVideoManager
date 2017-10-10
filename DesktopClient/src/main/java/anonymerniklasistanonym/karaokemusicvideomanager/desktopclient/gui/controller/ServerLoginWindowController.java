@@ -31,16 +31,16 @@ public class ServerLoginWindowController {
 	@FXML
 	private Button loginButton;
 
-	private Stage a;
+	private Stage serverStage;
 
-	public Main mainWindow;
+	public Main mainClass;
 
-	public void setServerLoginWindow(Main window, Stage a) {
-		this.mainWindow = window;
-		this.a = a;
-		String address = this.mainWindow.getMusicVideohandler().getSftpIpAddress();
-		String directory = this.mainWindow.getMusicVideohandler().getSftpDirectory();
-		String username = this.mainWindow.getMusicVideohandler().getSftpUsername();
+	public void setServerLoginWindow(Main mainClass, Stage serverStage) {
+		this.mainClass = mainClass;
+		this.serverStage = serverStage;
+		final String address = this.mainClass.getMusicVideohandler().getSftpIpAddress();
+		final String directory = this.mainClass.getMusicVideohandler().getSftpDirectory();
+		final String username = this.mainClass.getMusicVideohandler().getSftpUsername();
 		if (address != null) {
 			this.serverAddress.setText(address);
 		}
@@ -56,14 +56,14 @@ public class ServerLoginWindowController {
 	@FXML
 	public void tryToLogin() {
 
-		if (this.mainWindow.getMusicVideohandler().sftpConnect(userName.getText(), userPassword.getText(),
-				serverAddress.getText(), workingDirectory.getText())) {
-			this.mainWindow.getMusicVideohandler().saveSftpLogin(serverAddress.getText(), workingDirectory.getText(),
-					userName.getText());
-			this.mainWindow.getMusicVideohandler().sftpRetrievePlaylist();
-			this.a.close();
+		if (this.mainClass.getMusicVideohandler().sftpConnect(this.userName.getText(), this.userPassword.getText(),
+				this.serverAddress.getText(), this.workingDirectory.getText())) {
+			this.mainClass.getMusicVideohandler().saveSftpLogin(this.serverAddress.getText(),
+					this.workingDirectory.getText(), this.userName.getText());
+			this.mainClass.getMusicVideohandler().sftpRetrievePlaylist();
+			this.serverStage.close();
 
-			this.a.fireEvent(new WindowEvent(this.a, WindowEvent.WINDOW_CLOSE_REQUEST));
+			this.serverStage.fireEvent(new WindowEvent(this.serverStage, WindowEvent.WINDOW_CLOSE_REQUEST));
 		} else {
 			DialogModule.informationAlert("SFTP connection could not bes established", "Please try to login again",
 					AlertType.INFORMATION);

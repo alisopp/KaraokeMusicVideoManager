@@ -544,17 +544,52 @@ public class MainWindowController {
 	@FXML
 	private void openSelectedVideoFile() {
 
-		// get the currently selected entry
-		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
+		// get the selected tab
+		Tab selectedTab = tabView.getSelectionModel().getSelectedItem();
 
-		// if entry isn't null
-		if (musicVideoTableTab.isSelected() && selectedEntry != null) {
-			// open the music video file with the index
-			this.mainWindow.getMusicVideohandler().openMusicVideo(selectedEntry.getIndex() - 1);
-		} else {
-			// search on YouTube
-			searchOnYouTube();
+		if (selectedTab == musicVideoTableTab) {
+
+			// get the currently selected entry
+			MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
+
+			// if entry isn't null
+			if (selectedEntry != null) {
+				// open the music video file with the index
+				this.mainWindow.getMusicVideohandler().openMusicVideo(selectedEntry.getIndex() - 1);
+			} else {
+				// search on YouTube
+				searchOnYouTube();
+			}
+
+		} else if (selectedTab == playlistTab) {
+
+			// select the top item
+			this.playlistTable.getSelectionModel().select(0);
+
+			// open the selected item externally
+			if (!openSelectedPlaylistVideoFile()) {
+				// search on YouTube
+				searchOnYouTube();
+			}
+
+			// clear the selection
+			this.playlistTable.getSelectionModel().clearSelection();
+
+		} else if (selectedTab == sourceTab) {
+
+			// select the top item
+			this.directoryPathTable.getSelectionModel().select(0);
+
+			// open the selected directory entry externally
+			if (!showSelectedDirectoryInExplorer()) {
+				// search on YouTube
+				searchOnYouTube();
+			}
+
+			// clear the selection
+			this.directoryPathTable.getSelectionModel().clearSelection();
 		}
+
 	}
 
 	/**
@@ -691,21 +726,20 @@ public class MainWindowController {
 		String youTubeUrl = "https://www.youtube.com";
 
 		// if text field has text try to add it to the urlToOpen
-		try {
-			if (searchQuery != null && searchQuery.length() > 0) {
+		if (searchQuery != null && searchQuery.length() > 0) {
 
+			try {
 				// encode the text to a browser query
 				String textToSearchQuery = URLEncoder.encode(searchQuery, "UTF-8");
-
 				// add the search query to the YouTube URL
 				youTubeUrl += "/results?search_query=" + textToSearchQuery;
-
-				// open the new URL
-				ExternalApplicationModule.openUrl(youTubeUrl);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
 			}
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+
 		}
+		// open the new URL
+		ExternalApplicationModule.openUrl(youTubeUrl);
 
 	}
 
@@ -984,7 +1018,7 @@ public class MainWindowController {
 	 * Show the currently selected directory in the default file manager
 	 */
 	@FXML
-	private void showSelectedDirectoryInExplorer() {
+	private boolean showSelectedDirectoryInExplorer() {
 
 		// get the currently selected entry
 		MusicVideoSourceDirectoriesTableView selectedEntry = this.directoryPathTable.getSelectionModel()
@@ -994,7 +1028,10 @@ public class MainWindowController {
 		if (selectedEntry != null) {
 			// open the music video file with the index
 			ExternalApplicationModule.openFile(Paths.get(selectedEntry.getFilePath()).toFile());
+			return true;
 		}
+
+		return false;
 	}
 
 	/**
@@ -1336,7 +1373,7 @@ public class MainWindowController {
 		}
 	}
 
-	private void openSelectedPlaylistVideoFile() {
+	private boolean openSelectedPlaylistVideoFile() {
 
 		// get the currently selected entry in the table
 		MusicVideoPlaylistTableView selectedEntry = this.playlistTable.getSelectionModel().getSelectedItem();
@@ -1344,7 +1381,9 @@ public class MainWindowController {
 		// if something is selected
 		if (selectedEntry != null) {
 			this.mainWindow.getMusicVideohandler().openMusicVideo(selectedEntry.getMusicVideoIndex() - 1);
+			return true;
 		}
+		return false;
 
 	}
 
@@ -1459,6 +1498,14 @@ public class MainWindowController {
 			this.tableDataPlaylist.clear();
 		}
 
+	}
+
+	public String getLastName() {
+		return this.lastName;
+	}
+
+	public void setLastName(String newName) {
+		this.lastName = newName;
 	}
 
 }
