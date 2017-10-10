@@ -3,7 +3,6 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.contr
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -1187,8 +1186,7 @@ public class MainWindowController {
 	@FXML
 	private void exportHtmlStatic() {
 		File htmlFileDestination = DialogModule.chooseDirectory(this.mainWindow.getPrimaryStage(),
-				"Export music video list to static HTML table - Choose a directory",
-				FileSystems.getDefault().getPath(".").toFile());
+				"Export music video list to static HTML table - Choose a directory", null);
 
 		if (htmlFileDestination != null) {
 			this.mainWindow.getMusicVideohandler().saveHtmlList(htmlFileDestination.toPath(), true);
@@ -1201,8 +1199,7 @@ public class MainWindowController {
 	@FXML
 	private void exportHtmlSearch() {
 		File htmlFileDestination = DialogModule.chooseDirectory(this.mainWindow.getPrimaryStage(),
-				"Export music video list to static HTML table - Choose a directory",
-				FileSystems.getDefault().getPath(".").toFile());
+				"Export music video list to static HTML table - Choose a directory", null);
 
 		if (htmlFileDestination != null) {
 			this.mainWindow.getMusicVideohandler().saveHtmlSearch(htmlFileDestination.toPath(), true);
@@ -1215,8 +1212,7 @@ public class MainWindowController {
 	@FXML
 	private void exportHtmlParty() {
 		File htmlFileDestination = DialogModule.chooseDirectory(this.mainWindow.getPrimaryStage(),
-				"Export music video list to static HTML table - Choose a directory",
-				FileSystems.getDefault().getPath(".").toFile());
+				"Export music video list to static HTML table - Choose a directory", null);
 
 		if (htmlFileDestination != null) {
 			this.mainWindow.getMusicVideohandler().saveHtmlParty(htmlFileDestination.toPath(), true);
@@ -1230,9 +1226,8 @@ public class MainWindowController {
 	private void exportCsv() {
 		ExtensionFilter csvFilter = new ExtensionFilter("Csv File", "*.csv");
 		File[] csvFile = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(),
-				"Export music video list to a CSV file - Choose a directory and filename",
-				FileSystems.getDefault().getPath(".").toFile(), new ExtensionFilter[] { csvFilter },
-				DialogModule.CHOOSE_ACTION.SAVE);
+				"Export music video list to a CSV file - Choose a directory and filename", null,
+				new ExtensionFilter[] { csvFilter }, DialogModule.CHOOSE_ACTION.SAVE);
 
 		if (csvFile != null && csvFile[0] != null) {
 			this.mainWindow.getMusicVideohandler().saveCsv(csvFile[0].toPath());
@@ -1246,9 +1241,8 @@ public class MainWindowController {
 	private void exportJson() {
 		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
 		File[] jsonFile = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(),
-				"Export music video list to a JSON file - Choose a directory and filename",
-				FileSystems.getDefault().getPath(".").toFile(), new ExtensionFilter[] { jsonFilter },
-				DialogModule.CHOOSE_ACTION.SAVE);
+				"Export music video list to a JSON file - Choose a directory and filename", null,
+				new ExtensionFilter[] { jsonFilter }, DialogModule.CHOOSE_ACTION.SAVE);
 
 		if (jsonFile != null && jsonFile[0] != null) {
 			this.mainWindow.getMusicVideohandler().saveJson(jsonFile[0].toPath());
@@ -1271,8 +1265,8 @@ public class MainWindowController {
 	private void saveConfiguartionCustom() {
 		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
 		File[] jsonFile = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(),
-				"Save a Custom Named Configuration File", FileSystems.getDefault().getPath(".").toFile(),
-				new ExtensionFilter[] { jsonFilter }, DialogModule.CHOOSE_ACTION.SAVE);
+				"Save a Custom Named Configuration File", null, new ExtensionFilter[] { jsonFilter },
+				DialogModule.CHOOSE_ACTION.SAVE);
 		if (jsonFile != null && jsonFile[0] != null) {
 			File saveToThis = Paths.get(jsonFile[0].getAbsolutePath() + ".json").toFile();
 			this.mainWindow.getMusicVideohandler().saveSettings(saveToThis);
@@ -1283,8 +1277,8 @@ public class MainWindowController {
 	private void loadConfiguartionCustom() {
 		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
 		File[] jsonFile = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(),
-				"Load a Custom Named Configuration File", FileSystems.getDefault().getPath(".").toFile(),
-				new ExtensionFilter[] { jsonFilter }, DialogModule.CHOOSE_ACTION.NORMAL);
+				"Load a Custom Named Configuration File", null, new ExtensionFilter[] { jsonFilter },
+				DialogModule.CHOOSE_ACTION.NORMAL);
 		if (jsonFile != null && jsonFile[0] != null) {
 			this.mainWindow.getMusicVideohandler().loadSettings(jsonFile[0]);
 		}
@@ -1360,9 +1354,8 @@ public class MainWindowController {
 			DialogModule.informationAlert("Operation failed", "There is no playlist!", AlertType.ERROR);
 		} else {
 			ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
-			File[] fileName = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(), "Save current playlist",
-					FileSystems.getDefault().getPath(".").toFile(), new ExtensionFilter[] { jsonFilter },
-					DialogModule.CHOOSE_ACTION.SAVE);
+			File[] fileName = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(), "Save current playlist", null,
+					new ExtensionFilter[] { jsonFilter }, DialogModule.CHOOSE_ACTION.SAVE);
 			if (fileName != null && fileName[0] != null) {
 				File realFileName = new File(fileName[0].getParent() + "/" + fileName[0].getName());
 				this.tableDataPlaylist.clear();
@@ -1379,9 +1372,8 @@ public class MainWindowController {
 				"Do you really want to clear your current playlist?",
 				"The current playlist will be cleared if you continue")) {
 			ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
-			File[] fileName = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(), "Load a saved playlist",
-					FileSystems.getDefault().getPath(".").toFile(), new ExtensionFilter[] { jsonFilter },
-					DialogModule.CHOOSE_ACTION.NORMAL);
+			File[] fileName = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(), "Load a saved playlist", null,
+					new ExtensionFilter[] { jsonFilter }, DialogModule.CHOOSE_ACTION.NORMAL);
 			if (fileName != null && fileName[0] != null) {
 				this.mainWindow.getMusicVideohandler().loadPlaylist(fileName[0]);
 			}
@@ -1419,6 +1411,7 @@ public class MainWindowController {
 					"Save Changes");
 
 			if (authorComment != null && authorComment[0] != null) {
+				this.lastName = authorComment[0];
 				if (authorComment[1] == null) {
 					authorComment[1] = "";
 				}

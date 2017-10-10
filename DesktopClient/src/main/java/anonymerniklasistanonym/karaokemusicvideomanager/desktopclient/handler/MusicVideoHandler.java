@@ -874,7 +874,8 @@ public class MusicVideoHandler {
 				.replaceFirst("Title", this.columnNames[2]));
 
 		if (party) {
-			htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "form-start-html_party"));
+			htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "form-start-html_party")
+					.replaceFirst("../php/form.php", "php/form.php"));
 		}
 
 		// table data
