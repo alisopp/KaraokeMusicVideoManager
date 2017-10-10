@@ -352,6 +352,8 @@ public class DialogModule {
 		Node loginButton = dialog.getDialogPane().lookupButton(editElement);
 		loginButton.setDisable(true);
 
+		loginButton.setDisable(newAuthor.textProperty().getValue().trim().isEmpty());
+
 		// Do some validation (using the Java 8 lambda syntax).
 		newAuthor.textProperty().addListener((observable, oldValue, newValue) -> {
 			// disable the button as long as the author field is empty

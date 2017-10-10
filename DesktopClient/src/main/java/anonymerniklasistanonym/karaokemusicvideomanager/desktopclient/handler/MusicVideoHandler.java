@@ -153,7 +153,7 @@ public class MusicVideoHandler {
 	}
 
 	/**
-	 * Get if a settings file exists or nor
+	 * Get if a settings file exists or not
 	 */
 	public boolean settingsFileExist() {
 		if (this.settingsFile.exists()) {
@@ -161,6 +161,24 @@ public class MusicVideoHandler {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Get if a settings file exists in the users home directory if he installed it
+	 * on windows
+	 */
+	public boolean windowsSettingsFileExists() {
+		if (Paths.get(".").toAbsolutePath().toString().contains("(x86)")
+				|| Paths.get(".").toAbsolutePath().toString().contains("(x64)")) {
+			File windowsSettingsFile = Paths.get(System.getProperty("user.home") + "/MusicVideoManager/" + settingsFile)
+					.toFile();
+			if (windowsSettingsFile.getParentFile().exists()) {
+				if (windowsSettingsFile.exists()) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -179,15 +197,26 @@ public class MusicVideoHandler {
 	 * Load settings from "settings.json" file if there is one
 	 */
 	public void loadSettingsFromFile() {
+
+		System.out.println("current path: " + Paths.get(".").toAbsolutePath().normalize().toString());
 		if (settingsFileExist()) {
 			loadSettings(settingsFile);
-			// that was follows is beta and should read the files when it's installed like a
-			// real program on windows
-			// TODO
 		} else if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-			File windowsSettingsFile = Paths.get(System.getProperty("user.home") + "\\" + settingsFile).toFile();
-			if (windowsSettingsFile.exists()) {
-				loadSettings(windowsSettingsFile);
+
+			// if the current directory is the home folder of the user
+			if (Paths.get(".").toAbsolutePath().toString().contains("(x86)")
+					|| Paths.get(".").toAbsolutePath().toString().contains("(x64)")) {
+				File windowsSettingsFile = Paths
+						.get(System.getProperty("user.home") + "/MusicVideoManager/" + settingsFile).toFile();
+
+				if (windowsSettingsFile.getParentFile().exists()) {
+					System.out.println("Folder found");
+					// try to find a settings file
+					if (windowsSettingsFile.exists()) {
+						System.out.println("Settings found");
+						loadSettings(windowsSettingsFile);
+					}
+				}
 			}
 		}
 	}
@@ -196,11 +225,24 @@ public class MusicVideoHandler {
 	 * Save settings in the default settings file
 	 */
 	public boolean saveSettingsToFile() {
-		if (saveSettings(settingsFile)) {
-			return true;
-		} else {
-			return false;
+
+		File settingsFileToSave = this.settingsFile;
+
+		if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+
+			// if the current directory is the home folder of the user
+			if (Paths.get(".").toAbsolutePath().toString().contains("(x86)")
+					|| Paths.get(".").toAbsolutePath().toString().contains("(x64)")) {
+
+				File windowsSettingsFile = Paths
+						.get(System.getProperty("user.home") + "/MusicVideoManager/" + settingsFile).toFile();
+
+				FileReadWriteModule.createDirectory(windowsSettingsFile.getParentFile());
+
+				settingsFileToSave = windowsSettingsFile;
+			}
 		}
+		return saveSettings(settingsFileToSave);
 	}
 
 	/**
@@ -1196,7 +1238,34 @@ public class MusicVideoHandler {
 	 * @return theyAreTheSame (Boolean)
 	 */
 	public boolean compareSettings() {
-		return this.programDataHandler.compareSettingsFileToCurrent(this.settingsFile);
+
+		File settingsFileNew = this.settingsFile;
+		if (Paths.get(".").toAbsolutePath().toString().contains("(x86)")
+				|| Paths.get(".").toAbsolutePath().toString().contains("(x64)")) {
+			File windowsSettingsFile = Paths.get(System.getProperty("user.home") + "/MusicVideoManager/" + settingsFile)
+					.toFile();
+			if (windowsSettingsFile.getParentFile().exists()) {
+				if (windowsSettingsFile.exists()) {
+					settingsFileNew = windowsSettingsFile;
+				}
+			}
+		}
+
+		return this.programDataHandler.compareSettingsFileToCurrent(settingsFileNew);
+	}
+
+	/**
+	 * Returns FALSE if the new settings data from the file is different to the
+	 * current settings data. If they aren't the same TRUE will be returned.
+	 * 
+	 * @param settingsFilePathNew
+	 *            (File | File that contains settingsData in JSON format)
+	 * @return theyAreTheSame (Boolean)
+	 */
+	public boolean compareSettingsWindows() {
+		File windowsSettingsFile = Paths
+				.get(System.getProperty("user.home") + "/MusicVideoManager/" + this.settingsFile).toFile();
+		return this.programDataHandler.compareSettingsFileToCurrent(windowsSettingsFile);
 	}
 
 	/**
@@ -1395,7 +1464,6 @@ public class MusicVideoHandler {
 	}
 
 	public String getSftpIpAddress() {
-		System.out.println(this.programDataHandler.getIpAddressSftp());
 		return this.programDataHandler.getIpAddressSftp();
 	}
 

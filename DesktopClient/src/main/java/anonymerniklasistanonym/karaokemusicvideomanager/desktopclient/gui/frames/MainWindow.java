@@ -82,12 +82,14 @@ public class MainWindow {
 
 	public void onCloseDialog(WindowEvent e) {
 
-		if (!this.main.getMusicVideohandler().settingsFileExist()
-				|| this.main.getMusicVideohandler().getAlwaysSave() == true) {
+		if (this.main.getMusicVideohandler().getAlwaysSave() == true
+				|| (!this.main.getMusicVideohandler().settingsFileExist()
+						&& !this.main.getMusicVideohandler().windowsSettingsFileExists())) {
 			// save changes if nothing is there
 			this.main.getMusicVideohandler().saveSettingsToFile();
 
 			Platform.exit();
+
 		} else {
 
 			if (!this.main.getMusicVideohandler().compareSettings()) {

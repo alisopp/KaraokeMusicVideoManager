@@ -87,7 +87,6 @@ public final class ProgramDataHandler {
 					System.err.println("- Found duplicate: " + containedPath);
 				}
 			}
-			Collections.sort(uniqueAddresses);
 			this.settings.setPathList(uniqueAddresses.toArray(new Path[0]));
 
 		} else {

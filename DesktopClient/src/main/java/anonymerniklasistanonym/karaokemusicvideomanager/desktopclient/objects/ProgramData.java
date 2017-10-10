@@ -2,6 +2,7 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Arrays;
 
 /**
  * All the settings data of the current running program
@@ -71,6 +72,7 @@ public class ProgramData {
 	 *            the pathList to set
 	 */
 	public void setPathList(Path[] pathList) {
+		Arrays.sort(pathList);
 		this.pathList = pathList;
 	}
 

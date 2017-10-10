@@ -26,15 +26,13 @@ public class Main extends Application {
 	 */
 	private MusicVideoHandler musicVideoHandler;
 
-	private Stage mainWindowStage;
-
 	private MainWindow mainWindowCreator;
 
 	@Override
 	@SuppressWarnings("restriction")
 	public void init() throws Exception {
-		System.out.println(Main.STEP() + "MyApplication#init (doing some heavy lifting), thread: "
-				+ Thread.currentThread().getName());
+
+		System.out.println(">> App initalisation started");
 
 		// save/add a MusicVideoHandler
 		this.musicVideoHandler = new MusicVideoHandler();
@@ -55,21 +53,19 @@ public class Main extends Application {
 
 		LauncherImpl.notifyPreloader(this, new Preloader.ProgressNotification(100));
 
+		System.out.println("<< App initalisation finished");
 	}
 
 	@Override
 	public void start(Stage primaryStage) {
 
+		System.out.println(">> App open stage");
+
 		// get the created main window Stage back and set it as main stage
 		primaryStage = this.mainWindowCreator.createStage();
 
-	}
+		System.out.println("<< App open stage finished");
 
-	private static int stepCount = 1;
-
-	// Used to demonstrate step couns.
-	public static String STEP() {
-		return stepCount++ + ". ";
 	}
 
 	@SuppressWarnings("restriction")
@@ -78,7 +74,7 @@ public class Main extends Application {
 		// start JavaFx with a preloader
 		LauncherImpl.launchApplication(Main.class, MyPreloader.class, args);
 
-		// start JavaFx
+		// start JavaFx without a preloader
 		// launch(args);
 
 	}

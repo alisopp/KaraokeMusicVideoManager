@@ -11,6 +11,7 @@
 
   ;Define name of the product
   !define PRODUCT "MusicVideoManager"
+  !define DOCDIR "$PROFILE\${PRODUCT}"
   !define ABOUTURL "https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager"
   !define INSTALLATIONURL "https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager"
 
@@ -181,6 +182,9 @@ Section "Uninstall"
   ;Delete the installation directory + files
   RMDir /r "$INSTDIR\*.*"
   RMDir "$INSTDIR"
+  IfFileExists "${DOCDIR}" 0 +3
+  RMDir /r "${DOCDIR}\*.*"
+  RMDir "${DOCDIR}"
 
   ;Delete Start Menu Shortcuts
   Delete "$SMPROGRAMS\${PRODUCT}\*.*"

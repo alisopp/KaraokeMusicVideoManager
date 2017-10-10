@@ -321,6 +321,7 @@ public class MainWindowController {
 	 * Main class
 	 */
 	private Main mainWindow;
+	private String lastName;
 
 	/**
 	 * This method get's called when the FXML file get's loaded
@@ -524,12 +525,14 @@ public class MainWindowController {
 		searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
 
 		this.menuButtonSftp.setDisable(true);
+
+		this.lastName = System.getProperty("user.name");
 	}
 
 	public void setMainWindow(Main window) {
 		this.mainWindow = window;
 
-		refreshMusicVideoTable();
+		refreshMusicVideoTableWithoutUpdate();
 		refreshMusicVideoDirectoryTable();
 		refreshMusicVideoPlaylistTable();
 
@@ -1032,11 +1035,12 @@ public class MainWindowController {
 			int a = selectedEntry.getIndex();
 
 			// dialog to get author and optional a comment
-			String[] authorComment = DialogModule.playlistDialog("", "", "Create a new Playlist entry",
-					"Add an author and comment", "Add to playlist");
+			String[] authorComment = DialogModule.playlistDialog(lastName, "", "Create a new Playlist entry",
+					"Add an author and comment", "Add");
 
 			// if author not null add it to the playlist
 			if (authorComment != null && authorComment[0] != null) {
+				this.lastName = authorComment[0];
 				if (authorComment[1] == null) {
 					authorComment[1] = "";
 				}
@@ -1056,6 +1060,14 @@ public class MainWindowController {
 
 		// update the music video data
 		this.mainWindow.getMusicVideohandler().updateMusicVideoList();
+
+		refreshMusicVideoTableWithoutUpdate();
+	}
+
+	/**
+	 * Refresh the music video file table
+	 */
+	public void refreshMusicVideoTableWithoutUpdate() {
 
 		// get music video data
 		MusicVideo[] listOfVideos = this.mainWindow.getMusicVideohandler().getMusicVideoList();
