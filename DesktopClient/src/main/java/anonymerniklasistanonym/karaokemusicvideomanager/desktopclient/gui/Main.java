@@ -11,8 +11,9 @@ import javafx.stage.Stage;
 /**
  * Main method. The whole program runs here.
  *
- * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com>
- * @version 2.0
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
+ *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
+ * @version 2.0.0
  */
 public class Main extends Application {
 
@@ -22,12 +23,19 @@ public class Main extends Application {
 	private Stage primaryStage;
 
 	/**
-	 * Music Video Handler (manages the videos/paths/etc.)
+	 * Music Video Handler (manages the videos/paths/everything)
 	 */
 	private MusicVideoHandler musicVideoHandler;
 
+	/**
+	 * Creates the main window
+	 */
 	private MainWindow mainWindowCreator;
 
+	/**
+	 * Method that runs after the preloader was initialized and before the main
+	 * window get's created/shown
+	 */
 	@Override
 	@SuppressWarnings("restriction")
 	public void init() throws Exception {
@@ -56,6 +64,9 @@ public class Main extends Application {
 		System.out.println("<< App initalisation finished");
 	}
 
+	/**
+	 * Open the main window stage
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 
@@ -64,18 +75,23 @@ public class Main extends Application {
 		// get the created main window Stage back and set it as main stage
 		primaryStage = this.mainWindowCreator.createStage();
 
+		// show it
+		primaryStage.show();
+
 		System.out.println("<< App open stage finished");
 
 	}
 
+	/**
+	 * ---------------------- MAIN METHOD ----------------------
+	 */
 	@SuppressWarnings("restriction")
 	public static void main(String[] args) {
 
 		// start JavaFx with a preloader
-		LauncherImpl.launchApplication(Main.class, MyPreloader.class, args);
+		LauncherImpl.launchApplication(Main.class, CustomPreloader.class, args);
 
-		// start JavaFx without a preloader
-		// launch(args);
+		// start JavaFx without a preloader: launch(args);
 
 	}
 
@@ -85,17 +101,7 @@ public class Main extends Application {
 	 * @return (Stage | main Stage)
 	 */
 	public Stage getPrimaryStage() {
-		return primaryStage;
-	}
-
-	/**
-	 * Set the primary Stage
-	 * 
-	 * @param primaryStage
-	 *            (Stage)
-	 */
-	public void setPrimaryStage(Stage primaryStage) {
-		this.primaryStage = primaryStage;
+		return this.primaryStage;
 	}
 
 	/**
@@ -105,16 +111,6 @@ public class Main extends Application {
 	 */
 	public MusicVideoHandler getMusicVideohandler() {
 		return musicVideoHandler;
-	}
-
-	/**
-	 * Set the MusicVideoHandler
-	 * 
-	 * @param musicVideoHandler
-	 *            (MusicVideoHandler)
-	 */
-	public void setMusicVideoHandler(MusicVideoHandler musicVideoHandler) {
-		this.musicVideoHandler = musicVideoHandler;
 	}
 
 }

@@ -7,106 +7,170 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.W
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
+/**
+ * Main window creator.
+ *
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
+ *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
+ */
 public class MainWindow {
 
-	public MainWindow(Main hih) {
-		this.main = hih;
+	/**
+	 * The main class
+	 */
+	private Main mainClass;
+
+	/**
+	 * The main window scene
+	 */
+	private Scene mainWindowScene;
+
+	/**
+	 * The title of the window
+	 */
+	private final String windowTitle;
+
+	/**
+	 * The normal window size
+	 */
+	private final int[] normalWindowSize;
+
+	/**
+	 * The minimal window size
+	 */
+	private final int[] minimalWindowSize;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param mainClass
+	 *            (Main | needed to use the resources from the main class in here)
+	 */
+	public MainWindow(Main mainClass) {
+
+		// connect to the main class
+		this.mainClass = mainClass;
+
+		// get the program name
+		this.windowTitle = this.mainClass.getMusicVideohandler().getProgramName();
+
+		// set the window size constraints
+		this.normalWindowSize = new int[] { 600, 600 };
+		this.minimalWindowSize = new int[] { 540, 450 };
+
 	}
 
-	private Stage MainWindowStage;
-	private Scene scene;
-
-	private Main main;
-
-	private String windowTitle = "Karaoke Desktop Client [Beta]";
-	private int[] normalWindowSize = { 600, 600 };
-	private int[] minimalWindowSize = { 540, 450 };
-
+	/**
+	 * Create/Load the main windows scene (during preloader)
+	 */
 	public void createScene() {
+
 		try {
+
+			// load the whole FXML window
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getClassLoader().getResource("windows/MainWindow.fxml"));
-			BorderPane mainPane = loader.load();
-			this.scene = new Scene(mainPane, this.normalWindowSize[0], this.normalWindowSize[1]);
+
+			// load the window itself
+			final Parent mainPane = (Parent) loader.load();
 
 			// Connection to the Controller from the primary Stage
-			MainWindowController mainWindowController = loader.getController();
-			mainWindowController.setMainWindow(this.main);
+			final MainWindowController mainWindowController = loader.getController();
+			mainWindowController.setMainWindow(this.mainClass);
+
+			// set the scene with all these informations
+			this.mainWindowScene = new Scene(mainPane, this.normalWindowSize[0], this.normalWindowSize[1]);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
+	/**
+	 * Create the main windows stage
+	 * 
+	 * @return mainWindowStage (Stage)
+	 */
 	public Stage createStage() {
+
 		try {
-			this.MainWindowStage = new Stage(StageStyle.DECORATED);
 
-			this.MainWindowStage.setTitle(this.windowTitle);
+			// window looks like a normal application window
+			Stage mainWindowStage = new Stage(StageStyle.DECORATED);
 
-			this.MainWindowStage.setScene(scene);
+			// set a title for the window
+			mainWindowStage.setTitle(this.windowTitle);
 
-			this.MainWindowStage.setResizable(true);
-			this.MainWindowStage.setMinWidth(this.minimalWindowSize[0]);
-			this.MainWindowStage.setMinHeight(this.minimalWindowSize[1]);
-			this.MainWindowStage.centerOnScreen();
+			// add the scene to the stage
+			mainWindowStage.setScene(this.mainWindowScene);
+
+			// set the window resizable
+			mainWindowStage.setResizable(true);
+
+			// add minimal window sizes
+			mainWindowStage.setMinWidth(this.minimalWindowSize[0]);
+			mainWindowStage.setMinHeight(this.minimalWindowSize[1]);
+
+			// center the stage to the screen
+			mainWindowStage.centerOnScreen();
 
 			// try to add a window icon
-			try {
-				getMainWindowStage().getIcons().addAll(WindowModule.getWindowIcons());
-			} catch (Exception e) {
-				System.err.println("Exception while loding icons");
-			}
-			getMainWindowStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
+			mainWindowStage.getIcons().addAll(WindowModule.getWindowIcons());
+
+			// do the following if the stage get a close request (user presses X)
+			mainWindowStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 
 				@Override
 				public void handle(WindowEvent e) {
+					// on close do the "on-close-dialog"
 					onCloseDialog(e);
 				}
 			});
 
-			this.MainWindowStage.show();
+			// now return the stage
+			return mainWindowStage;
 
-			return MainWindowStage;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		return null;
+
 	}
 
+	/**
+	 * Do this on request of closing the main window
+	 */
 	public void onCloseDialog(WindowEvent e) {
 
-		if (this.main.getMusicVideohandler().getAlwaysSave() == true
-				|| (!this.main.getMusicVideohandler().settingsFileExist()
-						&& !this.main.getMusicVideohandler().windowsSettingsFileExists())) {
-			// save changes if nothing is there
-			this.main.getMusicVideohandler().saveSettingsToFile();
+		// check if there is no existing settings file
+		if (this.mainClass.getMusicVideohandler().getAlwaysSave() == true
+				|| (!this.mainClass.getMusicVideohandler().settingsFileExist()
+						&& !this.mainClass.getMusicVideohandler().windowsSettingsFileExists())) {
 
-			Platform.exit();
+			// if there is no one save the settings to the default file
+			this.mainClass.getMusicVideohandler().saveSettingsToFile();
 
 		} else {
 
-			if (!this.main.getMusicVideohandler().compareSettings()) {
-				DialogModule.mainStageClose(e, this.main.getMusicVideohandler());
-			} else {
-				System.out.println("Settings were the same");
-				Platform.exit();
+			// if there is an existing settings file compare the settings
+			if (!this.mainClass.getMusicVideohandler().compareSettings()) {
+
+				// if they are different open a special dialog
+				DialogModule.mainStageClose(e, this.mainClass.getMusicVideohandler());
 			}
-
 		}
-	}
 
-	public Stage getMainWindowStage() {
-		return MainWindowStage;
-	}
+		// last disconnect from the server and exit the whole program
+		this.mainClass.getMusicVideohandler().sftpDisconnect();
+		Platform.exit();
 
-	public void setMainWindowStage(Stage mainWindowStage) {
-		MainWindowStage = mainWindowStage;
 	}
 }

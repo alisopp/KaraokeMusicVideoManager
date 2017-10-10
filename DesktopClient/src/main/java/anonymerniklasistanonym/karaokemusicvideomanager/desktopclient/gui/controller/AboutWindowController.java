@@ -12,17 +12,16 @@ import javafx.fxml.FXML;
 public class AboutWindowController {
 
 	/**
-	 * This method get's called when the FXML file get's loaded
+	 * Open the link to the GitHub repository
 	 */
-	@FXML
-	private void initialize() {
-	}
-
 	@FXML
 	public void openGitHubLinkRepository() {
 		ExternalApplicationModule.openUrl("https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager");
 	}
 
+	/**
+	 * Open the link to the authors GitHub profile
+	 */
 	@FXML
 	public void openGitHubLinkProfile() {
 		ExternalApplicationModule.openUrl("https://github.com/AnonymerNiklasistanonym");

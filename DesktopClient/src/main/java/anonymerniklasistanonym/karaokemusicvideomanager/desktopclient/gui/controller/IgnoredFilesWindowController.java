@@ -1,7 +1,6 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
@@ -102,23 +101,30 @@ public class IgnoredFilesWindowController {
 	/**
 	 * Main class
 	 */
-	private Main mainWindow;
+	private Main mainClass;
 
 	/**
 	 * Main controller class
 	 */
-	private MainWindowController mainController;
+	private MainWindowController mainWindowController;
 
 	/**
 	 * Method to connect the window to use everything from the super class
 	 * 
-	 * @param window
+	 * @param mainClass
 	 *            (Main)
 	 */
-	public void setWindowController(Main window, MainWindowController mainController) {
-		this.mainWindow = window;
-		this.mainController = mainController;
-		updateIgnoredFileTable();
+	public void setWindowController(Main mainClass, MainWindowController mainWindowController) {
+
+		// get the main class to get the music video handler
+		this.mainClass = mainClass;
+
+		// get the main window controller to update the tables from there
+		this.mainWindowController = mainWindowController;
+
+		// fill the table with the ignored files
+		refreshIgnoredFileTable();
+
 	}
 
 	/**
@@ -174,17 +180,17 @@ public class IgnoredFilesWindowController {
 		 * Set icons/images
 		 */
 
-		// Context menu
+		// Context menu icons
 		contextRename.setGraphic(WindowModule.createMenuIcon("rename"));
 		contextExplorer.setGraphic(WindowModule.createMenuIcon("directory"));
 		contextIgnore.setGraphic(WindowModule.createMenuIcon("ignore"));
 		contextClear.setGraphic(WindowModule.createMenuIcon("clear"));
 		contextRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
 
-		// button
+		// button icon
 		buttonClearList.setGraphic(WindowModule.createMenuIcon("ignore"));
 
-		// label
+		// label icon
 		searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
 	}
 
@@ -194,52 +200,67 @@ public class IgnoredFilesWindowController {
 	@FXML
 	private void updateIgnoredFileTable() {
 
+		// refresh the table with the ignored files
+		refreshIgnoredFileTable();
+
+		// at the end refresh the playlist and music video table of the main window
+		mainWindowController.refreshMusicVideoTable();
+		mainWindowController.refreshMusicVideoPlaylistTable();
+
+	}
+
+	/**
+	 * Update/Refresh the table with the ignored files
+	 */
+	private void refreshIgnoredFileTable() {
+
 		// get the current wrong formatted files list
-		File[] ignoredFiles = this.mainWindow.getMusicVideohandler().getIgnoredFiles();
+		final File[] ignoredFiles = this.mainClass.getMusicVideohandler().getIgnoredFiles();
 
 		// clear the whole table
 		wrongFormattedFilesTableData.clear();
 
 		// overwrite the table with the new list (if there is one)
 		if (ignoredFiles != null) {
+
 			// add an entry for every path in the list
-			for (File ignoredFile : ignoredFiles) {
-				wrongFormattedFilesTableData.add(new WrongFormattedFilesTableView(ignoredFile.getAbsolutePath()));
+			for (int i = 0; i < ignoredFiles.length; i++) {
+				wrongFormattedFilesTableData.add(new WrongFormattedFilesTableView(ignoredFiles[i].getAbsolutePath()));
 			}
 		}
-		mainController.refreshMusicVideoTable();
-		mainController.refreshMusicVideoPlaylistTable();
+
 	}
 
 	/**
 	 * Open file on click
 	 */
 	private void openFile() {
+
 		// get the currently selected entry in the table
 		WrongFormattedFilesTableView selectedEntry = wrongFormattedFilesTable.getSelectionModel().getSelectedItem();
 
 		// if something is selected
 		if (selectedEntry != null) {
-			// check if the file really exists and isn't a directory
-			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
-			if (selectedFile.exists() && selectedFile.isFile()) {
-				// if yes then open the parent of the file (the directory it is in)
-				ExternalApplicationModule.openFile(selectedFile);
-			}
+
+			// then open the file externally
+			ExternalApplicationModule.openFile(new File(selectedEntry.getFilePath()));
 		}
+
 	}
 
 	/**
-	 * Open file on click
+	 * Open file if the left mouse key was clicked
 	 */
 	@FXML
 	private void openFileLeftClick() {
 
 		// check if the left mouse key was clicked
 		if (leftMouseKeyWasPressed) {
-			// only then try to open the file
+
+			// open the file
 			openFile();
 		}
+
 	}
 
 	/**
@@ -261,8 +282,11 @@ public class IgnoredFilesWindowController {
 
 		// check if left mouse key is pressed
 		if (e.isPrimaryButtonDown()) {
+
+			// save information
 			leftMouseKeyWasPressed = true;
 		}
+
 	}
 
 	/**
@@ -272,27 +296,35 @@ public class IgnoredFilesWindowController {
 	private void renameFile() {
 
 		// get the currently selected entry in the table
-		WrongFormattedFilesTableView selectedEntry = wrongFormattedFilesTable.getSelectionModel().getSelectedItem();
+		final WrongFormattedFilesTableView selectedEntry = wrongFormattedFilesTable.getSelectionModel()
+				.getSelectedItem();
 
 		// if something is selected
 		if (selectedEntry != null) {
-			// check if the file really exists and isn't a directory
-			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
-			if (selectedFile.exists() && selectedFile.isFile()) {
-				// show dialog to rename the file
-				String a = DialogModule.textInputDialog("Rename wrong formatted file", selectedFile.getName(),
-						"Rename the file", "Enter a new name:");
 
-				if (a != null) {
-					// "un"-ignore the file
-					this.mainWindow.getMusicVideohandler().removeFromIgnoredFilesList(selectedFile.toPath());
-					// rename the file
-					Path newFilePath = Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a);
-					FileReadWriteModule.rename(selectedFile, newFilePath.toFile());
+			// get the file of the selected entry
+			final File selectedFile = new File(selectedEntry.getFilePath());
 
-					// ignore the renamed file
-					this.mainWindow.getMusicVideohandler().addIgnoredFileToIgnoredFilesList(newFilePath);
+			// show dialog to rename the file
+			final String newFileName = DialogModule.fileRenameDialog("Rename wrong formatted file",
+					selectedFile.getName());
 
+			// if the dialogs output isn't null or empty
+			if (newFileName != null && !newFileName.isEmpty()) {
+
+				// calculate the new file name
+				final File newFile = new File(selectedFile.getParentFile(), newFileName);
+
+				// then rename the file to this new name and check if everything worked fine
+				if (FileReadWriteModule.rename(selectedFile, newFile)) {
+
+					// then remove the file from the ignored files list
+					this.mainClass.getMusicVideohandler().removeFromIgnoredFilesList(selectedFile.toPath());
+
+					// and add the renamed file to the ignored files list
+					this.mainClass.getMusicVideohandler().addIgnoredFileToIgnoredFilesList(newFile.toPath());
+
+					// and last update the table
 					updateIgnoredFileTable();
 				}
 			}
@@ -307,17 +339,16 @@ public class IgnoredFilesWindowController {
 	private void showInDirectory() {
 
 		// get the currently selected entry in the table
-		WrongFormattedFilesTableView selectedEntry = wrongFormattedFilesTable.getSelectionModel().getSelectedItem();
+		final WrongFormattedFilesTableView selectedEntry = wrongFormattedFilesTable.getSelectionModel()
+				.getSelectedItem();
 
 		// if something is selected
 		if (selectedEntry != null) {
-			// check if the file really exists and isn't a directory
-			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
-			if (selectedFile.exists() && !selectedFile.isDirectory()) {
-				// if yes then open the parent of the file (the directory it is in)
-				ExternalApplicationModule.openFile(selectedFile.getParentFile());
-			}
+
+			// open the files parent directory externally
+			ExternalApplicationModule.openFile(Paths.get(selectedEntry.getFilePath()).toFile().getParentFile());
 		}
+
 	}
 
 	/**
@@ -325,17 +356,18 @@ public class IgnoredFilesWindowController {
 	 */
 	@FXML
 	private void ignoreFile() {
+
 		// get the currently selected entry in the table
-		WrongFormattedFilesTableView selectedEntry = wrongFormattedFilesTable.getSelectionModel().getSelectedItem();
+		final WrongFormattedFilesTableView selectedEntry = wrongFormattedFilesTable.getSelectionModel()
+				.getSelectedItem();
 
 		// if something is selected
 		if (selectedEntry != null) {
-			// check if the file really exists and isn't a directory
-			Path selectedFile = Paths.get(selectedEntry.getFilePath());
 
-			this.mainWindow.getMusicVideohandler().removeFromIgnoredFilesList(selectedFile);
+			// remove the element with the ignored files index from the ignored files list
+			this.mainClass.getMusicVideohandler().removeFromIgnoredFilesList(Paths.get(selectedEntry.getFilePath()));
 
-			// update all tables
+			// then update the ignored files table
 			updateIgnoredFileTable();
 		}
 
@@ -346,7 +378,12 @@ public class IgnoredFilesWindowController {
 	 */
 	@FXML
 	private void clearList() {
-		this.mainWindow.getMusicVideohandler().clearIgnoredFilesList();
+
+		// clear the ignored files list
+		this.mainClass.getMusicVideohandler().clearIgnoredFilesList();
+
+		// then update the ignored files table
 		updateIgnoredFileTable();
+
 	}
 }

@@ -67,6 +67,8 @@ public class MusicVideoHandler {
 	 */
 	private SftpHandler sftpController;
 
+	private String programName;
+
 	// Constructor
 
 	/**
@@ -79,6 +81,7 @@ public class MusicVideoHandler {
 		this.playlistHandler = new MusicVideoPlaylistHandler();
 		this.sftpController = new SftpHandler();
 		this.faviconSizes = new int[] { 16, 32, 48, 64, 94, 128, 160, 180, 194, 256, 512 };
+		this.programName = "MusicVideoManager";
 	}
 
 	// Methods
@@ -1822,6 +1825,10 @@ public class MusicVideoHandler {
 	 */
 	public void transferHtmlSearch() {
 		transferHtmlMain(true, TYPE_OF_HTML.SEARCH);
+	}
+
+	public String getProgramName() {
+		return this.programName;
 	}
 
 }

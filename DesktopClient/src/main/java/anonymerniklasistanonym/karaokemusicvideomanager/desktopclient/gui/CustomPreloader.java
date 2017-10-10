@@ -24,17 +24,16 @@ import javafx.stage.StageStyle;
  * "https://blog.codecentric.de/en/2015/09/javafx-how-to-easily-implement-application-preloader-2/">codecentric
  * Blog</a>
  *
- * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com>
- * @version 2.0
- *
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
+ *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  */
-public class MyPreloader extends Preloader {
+public class CustomPreloader extends Preloader {
 
 	private Stage preloaderStage;
 	private Scene scene;
 	private ProgressBar progresBar;
 
-	public MyPreloader() {
+	public CustomPreloader() {
 		// Constructor is called before everything.
 		System.out.println("Preloader constructor");
 	}
@@ -107,7 +106,7 @@ public class MyPreloader extends Preloader {
 			break;
 		case BEFORE_START:
 			System.out.println("Preloader >> BEFORE_START >> Hide the stage");
-			preloaderStage.hide();
+			this.preloaderStage.hide();
 			break;
 		}
 	}

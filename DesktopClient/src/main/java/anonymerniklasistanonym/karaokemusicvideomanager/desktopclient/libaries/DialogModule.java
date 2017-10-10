@@ -17,6 +17,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.DirectoryChooser;
@@ -87,6 +89,9 @@ public class DialogModule {
 				saveTheSettings.setAlwaysSave(true);
 				saveTheSettings.saveSettingsToFile();
 			}
+
+			// disconnect from server if connected
+			saveTheSettings.sftpDisconnect();
 
 			// close the program without exceptions else
 			Platform.exit();
@@ -471,6 +476,38 @@ public class DialogModule {
 		alert.setContentText(text);
 
 		alert.showAndWait();
+	}
+
+	/**
+	 * Rename dialog
+	 */
+	public static String fileRenameDialog(String header, String contentOfTextField) {
+
+		// create a new text input dialog
+		TextInputDialog dialog = new TextInputDialog(contentOfTextField);
+
+		// set a window title
+		dialog.setTitle("Rename");
+
+		// set a header title
+		dialog.setHeaderText(header);
+		dialog.setGraphic(
+				new ImageView(new Image(ClassResourceReaderModule.getInputStream("images/icons/rename.png"))));
+		dialog.setResizable(true);
+		dialog.initStyle(StageStyle.UNIFIED);
+
+		// Get the Stage.
+		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+
+		// Add a custom icon.
+		stage.getIcons().addAll(WindowModule.getWindowIcons());
+
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()) {
+			System.out.println("Input was: \"" + result.get() + "\"");
+			return result.get();
+		}
+		return null;
 	}
 
 }
