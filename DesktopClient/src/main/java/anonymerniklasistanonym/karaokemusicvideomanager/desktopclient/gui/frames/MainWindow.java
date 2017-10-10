@@ -10,22 +10,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 public class MainWindow {
 
-	public MainWindow(Stage hi) {
-		this.setMainWindowStage(hi);
-
-	}
-
 	public MainWindow(Main hih) {
 		this.main = hih;
-		this.setMainWindowStage(hih.getPrimaryStage());
-		createStage();
 	}
 
 	private Stage MainWindowStage;
+	private Scene scene;
 
 	private Main main;
 
@@ -33,19 +28,29 @@ public class MainWindow {
 	private int[] normalWindowSize = { 600, 600 };
 	private int[] minimalWindowSize = { 540, 450 };
 
-	public void createStage() {
+	public void createScene() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getClassLoader().getResource("windows/MainWindow.fxml"));
 			BorderPane mainPane = loader.load();
-
-			this.MainWindowStage.setTitle(this.windowTitle);
+			this.scene = new Scene(mainPane, this.normalWindowSize[0], this.normalWindowSize[1]);
 
 			// Connection to the Controller from the primary Stage
 			MainWindowController mainWindowController = loader.getController();
 			mainWindowController.setMainWindow(this.main);
 
-			this.MainWindowStage.setScene(new Scene(mainPane, this.normalWindowSize[0], this.normalWindowSize[1]));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Stage createStage() {
+		try {
+			this.MainWindowStage = new Stage(StageStyle.DECORATED);
+
+			this.MainWindowStage.setTitle(this.windowTitle);
+
+			this.MainWindowStage.setScene(scene);
 
 			this.MainWindowStage.setResizable(true);
 			this.MainWindowStage.setMinWidth(this.minimalWindowSize[0]);
@@ -66,11 +71,13 @@ public class MainWindow {
 				}
 			});
 
-			// show the window
-			getMainWindowStage().show();
+			this.MainWindowStage.show();
+
+			return MainWindowStage;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	public void onCloseDialog(WindowEvent e) {

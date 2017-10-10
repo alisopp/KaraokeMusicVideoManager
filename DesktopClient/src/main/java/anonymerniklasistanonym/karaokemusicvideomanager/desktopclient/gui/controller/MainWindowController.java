@@ -811,8 +811,8 @@ public class MainWindowController {
 					});
 
 					// Connection to the Controller to the stage
-					ServerLoginWindowController aboutWindowController = loader.getController();
-					aboutWindowController.setServerLoginWindow(this.mainWindow, stage);
+					ServerLoginWindowController windowController = loader.getController();
+					windowController.setServerLoginWindow(this.mainWindow, stage);
 
 					// show the stage
 					stage.show();

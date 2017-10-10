@@ -96,6 +96,10 @@ public class WrongFormattedFilesWindowController {
 	 * Main class
 	 */
 	private Main mainWindow;
+
+	/**
+	 * Main window controller class
+	 */
 	private MainWindowController controller;
 
 	/**
@@ -103,6 +107,8 @@ public class WrongFormattedFilesWindowController {
 	 * 
 	 * @param window
 	 *            (Main)
+	 * @param controller
+	 *            (MainWindowController)
 	 */
 	public void setWindowController(Main window, MainWindowController controller) {
 		this.mainWindow = window;
@@ -175,8 +181,9 @@ public class WrongFormattedFilesWindowController {
 	}
 
 	/**
-	 * Update the wrong formatted files path table
+	 * Refresh/Update the wrong formatted files path list
 	 */
+	@FXML
 	private void updateWrongFileTable() {
 
 		// get the current wrong formatted files list
@@ -197,18 +204,31 @@ public class WrongFormattedFilesWindowController {
 	 * Open file on click
 	 */
 	private void openFile() {
+
 		// get the currently selected entry in the table
 		WrongFormattedFilesTableView selectedEntry = wrongFormattedFilesTable.getSelectionModel().getSelectedItem();
 
 		// if something is selected
 		if (selectedEntry != null) {
-			// check if the file really exists and isn't a directory
-			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
-			if (selectedFile.exists() && selectedFile.isFile()) {
-				// if yes then open the parent of the file (the directory it is in)
-				ExternalApplicationModule.openFile(selectedFile);
-			}
+			// open the file
+			ExternalApplicationModule.openFile(Paths.get(selectedEntry.getFilePath()).toFile());
 		}
+	}
+
+	/**
+	 * Open file on click
+	 */
+	@FXML
+	private void openTopFile() {
+
+		// select the top row
+		wrongFormattedFilesTable.getSelectionModel().select(0);
+
+		// open the file
+		openFile();
+
+		// clear the selection again
+		wrongFormattedFilesTable.getSelectionModel().clearSelection();
 	}
 
 	/**
@@ -317,11 +337,4 @@ public class WrongFormattedFilesWindowController {
 		controller.refreshMusicVideoPlaylistTable();
 	}
 
-	/**
-	 * Refresh the wrong formatted files path list
-	 */
-	@FXML
-	private void refreshTable() {
-		updateWrongFileTable();
-	}
 }

@@ -1,8 +1,11 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui;
 
+import com.sun.javafx.application.LauncherImpl;
+
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.MainWindow;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.MusicVideoHandler;
 import javafx.application.Application;
+import javafx.application.Preloader;
 import javafx.stage.Stage;
 
 /**
@@ -23,29 +26,60 @@ public class Main extends Application {
 	 */
 	private MusicVideoHandler musicVideoHandler;
 
-	@Override
-	public void start(Stage primaryStage) {
+	private Stage mainWindowStage;
 
-		// save/add the primary/main Stage
-		this.setPrimaryStage(primaryStage);
+	private MainWindow mainWindowCreator;
+
+	@Override
+	@SuppressWarnings("restriction")
+	public void init() throws Exception {
+		System.out.println(Main.STEP() + "MyApplication#init (doing some heavy lifting), thread: "
+				+ Thread.currentThread().getName());
 
 		// save/add a MusicVideoHandler
 		this.musicVideoHandler = new MusicVideoHandler();
 
+		LauncherImpl.notifyPreloader(this, new Preloader.ProgressNotification(20));
+
 		// try to load settings from a "settings.json" file
 		this.musicVideoHandler.loadSettingsFromFile();
 
-		// create a main window which will get all the data
-		MainWindow mainWindowCreator = new MainWindow(this);
+		LauncherImpl.notifyPreloader(this, new Preloader.ProgressNotification(80));
 
-		// get the created main window Stage back and set it as main stage
-		this.setPrimaryStage(mainWindowCreator.getMainWindowStage());
+		// create a main window which will get all the data
+		this.mainWindowCreator = new MainWindow(this);
+
+		LauncherImpl.notifyPreloader(this, new Preloader.ProgressNotification(85));
+
+		this.mainWindowCreator.createScene();
+
+		LauncherImpl.notifyPreloader(this, new Preloader.ProgressNotification(100));
+
 	}
 
+	@Override
+	public void start(Stage primaryStage) {
+
+		// get the created main window Stage back and set it as main stage
+		primaryStage = this.mainWindowCreator.createStage();
+
+	}
+
+	private static int stepCount = 1;
+
+	// Used to demonstrate step couns.
+	public static String STEP() {
+		return stepCount++ + ". ";
+	}
+
+	@SuppressWarnings("restriction")
 	public static void main(String[] args) {
 
+		// start JavaFx with a preloader
+		LauncherImpl.launchApplication(Main.class, MyPreloader.class, args);
+
 		// start JavaFx
-		launch(args);
+		// launch(args);
 
 	}
 
@@ -86,4 +120,5 @@ public class Main extends Application {
 	public void setMusicVideoHandler(MusicVideoHandler musicVideoHandler) {
 		this.musicVideoHandler = musicVideoHandler;
 	}
+
 }
