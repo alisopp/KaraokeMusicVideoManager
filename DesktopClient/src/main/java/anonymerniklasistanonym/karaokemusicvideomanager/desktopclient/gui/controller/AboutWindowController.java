@@ -15,7 +15,7 @@ public class AboutWindowController {
 	 * Open the link to the GitHub repository
 	 */
 	@FXML
-	public void openGitHubLinkRepository() {
+	private void openGitHubLinkRepository() {
 		ExternalApplicationModule.openUrl("https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager");
 	}
 
@@ -23,7 +23,7 @@ public class AboutWindowController {
 	 * Open the link to the authors GitHub profile
 	 */
 	@FXML
-	public void openGitHubLinkProfile() {
+	private void openGitHubLinkProfile() {
 		ExternalApplicationModule.openUrl("https://github.com/AnonymerNiklasistanonym");
 	}
 

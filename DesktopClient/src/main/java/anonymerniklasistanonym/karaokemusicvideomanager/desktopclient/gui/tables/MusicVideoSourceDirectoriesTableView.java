@@ -14,21 +14,25 @@ import javafx.beans.property.StringProperty;
 public class MusicVideoSourceDirectoriesTableView {
 
 	/**
-	 * directory path as a String
+	 * The path of the directory as String
 	 */
 	private final StringProperty filePath;
 
 	/**
+	 * MusicVideoSourceDirectoriesTableView constructor #1
+	 * 
 	 * @param filePath
-	 *            (String | absolute path to directory)
+	 *            (String | Absolute path to directory as String)
 	 */
 	public MusicVideoSourceDirectoriesTableView(String filePath) {
 		this.filePath = new SimpleStringProperty(filePath);
 	}
 
 	/**
+	 * MusicVideoSourceDirectoriesTableView constructor #2
+	 * 
 	 * @param filePath
-	 *            (Path | absolute path to directory)
+	 *            (Path | Absolute path to directory)
 	 */
 	public MusicVideoSourceDirectoriesTableView(Path filePath) {
 		this.filePath = new SimpleStringProperty(filePath.toString());
@@ -38,14 +42,14 @@ public class MusicVideoSourceDirectoriesTableView {
 	 * @return get table usable String of file path
 	 */
 	public StringProperty getFilePathProperty() {
-		return filePath;
+		return this.filePath;
 	}
 
 	/**
 	 * @return get directory path as a String (String)
 	 */
 	public String getFilePath() {
-		return filePath.get();
+		return this.filePath.get();
 	}
 
 }

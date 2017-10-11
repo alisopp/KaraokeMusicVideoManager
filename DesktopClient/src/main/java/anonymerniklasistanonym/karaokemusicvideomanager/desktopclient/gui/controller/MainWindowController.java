@@ -93,6 +93,8 @@ public class MainWindowController {
 	private TableColumn<MusicVideoPlaylistTableView, String> columnPlaylistAuthor;
 	@FXML
 	private TableColumn<MusicVideoPlaylistTableView, String> columnPlaylistComment;
+	@FXML
+	private TableColumn<MusicVideoPlaylistTableView, Number> columnPlaylistVotes;
 
 	// the tabs
 	@FXML
@@ -379,11 +381,7 @@ public class MainWindowController {
 		 */
 
 		// 0. Initialize the columns.
-		columnPlaylistTime.setCellValueFactory(cellData -> cellData.getValue().getTimeProperty());
-		columnPlaylistTitle.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
-		columnPlaylistArtist.setCellValueFactory(cellData -> cellData.getValue().getArtistProperty());
-		columnPlaylistAuthor.setCellValueFactory(cellData -> cellData.getValue().getAuthorProperty());
-		columnPlaylistComment.setCellValueFactory(cellData -> cellData.getValue().getCommentProperty());
+		columnFilePath.setCellValueFactory(cellData -> cellData.getValue().getFilePathProperty());
 
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
 		tableDataDirectory = FXCollections.observableArrayList();
@@ -426,7 +424,12 @@ public class MainWindowController {
 		 */
 
 		// 0. Initialize the columns.
-		columnFilePath.setCellValueFactory(cellData -> cellData.getValue().getFilePathProperty());
+		columnPlaylistTime.setCellValueFactory(cellData -> cellData.getValue().getTimeProperty());
+		columnPlaylistTitle.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
+		columnPlaylistArtist.setCellValueFactory(cellData -> cellData.getValue().getArtistProperty());
+		columnPlaylistAuthor.setCellValueFactory(cellData -> cellData.getValue().getAuthorProperty());
+		columnPlaylistComment.setCellValueFactory(cellData -> cellData.getValue().getCommentProperty());
+		columnPlaylistVotes.setCellValueFactory(cellData -> cellData.getValue().getVotesProperty());
 
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
 		tableDataPlaylist = FXCollections.observableArrayList();
@@ -1169,7 +1172,7 @@ public class MainWindowController {
 				if (a != null) {
 					tableDataPlaylist.add(new MusicVideoPlaylistTableView(i, element.getMusicVideoIndex(),
 							element.getUnixTimeString(), a.getTitle(), a.getArtist(), element.getAuthor(),
-							element.getComment()));
+							element.getComment(), 0));
 					i++;
 				} else {
 					System.err.println(

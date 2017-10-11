@@ -1,4 +1,4 @@
-package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui;
+package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ClassResourceReaderModule;
 import javafx.application.Preloader;

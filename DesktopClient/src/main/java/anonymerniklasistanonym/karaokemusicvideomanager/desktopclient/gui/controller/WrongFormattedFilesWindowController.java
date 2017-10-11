@@ -95,24 +95,28 @@ public class WrongFormattedFilesWindowController {
 	/**
 	 * Main class
 	 */
-	private Main mainWindow;
+	private Main mainClass;
 
 	/**
 	 * Main window controller class
 	 */
-	private MainWindowController controller;
+	private MainWindowController mainWindowController;
 
 	/**
 	 * Method to connect the window to use everything from the super class
 	 * 
-	 * @param window
+	 * @param mainClass
 	 *            (Main)
-	 * @param controller
+	 * @param mainWindowController
 	 *            (MainWindowController)
 	 */
-	public void setWindowController(Main window, MainWindowController controller) {
-		this.mainWindow = window;
-		this.controller = controller;
+	public void setWindowController(Main mainClass, MainWindowController mainWindowController) {
+
+		// set the connection to the main class and the main window controller
+		this.mainClass = mainClass;
+		this.mainWindowController = mainWindowController;
+
+		// then create the wrong file table
 		updateWrongFileTable();
 	}
 
@@ -187,17 +191,20 @@ public class WrongFormattedFilesWindowController {
 	private void updateWrongFileTable() {
 
 		// get the current wrong formatted files list
-		Path[] wrongFormattedFiles = this.mainWindow.getMusicVideohandler().getWrongFormattedFiles();
+		Path[] wrongFormattedFiles = this.mainClass.getMusicVideohandler().getWrongFormattedFiles();
 
 		// overwrite the table with the new list
 		if (wrongFormattedFiles != null) {
+
 			// clear the whole table
 			wrongFormattedFilesTableData.clear();
+
 			// add an entry for every path in the list
 			for (int i = 0; i < wrongFormattedFiles.length; i++) {
 				wrongFormattedFilesTableData.add(new WrongFormattedFilesTableView(wrongFormattedFiles[i].toString()));
 			}
 		}
+
 	}
 
 	/**
@@ -210,9 +217,11 @@ public class WrongFormattedFilesWindowController {
 
 		// if something is selected
 		if (selectedEntry != null) {
+
 			// open the file
 			ExternalApplicationModule.openFile(Paths.get(selectedEntry.getFilePath()).toFile());
 		}
+
 	}
 
 	/**
@@ -229,6 +238,7 @@ public class WrongFormattedFilesWindowController {
 
 		// clear the selection again
 		wrongFormattedFilesTable.getSelectionModel().clearSelection();
+
 	}
 
 	/**
@@ -242,6 +252,7 @@ public class WrongFormattedFilesWindowController {
 			// only then try to open the file
 			openFile();
 		}
+
 	}
 
 	/**
@@ -265,6 +276,7 @@ public class WrongFormattedFilesWindowController {
 		if (e.isPrimaryButtonDown()) {
 			leftMouseKeyWasPressed = true;
 		}
+
 	}
 
 	/**
@@ -278,21 +290,32 @@ public class WrongFormattedFilesWindowController {
 
 		// if something is selected
 		if (selectedEntry != null) {
+
 			// check if the file really exists and isn't a directory
 			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
 			if (selectedFile.exists() && selectedFile.isFile()) {
+
 				// show dialog to rename the file
 				String a = DialogModule.textInputDialog("Rename wrong formatted file", selectedFile.getName(),
 						"Rename the file", "Enter a new name:");
+
+				// if the dialogs response isn't null
 				if (a != null) {
+
+					// rename the selected file
 					FileReadWriteModule.rename(selectedFile,
 							Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
+
+					// then update the wrong file table
 					updateWrongFileTable();
-					controller.refreshMusicVideoTable();
-					controller.refreshMusicVideoPlaylistTable();
+
+					// and then update also the playlist and music video table
+					mainWindowController.refreshMusicVideoTable();
+					mainWindowController.refreshMusicVideoPlaylistTable();
 				}
 			}
 		}
+
 	}
 
 	/**
@@ -306,13 +329,16 @@ public class WrongFormattedFilesWindowController {
 
 		// if something is selected
 		if (selectedEntry != null) {
+
 			// check if the file really exists and isn't a directory
 			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
 			if (selectedFile.exists() && !selectedFile.isDirectory()) {
+
 				// if yes then open the parent of the file (the directory it is in)
 				ExternalApplicationModule.openFile(selectedFile.getParentFile());
 			}
 		}
+
 	}
 
 	/**
@@ -327,14 +353,18 @@ public class WrongFormattedFilesWindowController {
 		// if something is selected
 		if (selectedEntry != null) {
 
-			this.mainWindow.getMusicVideohandler()
+			// add the selected entry to the ignored files list
+			this.mainClass.getMusicVideohandler()
 					.addIgnoredFileToIgnoredFilesList(Paths.get(selectedEntry.getFilePath()));
 		}
 
 		// update the music video list after this
 		updateWrongFileTable();
-		controller.refreshMusicVideoTable();
-		controller.refreshMusicVideoPlaylistTable();
+
+		// and then update also the playlist and music video table
+		mainWindowController.refreshMusicVideoTable();
+		mainWindowController.refreshMusicVideoPlaylistTable();
+
 	}
 
 }

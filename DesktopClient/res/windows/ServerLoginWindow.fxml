@@ -32,7 +32,7 @@
             <GridPane>
               <children>
                         <Label text="IP address:" />
-                        <TextField fx:id="serverAddress" onKeyReleased="#checkConnectButton" promptText="server address" GridPane.columnIndex="1" />
+                        <TextField fx:id="serverIpAddress" onKeyReleased="#checkConnectButton" promptText="server address" GridPane.columnIndex="1" />
                         <Label text="Filepath:" GridPane.rowIndex="1" />
                         <TextField fx:id="workingDirectory" onKeyReleased="#checkConnectButton" promptText="path of the website folder" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="2" />

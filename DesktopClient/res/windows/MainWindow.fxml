@@ -168,6 +168,7 @@
                                     <TableColumn fx:id="columnPlaylistArtist" minWidth="50.0" prefWidth="50.0" text="Artist" />
                                     <TableColumn fx:id="columnPlaylistAuthor" minWidth="50.0" prefWidth="50.0" text="Author" />
                                     <TableColumn fx:id="columnPlaylistComment" minWidth="80.0" text="Comment" />
+                                    <TableColumn fx:id="columnPlaylistVotes" prefWidth="75.0" text="Votes" />
                                 </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
