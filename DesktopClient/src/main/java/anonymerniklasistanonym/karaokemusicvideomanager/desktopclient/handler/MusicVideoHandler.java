@@ -844,7 +844,7 @@ public class MusicVideoHandler {
 
 		// add js
 		htmlStatic.append("<script>");
-		htmlStatic.append(JsonModule.getValueString(jsJsonContent, "w3-js"));
+		htmlStatic.append(JsonModule.getValueString(jsJsonContent, "w3"));
 
 		// add css
 		htmlStatic.append("</script><style>");
@@ -1034,10 +1034,44 @@ public class MusicVideoHandler {
 			FileReadWriteModule.writeTextFile(new File(phpFolder.toString() + "/form.php"),
 					new String[] { generateHtmlPartyForm() });
 
+			// paste view.php
+			FileReadWriteModule.writeTextFile(new File(phpFolder.toString() + "/view.php"),
+					new String[] { generateHtmlPartyView() });
+
+			// paste view.php
+			FileReadWriteModule.writeTextFile(new File(phpFolder.toString() + "/vote.php"),
+					new String[] { generateHtmlPartyVote() });
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+	}
+
+	private String generateHtmlPartyVote() {
+		// string builder for the whole site
+		StringBuilder phpProcess = new StringBuilder("");
+
+		JsonObject phpJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/php.json")[0]);
+
+		// add php before everything
+		phpProcess.append(JsonModule.getValueString(phpJsonContent, "php-data-vote"));
+
+		return phpProcess.toString();
+	}
+
+	private String generateHtmlPartyView() {
+		// string builder for the whole site
+		StringBuilder phpProcess = new StringBuilder("");
+
+		JsonObject phpJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/php.json")[0]);
+
+		// add php before everything
+		phpProcess.append(JsonModule.getValueString(phpJsonContent, "php-data-view"));
+
+		return phpProcess.toString();
 	}
 
 	private String generateHtmlPartyForm() {
@@ -1123,6 +1157,8 @@ public class MusicVideoHandler {
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/css.json")[0]);
 		JsonObject phpJsonContent = JsonModule
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/php.json")[0]);
+		JsonObject jsJsonContent = JsonModule
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/js.json")[0]);
 
 		// add default head
 		phpPlaylist.append("<!DOCTYPE html><html lang=\"en\"><head>");
@@ -1137,7 +1173,12 @@ public class MusicVideoHandler {
 		// add links to all the images
 		phpPlaylist.append(generateFaviconLinks(""));
 
-		phpPlaylist.append("<style>");
+		// add js
+		phpPlaylist.append("<script>");
+		phpPlaylist.append(JsonModule.getValueString(jsJsonContent, "jquery.min"));
+
+		// add css
+		phpPlaylist.append("</script><style>");
 		phpPlaylist.append(JsonModule.getValueString(cssJsonContent, "styles_party_live"));
 
 		// close head and open body

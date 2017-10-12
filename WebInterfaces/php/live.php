@@ -1,12 +1,19 @@
 <?php
 
 # open the directory with the playlist entries and get every file but the php files
-$path = "php";
-$files = array_diff(scandir($path), array('..', '.',"form.php","process.php"));
+$path = "./";
+$files = array_diff(scandir($path), array('..', '.',"form.php","process.php", "live.php", "vote.php"));
+
+# create array for unixtimes and live element strings
+$allData = array();
+$allTimestamps = array();
 
 # count the elements
 $counter = 1;
+# placeholder for ID/POSITION
+$counterString = '~##counter##~';
 
+# do for every found .json file
 foreach ($files as $file) {
 
 	# get json data
@@ -17,34 +24,54 @@ foreach ($files as $file) {
 	$artist = $json['artist'];
 	$author = $json['author'];
 	$comment = $json['comment'];
-	$time = date("Y-m-d H:i:s", $json['time']);
+	$time = $json['time'];
+	$readableTime = date("H:i", $time);
 	$created = $json['created-locally'];
-
+	$votes = $json['votes'];
+	
+	# get live element string data
+	$liveElement = "";
 	# write live element
-	echo "<div class=\"live-element\">";
+	$liveElement = '<div class="live-element">';
 	# >>> open upvote counter
-	echo "<div class= \"upvote-counter\">" . "##" . "</div>";
+	$liveElement .= '<div class="upvote-counter" id="vote' . $counterString . '">' . $votes . '</div>';
 	# <<< closing upvote counter
 	# >>> open song and artist
-	echo "<div class= \"song-and-artist\">";
-	echo "<div class=\"playlist-number\">" . "#" . $counter . "</div>";
-	echo "<div class=\"song-title\">" . $title . "</div>";
-	echo "<div class=\"song-artist\">" . "from " . $artist . "</div>";
-	echo "</div>";
+	$liveElement .= '<div class="song-and-artist">';
+	$liveElement .= '<div class="playlist-number">' . '#' . $counterString . '</div>';
+	$liveElement .= '<div class="song-title">' . $title . '</div>';
+	$liveElement .= '<div class="song-artist">' . 'from ' . $artist . '</div>';
+	$liveElement .= '</div>';
 	# <<< closing song and artist
 	# >>> open author and comment
-	echo "<div class=\"author-and-comment\">";
-	echo "<div class=\"author\">" . "<p class=\"author-text\">" . $author . "</p>" . "</div>";
-	echo "<div class=\"scroll-comment\">" . "<marquee behavior=\"scroll\" direction=\"left\" scrollamount=\"5\">" . $comment . "</marquee>" . "</div>";
-	echo "</div>";
+	$liveElement .= '<div class="author-and-comment">';
+	$liveElement .= '<div class="author">' . '<p class="author-text">' . $author . ' - ' . $readableTime . '</p>' . '</div>';
+	$liveElement .= '<div class="scroll-comment">' . '<marquee behavior="scroll" direction="left" scrollamount="5">' . $comment . '</marquee>' . '</div>';
+	$liveElement .= '</div>';
 	# <<< closing author and comment
 	# >>> open interaction comment and vote button
-	echo "<p class=\"text-beta\">" . $comment . "</p>";
-	echo "<div class=\"upvotes\">" . "<div class=\"upvote-button\">" . "<button class=\"upvote-button-button\">Vote</button>" . "</div>" . "</div>";
-	echo "</div>";
+	$liveElement .= '<p class="text-beta">' . $comment . '</p>';
+	$liveElement .= '<div class="upvotes">' . '<div class="upvote-button">' . '<button class="upvote-button-button" id="' . $counterString . '">Vote</button>' . '</div>' . '</div>';
+	$liveElement .= '<div class="hidden-filename" id="file' . $counterString . '">' . $file . '</div>';
+	$liveElement .= '</div>';
 	# <<< closing interaction comment and vote button
+	
+	# push the string and the current unixtime to an array
+	array_push($allData, $liveElement);
+	array_push($allTimestamps, $time);
+}
 
-	# element number + 1
+# sort the string array after the unixtime array with the oldest date on top
+array_multisort($allTimestamps, SORT_ASC, SORT_NUMERIC, $allData);
+
+# print the sorted array
+foreach($allData as $key => $value) {
+	
+	# print the current string but add an ID and POSITION number
+	echo str_replace($counterString, $counter, $value);
+	
+	# count on for next ID/POSITION
 	$counter++;
 }
+
 ?>

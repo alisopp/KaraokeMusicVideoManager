@@ -17,11 +17,12 @@ HTML_HEAD = "html_head"
 PATH_PHP = "php"
 PHP_FILE_FORM = "form"
 PHP_FILE_PROCESS = "process"
-PHP_FILE_LIVE = "live"
+PHP_COPY_FILES = ["live", "vote"]
 PATH_CSS = "css"
 CSS_FILES = ["styles_static", "styles_searchable",
              "styles_party", "styles_php_form", "styles_party_live"]
 PATH_JS = "js"
+JS_FILES = ["jquery.min", "w3"]
 
 
 def css_to_json(output_path):
@@ -304,50 +305,52 @@ def php_to_json(output_path):
             else:
                 walking_php_string += line
 
-    json_php['after-link-' + PHP_FILE_PROCESS] = walking_php_string
+    json_php['after-link-' + PHP_FILE_PROCESS] = walking_php_string    
+    
+    for php_file in PHP_COPY_FILES:
+        
+        walking_php_string = ""
 
-    walking_php_string = "";
-
-    for line in read_text_file_to_lines(os.path.join(PATH_PHP, PHP_FILE_LIVE + ".php")):
-        # strip whitespaces, tabs and paragraphs from line
-        line = line.strip()
-        # check if the line is neither empty nor a comment
-        if line is not "":
-            if line.startswith('<?php'):
-                if line.startswith('<?php '):
+        for line in read_text_file_to_lines(os.path.join(PATH_PHP, php_file + ".php")):
+            # strip whitespaces, tabs and paragraphs from line
+            line = line.strip()
+            # check if the line is neither empty nor a comment
+            if line is not "":
+                if line.startswith('<?php'):
+                    if line.startswith('<?php '):
+                        walking_php_string += line
+                    else:
+                        walking_php_string += line + "\n"
+                elif line.startswith('?>'):
+                    walking_php_string += "\n" + line
+                elif not line.startswith("#"):
                     walking_php_string += line
-                else:
-                    walking_php_string += line + "\n"
-            elif line.startswith('?>'):
-                walking_php_string += "\n" + line
-            elif not line.startswith("#"):
-                walking_php_string += line
 
-    json_php['php-data-' + PHP_FILE_LIVE] = walking_php_string
+        json_php['php-data-' + php_file] = walking_php_string
 
     dictonary_to_json(output_path, json_php)
 
 
-def copy_we_js(output_path):
+def js_to_json(output_path):
     """Copy javascript to java project."""
-
-    js_filename = "js/w3.js"
-
-    # read the css file
-    with open(js_filename) as file:
-        content_js = file.readlines()
-
-    walking_js_string = ""
-
-    # create an empty "walking" string with the opening style tag
-    # walk through all lines of the html email
-    for line in content_js:
-        # strip whitespaces, tabs and paragraphs from line
-        walking_js_string += line.strip()
 
     json_javascript = {}
 
-    json_javascript["w3-js"] = walking_js_string
+    for js_file in JS_FILES:
+
+        # read the css file
+        with open(os.path.join(PATH_JS, js_file + ".js")) as file:
+            content_js = file.readlines()
+
+        # create an empty "walking" string with the opening style tag
+        walking_js_string = ""
+
+        # walk through all lines of the html email
+        for line in content_js:
+            # strip whitespaces, tabs and paragraphs from line
+            walking_js_string += line.strip()
+
+        json_javascript[js_file] = walking_js_string
 
     # save the json dictionary in a json file
     with open(output_path, 'w') as outfile:
@@ -380,6 +383,6 @@ if __name__ == '__main__':
 
     # copy javascript to websites data libraries
     JAVASCRIPT_W3_OUTPUT_PATH = os.path.join(MAIN_OUTPUT_DIRECTORY, "js.json")
-    copy_we_js(JAVASCRIPT_W3_OUTPUT_PATH)
+    js_to_json(JAVASCRIPT_W3_OUTPUT_PATH)
 
     print("Ready!")

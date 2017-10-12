@@ -193,6 +193,10 @@ section {
 	word-wrap: break-word;
 }
 
+.hidden-filename {
+	display: none;
+}
+
 /* Floating button properties: */
 
 .floating-button {

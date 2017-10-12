@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="../css/styles_static.css">-->
 	<link rel="stylesheet" href="../css/styles_party_live.css">
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="../js/jquery.min.js"></script>
 
 	<!-- "custom-head-begin" -->
 
@@ -32,10 +32,9 @@
 
 	<!-- Section that contains the table with all found music video -->
 	<section>
-		<div class="live-elements">
+		<div class="live-elements" id="refresh">
 			<!-- "begin-section-end" -->
 			<!-- "demo-playlist-begin" -->
-			<p id="aha"></p>
 
 			<div class="live-element">
 				<div id="number1" class="upvote-counter">
@@ -256,32 +255,87 @@
 
 	<script>
 		$(document).ready(function() {
-			// Toggle button class "activated" on click
-			var btn = $(".upvote-button-button");
-			btn.click(function() {
 
-				// Toggle class "activated" (add or remove the class)
+			$.ajax({
+				url: '../php/live.php',
+				success: function(result) {
+					$("#refresh").html(result);
+					bindButtonClick();
+				}
+			});
+
+			/* use this for the special playlist view window
+			window.setInterval(function() {
+				$.ajax({
+					url: '../php/live.php',
+					success: function(result) {
+						$("#refresh").html(result);
+						/* re-bind event handlers to '.myClickableElement' */
+			/*
+									bindButtonClick();
+								}
+							});
+						}, 500000000);*/
+
+			/* bind event handlers when the page loads */
+			bindButtonClick();
+
+
+			$('live-elements').on('click', '.upvote-button-button', function() {
 				var d = document.getElementById(this.id);
 				d.classList.toggle("activated");
 
+				var doThis = "get";
+
+				/* If the button is now "activated" */
+				if (d.classList.contains("activated")) {
+					/* add the votes + 1 */
+					doThis = "inc";
+				} else {
+					/* remove the vote - 1 */
+					doThis = "dec";
+				}
+
 				$.ajax({
-					url: "demo_test.txt",
+					url: '../php/vote.php?file=' + document.getElementById("file" + this.id).innerHTML + '&type=' + doThis,
 					success: function(result) {
-						$("#aha").html(result);
+						$("#vote" + this.id).html(result);
 					}
 				});
 
-				// If the button is now "activated"
-				if (d.classList.contains("activated")) {
-					// add the votes + 1
-					document.getElementById("number" + this.id).innerHTML = parseFloat(document.getElementById("number" + this.id).innerHTML) + 1;
-				} else {
-					// make the votes - 1
-					document.getElementById("number" + this.id).innerHTML = parseFloat(document.getElementById("number" + this.id).innerHTML) - 1;
-				}
-
 				return false;
 			});
+
+
+			function bindButtonClick() {
+				$('.upvote-button-button').click(function() {
+					/* Toggle class "activated" (add or remove the class) */
+					var d = document.getElementById(this.id);
+					d.classList.toggle("activated");
+
+					var doThis = "get";
+
+					/* If the button is now "activated" */
+					if (d.classList.contains("activated")) {
+						/* add the votes + 1 */
+						doThis = "inc";
+					} else {
+						/* remove the vote - 1 */
+						doThis = "dec";
+					}
+
+					var savedID = this.id;
+
+					$.ajax({
+						url: '../php/vote.php?file=' + document.getElementById("file" + this.id).innerHTML + '&type=' + doThis,
+						success: function(result) {
+							$("#vote" + savedID).html(result);
+						}
+					});
+
+					return false;
+				});
+			}
 		});
 
 	</script>
