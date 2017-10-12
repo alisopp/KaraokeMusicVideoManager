@@ -137,7 +137,7 @@ public class WrongFormattedFilesWindowController {
 
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
 		wrongFormattedFilesTableData = FXCollections.observableArrayList();
-		FilteredList<WrongFormattedFilesTableView> filteredDataDirectory = new FilteredList<>(
+		final FilteredList<WrongFormattedFilesTableView> filteredDataDirectory = new FilteredList<>(
 				wrongFormattedFilesTableData, p -> true);
 
 		// 2. Set the filter Predicate whenever the filter changes.
@@ -161,7 +161,7 @@ public class WrongFormattedFilesWindowController {
 		});
 
 		// 3. Wrap the FilteredList in a SortedList.
-		SortedList<WrongFormattedFilesTableView> sortedDataDirectory = new SortedList<>(filteredDataDirectory);
+		final SortedList<WrongFormattedFilesTableView> sortedDataDirectory = new SortedList<>(filteredDataDirectory);
 
 		// 4. Bind the SortedList comparator to the TableView comparator.
 		sortedDataDirectory.comparatorProperty().bind(wrongFormattedFilesTable.comparatorProperty());

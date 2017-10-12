@@ -107,9 +107,11 @@ section {
 	/* Add animation duration */
 	-webkit-transition-duration: 0.4s;
 	transition-duration: 0.4s;
+	/* No selection border */
+	outline: 0;
 }
 
-.upvote-button-button:hover {
+.upvote-button-button.activated {
 	border-color: white;
 	background-color: white;
 	color: #24a204;

@@ -90,7 +90,7 @@ public class CustomPreloader extends Preloader {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		System.out.println("Preloader srtart the stage");
+		System.out.println("Open Preloader stage");
 
 		// add the scene to the primary stage
 		primaryStage.setScene(this.preloaderScene);
