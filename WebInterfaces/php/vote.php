@@ -13,8 +13,6 @@ $json = json_decode($str, true);
 # Get vote file contents
 $votes = $json['votes'];
 
-echo "bisherige votes: " . $votes;
-
 
 # Check if only the votes are asked
 if ($type == 'get') {
@@ -79,19 +77,23 @@ if ($type == 'inc') {
 $jsonData = json_encode($tempArray);
 file_put_contents($path . "/" . $ipAddressBook, $jsonData);
 
-echo "write votes: " . $votes . " to " . $fileName;
-
 # then write the new vote number to file
 $newData = array('song'=> $json['song'], 'title'=> $json['title'], 'artist'=> $json['artist'], 'author'=> $json['author'], 'comment'=> $json['comment'], 'time'=> $json['time'], 'created-locally'=> $json['created-locally'], 'votes'=> $votes);
 $newJsonString = json_encode($newData);
 
-$fp = fopen($path . "/" . $fileName, 'w') or die("<script type='text/javascript'>alert('fopen failed!');location.href='../html/html_party_live.html';</script>");
-fwrite($fp,  $newJsonString) or die("<script type='text/javascript'>alert('fwrite failed!');location.href='../html/html_party_live.html';</script>");
-fclose($fp) or die("<script type='text/javascript'>alert('fclose failed!');location.href='../html/html_party_live.html';</script>");
+$file = $path . "/" . $fileName;
 
-#file_put_contents($path . "/" . $fileName, $newJsonString);
+if (!file_exists($file)) {
+	echo "<script type='text/javascript'>alert('" . $path . "/" . $fileName . " doesn't exists!" . "');</script>";
+}
+
+$fp = fopen($file, 'w') or die("<script type='text/javascript'>alert('fopen failed!');</script>");
+fwrite($fp,  $newJsonString) or die("<script type='text/javascript'>alert('fwrite failed!');</script>");
+fclose($fp) or die("<script type='text/javascript'>alert('fclose failed!');</script>");
+
+
 
 # and last but not least return the vote number
-echo "neue votes: " . $votes;
+echo $votes;
 
 ?>
