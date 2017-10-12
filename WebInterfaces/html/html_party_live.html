@@ -256,27 +256,6 @@
 	<script>
 		$(document).ready(function() {
 
-			$.ajax({
-				url: '../php/live.php',
-				success: function(result) {
-					$("#refresh").html(result);
-					bindButtonClick();
-				}
-			});
-
-			/* use this for the special playlist view window
-			window.setInterval(function() {
-				$.ajax({
-					url: '../php/live.php',
-					success: function(result) {
-						$("#refresh").html(result);
-						/* re-bind event handlers to '.myClickableElement' */
-			/*
-									bindButtonClick();
-								}
-							});
-						}, 500000000);*/
-
 			/* bind event handlers when the page loads */
 			bindButtonClick();
 
@@ -341,6 +320,61 @@
 	</script>
 
 	<!-- "body-end" -->
+	
+
+	
+	<script>
+	
+	$(document).ready(function() {
+	/* use this for the special playlist view window */
+	/* update every 12 seconds */
+			window.setInterval(function() {
+				$.ajax({
+					url: '../php/live.php',
+					success: function(result) {
+						$("#refresh").html(result);
+						/* re-bind event handlers to '.myClickableElement' */
+									bindButtonClick();
+								}
+							});
+						}, 20000);
+						
+			function bindButtonClick() {
+				$('.upvote-button-button').click(function() {
+					/* Toggle class "activated" (add or remove the class) */
+					var d = document.getElementById(this.id);
+					d.classList.toggle("activated");
+
+					var doThis = "get";
+
+					/* If the button is now "activated" */
+					if (d.classList.contains("activated")) {
+						/* add the votes + 1 */
+						doThis = "inc";
+					} else {
+						/* remove the vote - 1 */
+						doThis = "dec";
+					}
+
+					var savedID = this.id;
+
+					$.ajax({
+						url: '../php/vote.php?file=' + document.getElementById("file" + this.id).innerHTML + '&type=' + doThis,
+						success: function(result) {
+							$("#vote" + savedID).html(result);
+						}
+					});
+
+					return false;
+				});
+			}
+	});
+	
+	</script>
+	
+	<!-- "script-repeat" -->
+	
+	
 </body>
 
 

@@ -2,7 +2,7 @@
 
 # open the directory with the playlist entries and get every file but the php files
 $path = "./";
-$files = array_diff(scandir($path), array('..', '.',"form.php","process.php", "live.php", "vote.php"));
+$files = array_diff(scandir($path), array('..', '.',"form.php","process.php", "live.php", "vote.php", "ipBook.json"));
 
 # create array for unixtimes and live element strings
 $allData = array();

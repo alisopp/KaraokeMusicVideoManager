@@ -572,6 +572,7 @@ public class SftpHandler {
 
 		try {
 
+			@SuppressWarnings("resource")
 			java.util.Scanner s = new java.util.Scanner(channelSftp.get(remoteFile)).useDelimiter("\\A");
 			String content = s.hasNext() ? s.next() : "";
 			s.close();

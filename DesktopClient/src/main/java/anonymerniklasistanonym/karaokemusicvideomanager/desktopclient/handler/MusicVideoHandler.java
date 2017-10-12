@@ -1001,10 +1001,11 @@ public class MusicVideoHandler {
 		FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/list.html"),
 				new String[] { generateHtmlParty() });
 
-		System.out.println(generateHtmlPartyPlaylist());
+		FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.php"),
+				new String[] { generateHtmlPartyPlaylist(false) });
 
-		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.php"),
-				new String[] { generateHtmlPartyPlaylist() });
+		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index2.php"),
+				new String[] { generateHtmlPartyPlaylist(true) });
 	}
 
 	private void createPhpDirectoryWithFiles(Path outputFolder) {
@@ -1021,7 +1022,7 @@ public class MusicVideoHandler {
 
 			outputFolder = outputFolder.toAbsolutePath();
 
-			String phpFolder = outputFolder.toString() + "/php";
+			String phpFolder = outputFolder.toString() + "php";
 
 			// create the favicon directory
 			FileReadWriteModule.createDirectory(new File(phpFolder));
@@ -1035,7 +1036,7 @@ public class MusicVideoHandler {
 					new String[] { generateHtmlPartyForm() });
 
 			// paste view.php
-			FileReadWriteModule.writeTextFile(new File(phpFolder.toString() + "/view.php"),
+			FileReadWriteModule.writeTextFile(new File(phpFolder.toString() + "/live.php"),
 					new String[] { generateHtmlPartyView() });
 
 			// paste view.php
@@ -1069,7 +1070,7 @@ public class MusicVideoHandler {
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/php.json")[0]);
 
 		// add php before everything
-		phpProcess.append(JsonModule.getValueString(phpJsonContent, "php-data-view"));
+		phpProcess.append(JsonModule.getValueString(phpJsonContent, "php-data-live"));
 
 		return phpProcess.toString();
 	}
@@ -1145,7 +1146,7 @@ public class MusicVideoHandler {
 		return phpProcess.toString();
 	}
 
-	private String generateHtmlPartyPlaylist() {
+	private String generateHtmlPartyPlaylist(boolean b) {
 
 		// string builder for the whole site
 		StringBuilder phpPlaylist = new StringBuilder("");
@@ -1189,9 +1190,15 @@ public class MusicVideoHandler {
 
 		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "section-start-html_party_live"));
 
-		phpPlaylist.append(JsonModule.getValueString(phpJsonContent, "php-data-live"));
+		phpPlaylist.append(
+				JsonModule.getValueString(phpJsonContent, "php-data-live").replace("path = \"./\"", "path = \"php/\""));
 
 		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "after-table-html_party_live"));
+
+		if (b) {
+			phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "repeat-script-html_party_live")
+					.replace("../php/live.php", "php/live.php"));
+		}
 
 		phpPlaylist.append("</body></html>");
 		return phpPlaylist.toString();
@@ -1411,7 +1418,7 @@ public class MusicVideoHandler {
 	private void addMusicVideoToPlaylist(long unixTime, int index, MusicVideo musicVideo, String author, String comment,
 			boolean createdLocally) {
 		MusicVideoPlaylistElement newElement = this.playlistHandler.load(unixTime, index, musicVideo, author, comment,
-				createdLocally);
+				createdLocally, 0);
 
 		if (sftpConnectionEstablished()) {
 			uploadPlaylistEntry(newElement);
@@ -1492,7 +1499,7 @@ public class MusicVideoHandler {
 							// last but not least import it to the playlist
 							this.playlistHandler.load((long) contentData[0], (int) contentData[1],
 									this.musicVideoList[(int) contentData[1] - 1], (String) contentData[2],
-									(String) contentData[3], (boolean) contentData[4]);
+									(String) contentData[3], (boolean) contentData[4], (int) contentData[5]);
 						}
 					}
 
@@ -1500,6 +1507,7 @@ public class MusicVideoHandler {
 
 			}
 		}
+
 	}
 
 	public void saveSftpLogin(String ipAddressSftp, String workingDirectorySftp, String usernameSftp) {
@@ -1624,11 +1632,17 @@ public class MusicVideoHandler {
 		// read the given file
 		final String[] playlistTextContent = FileReadWriteModule.readTextFile(file);
 
+		return loadPlaylistString(playlistTextContent[0]);
+
+	}
+
+	private boolean loadPlaylistString(String a) {
+
 		// check if the content is not null
-		if (playlistTextContent != null) {
+		if (a != null) {
 
 			// load JSON data from given text
-			final JsonObject playlist = JsonModule.loadJsonFromString(playlistTextContent[0]);
+			final JsonObject playlist = JsonModule.loadJsonFromString(a);
 
 			// check if the JSON data exists
 			if (playlist != null) {
@@ -1676,6 +1690,7 @@ public class MusicVideoHandler {
 		}
 		System.err.println("Playlist could not be loaded!");
 		return false;
+
 	}
 
 	/**
@@ -1830,8 +1845,10 @@ public class MusicVideoHandler {
 				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlParty()),
 						"list.html");
 				// playlist view PHP list
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist()),
-						"index.php");
+				this.sftpController.transferFile(
+						FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist(false)), "index.php");
+				this.sftpController.transferFile(
+						FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist(true)), "index2.php");
 
 				// create a directory for the PHP documents and change into it
 				this.sftpController.makeDirectory("php");
@@ -1843,6 +1860,11 @@ public class MusicVideoHandler {
 				// PHP process document to add a submit to the playlist
 				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlPartyProcess()),
 						"process.php");
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlPartyView()),
+						"live.php");
+				// PHP process document to add a submit to the playlist
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlPartyVote()),
+						"vote.php");
 			}
 		}
 	}
@@ -1870,6 +1892,44 @@ public class MusicVideoHandler {
 
 	public String getProgramName() {
 		return this.programName;
+	}
+
+	public void resetVotingSftp() {
+
+		// check if a connection was established
+		if (sftpConnectionEstablished()) {
+
+			// go into the default directory
+			this.sftpController.changeDirectory(this.programDataHandler.getWorkingDirectorySftp());
+
+			// then check if a directory named php exists
+			boolean existingPhpDirectory = false;
+			for (String file : this.sftpController.listFiles()) {
+				if (file.equals("php")) {
+					System.out.println("Found php directory");
+					existingPhpDirectory = true;
+				}
+			}
+
+			// if yes
+			if (existingPhpDirectory) {
+
+				// go into it
+				this.sftpController.changeDirectory("php");
+
+				this.sftpController.removeFile("ipBook.json");
+
+				sftpRetrievePlaylist();
+
+				// now clean the list
+				this.playlistHandler.resetPlaylistVoting();
+
+				loadPlaylistString(MusicVideoDataExportHandler
+						.generateJsonContentPlaylist(this.playlistHandler.getPlaylistElements()));
+
+			}
+		}
+
 	}
 
 }

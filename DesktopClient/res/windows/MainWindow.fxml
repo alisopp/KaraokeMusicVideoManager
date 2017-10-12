@@ -50,6 +50,7 @@
                               <MenuItem fx:id="menuButtonSftpParty" mnemonicParsing="false" onAction="#sftpParty" text="Party List" />
                           </items>
                         </Menu>
+                        <MenuItem fx:id="menuButtonSftpVotingReset" mnemonicParsing="false" onAction="#sftpVotingReset" text="Reset Voting" />
                       <MenuItem fx:id="menuButtonSftpReset" mnemonicParsing="false" onAction="#sftpReset" text="Reset Network Settings" />
                     </items>
                   </Menu>

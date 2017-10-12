@@ -43,6 +43,11 @@ public final class MusicVideoPlaylistElement {
 	private final int musicVideoIndex;
 
 	/**
+	 * Votes integer
+	 */
+	private int votes;
+
+	/**
 	 * Constructor: All possibilities
 	 * 
 	 * @param musicVideoFile
@@ -62,6 +67,7 @@ public final class MusicVideoPlaylistElement {
 		this.comment = comment;
 		this.createdLocally = createdLocally;
 		this.unixTime = Instant.now().getEpochSecond();
+		this.votes = 0;
 	}
 
 	/**
@@ -84,6 +90,7 @@ public final class MusicVideoPlaylistElement {
 		this.comment = null;
 		this.createdLocally = createdLocally;
 		this.unixTime = Instant.now().getEpochSecond();
+		this.votes = 0;
 	}
 
 	/**
@@ -99,6 +106,7 @@ public final class MusicVideoPlaylistElement {
 		this.comment = null;
 		this.createdLocally = true;
 		this.unixTime = Instant.now().getEpochSecond();
+		this.votes = 0;
 	}
 
 	/**
@@ -112,15 +120,17 @@ public final class MusicVideoPlaylistElement {
 	 *            (String)
 	 * @param createdLocally
 	 *            (Boolean)
+	 * @param votes
 	 */
 	public MusicVideoPlaylistElement(long unixTime, int musicVideoIndex, MusicVideo musicVideoFile, String author,
-			String comment, boolean createdLocally) {
+			String comment, boolean createdLocally, int votes) {
 		this.musicVideoIndex = musicVideoIndex;
 		this.musicVideoFile = musicVideoFile;
 		this.author = author;
 		this.comment = comment;
 		this.createdLocally = createdLocally;
 		this.unixTime = unixTime;
+		this.votes = votes;
 	}
 
 	/**
@@ -181,6 +191,15 @@ public final class MusicVideoPlaylistElement {
 
 	public boolean getCreatedLocally() {
 		return this.createdLocally;
+	}
+
+	public int getVotes() {
+		return this.votes;
+	}
+
+	public void setVotes(int vote) {
+		this.votes = vote;
+
 	}
 
 }

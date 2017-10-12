@@ -186,6 +186,11 @@ def html_to_json(output_path):
                         # save everything after the table to the end of the body
                         json_html['after-table-' +
                                   html_file] = walking_html_string
+                        walking_html_string = ""
+                    elif "script-repeat" in line:
+                        # save everything after the table to the end of the body
+                        json_html['repeat-script-' +
+                                  html_file] = walking_html_string
                 else:
                     walking_html_string += line
 

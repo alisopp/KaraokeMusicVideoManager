@@ -54,6 +54,14 @@ public class MusicVideoPlaylistHandler {
 
 	}
 
+	public void getVotes(int index) {
+		this.playlistElements[index].getVotes();
+	}
+
+	public void setVotes(int vote, int index) {
+		this.playlistElements[index].setVotes(vote);
+	}
+
 	/**
 	 * Constructor of playlist
 	 */
@@ -121,10 +129,10 @@ public class MusicVideoPlaylistHandler {
 	}
 
 	public MusicVideoPlaylistElement load(long unixTime, int musicVideoIndex, MusicVideo musicVideo, String author,
-			String comment, boolean createdLocally) {
+			String comment, boolean createdLocally, int votes) {
 		// create new entry
 		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(unixTime, musicVideoIndex, musicVideo,
-				author, comment, true);
+				author, comment, true, votes);
 
 		MusicVideoPlaylistElement[] oldPlaylist = this.playlistElements;
 		MusicVideoPlaylistElement[] newPlaylist = new MusicVideoPlaylistElement[] { newEntry };
@@ -143,7 +151,7 @@ public class MusicVideoPlaylistHandler {
 			String comment) {
 		// create new entry
 		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(Instant.now().getEpochSecond() + number,
-				musicVideoIndex, musicVideo, author, comment, true);
+				musicVideoIndex, musicVideo, author, comment, true, 0);
 
 		MusicVideoPlaylistElement[] oldPlaylist = this.playlistElements;
 		MusicVideoPlaylistElement[] newPlaylist = new MusicVideoPlaylistElement[] { newEntry };
@@ -299,6 +307,8 @@ public class MusicVideoPlaylistHandler {
 
 			mainJsonBuilder.add("created-locally", playlistElement.getCreatedLocally());
 
+			mainJsonBuilder.add("votes", playlistElement.getVotes());
+
 			return JsonModule.dumpJsonObjectToString(mainJsonBuilder);
 
 		} catch (
@@ -318,7 +328,7 @@ public class MusicVideoPlaylistHandler {
 		if (data != null) {
 
 			load((long) data[0], (int) data[1] + 1, musicVideoList[(int) data[1]], (String) data[2], (String) data[3],
-					(boolean) data[4]);
+					(boolean) data[4], (int) data[5]);
 
 			return;
 		}
@@ -345,6 +355,7 @@ public class MusicVideoPlaylistHandler {
 			String playlistElementDataAuthor;
 			String playlistElementDataComment;
 			boolean playlistElementPlaceCreated;
+			int playlistElementDataVoteNumber;
 
 			// convert string to a JSON object
 			JsonObject jsonObject = JsonModule.loadJsonFromString(contentOfFile);
@@ -394,18 +405,37 @@ public class MusicVideoPlaylistHandler {
 				return null;
 			}
 
+			// -> (try to) get the vote number
+			int keyValueVoteNumber = JsonModule.getValueInteger(jsonObject, "votes");
+
+			if (keyValueVoteNumber != -1) {
+
+				playlistElementDataVoteNumber = keyValueVoteNumber;
+			} else {
+				System.err.println(" << No votes found");
+				return null;
+			}
+
 			// -> (try to) get if always the changes should be saved
 			boolean keyValuePlaceCreated = JsonModule.getValueBoolean(jsonObject, "created-locally");
 
 			playlistElementPlaceCreated = keyValuePlaceCreated;
 
 			return new Object[] { playlistElementDataUnixTime, playlistElementDataSongIndex, playlistElementDataAuthor,
-					playlistElementDataComment, playlistElementPlaceCreated };
+					playlistElementDataComment, playlistElementPlaceCreated, playlistElementDataVoteNumber };
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public void resetPlaylistVoting() {
+
+		for (int i = 0; i < this.playlistElements.length; i++) {
+			this.playlistElements[i].setVotes(0);
+		}
+
 	}
 
 }

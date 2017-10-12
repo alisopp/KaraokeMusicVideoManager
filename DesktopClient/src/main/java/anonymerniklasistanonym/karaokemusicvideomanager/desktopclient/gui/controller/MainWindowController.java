@@ -291,6 +291,8 @@ public class MainWindowController {
 	@FXML
 	private MenuItem menuButtonSftpReset;
 	@FXML
+	private MenuItem menuButtonSftpVotingReset;
+	@FXML
 	private Menu menuButtonSftp;
 
 	@FXML
@@ -518,6 +520,7 @@ public class MainWindowController {
 		menuButtonLoadConfigurationCustom.setGraphic(WindowModule.createMenuIcon("load"));
 		menuButtonResetConfiguration.setGraphic(WindowModule.createMenuIcon("reset"));
 		menuButtonSftp.setGraphic(WindowModule.createMenuIcon("network"));
+		menuButtonSftpVotingReset.setGraphic(WindowModule.createMenuIcon("reset"));
 		menuButtonSftpReset.setGraphic(WindowModule.createMenuIcon("remove"));
 		menuButtonSftpStatic.setGraphic(WindowModule.createMenuIcon("html_static"));
 		menuButtonSftpSearch.setGraphic(WindowModule.createMenuIcon("html_search"));
@@ -1172,7 +1175,7 @@ public class MainWindowController {
 				if (a != null) {
 					tableDataPlaylist.add(new MusicVideoPlaylistTableView(i, element.getMusicVideoIndex(),
 							element.getUnixTimeString(), a.getTitle(), a.getArtist(), element.getAuthor(),
-							element.getComment(), 0));
+							element.getComment(), element.getVotes()));
 					i++;
 				} else {
 					System.err.println(
@@ -1463,6 +1466,11 @@ public class MainWindowController {
 			}
 
 		}
+	}
+
+	@FXML
+	private void sftpVotingReset() {
+		this.mainWindow.getMusicVideohandler().resetVotingSftp();
 	}
 
 	@FXML
