@@ -321,12 +321,11 @@ public class DialogModule {
 	 * 
 	 * @return
 	 */
-	public static String[] playlistDialog(String author, String comment, String title, String header,
-			String buttonText) {
+	public static String[] playlistDialog(String author, String comment) {
 		// Create the custom dialog.
 		Dialog<Pair<String, String>> dialog = new Dialog<>();
-		dialog.setTitle(title);
-		dialog.setHeaderText(header);
+		dialog.setTitle(Internationalization.translate("Add to playlist"));
+		dialog.setHeaderText(Internationalization.translate("Enter an author and comment"));
 
 		// Get the Stage.
 		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
@@ -334,7 +333,7 @@ public class DialogModule {
 		stage.getIcons().addAll(WindowModule.getWindowIcons());
 
 		// Set the button types.
-		ButtonType editElement = new ButtonType(buttonText, ButtonData.OK_DONE);
+		ButtonType editElement = new ButtonType(Internationalization.translate("Add"), ButtonData.OK_DONE);
 		dialog.getDialogPane().getButtonTypes().addAll(editElement, ButtonType.CANCEL);
 
 		// Create the username and password labels and fields.
@@ -344,15 +343,15 @@ public class DialogModule {
 		grid.setPadding(new Insets(10, 10, 10, 10));
 
 		TextField newAuthor = new TextField();
-		newAuthor.setPromptText("New author");
+		newAuthor.setPromptText(Internationalization.translate("New author"));
 		newAuthor.setText(author);
 		TextField newComment = new TextField();
-		newComment.setPromptText("New Comment");
+		newComment.setPromptText(Internationalization.translate("New comment"));
 		newComment.setText(comment);
 
-		grid.add(new Label("Author:"), 0, 0);
+		grid.add(new Label(Internationalization.translate("Author") + ":"), 0, 0);
 		grid.add(newAuthor, 1, 0);
-		grid.add(new Label("Comment:"), 0, 1);
+		grid.add(new Label(Internationalization.translate("Comment") + ":"), 0, 1);
 		grid.add(newComment, 1, 1);
 
 		Node loginButton = dialog.getDialogPane().lookupButton(editElement);
@@ -398,8 +397,7 @@ public class DialogModule {
 	 * 
 	 * @return
 	 */
-	public static String[] playlistEditDialog(String author, String comment, String title, String header,
-			String buttonText) {
+	public static String[] playlistEditDialog(String author, String comment, String title, String header) {
 		// Create the custom dialog.
 		Dialog<Pair<String, String>> dialog = new Dialog<>();
 		dialog.setTitle(title);
@@ -411,7 +409,7 @@ public class DialogModule {
 		stage.getIcons().addAll(WindowModule.getWindowIcons());
 
 		// Set the button types.
-		ButtonType editElement = new ButtonType(buttonText, ButtonData.OK_DONE);
+		ButtonType editElement = new ButtonType(Internationalization.translate("Save"), ButtonData.OK_DONE);
 		dialog.getDialogPane().getButtonTypes().addAll(editElement, ButtonType.CANCEL);
 
 		// Create the username and password labels and fields.
@@ -421,15 +419,15 @@ public class DialogModule {
 		grid.setPadding(new Insets(10, 10, 10, 10));
 
 		TextField newAuthor = new TextField();
-		newAuthor.setPromptText("New author");
+		newAuthor.setPromptText(Internationalization.translate("New author"));
 		newAuthor.setText(author);
 		TextField newComment = new TextField();
-		newComment.setPromptText("New Comment");
+		newComment.setPromptText(Internationalization.translate("New comment"));
 		newComment.setText(comment);
 
-		grid.add(new Label("Author:"), 0, 0);
+		grid.add(new Label(Internationalization.translate("Author") + ":"), 0, 0);
 		grid.add(newAuthor, 1, 0);
-		grid.add(new Label("Comment:"), 0, 1);
+		grid.add(new Label(Internationalization.translate("Comment") + ":"), 0, 1);
 		grid.add(newComment, 1, 1);
 
 		Node loginButton = dialog.getDialogPane().lookupButton(editElement);
@@ -488,7 +486,7 @@ public class DialogModule {
 		TextInputDialog dialog = new TextInputDialog(contentOfTextField);
 
 		// set a window title
-		dialog.setTitle("Rename");
+		dialog.setTitle(Internationalization.translate("Rename"));
 
 		// set a header title
 		dialog.setHeaderText(header);

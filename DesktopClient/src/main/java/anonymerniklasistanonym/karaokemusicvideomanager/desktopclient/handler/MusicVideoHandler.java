@@ -787,7 +787,7 @@ public class MusicVideoHandler {
 		// string builder for all links
 		StringBuilder specialHead = new StringBuilder("");
 
-		String name = "MusicVideoManager";
+		String name = "Karaoke Music Video Manager";
 		specialHead.append("<title>" + name + "</title>");
 		specialHead.append("<meta name=\"apple-mobile-web-app-title\" content=\"" + name + "\">");
 		specialHead.append("<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">");
@@ -832,7 +832,7 @@ public class MusicVideoHandler {
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/js.json")[0]);
 
 		// add default head
-		htmlStatic.append("<!DOCTYPE html><html lang=\"en\"><head>");
+		htmlStatic.append("<!DOCTYPE html><html lang=\"" + Internationalization.getLocaleString() + "\"><head>");
 		// add generic head
 		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "head"));
 		// add custom head for static
@@ -862,21 +862,28 @@ public class MusicVideoHandler {
 
 		if (party) {
 			htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "floating-button-html_party")
-					.replace("html_party_live.html", "index.php"));
+					.replace("html_party_live.html", "index.php")
+					.replace("Party Playlist", Internationalization.translate("Party Playlist")));
 		}
 
 		// add section begin
 		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "section-start-html_party"));
 
 		// add the overlay / table header
-		htmlStatic.append(
-				JsonModule.getValueString(htmlJsonContent, "overlay-html_party").replaceFirst("#", this.columnNames[0])
-						.replaceFirst("Artist", this.columnNames[1]).replaceFirst("Title", this.columnNames[2]));
+		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "overlay-html_party")
+				.replaceFirst("#", this.columnNames[0])
+				.replaceFirst("Search for artist/title",
+						Internationalization.translate("Search for") + " " + Internationalization.translate("artist")
+								+ "/" + Internationalization.translate("title") + "/"
+								+ Internationalization.translate("nummer"))
+				.replaceFirst("Title", Internationalization.translate(this.columnNames[2]))
+				.replaceFirst("Artist", Internationalization.translate(this.columnNames[1])));
 
 		// add the second table header (for print)
 		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "table-header-html_party")
-				.replaceFirst("#", this.columnNames[0]).replaceFirst("Artist", this.columnNames[1])
-				.replaceFirst("Title", this.columnNames[2]));
+				.replaceFirst("#", this.columnNames[0])
+				.replaceFirst("Artist", Internationalization.translate(this.columnNames[1]))
+				.replaceFirst("Title", Internationalization.translate(this.columnNames[2])));
 
 		if (party) {
 			htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "form-start-html_party")
@@ -924,7 +931,7 @@ public class MusicVideoHandler {
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/css.json")[0]);
 
 		// add default head
-		htmlStatic.append("<!DOCTYPE html><html lang=\"en\"><head>");
+		htmlStatic.append("<!DOCTYPE html><html lang=\"" + Internationalization.getLocaleString() + "\"><head>");
 		// add generic head
 		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "head"));
 		// add custom head for static
@@ -947,9 +954,9 @@ public class MusicVideoHandler {
 
 		// add table header
 		String tableHeader = JsonModule.getValueString(htmlJsonContent, "table-header-html_static");
-		tableHeader = tableHeader.replaceFirst("#", this.columnNames[0]);
-		tableHeader = tableHeader.replaceFirst("Artist", this.columnNames[1]);
-		tableHeader = tableHeader.replaceFirst("Title", this.columnNames[2]);
+		tableHeader = tableHeader.replaceFirst("#", this.columnNames[0]).replaceFirst("#", this.columnNames[0])
+				.replaceFirst("Artist", Internationalization.translate(this.columnNames[1]))
+				.replaceFirst("Title", Internationalization.translate(this.columnNames[2]));
 		htmlStatic.append(tableHeader);
 
 		// table data
@@ -1072,7 +1079,9 @@ public class MusicVideoHandler {
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/php.json")[0]);
 
 		// add php before everything
-		phpProcess.append(JsonModule.getValueString(phpJsonContent, "php-data-live"));
+		phpProcess.append(JsonModule.getValueString(phpJsonContent, "php-data-live")
+				.replace("Vote", Internationalization.translate("Vote"))
+				.replace("from", Internationalization.translate("from")));
 
 		return phpProcess.toString();
 	}
@@ -1093,7 +1102,7 @@ public class MusicVideoHandler {
 		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-html-form"));
 
 		// add default head
-		phpForm.append("<!DOCTYPE html><html lang=\"en\"><head>");
+		phpForm.append("<!DOCTYPE html><html lang=\"" + Internationalization.getLocaleString() + "\"><head>");
 		// add generic head
 		phpForm.append(JsonModule.getValueString(htmlJsonContent, "head"));
 		// add custom head for php form
@@ -1116,13 +1125,16 @@ public class MusicVideoHandler {
 		phpForm.append(JsonModule.getValueString(phpJsonContent, "floating-button-form"));
 
 		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-title-form"));
-		phpForm.append("Submit this song to the playlist:");
+		phpForm.append(Internationalization.translate("Submit this song to the playlist") + ":");
 		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-artist-form"));
-		phpForm.append("from&nbsp;");
+		phpForm.append(Internationalization.translate("from") + "&nbsp;");
 		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-input-form"));
-		phpForm.append(JsonModule.getValueString(phpJsonContent, "input-form"));
+		phpForm.append(JsonModule.getValueString(phpJsonContent, "input-form")
+				.replace("Your name/s", Internationalization.translate("Your names"))
+				.replace("Your comment", Internationalization.translate("Your comment")));
 		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-submit-form"));
-		phpForm.append(JsonModule.getValueString(phpJsonContent, "submit-form"));
+		phpForm.append(JsonModule.getValueString(phpJsonContent, "submit-form").replace("Submit",
+				Internationalization.translate("Submit")));
 		phpForm.append(JsonModule.getValueString(phpJsonContent, "after-submit-form"));
 
 		phpForm.append("</body></html>");
@@ -1164,7 +1176,7 @@ public class MusicVideoHandler {
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/js.json")[0]);
 
 		// add default head
-		phpPlaylist.append("<!DOCTYPE html><html lang=\"en\"><head>");
+		phpPlaylist.append("<!DOCTYPE html><html lang=\"" + Internationalization.getLocaleString() + "\"><head>");
 		// add generic head
 		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "head"));
 		// add custom head for static
@@ -1188,12 +1200,14 @@ public class MusicVideoHandler {
 		phpPlaylist.append("</style></head><body>");
 
 		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "floating-button-html_party_live")
-				.replace("html_party.html", "list.html"));
+				.replace("html_party.html", "list.html")
+				.replace("View Song List", Internationalization.translate("View Song List")));
 
 		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "section-start-html_party_live"));
 
-		phpPlaylist.append(
-				JsonModule.getValueString(phpJsonContent, "php-data-live").replace("path = \"./\"", "path = \"php/\""));
+		phpPlaylist.append(JsonModule.getValueString(phpJsonContent, "php-data-live")
+				.replace("path = \"./\"", "path = \"php/\"").replace("Vote", Internationalization.translate("Vote"))
+				.replace("from", Internationalization.translate("from")));
 
 		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "after-table-html_party_live"));
 

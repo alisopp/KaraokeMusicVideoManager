@@ -28,7 +28,7 @@
          <children>
             <MenuBar style="-fx-background-color: white;">
               <menus>
-                <Menu mnemonicParsing="false" text="Export">
+                <Menu fx:id="menuExport" mnemonicParsing="false" text="Export">
                   <items>
                         <Menu fx:id="menuButtonWebsites" mnemonicParsing="false" text="Website">
                           <items>
@@ -41,7 +41,7 @@
                         <MenuItem fx:id="menuButtonJson" mnemonicParsing="false" onAction="#exportJson" text="JSON" />
                   </items>
                 </Menu>
-                  <Menu mnemonicParsing="false" text="Network">
+                  <Menu fx:id="menuNetwork" mnemonicParsing="false" text="Network">
                     <items>
                         <Menu fx:id="menuButtonSftp" disable="true" mnemonicParsing="false" text="Setup The Server">
                           <items>
@@ -54,7 +54,7 @@
                       <MenuItem fx:id="menuButtonSftpReset" mnemonicParsing="false" onAction="#sftpReset" text="Reset Network Settings" />
                     </items>
                   </Menu>
-                <Menu mnemonicParsing="false" text="Save &amp; Restore">
+                <Menu fx:id="menuConfiguration" mnemonicParsing="false" text="Save &amp; Restore">
                   <items>
                     <MenuItem fx:id="menuButtonSaveConfiguration" mnemonicParsing="false" onAction="#saveConfiguartion" text="Save Configuration">
                            <accelerator>
@@ -69,13 +69,12 @@
                         <MenuItem fx:id="menuButtonResetConfiguration" mnemonicParsing="false" onAction="#resetConfiguartion" text="Reset Everything" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Settings">
+                <Menu fx:id="menuSettings" mnemonicParsing="false" text="Settings">
                   <items>
                         <CheckMenuItem fx:id="menuButtonAlwaysSave" mnemonicParsing="false" onAction="#changeAlwaysSave" text="Always Save Changes on Exit Without Dialog" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="Language" />
                   </items>
                 </Menu>
-                  <Menu mnemonicParsing="false" text="About">
+                  <Menu fx:id="menuAbout" mnemonicParsing="false" text="About">
                     <items>
                       <MenuItem fx:id="aboutButton" mnemonicParsing="false" onAction="#openAboutWindow" text="About">
                            <accelerator>
@@ -190,7 +189,6 @@
                                     <Button fx:id="buttonSavePlaylist" accessibleText="Save the current Playlist" mnemonicParsing="false" onAction="#savePlaylistDialog" text="Save Playlist" />
                                     <Button fx:id="buttonLoadPlaylist" mnemonicParsing="false" onAction="#loadPlaylistDialog" text="Load Playlist" />
                                     <Button fx:id="buttonClearPlaylist" mnemonicParsing="false" onAction="#clearMusicVideoPlaylistTable" text="Clear Playlist" />
-                                    <Button fx:id="buttonRefreshPlaylist" mnemonicParsing="false" onAction="#refreshMusicVideoPlaylistTable" text="Refresh Playlist" />
                                  </children>
                                  <padding>
                                     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

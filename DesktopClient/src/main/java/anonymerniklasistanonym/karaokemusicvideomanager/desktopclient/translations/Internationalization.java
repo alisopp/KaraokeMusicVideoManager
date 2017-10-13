@@ -10,6 +10,8 @@ public class Internationalization {
 
 	public static ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
 
+	private static Locale locale = Locale.getDefault();
+
 	public static void main(String[] args) {
 
 		System.out.println(translate("CountryName"));
@@ -29,7 +31,8 @@ public class Internationalization {
 		bundle = ResourceBundle.getBundle(bundleName);
 	}
 
-	public static void setBundle(Locale locale) {
+	public static void setBundle(Locale localeNew) {
+		locale = localeNew;
 		bundle = ResourceBundle.getBundle(bundleName, locale);
 	}
 
@@ -50,6 +53,10 @@ public class Internationalization {
 		}
 
 		return text;
+	}
+
+	public static String getLocaleString() {
+		return locale.getLanguage();
 	}
 
 }

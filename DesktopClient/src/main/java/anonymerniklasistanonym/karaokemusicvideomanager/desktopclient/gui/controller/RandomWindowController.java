@@ -160,7 +160,7 @@ public class RandomWindowController {
 
 	}
 
-	public void translateText() {
+	private void translateText() {
 
 		randomPlay1.setText(Internationalization.translate("play"));
 		randomPlay2.setText(Internationalization.translate("play"));
@@ -222,9 +222,7 @@ public class RandomWindowController {
 		}
 
 		// open a dialog to input name and comment
-		final String[] authorComment = DialogModule.playlistDialog(this.mainWindowController.getLastName(), "", header,
-				Internationalization.translate("Add an author and comment"),
-				Internationalization.translate("Add to playlist"));
+		final String[] authorComment = DialogModule.playlistDialog(this.mainWindowController.getLastName(), "");
 
 		// if at least the author wasn't null
 		if (authorComment != null && authorComment[0] != null) {

@@ -268,8 +268,6 @@ public class MainWindowController {
 	@FXML
 	private Button buttonLoadPlaylist;
 	@FXML
-	private Button buttonRefreshPlaylist;
-	@FXML
 	private Button buttonClearPlaylist;
 
 	@FXML
@@ -299,6 +297,17 @@ public class MainWindowController {
 	@FXML
 	private CheckMenuItem menuButtonAlwaysSave;
 
+	@FXML
+	private Menu menuExport;
+	@FXML
+	private Menu menuNetwork;
+	@FXML
+	private Menu menuConfiguration;
+	@FXML
+	private Menu menuSettings;
+	@FXML
+	private Menu menuAbout;
+
 	// other
 
 	/**
@@ -326,6 +335,80 @@ public class MainWindowController {
 	 */
 	private Main mainWindow;
 	private String lastName;
+
+	private void translateText() {
+		columnArtist.setText(Internationalization.translate("Artist"));
+		columnTitle.setText(Internationalization.translate("Title"));
+
+		columnPlaylistTime.setText(Internationalization.translate("Time"));
+		columnPlaylistTitle.setText(Internationalization.translate("Title"));
+		columnPlaylistArtist.setText(Internationalization.translate("Artist"));
+		columnPlaylistAuthor.setText(Internationalization.translate("Author"));
+		columnPlaylistComment.setText(Internationalization.translate("Comment"));
+		columnPlaylistVotes.setText(Internationalization.translate("Votes"));
+
+		columnFilePath.setText(Internationalization.translate("Directory path"));
+
+		searchLabel.setText(Internationalization.translate("Search") + ":");
+
+		// Context menu
+		contextMusicVideoPlaylist.setText(Internationalization.translate("Add to playlist"));
+		contextMusicVideoDirectory.setText(Internationalization.translate("Show Directory of File"));
+		contextMusicVideoIgnore.setText(Internationalization.translate("Ignore File"));
+		contextMusicVideoClear.setText(Internationalization.translate("Clear Selection"));
+		contextMusicVideoRefresh.setText(Internationalization.translate("Refresh"));
+		contextPathRemove.setText(Internationalization.translate("Remove directory"));
+		contextPathClear.setText(Internationalization.translate("Clear Selection"));
+		contextPathRefresh.setText(Internationalization.translate("Refresh"));
+		contextMusicVideoRename.setText(Internationalization.translate("Rename File"));
+		contextPlaylistRemove.setText(Internationalization.translate("Remove playlist entry"));
+		contextPlaylistEdit.setText(Internationalization.translate("Edit playlist entry"));
+		contextPlaylistClear.setText(Internationalization.translate("Clear Selection"));
+		contextPlaylistRefresh.setText(Internationalization.translate("Refresh"));
+
+		// other buttons
+		buttonWrongFormattedFiles.setText(Internationalization.translate("Wrong Formatted Files"));
+		buttonIgnoredFiles.setText(Internationalization.translate("Ignored Files"));
+		buttonAddDirectory.setText(Internationalization.translate("Add directory"));
+		networkButton.setText(Internationalization.translate("Network"));
+		aboutButton.setText(Internationalization.translate("About"));
+		randomButton.setText(Internationalization.translate("Random"));
+		helpButton.setText(Internationalization.translate("Help"));
+		buttonLoadPlaylist.setText(Internationalization.translate("Load playlist"));
+		buttonSavePlaylist.setText(Internationalization.translate("Save playlist"));
+		buttonClearPlaylist.setText(Internationalization.translate("Clear playlist"));
+
+		// menu buttons
+		menuButtonWebsites.setText(Internationalization.translate("Websites"));
+		menuButtonHtmlStatic.setText(Internationalization.translate("Static website"));
+		menuButtonHtmlSearch.setText(Internationalization.translate("Searchable website"));
+		menuButtonHtmlParty.setText(Internationalization.translate("Party website"));
+		menuButtonSaveConfiguration.setText(Internationalization.translate("Save configuration"));
+		menuButtonLoadConfiguration.setText(Internationalization.translate("Load configuration"));
+		menuButtonSaveConfigurationCustom.setText(
+				Internationalization.translate("Save configuration") + " " + Internationalization.translate("custom"));
+		menuButtonLoadConfigurationCustom.setText(
+				Internationalization.translate("Save configuration") + " " + Internationalization.translate("custom"));
+		menuButtonResetConfiguration.setText(Internationalization.translate("Reset configuration"));
+		menuButtonSftp.setText(Internationalization.translate("Setup the server"));
+		menuButtonSftpVotingReset.setText(Internationalization.translate("Voting reset"));
+		menuButtonSftpReset.setText(Internationalization.translate("Reset network configuration"));
+		menuButtonSftpStatic.setText(Internationalization.translate("Static website"));
+		menuButtonSftpSearch.setText(Internationalization.translate("Searchable website"));
+		menuButtonSftpParty.setText(Internationalization.translate("Party website"));
+		menuButtonAlwaysSave.setText(Internationalization.translate("Always save Settings on Exit"));
+
+		musicVideoTableTab.setText(Internationalization.translate("Music Video List"));
+		playlistTab.setText(Internationalization.translate("Music Video Playlist"));
+		sourceTab.setText(Internationalization.translate("Source Directories"));
+
+		menuExport.setText(Internationalization.translate("Export"));
+		menuNetwork.setText(Internationalization.translate("Network"));
+		menuSettings.setText(Internationalization.translate("Settings"));
+		menuAbout.setText(Internationalization.translate("About"));
+		menuConfiguration
+				.setText(Internationalization.translate("Save") + " & " + Internationalization.translate("Restore"));
+	}
 
 	/**
 	 * This method get's called when the FXML file get's loaded
@@ -505,7 +588,6 @@ public class MainWindowController {
 		helpButton.setGraphic(WindowModule.createMenuIcon("help"));
 		buttonLoadPlaylist.setGraphic(WindowModule.createMenuIcon("load"));
 		buttonSavePlaylist.setGraphic(WindowModule.createMenuIcon("save"));
-		buttonRefreshPlaylist.setGraphic(WindowModule.createMenuIcon("refresh"));
 		buttonClearPlaylist.setGraphic(WindowModule.createMenuIcon("remove"));
 
 		// menu buttons
@@ -531,8 +613,11 @@ public class MainWindowController {
 		searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
 
 		this.menuButtonSftp.setDisable(true);
+		this.menuButtonSftpVotingReset.setDisable(true);
 
 		this.lastName = System.getProperty("user.name");
+
+		translateText();
 	}
 
 	public void setMainWindow(Main window) {
@@ -710,11 +795,14 @@ public class MainWindowController {
 
 		// change the text in the search box respective to the selected tab
 		if (selectedTab == musicVideoTableTab) {
-			this.searchBox.setPromptText("Search for music videos...");
+			this.searchBox.setPromptText(Internationalization.translate("Search for") + " "
+					+ Internationalization.translate("music videos") + "...");
 		} else if (selectedTab == playlistTab) {
-			this.searchBox.setPromptText("Search for playlist entries...");
+			this.searchBox.setPromptText(Internationalization.translate("Search for") + " "
+					+ Internationalization.translate("playlist entries") + "...");
 		} else if (selectedTab == sourceTab) {
-			this.searchBox.setPromptText("Search for directories...");
+			this.searchBox.setPromptText(Internationalization.translate("Search for") + " "
+					+ Internationalization.translate("directories") + "...");
 		}
 
 	}
@@ -797,7 +885,7 @@ public class MainWindowController {
 			Stage stage = new Stage(StageStyle.UTILITY);
 			stage.setScene(new Scene(root1));
 			stage.setResizable(false);
-			stage.setTitle("About");
+			stage.setTitle(Internationalization.translate("About"));
 
 			// show the stage
 			stage.show();
@@ -835,6 +923,7 @@ public class MainWindowController {
 					Stage stage = new Stage(StageStyle.DECORATED);
 					stage.setScene(new Scene(root1));
 					stage.setResizable(false);
+					stage.setWidth(400);
 					stage.setTitle(Internationalization.translate("Server Login"));
 
 					// try to add a window icon
@@ -1078,8 +1167,7 @@ public class MainWindowController {
 			int a = selectedEntry.getIndex();
 
 			// dialog to get author and optional a comment
-			String[] authorComment = DialogModule.playlistDialog(lastName, "", "Create a new Playlist entry",
-					"Add an author and comment", "Add");
+			String[] authorComment = DialogModule.playlistDialog(lastName, "");
 
 			// if author not null add it to the playlist
 			if (authorComment != null && authorComment[0] != null) {
@@ -1214,12 +1302,14 @@ public class MainWindowController {
 		if (this.mainWindow.getMusicVideohandler().sftpConnectionEstablished()) {
 			this.networkButton.setSelected(true);
 			this.menuButtonSftp.setDisable(false);
+			this.menuButtonSftpVotingReset.setDisable(false);
 			// update the table
 			refreshMusicVideoPlaylistTable();
 
 		} else {
 			this.networkButton.setSelected(false);
 			this.menuButtonSftp.setDisable(true);
+			this.menuButtonSftpVotingReset.setDisable(true);
 		}
 
 	}
@@ -1453,8 +1543,7 @@ public class MainWindowController {
 		// if something is selected
 		if (selectedEntry != null) {
 			String[] authorComment = DialogModule.playlistEditDialog(selectedEntry.getAuthor(),
-					selectedEntry.getComment(), "Edit the selected Playlist entry", "Edit author and comment",
-					"Save Changes");
+					selectedEntry.getComment(), "Edit the selected Playlist entry", "Edit author and comment");
 
 			if (authorComment != null && authorComment[0] != null) {
 				this.lastName = authorComment[0];
