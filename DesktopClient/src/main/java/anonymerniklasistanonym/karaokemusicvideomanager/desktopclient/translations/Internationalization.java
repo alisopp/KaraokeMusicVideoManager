@@ -12,28 +12,21 @@ public class Internationalization {
 
 	private static Locale locale = Locale.getDefault();
 
-	public static void main(String[] args) {
-
-		System.out.println(translate("CountryName"));
-
-		setBundle(new Locale("sv", "SE"));
-
-		System.out.println(translate("CountryName"));
-
-		setBundle(Locale.FRANCE);
-
-		System.out.println(translate("CountryName"));
-		System.out.println(translate("CountryNameaaaa"));
-
-	}
-
 	public static void setBundle() {
 		bundle = ResourceBundle.getBundle(bundleName);
 	}
 
 	public static void setBundle(Locale localeNew) {
-		locale = localeNew;
-		bundle = ResourceBundle.getBundle(bundleName, locale);
+		try {
+			locale = localeNew;
+			bundle = ResourceBundle.getBundle(bundleName, locale);
+		} catch (NullPointerException n) {
+			n.printStackTrace();
+			bundle = ResourceBundle.getBundle(bundleName);
+		} catch (MissingResourceException m) {
+			m.printStackTrace();
+			bundle = ResourceBundle.getBundle(bundleName);
+		}
 	}
 
 	public static String translate(String text) {

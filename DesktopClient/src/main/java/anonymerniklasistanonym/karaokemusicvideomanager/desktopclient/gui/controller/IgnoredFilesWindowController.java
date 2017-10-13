@@ -322,8 +322,7 @@ public class IgnoredFilesWindowController {
 			final File selectedFile = new File(selectedEntry.getFilePath());
 
 			// show dialog to rename the file
-			final String newFileName = DialogModule.fileRenameDialog("Rename wrong formatted file",
-					selectedFile.getName());
+			final String newFileName = DialogModule.fileRenameDialog(selectedFile.getName());
 
 			// if the dialogs output isn't null or empty
 			if (newFileName != null && !newFileName.isEmpty()) {

@@ -325,13 +325,16 @@ a.floating-button:hover + div.label-container {
 	.live-element {
 		margin-top: 10px;
 		margin-bottom: 10px;
+		margin-bottom: 0;
+		border-radius: 0;
+		border-top: 0;
 	}
 	.upvote-button {
 		float: right;
 		text-align: right;
 	}
 	.upvote-button-button {
-		margin-top: -40px;
+		margin-top: -3rem;
 	}
 	.text-beta {
 	margin-right: 100px;

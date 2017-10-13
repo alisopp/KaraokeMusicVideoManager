@@ -388,7 +388,7 @@ public class MainWindowController {
 		menuButtonSaveConfigurationCustom.setText(
 				Internationalization.translate("Save configuration") + " " + Internationalization.translate("custom"));
 		menuButtonLoadConfigurationCustom.setText(
-				Internationalization.translate("Save configuration") + " " + Internationalization.translate("custom"));
+				Internationalization.translate("Load configuration") + " " + Internationalization.translate("custom"));
 		menuButtonResetConfiguration.setText(Internationalization.translate("Reset configuration"));
 		menuButtonSftp.setText(Internationalization.translate("Setup the server"));
 		menuButtonSftpVotingReset.setText(Internationalization.translate("Voting reset"));
@@ -628,6 +628,11 @@ public class MainWindowController {
 		refreshMusicVideoPlaylistTable();
 
 		this.menuButtonAlwaysSave.setSelected(this.mainWindow.getMusicVideohandler().getAlwaysSave());
+
+		// select source path tab if there are no music videos
+		if (this.mainWindow.getMusicVideohandler().getMusicVideoList() == null) {
+			tabView.getSelectionModel().select(this.sourceTab);
+		}
 	}
 
 	/**
@@ -846,7 +851,8 @@ public class MainWindowController {
 	private void addSourceFolderDialog() {
 
 		// get a directory
-		File directory = DialogModule.chooseDirectory(this.mainWindow.getPrimaryStage(), "Add a path", null);
+		File directory = DialogModule.chooseDirectory(this.mainWindow.getPrimaryStage(),
+				Internationalization.translate("Select a new source directory"), null);
 
 		// if the directory isn't null
 		if (directory != null) {
@@ -905,9 +911,11 @@ public class MainWindowController {
 
 			if ((this.mainWindow.getMusicVideohandler().getPlaylistHandler() != null
 					&& this.mainWindow.getMusicVideohandler().getPlaylistHandler().getPlaylistElements() == null)
-					|| DialogModule.yesNoDialog("You really want to continue?",
-							"If you login to the server you will lose your current playlist!",
-							"If you do not want to loose this playlist save it before you logg yourself in. Load it after the connection was established to overwrite the server data.")) {
+					|| DialogModule.yesNoDialog(Internationalization.translate("Do you really want to continue") + "?",
+							Internationalization
+									.translate("If you login to the server you will lose your current playlist") + "!",
+							Internationalization.translate(
+									"If you do not want to loose this playlist save it before you log yourself in. Load it after the connection was established to overwrite the server data."))) {
 
 				this.networkButton.setSelected(true);
 				try {
@@ -954,8 +962,9 @@ public class MainWindowController {
 				}
 			}
 		} else {
-			if (DialogModule.yesNoDialog("Logout?", "Do you want to log out?",
-					"You are already logged in. Click OK to logout.")) {
+			if (DialogModule.yesNoDialog(Internationalization.translate("Logout") + "?",
+					Internationalization.translate("Do you want to log out") + "?",
+					Internationalization.translate("You are already logged in. Click OK to logout."))) {
 				this.mainWindow.getMusicVideohandler().sftpDisconnect();
 				this.networkButton.setSelected(false);
 			} else {
@@ -1320,7 +1329,9 @@ public class MainWindowController {
 	@FXML
 	private void exportHtmlStatic() {
 		File htmlFileDestination = DialogModule.chooseDirectory(this.mainWindow.getPrimaryStage(),
-				"Export music video list to static HTML table - Choose a directory", null);
+				Internationalization.translate("Export music video list to") + " "
+						+ Internationalization.translate("a static HTML website"),
+				null);
 
 		if (htmlFileDestination != null) {
 			this.mainWindow.getMusicVideohandler().saveHtmlList(htmlFileDestination.toPath(), true);
@@ -1333,7 +1344,9 @@ public class MainWindowController {
 	@FXML
 	private void exportHtmlSearch() {
 		File htmlFileDestination = DialogModule.chooseDirectory(this.mainWindow.getPrimaryStage(),
-				"Export music video list to static HTML table - Choose a directory", null);
+				Internationalization.translate("Export music video list to") + " "
+						+ Internationalization.translate("a static HTML website with a search"),
+				null);
 
 		if (htmlFileDestination != null) {
 			this.mainWindow.getMusicVideohandler().saveHtmlSearch(htmlFileDestination.toPath(), true);
@@ -1346,7 +1359,9 @@ public class MainWindowController {
 	@FXML
 	private void exportHtmlParty() {
 		File htmlFileDestination = DialogModule.chooseDirectory(this.mainWindow.getPrimaryStage(),
-				"Export music video list to static HTML table - Choose a directory", null);
+				Internationalization.translate("Export music video list to") + " "
+						+ Internationalization.translate("a party HTML/PHP website structure"),
+				null);
 
 		if (htmlFileDestination != null) {
 			this.mainWindow.getMusicVideohandler().saveHtmlParty(htmlFileDestination.toPath(), true);
@@ -1358,10 +1373,11 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void exportCsv() {
-		ExtensionFilter csvFilter = new ExtensionFilter("Csv File", "*.csv");
+		ExtensionFilter csvFilter = new ExtensionFilter(Internationalization.translate("CSV file"), "*.csv");
 		File[] csvFile = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(),
-				"Export music video list to a CSV file - Choose a directory and filename", null,
-				new ExtensionFilter[] { csvFilter }, DialogModule.CHOOSE_ACTION.SAVE);
+				Internationalization.translate("Export music video list to") + " "
+						+ Internationalization.translate("a CSV file"),
+				null, new ExtensionFilter[] { csvFilter }, DialogModule.CHOOSE_ACTION.SAVE);
 
 		if (csvFile != null && csvFile[0] != null) {
 			this.mainWindow.getMusicVideohandler().saveCsv(csvFile[0].toPath());
@@ -1373,10 +1389,11 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void exportJson() {
-		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
+		ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("JSON file"), "*.json");
 		File[] jsonFile = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(),
-				"Export music video list to a JSON file - Choose a directory and filename", null,
-				new ExtensionFilter[] { jsonFilter }, DialogModule.CHOOSE_ACTION.SAVE);
+				Internationalization.translate("Export music video list to") + " "
+						+ Internationalization.translate("a JSON file"),
+				null, new ExtensionFilter[] { jsonFilter }, DialogModule.CHOOSE_ACTION.SAVE);
 
 		if (jsonFile != null && jsonFile[0] != null) {
 			this.mainWindow.getMusicVideohandler().saveJson(jsonFile[0].toPath());
@@ -1397,9 +1414,9 @@ public class MainWindowController {
 
 	@FXML
 	private void saveConfiguartionCustom() {
-		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
+		ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("JSON file"), "*.json");
 		File[] jsonFile = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(),
-				"Save a Custom Named Configuration File", null, new ExtensionFilter[] { jsonFilter },
+				Internationalization.translate("Save configuration"), null, new ExtensionFilter[] { jsonFilter },
 				DialogModule.CHOOSE_ACTION.SAVE);
 		if (jsonFile != null && jsonFile[0] != null) {
 			File saveToThis = Paths.get(jsonFile[0].getAbsolutePath() + ".json").toFile();
@@ -1409,9 +1426,9 @@ public class MainWindowController {
 
 	@FXML
 	private void loadConfiguartionCustom() {
-		ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
+		ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("JSON file"), "*.json");
 		File[] jsonFile = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(),
-				"Load a Custom Named Configuration File", null, new ExtensionFilter[] { jsonFilter },
+				Internationalization.translate("Load configuration"), null, new ExtensionFilter[] { jsonFilter },
 				DialogModule.CHOOSE_ACTION.NORMAL);
 		if (jsonFile != null && jsonFile[0] != null) {
 			this.mainWindow.getMusicVideohandler().loadSettings(jsonFile[0]);
@@ -1422,8 +1439,9 @@ public class MainWindowController {
 
 	@FXML
 	private void resetConfiguartion() {
-		if (DialogModule.yesNoDialog("Confirm to Continue", "Reset Everything",
-				"Do you really want to reset EVERYTHING?")) {
+		if (DialogModule.yesNoDialog(Internationalization.translate("Confirm to continue"),
+				Internationalization.translate("Reset Everything"),
+				Internationalization.translate("Do you really want to reset EVERYTHING") + "!?")) {
 			this.mainWindow.getMusicVideohandler().reset();
 			refreshMusicVideoTable();
 			refreshMusicVideoDirectoryTable();
@@ -1451,8 +1469,7 @@ public class MainWindowController {
 			File selectedFile = pathOfSelectedFile.toFile();
 			if (selectedFile.exists() && selectedFile.isFile()) {
 				// show dialog to rename the file
-				String a = DialogModule.textInputDialog("Rename wrong formatted file", selectedFile.getName(),
-						"Rename the file", "Enter a new name:");
+				String a = DialogModule.fileRenameDialog(selectedFile.getName());
 				if (a != null) {
 					FileReadWriteModule.rename(selectedFile,
 							Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
@@ -1487,11 +1504,13 @@ public class MainWindowController {
 	@FXML
 	private void savePlaylistDialog() {
 		if (this.tableDataPlaylist.isEmpty()) {
-			DialogModule.informationAlert("Operation failed", "There is no playlist!", AlertType.ERROR);
+			DialogModule.informationAlert(Internationalization.translate("Operation failed"),
+					Internationalization.translate("There is no playlist") + "!", AlertType.ERROR);
 		} else {
-			ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
-			File[] fileName = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(), "Save current playlist", null,
-					new ExtensionFilter[] { jsonFilter }, DialogModule.CHOOSE_ACTION.SAVE);
+			ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("Json File"), "*.json");
+			File[] fileName = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(),
+					Internationalization.translate("Save current playlist"), null, new ExtensionFilter[] { jsonFilter },
+					DialogModule.CHOOSE_ACTION.SAVE);
 			if (fileName != null && fileName[0] != null) {
 				File realFileName = new File(fileName[0].getParent() + "/" + fileName[0].getName());
 				this.tableDataPlaylist.clear();
@@ -1504,12 +1523,14 @@ public class MainWindowController {
 
 	@FXML
 	private void loadPlaylistDialog() {
-		if (this.tableDataPlaylist.isEmpty() || DialogModule.yesNoDialog("This action has consequences",
-				"Do you really want to clear your current playlist?",
-				"The current playlist will be cleared if you continue")) {
-			ExtensionFilter jsonFilter = new ExtensionFilter("Json File", "*.json");
-			File[] fileName = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(), "Load a saved playlist", null,
-					new ExtensionFilter[] { jsonFilter }, DialogModule.CHOOSE_ACTION.NORMAL);
+		if (this.tableDataPlaylist.isEmpty()
+				|| DialogModule.yesNoDialog(Internationalization.translate("This action has consequences"),
+						Internationalization.translate("Do you really want to clear your current playlist") + "?",
+						Internationalization.translate("The current playlist will be cleared if you continue"))) {
+			ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("JSON file"), "*.json");
+			File[] fileName = DialogModule.chooseFile(this.mainWindow.getPrimaryStage(),
+					Internationalization.translate("Load a saved playlist"), null, new ExtensionFilter[] { jsonFilter },
+					DialogModule.CHOOSE_ACTION.NORMAL);
 			if (fileName != null && fileName[0] != null) {
 				this.mainWindow.getMusicVideohandler().loadPlaylist(fileName[0]);
 			}
@@ -1543,7 +1564,7 @@ public class MainWindowController {
 		// if something is selected
 		if (selectedEntry != null) {
 			String[] authorComment = DialogModule.playlistEditDialog(selectedEntry.getAuthor(),
-					selectedEntry.getComment(), "Edit the selected Playlist entry", "Edit author and comment");
+					selectedEntry.getComment());
 
 			if (authorComment != null && authorComment[0] != null) {
 				this.lastName = authorComment[0];
@@ -1592,9 +1613,10 @@ public class MainWindowController {
 
 	@FXML
 	private void clearMusicVideoPlaylistTable() {
-		if (!this.tableDataPlaylist.isEmpty()
-				&& DialogModule.yesNoDialog("Clear the playlist", "Do you really want to clear the playlist?",
-						"If you enter yes all playlist elements will be removed!")) {
+		if (!this.tableDataPlaylist.isEmpty() && DialogModule.yesNoDialog(
+				Internationalization.translate("Clear playlist"),
+				Internationalization.translate("Do you really want to clear your current playlist") + "?",
+				Internationalization.translate("If you enter yes all playlist elements will be removed") + "!")) {
 			this.mainWindow.getMusicVideohandler().clearPlaylist();
 			this.tableDataPlaylist.clear();
 		}

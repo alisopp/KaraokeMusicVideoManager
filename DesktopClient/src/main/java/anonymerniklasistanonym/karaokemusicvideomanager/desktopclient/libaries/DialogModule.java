@@ -397,11 +397,12 @@ public class DialogModule {
 	 * 
 	 * @return
 	 */
-	public static String[] playlistEditDialog(String author, String comment, String title, String header) {
+	public static String[] playlistEditDialog(String author, String comment) {
 		// Create the custom dialog.
 		Dialog<Pair<String, String>> dialog = new Dialog<>();
-		dialog.setTitle(title);
-		dialog.setHeaderText(header);
+
+		dialog.setTitle(Internationalization.translate("Edit the selected Playlist entry"));
+		dialog.setHeaderText(Internationalization.translate("Edit author and comment"));
 
 		// Get the Stage.
 		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
@@ -473,6 +474,7 @@ public class DialogModule {
 		alert.setTitle(title);
 		alert.setHeaderText(null);
 		alert.setContentText(text);
+		alert.initStyle(StageStyle.UTILITY);
 
 		alert.showAndWait();
 	}
@@ -480,16 +482,16 @@ public class DialogModule {
 	/**
 	 * Rename dialog
 	 */
-	public static String fileRenameDialog(String header, String contentOfTextField) {
+	public static String fileRenameDialog(String contentOfTextField) {
 
 		// create a new text input dialog
 		TextInputDialog dialog = new TextInputDialog(contentOfTextField);
 
 		// set a window title
-		dialog.setTitle(Internationalization.translate("Rename"));
+		dialog.setTitle(Internationalization.translate("Rename File"));
 
 		// set a header title
-		dialog.setHeaderText(header);
+		dialog.setHeaderText(Internationalization.translate("Rename the following file") + ":");
 		dialog.setGraphic(
 				new ImageView(new Image(ClassResourceReaderModule.getInputStream("images/icons/rename.png"))));
 		dialog.setResizable(true);

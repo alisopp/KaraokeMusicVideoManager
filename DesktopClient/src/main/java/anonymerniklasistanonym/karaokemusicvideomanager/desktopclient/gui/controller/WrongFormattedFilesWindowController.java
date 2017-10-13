@@ -309,8 +309,7 @@ public class WrongFormattedFilesWindowController {
 			if (selectedFile.exists() && selectedFile.isFile()) {
 
 				// show dialog to rename the file
-				String a = DialogModule.textInputDialog("Rename wrong formatted file", selectedFile.getName(),
-						"Rename the file", "Enter a new name:");
+				String a = DialogModule.fileRenameDialog(selectedFile.getName());
 
 				// if the dialogs response isn't null
 				if (a != null) {

@@ -10,7 +10,7 @@
 ;General
 
   ;Define name of the product
-  !define PRODUCT "MusicVideoManager"
+  !define PRODUCT "KaraokeMusicVideoManager"
   !define DOCDIR "$PROFILE\${PRODUCT}"
   !define ABOUTURL "https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager"
   !define INSTALLATIONURL "https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager"

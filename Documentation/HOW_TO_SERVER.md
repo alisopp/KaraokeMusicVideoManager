@@ -215,6 +215,6 @@ This number is the address of your router in your home network.
 
 Write everything on a paper and you can start:
 
-| IP address   | Username                   | Password                                 |
-| ------------ | -------------------------- | ---------------------------------------- |
-| 192.168.0.42 | your just jet created user | the password to your just jet created user |
+| IP address   | Username                   | Password                                 | "Server" directory                       |
+| ------------ | -------------------------- | ---------------------------------------- | ---------------------------------------- |
+| 192.168.0.42 | Your just jet created user | The password to your just jet created user | The path to the directory which contains the `index.html` or `index.phph` file which is displayed in the browser if you enter the IP address |

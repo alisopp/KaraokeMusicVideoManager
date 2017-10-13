@@ -151,8 +151,9 @@ public class ServerLoginWindowController {
 		} else {
 
 			// if the login didn't worked out show a dialog
-			DialogModule.informationAlert("SFTP connection could not bes established", "Please try to login again",
-					AlertType.INFORMATION);
+			DialogModule.informationAlert(
+					Internationalization.translate("SFTP connection could not be established") + "!",
+					Internationalization.translate("Please try to login again"), AlertType.INFORMATION);
 		}
 
 	}

@@ -213,14 +213,6 @@ public class RandomWindowController {
 	 */
 	private void addVideoMain(int position, boolean addAll) {
 
-		// create a different header for one file and all
-		String header;
-		if (addAll) {
-			header = Internationalization.translate("Create 5 new Playlist entries");
-		} else {
-			header = Internationalization.translate("Create a new Playlist entry");
-		}
-
 		// open a dialog to input name and comment
 		final String[] authorComment = DialogModule.playlistDialog(this.mainWindowController.getLastName(), "");
 

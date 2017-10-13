@@ -1,6 +1,9 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames;
 
+import java.util.Locale;
+
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ClassResourceReaderModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.translations.Internationalization;
 import javafx.application.Preloader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -57,13 +60,15 @@ public class CustomPreloader extends Preloader {
 
 		System.out.println("Preloader initalisation");
 
+		// set the language in relation to the Java Runtime language
+		Internationalization.setBundle(Locale.getDefault());
+
 		// setup a preloader image
 		final ImageView preloadImage = new ImageView();
 		preloadImage.setImage(new Image(ClassResourceReaderModule.getInputStream("images/preload.png")));
 
 		// setup the preloader's bottom text
-		final Text versionAndNameText = new Text(10, 20, "MusicVideoManager v2.0.0");
-		versionAndNameText.setText("MusicVideoManager v2.0.0");
+		final Text versionAndNameText = new Text(10, 20, "KaraokeMusicVideoManager v2.0.0");
 		versionAndNameText.setFont(Font.font(16));
 		versionAndNameText.setFill(Color.GREY);
 
