@@ -47,6 +47,13 @@
 
 	<build>
 		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+
 			<!-- Delete if no solution will be found: Add resource folder and files to maven -->
 			<resource>
 				<directory>res</directory>
