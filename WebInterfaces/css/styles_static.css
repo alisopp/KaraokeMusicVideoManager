@@ -1,0 +1,128 @@
+@charset "utf-8";
+
+
+/* The whole site: */
+
+body {
+	/* No space anywhere for fixed elements */
+	margin: 0;
+	padding: 0;
+	/* Font for the whole site */
+	font-family: Arial,sans-serif;
+}
+
+
+/* The area where all the content (table) is: */
+
+section {
+	/* Maximum site width */
+	max-width: 1200px;
+	/* Center the whole body */
+	margin: auto;
+}
+
+
+/* The table: */
+
+table {
+	/* The table is always as wide as it can get in the section */
+	width: 100%;
+	/* All table borders are one border - not detached */
+	border-collapse: collapse;
+	/* We do not want a table/cell border */
+	border-width: 0;
+	/* All the text is left aligned */
+	text-align: left;
+}
+
+/* Each row of the table body: */
+
+tbody > tr {
+	/* The bottom border of each cell is light grey and 1px thick */
+	border-bottom: 1pt solid #dddddd;
+}
+
+/* The table head cells, the table body cells: */
+
+th,
+td {
+	/* Each cell has a 8px invisible padding */
+	padding: 8px;
+}
+
+/* The table head and body cells: [their first element] */
+
+th:nth-child(1),
+td:nth-child(1) {
+	/* The first cell in every row has a 16px invisible padding */
+	padding-left: 16px;
+}
+
+/* The table head cells: */
+
+th {
+	/* The border has the same color like the background - dark grey */
+	border-color: #616161;
+	background-color: #616161;
+	/* Set the text color to white because of the dark background */
+	color: white;
+	/* Make the text bold */
+	font-weight: bold;
+}
+
+
+/* MEDIA TAGS */
+
+/* CSS for small devices (smartphones): */
+
+@media screen and (max-width: 50em) {
+	/* The area where the table is located */
+	section {
+		/* Zero space between the area and the window border */
+		padding: 0;
+	}
+}
+
+/* CSS for normal to big devices (tablets, laptops, desktop, ...): */
+
+@media screen and (min-width: 50em) {
+	/* The area where the table is located */
+	section {
+		/* A bit space between the area and the window border */
+		padding: 2rem;
+	}
+}
+
+/* CSS in case someone wants to print the site: */
+
+@media print {
+	/* Settings for the page if it should be printed */
+	@page {
+		/* Paper default size: */
+		size: A4;
+		/* Invisible border around everything: */
+		margin: 2rem;
+		/* Paper default alignment: */
+		size: portrait;
+	}
+	/* The table: */
+	table {
+		/* Has a black border now */
+		border: 1pt solid black;
+	}
+	/* The table head row cells: */
+	thead > tr > th {
+		/* The border is now black */
+		border-color: black;
+		/* No background color */
+		background-color: transparent;
+		/* Black text */
+		color: black;
+	}
+	/* The table head row, The table body row cells: */
+	thead > tr,
+	tbody > tr > td {
+		/* The bottom border of each cell is black */
+		border-bottom: 1pt solid black;
+	}
+}

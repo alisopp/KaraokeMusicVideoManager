@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="DesktopClient">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../../../eclipse/java-oxygen/eclipse/"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="Maven Dependencies.libraryclasspath">
+        <pathelement location="../../../../.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar"/>
+        <pathelement location="../../../../.m2/repository/javax/json/javax.json-api/1.1/javax.json-api-1.1.jar"/>
+        <pathelement location="../../../../.m2/repository/org/glassfish/javax.json/1.1/javax.json-1.1.jar"/>
+        <pathelement location="../../../../.m2/repository/com/jcraft/jsch/0.1.54/jsch-0.1.54.jar"/>
+    </path>
+    <path id="DesktopClient.classpath">
+        <pathelement location="target/classes"/>
+        <pathelement location="target/test-classes"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.#NewRun.classpath">
+        <path refid="DesktopClient.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.App (1).classpath">
+        <path refid="DesktopClient.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.App (2).classpath">
+        <path refid="DesktopClient.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.App.classpath">
+        <path refid="DesktopClient.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.AppTest.classpath">
+        <path refid="DesktopClient.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.ClientSFTP.classpath">
+        <path refid="DesktopClient.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.DialogClosing.classpath">
+        <path refid="DesktopClient.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.Dialogs.classpath">
+        <path refid="DesktopClient.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.JsonModule.classpath">
+        <path refid="DesktopClient.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.Main (1).classpath">
+        <path refid="DesktopClient.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.MainWindow (1).classpath">
+        <path refid="DesktopClient.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.MainWindow.classpath">
+        <path refid="DesktopClient.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.test.classpath">
+        <path refid="DesktopClient.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <target name="init">
+        <mkdir dir="target/classes"/>
+        <mkdir dir="target/test-classes"/>
+        <copy includeemptydirs="false" todir="target/classes">
+            <fileset dir="src/main/java">
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.useq"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="target/test-classes">
+            <fileset dir="src/test/java">
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.useq"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="target/classes"/>
+        <delete dir="target/test-classes"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="target/classes" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src/main/java"/>
+            <classpath refid="DesktopClient.classpath"/>
+        </javac>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="target/test-classes" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src/test/java"/>
+            <classpath refid="DesktopClient.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="#NewRun">
+        <java classname="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.App" failonerror="true" fork="yes">
+            <classpath refid="run.#NewRun.classpath"/>
+        </java>
+    </target>
+    <target name="App (1)">
+        <java classname="AnonymerNiklasistanonym.KaraokeMusicVideoManager.DesktopClient.GUI.App" failonerror="true" fork="yes">
+            <classpath refid="run.App (1).classpath"/>
+        </java>
+    </target>
+    <target name="App (2)">
+        <java classname="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.App" failonerror="true" fork="yes">
+            <classpath refid="run.App (2).classpath"/>
+        </java>
+    </target>
+    <target name="App">
+        <java classname="AnonymerNiklasistanonym.KaraokeMusicVideoManager.DesktopClient.GUI.App" failonerror="true" fork="yes">
+            <classpath refid="run.App.classpath"/>
+        </java>
+    </target>
+    <target name="AppTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="AnonymerNiklasistanonym.KaraokeMusicVideoManager.DesktopClient.AppTest" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="run.AppTest.classpath"/>
+        </junit>
+    </target>
+    <target name="ClientSFTP">
+        <java classname="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.network.sftp.ClientSFTP" failonerror="true" fork="yes">
+            <classpath refid="run.ClientSFTP.classpath"/>
+        </java>
+    </target>
+    <target name="DialogClosing">
+        <java classname="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.DialogClosing" failonerror="true" fork="yes">
+            <classpath refid="run.DialogClosing.classpath"/>
+        </java>
+    </target>
+    <target name="Dialogs">
+        <java classname="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.dialogs.Dialogs" failonerror="true" fork="yes">
+            <classpath refid="run.Dialogs.classpath"/>
+        </java>
+    </target>
+    <target name="JsonModule">
+        <java classname="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.json.JsonModule" failonerror="true" fork="yes">
+            <classpath refid="run.JsonModule.classpath"/>
+        </java>
+    </target>
+    <target name="Main (1)">
+        <java classname="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.MainWindow" failonerror="true" fork="yes">
+            <classpath refid="run.Main (1).classpath"/>
+        </java>
+    </target>
+    <target name="MainWindow (1)">
+        <java classname="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.MainWindow" failonerror="true" fork="yes">
+            <classpath refid="run.MainWindow (1).classpath"/>
+        </java>
+    </target>
+    <target name="MainWindow">
+        <java classname="AnonymerNiklasistanonym.KaraokeMusicVideoManager.DesktopClient.GUI.Frames.MainWindow" failonerror="true" fork="yes">
+            <classpath refid="run.MainWindow.classpath"/>
+        </java>
+    </target>
+    <target name="test">
+        <java classname="anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.network.sftp.test" failonerror="true" fork="yes">
+            <classpath refid="run.test.classpath"/>
+        </java>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+</project>

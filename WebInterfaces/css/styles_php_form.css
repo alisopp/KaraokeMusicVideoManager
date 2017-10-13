@@ -1,0 +1,230 @@
+@charset "utf-8";
+
+
+/* The whole site: */
+
+body {
+	/* No space anywhere for fixed elements */
+	margin: 0;
+	padding: 0;
+	/* Font for the whole site */
+	font-family: arial, sans-serif;
+	/* Increase the font size */
+	font-size: 20px;
+}
+
+
+/* The area where all the content (table) is: */
+
+section {
+	/* Maximum site width */
+	max-width: 600px;
+	/* Center the whole body */
+	margin: auto;
+}
+
+
+/* The submit form in the section: */
+
+.submit-form {
+	/* Add a small padding */
+	padding: 2rem;
+	/* Add a bprder radius to round the corners */
+	border-radius: 30px;
+	/* Color the background */
+	background-color: #24a204;
+	/* Make the text color because of the background color white */
+	color: white;
+	/* Text should be centered */
+	text-align: center;
+}
+
+
+/* Simple input text field: */
+
+input {
+	background-color: white;
+	border-radius: 0.2em;
+	border: 2px solid lightgray;
+	box-sizing: border-box;
+	color: black;
+	font-family: inherit;
+	font-size: inherit;
+	min-width: 15em;
+	outline: none;
+	padding: 0.6em;
+	-webkit-transition: 0.4s;
+	margin: 0.5rem;
+}
+
+/* Simple input text field on hover: */
+
+input:hover {
+	border-color: silver;
+}
+
+/* Simple input text field on focus: */
+
+input:focus {
+	border-color: darkgray;
+}
+
+/* Simple input text field that is requiered on focus: */
+
+input:focus:required:invalid {
+	color: red;
+	border-color: red;
+	box-shadow: 0 0 6px red;
+}
+
+/* Simple input text field that is required but invalid: */
+
+input:required:invalid {
+	background-color: #ff0000;
+	border: 2px solid #ff0000;
+	box-sizing: border-box;
+	color: white;
+	padding: 0.6em;
+}
+
+/* Simple input text field placeholder: */
+
+::-webkit-input-placeholder {
+	/* WebKit, Blink, Edge */
+	color: darkgray;
+}
+
+/* Simple input text field placeholder if input is required: */
+
+input:required:invalid::-webkit-input-placeholder {
+	/* WebKit, Blink, Edge */
+	color: white;
+	font-weight: bold;
+}
+
+
+/* Properties for the form title text: */
+
+.form-title {
+	font-weight: bold;
+	margin-top: 0;
+	font-size: 30px;
+}
+
+/* Properties for the song title text: */
+
+.song-title {
+	font-size: 24px;
+	margin-top: 2rem;
+	margin-bottom: 0.2rem;
+}
+
+/* Properties for the artist title text: */
+
+.artist-title {
+	margin-top: 0.2rem;
+	margin-bottom: 3rem;
+}
+
+
+/* Properties for the submit button: */
+
+.submit-button {
+	margin-top: 3rem;
+	border-radius: 1000px;
+	min-width: 7em;
+	cursor: pointer;
+}
+
+
+/* Floating button properties: */
+
+.floating-button {
+	/* Set the fixed position of the floating button */
+	position: fixed;
+	bottom: 23px;
+	right: 23px;
+	/* Set width and height */
+	width: 60px;
+	height: 60px;
+	/* Make it round */
+	border-radius: 50px;
+	/* Aglin text centered */
+	text-align: center;
+	/* Give it some box shadow */
+	box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
+	/* Add a background image */
+	/* The image is from material.io (https://material.io/icons/#ic_arrow_back - 48dp) */
+	/* and was decoded with this tool from yoksel: https://codepen.io/yoksel/details/JDqvs */
+	background: url(data:image/svg+xml,%3Csvg%20fill%3D%22%23FFFFFF%22%20height%3D%2248%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2248%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%200h24v24H0z%22%20fill%3D%22none%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M21%2011H6.83l3.58-3.59L9%206l-6%206%206%206%201.41-1.41L6.83%2013H21z%22/%3E%0A%3C/svg%3E) no-repeat 8px;
+	/* Add color and background color */
+	background-color: #24a204;
+	color: #FFF;
+}
+
+/* Floating button on hover/touch: */
+
+.floating-button:hover {
+	/* Change the box shadow for a depth effect */
+	box-shadow: 0 0 6px rgba(0,0,0,.16), 0 6px 12px rgba(0,0,0,.32);
+	/* Add animation duration */
+	transition: box-shadow 150ms cubic-bezier(0,0,.2,1);
+}
+
+
+/* MEDIA TAGS */
+
+/* CSS for small devices (smartphones): */
+
+@media screen and (max-width: 50em) {
+	/* Everything */
+	body {
+		/* Change background color to form bg color */
+		background-color: #24a204;
+	}
+}
+
+
+/* CSS for normal to big devices (tablets, laptops, desktop, ...): */
+
+@media screen and (min-width: 50em) {
+	/* Everything */
+	body {
+		/* Make background color white-grey */
+		background-color: whitesmoke;
+	}
+}
+
+/* MEDIA TAGS */
+
+/* CSS for small devices (smartphones): */
+
+@media screen and (max-width: 50em) {
+	/* The area where the table is located */
+	section {
+		/* Zero space between the area and the window border */
+		padding: 0;
+	}
+	/* Floating button properties: */
+	.floating-button {
+		/* Give it some box shadow */
+		box-shadow: 0px 0px 0px rgba(153, 153, 153, 0);
+	}
+	/* Floating button on hover/touch: */
+	.floating-button:hover {
+		/* make the background color a bit brighter */
+		background-color: #25b701;
+		/* Change the box shadow for a depth effect */
+		box-shadow: 0px 0px 0px rgba(153, 153, 153, 0);
+	}
+}
+
+/* CSS for normal to big devices (tablets, laptops, desktop, ...): */
+
+@media screen and (min-width: 50em) {
+	/* The area where the table is located */
+	section {
+		/* A bit space between the area and the window border */
+		padding: 2rem;
+	}
+}

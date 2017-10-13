@@ -1,0 +1,196 @@
+@charset "utf-8";
+
+
+/* A fixed overlay for a second thead and a search bar */
+
+.fixed-search-overlay {
+	/* Fix it to the top with zero space */
+	position: fixed;
+	top: 0;
+	/* Make it whote so that you cannot see that text sliding under it */
+	background-color: white;
+	/* It should only be as wide as the section */
+	max-width: 1200px;
+	/* No space or padding */
+	margin: 0;
+	padding: 0;
+}
+
+/* Searchbar properties: */
+
+.fixed-searchbar {
+	/* No space left and right */
+	margin-left: 0;
+	margin-right: 0;
+	/* Add a solid grey border */
+	border: 1px solid #ccc;
+	/* Font size a bit bigger than normal */
+	font-size: 16px;
+	/* A search icon */
+	/* The image is from material.io (https://material.io/icons/#ic_search - 24dp) */
+	/* and was decoded with this tool from yoksel: https://codepen.io/yoksel/details/JDqvs */
+	/* [I changed the default color #000000 to #616161] */
+	background: url(data:image/svg+xml,%3Csvg%20fill%3D%22%23616161%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M15.5%2014h-.79l-.28-.27C15.41%2012.59%2016%2011.11%2016%209.5%2016%205.91%2013.09%203%209.5%203S3%205.91%203%209.5%205.91%2016%209.5%2016c1.61%200%203.09-.59%204.23-1.57l.27.28v.79l5%204.99L20.49%2019l-4.99-5zm-6%200C7.01%2014%205%2011.99%205%209.5S7.01%205%209.5%205%2014%207.01%2014%209.5%2011.99%2014%209.5%2014z%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%200h24v24H0z%22%20fill%3D%22none%22/%3E%0A%3C/svg%3E) no-repeat 8px;
+	/* Position the icon at the right */
+	background-size: auto 100%;
+}
+
+/* Searchbar on hover/touch: */
+
+.fixed-searchbar:focus {
+	/* No border on focus */
+	outline-width: 0;
+	border: 1px solid #24a204;
+}
+
+
+/* The table with all the data: */
+
+#search-table {
+	margin-top: calc(6em - 4px);
+}
+
+/* The first table cell and every first normal cell: */
+
+th:nth-child(1),
+td:nth-child(1) {
+	/* A general width for the number */
+	width: 15%;
+}
+
+/* The second table cell and every second normal cell: */
+
+th:nth-child(2),
+td:nth-child(2) {
+	/* A general width for the artist string */
+	width: 35%;
+}
+
+/* The third table cell and every third normal cell: */
+
+th:nth-child(3),
+td:nth-child(3) {
+	/* A general width for the title string */
+	width: 50%;
+}
+
+/* The table head cells on hover/touch: */
+
+th:hover {
+	/* On selection make border and background darker */
+	background-color: #333333;
+	/* Notify with another cursor that this is interactive */
+	cursor: pointer;
+}
+
+/* On hover of a table row do this with all cells of the table row: */
+
+tr:hover td {
+	/* Color everything green */
+	background-color: #24a204;
+	border-color: #24a204;
+	/* If we color everything we need to make the text white */
+	color: white;
+}
+
+/* A second thead that is only there for printing */
+
+.printhead {
+	/* Make it invisible during normal use */
+	display: none;
+}
+
+
+/* MEDIA TAGS */
+
+/* CSS for small devices (smartphones): */
+
+@media screen and (max-width: 50em) {
+	/* The fixed overlay: */
+	.fixed-search-overlay {
+		/* Go with the maximal width */
+		width: 100%;
+	}
+	/* The searchbar that is fixed on the search overlay: */
+	.fixed-searchbar {
+		margin-top: 0;
+		padding-top: 1.2rem;
+		padding-bottom: 1.2rem;
+		margin-bottom: 0;
+		padding-left: 5rem;
+		width: calc(100% - 1rem - 2px);
+	}
+	/* The table header that is fixed on the search overlay */
+	.fixed-header {
+		/* No space at the top */
+		margin-top: 0;
+	}
+
+}
+
+/* CSS for normal to big devices (tablets, laptops, desktop, ...): */
+
+@media screen and (min-width: 50em) {
+	/* The fixed overlay: */
+	.fixed-search-overlay {
+		/* Go not with the maximal width - with -4rem as wide as the data table */
+		width: calc(100% - 4rem);
+	}
+	/* The searchbar that is fixed on the search overlay: */
+	.fixed-searchbar {
+		/* A bit space at the top */
+		margin-top: 1rem;
+		/* Make the the input field a little higher */
+		padding-top: 0.8rem;
+		padding-bottom: 0.8rem;
+		/* Increase the (icon) space because it's (the icon) bigger */
+		padding-left: 4rem;
+		/* Calculate a width that is as big as the data table */
+		width: calc(100% - 4rem - 2px);
+	}
+	/* The table header that is fixed on the search overlay */
+	.fixed-header {
+		/* A bit space at the top */
+		margin-top: 1rem;
+	}
+}
+
+/* CSS in case someone wants to print the site: */
+
+@media print {
+	/* The fixed overlay: */
+	.fixed-search-overlay {
+		/* Remove the fixed overlay - we only want the data table */
+		display: none;
+	}
+	/* A second thead that is only there for printing */
+	.printhead {
+		/* Display it now */
+		display: table-header-group;
+	}
+	/* The data table */
+	#search-table {
+		/*  Remove the space to the top */
+		margin-top: 0;
+	}
+	/* The table head row, ... everything so that the table is completly print friendly: */
+	thead > tr:hover,
+	thead > tr,
+	tbody > tr > td:hover,
+	tbody > tr > td,
+	tbody > tr:hover,
+	tbody > tr,
+	thead > tr > th:hover,
+	thead > tr > th,
+	th:hover,
+	tr:hover td {
+		/* Every cell has a translucent background */
+		background-color: transparent;
+		/* The bottom border of each cell is black */
+		border-bottom: 1pt solid black;
+		/* The text is black */
+		color: black;
+		/* Every border is black */
+		border-color: black;
+	}
+}
