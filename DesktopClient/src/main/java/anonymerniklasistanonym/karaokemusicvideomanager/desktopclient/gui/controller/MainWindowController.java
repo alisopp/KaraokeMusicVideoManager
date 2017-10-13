@@ -16,6 +16,7 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.F
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoPlaylistElement;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.translations.Internationalization;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -834,7 +835,7 @@ public class MainWindowController {
 					Stage stage = new Stage(StageStyle.DECORATED);
 					stage.setScene(new Scene(root1));
 					stage.setResizable(false);
-					stage.setTitle("Server Login");
+					stage.setTitle(Internationalization.translate("Server Login"));
 
 					// try to add a window icon
 					try {
@@ -898,9 +899,9 @@ public class MainWindowController {
 			Stage stage = new Stage(StageStyle.DECORATED);
 			stage.setScene(new Scene(root1));
 			stage.setResizable(true);
-			stage.setMinWidth(450);
+			stage.setMinWidth(500);
 			stage.setMinHeight(350);
-			stage.setTitle("Wrong Formatted Files");
+			stage.setTitle(Internationalization.translate("Wrong Formatted Files"));
 
 			// try to add a window icon
 			try {
@@ -941,7 +942,7 @@ public class MainWindowController {
 			stage.setResizable(true);
 			stage.setMinWidth(450);
 			stage.setMinHeight(350);
-			stage.setTitle("Ignored Music Video Files");
+			stage.setTitle(Internationalization.translate("Ignored Music Video Files"));
 
 			// try to add a window icon
 			try {
@@ -981,9 +982,9 @@ public class MainWindowController {
 			stage.setScene(new Scene(root1));
 			stage.setResizable(true);
 			stage.setMinHeight(300);
-			stage.setMinWidth(600);
+			stage.setMinWidth(650);
 
-			stage.setTitle("Random music video files");
+			stage.setTitle(Internationalization.translate("Random music video files"));
 
 			// try to add a window icon
 			try {

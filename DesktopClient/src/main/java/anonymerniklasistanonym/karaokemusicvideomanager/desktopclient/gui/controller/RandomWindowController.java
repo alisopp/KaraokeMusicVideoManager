@@ -8,6 +8,7 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.E
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoRandomElement;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.translations.Internationalization;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -155,6 +156,26 @@ public class RandomWindowController {
 
 		// now refresh/create the random music video list
 		refreshRandom();
+		translateText();
+
+	}
+
+	public void translateText() {
+
+		randomPlay1.setText(Internationalization.translate("play"));
+		randomPlay2.setText(Internationalization.translate("play"));
+		randomPlay3.setText(Internationalization.translate("play"));
+		randomPlay4.setText(Internationalization.translate("play"));
+		randomPlay5.setText(Internationalization.translate("play"));
+
+		randomAdd1.setText(Internationalization.translate("add"));
+		randomAdd2.setText(Internationalization.translate("add"));
+		randomAdd3.setText(Internationalization.translate("add"));
+		randomAdd4.setText(Internationalization.translate("add"));
+		randomAdd5.setText(Internationalization.translate("add"));
+
+		buttonRefresh.setText(Internationalization.translate("Refresh"));
+		buttonAddAll.setText(Internationalization.translate("Add all to Playlist"));
 
 	}
 
@@ -195,14 +216,15 @@ public class RandomWindowController {
 		// create a different header for one file and all
 		String header;
 		if (addAll) {
-			header = "Create 5 new Playlist entries";
+			header = Internationalization.translate("Create 5 new Playlist entries");
 		} else {
-			header = "Create a new Playlist entry";
+			header = Internationalization.translate("Create a new Playlist entry");
 		}
 
 		// open a dialog to input name and comment
 		final String[] authorComment = DialogModule.playlistDialog(this.mainWindowController.getLastName(), "", header,
-				"Add an author and comment", "Add to playlist");
+				Internationalization.translate("Add an author and comment"),
+				Internationalization.translate("Add to playlist"));
 
 		// if at least the author wasn't null
 		if (authorComment != null && authorComment[0] != null) {
@@ -373,8 +395,8 @@ public class RandomWindowController {
 			this.labelContent[i] = new MusicVideoRandomElement(allFiles[randomNumber], randomNumber);
 
 			// set the text to each label of this entry
-			this.allLabels[i].setText(this.labelContent[i].getMusicVideo().getTitle() + " from "
-					+ this.labelContent[i].getMusicVideo().getArtist());
+			this.allLabels[i].setText(this.labelContent[i].getMusicVideo().getTitle() + " "
+					+ Internationalization.translate("from") + " " + this.labelContent[i].getMusicVideo().getArtist());
 		}
 
 	}

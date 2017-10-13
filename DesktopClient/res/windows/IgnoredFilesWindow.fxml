@@ -44,7 +44,7 @@
                <contextMenu>
                   <ContextMenu>
                     <items>
-                        <MenuItem fx:id="contextIgnore" mnemonicParsing="false" onAction="#ignoreFile" text="Remove from Ignored Files" />
+                        <MenuItem fx:id="contextIgnore" mnemonicParsing="false" onAction="#ignoreFile" text="Remove file from list" />
                       <MenuItem fx:id="contextRename" mnemonicParsing="false" onAction="#renameFile" text="Rename File" />
                         <MenuItem fx:id="contextExplorer" mnemonicParsing="false" onAction="#showInDirectory" text="Show Directory of File" />
                         <MenuItem fx:id="contextClear" mnemonicParsing="false" onAction="#clearRowSelection" text="Clear Selection" />

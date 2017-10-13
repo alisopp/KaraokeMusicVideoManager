@@ -165,6 +165,7 @@ public class MainWindow {
 
 				// if they are different open a special dialog
 				DialogModule.mainStageClose(e, this.mainClass.getMusicVideohandler());
+				return;
 			}
 		}
 

@@ -9,6 +9,7 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.D
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.translations.Internationalization;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -127,6 +128,19 @@ public class IgnoredFilesWindowController {
 
 	}
 
+	private void translateText() {
+		columnFilePath.setText(Internationalization.translate("File Paths"));
+		contextRename.setText(Internationalization.translate("Rename File"));
+		contextExplorer.setText(Internationalization.translate("Show Directory of File"));
+		contextIgnore.setText(Internationalization.translate("Remove file from list"));
+		contextClear.setText(Internationalization.translate("Clear Selection"));
+		contextRefresh.setText(Internationalization.translate("Refresh"));
+
+		buttonClearList.setText(Internationalization.translate("Remove All Files from Ignored Files"));
+		searchLabel.setText(Internationalization.translate("Search for ignored files") + ":");
+
+	}
+
 	/**
 	 * This method get's called when the FXML file get's loaded
 	 */
@@ -192,6 +206,8 @@ public class IgnoredFilesWindowController {
 
 		// label icon
 		searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
+
+		translateText();
 	}
 
 	/**

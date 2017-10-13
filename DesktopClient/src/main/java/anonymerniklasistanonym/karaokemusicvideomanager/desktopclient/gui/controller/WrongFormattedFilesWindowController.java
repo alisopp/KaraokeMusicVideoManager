@@ -10,6 +10,7 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.D
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.translations.Internationalization;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -120,6 +121,16 @@ public class WrongFormattedFilesWindowController {
 		updateWrongFileTable();
 	}
 
+	private void translateText() {
+		columnFilePath.setText(Internationalization.translate("File Paths"));
+		contextRename.setText(Internationalization.translate("Rename File"));
+		contextExplorer.setText(Internationalization.translate("Show Directory of File"));
+		contextIgnore.setText(Internationalization.translate("Ignore File"));
+		contextClear.setText(Internationalization.translate("Clear Selection"));
+		contextRefresh.setText(Internationalization.translate("Refresh"));
+		searchLabel.setText(Internationalization.translate("Search for wrong formatted files") + ":");
+	}
+
 	/**
 	 * This method get's called when the FXML file get's loaded
 	 */
@@ -182,6 +193,8 @@ public class WrongFormattedFilesWindowController {
 
 		// label
 		searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
+
+		translateText();
 	}
 
 	/**

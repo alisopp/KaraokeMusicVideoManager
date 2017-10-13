@@ -2,9 +2,11 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.contr
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.translations.Internationalization;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -50,6 +52,17 @@ public class ServerLoginWindowController {
 	@FXML
 	private Button loginButton;
 
+	@FXML
+	private Label labelLogin;
+	@FXML
+	private Label labelAddress;
+	@FXML
+	private Label labelFilePath;
+	@FXML
+	private Label labelUserName;
+	@FXML
+	private Label labelPassword;
+
 	/**
 	 * The own stage (connection to be able to close it within a method)
 	 */
@@ -91,6 +104,27 @@ public class ServerLoginWindowController {
 			this.userName.setText(username);
 		}
 
+	}
+
+	private void translateText() {
+
+		labelLogin.setText(Internationalization.translate("Welcome to the server login") + "!");
+		labelAddress.setText(Internationalization.translate("IP address") + ":");
+		labelFilePath.setText(Internationalization.translate("Working directory") + ":");
+		labelUserName.setText(Internationalization.translate("User name") + ":");
+		labelPassword.setText(Internationalization.translate("SFTP password") + ":");
+
+		loginButton.setText(Internationalization.translate("Connect"));
+
+		serverIpAddress.setPromptText(Internationalization.translate("Server address"));
+		workingDirectory.setPromptText(Internationalization.translate("Path of the website folder"));
+		userName.setPromptText(Internationalization.translate("SFTP user name"));
+		userPassword.setPromptText(Internationalization.translate("SFTP password"));
+	}
+
+	@FXML
+	private void initialize() {
+		translateText();
 	}
 
 	/**

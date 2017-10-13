@@ -21,6 +21,7 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.F
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.JsonModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoPlaylistElement;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.translations.Internationalization;
 
 /**
  * Class that handles everything about music video files
@@ -77,11 +78,12 @@ public class MusicVideoHandler {
 	public MusicVideoHandler() {
 		this.programDataHandler = new ProgramDataHandler();
 		this.settingsFile = new File("settings.json");
-		this.columnNames = new String[] { "#", "Artist", "Title" };
+		this.columnNames = new String[] { "#", Internationalization.translate("Artist"),
+				Internationalization.translate("Title") };
 		this.playlistHandler = new MusicVideoPlaylistHandler();
 		this.sftpController = new SftpHandler();
 		this.faviconSizes = new int[] { 16, 32, 48, 64, 94, 128, 160, 180, 194, 256, 512 };
-		this.programName = "MusicVideoManager";
+		this.programName = Internationalization.translate("MusicVideoManager");
 	}
 
 	// Methods

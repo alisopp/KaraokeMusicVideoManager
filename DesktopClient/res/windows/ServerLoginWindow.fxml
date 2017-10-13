@@ -18,7 +18,7 @@
       <children>
         <VBox spacing="10.0" style="-fx-background-color: white;">
           <children>
-                  <Label style="-fx-background-color: white;" text="Welcome to the server login!" wrapText="true">
+                  <Label fx:id="labelLogin" style="-fx-background-color: white;" text="Welcome to the server login!" wrapText="true">
                      <font>
                         <Font size="23.0" />
                      </font>
@@ -31,14 +31,14 @@
                   </Label>
             <GridPane>
               <children>
-                        <Label text="IP address:" />
+                        <Label fx:id="labelAddress" text="IP address:" />
                         <TextField fx:id="serverIpAddress" onKeyReleased="#checkConnectButton" promptText="server address" GridPane.columnIndex="1" />
-                        <Label text="Filepath:" GridPane.rowIndex="1" />
+                        <Label fx:id="labelFilePath" text="Filepath:" GridPane.rowIndex="1" />
                         <TextField fx:id="workingDirectory" onKeyReleased="#checkConnectButton" promptText="path of the website folder" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                  <Label fx:id="labelUserName" text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                   <TextField fx:id="userName" onKeyReleased="#checkConnectButton" promptText="sftp username" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <PasswordField fx:id="userPassword" onKeyReleased="#checkConnectButton" promptText="sftp password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                  <Label fx:id="labelPassword" text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
               </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="79.0" />

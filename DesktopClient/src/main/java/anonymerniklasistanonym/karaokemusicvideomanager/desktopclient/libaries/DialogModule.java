@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.MusicVideoHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.translations.Internationalization;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -54,8 +55,8 @@ public class DialogModule {
 		Alert alert = new Alert(AlertType.WARNING);
 
 		// with the following title and text
-		alert.setTitle("Save changes?");
-		alert.setHeaderText("Do you want to save your changes?");
+		alert.setTitle(Internationalization.translate("Save changes") + "?");
+		alert.setHeaderText(Internationalization.translate("Do you want to save your changes") + "?");
 
 		// Get the Stage.
 		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
@@ -64,7 +65,7 @@ public class DialogModule {
 
 		// with the following buttons
 		alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
-		final ButtonType buttonAlways = new ButtonType("Always", ButtonData.RIGHT);
+		final ButtonType buttonAlways = new ButtonType(Internationalization.translate("Always"), ButtonData.RIGHT);
 		alert.getButtonTypes().addAll(buttonAlways);
 
 		// which button was pressed getter

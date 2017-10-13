@@ -15,22 +15,22 @@
          <right>
             <VBox alignment="CENTER_LEFT">
                <children>
-                  <Text onMouseClicked="#openGitHubLinkRepository" strokeType="OUTSIDE" strokeWidth="0.0" text="This program is completely open source on Github">
+                  <Text fx:id="about01" onMouseClicked="#openGitHubLinkRepository" strokeType="OUTSIDE" strokeWidth="0.0" text="This program is completely open source on Github">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Text>
-                  <Text onMouseClicked="#openGitHubLinkProfile" strokeType="OUTSIDE" strokeWidth="0.0" text="Author: Niklas | https://github.com/AnonymerNiklasistanonym">
+                  <Text fx:id="about02" onMouseClicked="#openGitHubLinkProfile" strokeType="OUTSIDE" strokeWidth="0.0" text="Author: Niklas | https://github.com/AnonymerNiklasistanonym">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Text>
-                  <Text onMouseClicked="#openGitHubLinkRepository" strokeType="OUTSIDE" strokeWidth="0.0" text="Code: https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager">
+                  <Text fx:id="about03" onMouseClicked="#openGitHubLinkRepository" strokeType="OUTSIDE" strokeWidth="0.0" text="Code: https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Version: v2.0" />
+                  <Text fx:id="about04" strokeType="OUTSIDE" strokeWidth="0.0" text="Version: v2.0" />
                </children>
                <padding>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
