@@ -852,23 +852,26 @@ public class MainWindowController {
 	@FXML
 	private void addSourceFolderDialog() {
 
-		// get a directory
-		File directory = DialogHandler.chooseDirectory(this.mainWindow.getPrimaryStage(),
-				Internationalization.translate("Select a new source directory"), null);
+		if (!this.mainWindow.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
 
-		// if the directory isn't null
-		if (directory != null) {
+			// get a directory
+			File directory = DialogHandler.chooseDirectory(this.mainWindow.getPrimaryStage(),
+					Internationalization.translate("Select a new source directory"), null);
 
-			// add it to the path list
-			this.mainWindow.getMusicVideohandler().addPathToPathList(directory.toPath());
+			// if the directory isn't null
+			if (directory != null) {
 
-			// update the music video table list
-			this.mainWindow.getMusicVideohandler().updateMusicVideoList();
+				// add it to the path list
+				this.mainWindow.getMusicVideohandler().addPathToPathList(directory.toPath());
 
-			// update all JavaFx tables
-			refreshMusicVideoTable();
-			refreshMusicVideoPlaylistTable();
-			refreshMusicVideoDirectoryTable();
+				// update the music video table list
+				this.mainWindow.getMusicVideohandler().updateMusicVideoList();
+
+				// update all JavaFx tables
+				refreshMusicVideoTable();
+				refreshMusicVideoPlaylistTable();
+				refreshMusicVideoDirectoryTable();
+			}
 		}
 	}
 
@@ -1112,12 +1115,16 @@ public class MainWindowController {
 
 		// if something was selected
 		if (selectedEntry != null) {
-			// remove this entry from the path list
-			this.mainWindow.getMusicVideohandler().removeFromPathList(Paths.get(selectedEntry.getFilePath()));
 
-			// update now both tables
-			refreshMusicVideoDirectoryTable();
-			refreshMusicVideoTable();
+			if (!this.mainWindow.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
+
+				// remove this entry from the path list
+				this.mainWindow.getMusicVideohandler().removeFromPathList(Paths.get(selectedEntry.getFilePath()));
+
+				// update now both tables
+				refreshMusicVideoDirectoryTable();
+				refreshMusicVideoTable();
+			}
 		}
 	}
 
@@ -1316,13 +1323,16 @@ public class MainWindowController {
 
 		if (selectedEntry != null) {
 
-			MusicVideo selectedFile = this.mainWindow.getMusicVideohandler()
-					.getMusicVideoList()[selectedEntry.getIndex() - 1];
-			this.mainWindow.getMusicVideohandler().addIgnoredFileToIgnoredFilesList(selectedFile.getPath());
+			if (!this.mainWindow.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
+				MusicVideo selectedFile = this.mainWindow.getMusicVideohandler()
+						.getMusicVideoList()[selectedEntry.getIndex() - 1];
+				this.mainWindow.getMusicVideohandler().addIgnoredFileToIgnoredFilesList(selectedFile.getPath());
+
+				// update the music video list after this
+				refreshMusicVideoTable();
+			}
 		}
 
-		// update the music video list after this
-		refreshMusicVideoTable();
 	}
 
 	/**
@@ -1484,17 +1494,20 @@ public class MainWindowController {
 
 		// if something is selected
 		if (selectedEntry != null) {
-			Path pathOfSelectedFile = this.mainWindow.getMusicVideohandler()
-					.getMusicVideoList()[selectedEntry.getIndex() - 1].getPath();
-			// check if the file really exists and isn't a directory
-			File selectedFile = pathOfSelectedFile.toFile();
-			if (selectedFile.exists() && selectedFile.isFile()) {
-				// show dialog to rename the file
-				String a = DialogHandler.renameFile(selectedFile.getName());
-				if (a != null) {
-					FileReadWriteModule.rename(selectedFile,
-							Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
-					refreshMusicVideoTable();
+
+			if (!this.mainWindow.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
+				Path pathOfSelectedFile = this.mainWindow.getMusicVideohandler()
+						.getMusicVideoList()[selectedEntry.getIndex() - 1].getPath();
+				// check if the file really exists and isn't a directory
+				File selectedFile = pathOfSelectedFile.toFile();
+				if (selectedFile.exists() && selectedFile.isFile()) {
+					// show dialog to rename the file
+					String a = DialogHandler.renameFile(selectedFile.getName());
+					if (a != null) {
+						FileReadWriteModule.rename(selectedFile,
+								Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
+						refreshMusicVideoTable();
+					}
 				}
 			}
 		}

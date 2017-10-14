@@ -244,4 +244,20 @@ public class DialogHandler {
 
 	}
 
+	/**
+	 * Server confirm dialog
+	 * 
+	 * @return true if confirmed else false
+	 */
+	public static boolean confirmDialog() {
+		String title = Internationalization.translate("Warning");
+		String header = Internationalization.translate("Do you really want to continue") + "?";
+		String contentOfTextField = Internationalization.translate(
+				"Because you are connected with a server the websites music video list and the playlist won't work right if you continue")
+				+ "!";
+		return DialogModule.alertConfirm(title, header, contentOfTextField, AlertType.CONFIRMATION, null,
+				WindowModule.getWindowIcons(), StageStyle.UNIFIED);
+
+	}
+
 }

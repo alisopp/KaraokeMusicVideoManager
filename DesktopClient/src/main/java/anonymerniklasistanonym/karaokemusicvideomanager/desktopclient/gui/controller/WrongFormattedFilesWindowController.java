@@ -308,22 +308,26 @@ public class WrongFormattedFilesWindowController {
 			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
 			if (selectedFile.exists() && selectedFile.isFile()) {
 
-				// show dialog to rename the file
-				String a = DialogHandler.renameFile(selectedFile.getName());
+				if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished()
+						|| DialogHandler.confirmDialog()) {
 
-				// if the dialogs response isn't null
-				if (a != null) {
+					// show dialog to rename the file
+					String a = DialogHandler.renameFile(selectedFile.getName());
 
-					// rename the selected file
-					FileReadWriteModule.rename(selectedFile,
-							Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
+					// if the dialogs response isn't null
+					if (a != null) {
 
-					// then update the wrong file table
-					updateWrongFileTable();
+						// rename the selected file
+						FileReadWriteModule.rename(selectedFile,
+								Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
 
-					// and then update also the playlist and music video table
-					mainWindowController.refreshMusicVideoTable();
-					mainWindowController.refreshMusicVideoPlaylistTable();
+						// then update the wrong file table
+						updateWrongFileTable();
+
+						// and then update also the playlist and music video table
+						mainWindowController.refreshMusicVideoTable();
+						mainWindowController.refreshMusicVideoPlaylistTable();
+					}
 				}
 			}
 		}
@@ -365,18 +369,21 @@ public class WrongFormattedFilesWindowController {
 		// if something is selected
 		if (selectedEntry != null) {
 
-			// add the selected entry to the ignored files list
-			this.mainClass.getMusicVideohandler()
-					.addIgnoredFileToIgnoredFilesList(Paths.get(selectedEntry.getFilePath()));
+			if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
+
+				// add the selected entry to the ignored files list
+				this.mainClass.getMusicVideohandler()
+						.addIgnoredFileToIgnoredFilesList(Paths.get(selectedEntry.getFilePath()));
+
+				// update the music video list after this
+				updateWrongFileTable();
+
+				// and then update also the playlist and music video table
+				mainWindowController.refreshMusicVideoTable();
+				mainWindowController.refreshMusicVideoPlaylistTable();
+
+			}
 		}
-
-		// update the music video list after this
-		updateWrongFileTable();
-
-		// and then update also the playlist and music video table
-		mainWindowController.refreshMusicVideoTable();
-		mainWindowController.refreshMusicVideoPlaylistTable();
-
 	}
 
 }

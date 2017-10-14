@@ -318,29 +318,32 @@ public class IgnoredFilesWindowController {
 		// if something is selected
 		if (selectedEntry != null) {
 
-			// get the file of the selected entry
-			final File selectedFile = new File(selectedEntry.getFilePath());
+			if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
 
-			// show dialog to rename the file
-			final String newFileName = DialogHandler.renameFile(selectedFile.getName());
+				// get the file of the selected entry
+				final File selectedFile = new File(selectedEntry.getFilePath());
 
-			// if the dialogs output isn't null or empty
-			if (newFileName != null && !newFileName.isEmpty()) {
+				// show dialog to rename the file
+				final String newFileName = DialogHandler.renameFile(selectedFile.getName());
 
-				// calculate the new file name
-				final File newFile = new File(selectedFile.getParentFile(), newFileName);
+				// if the dialogs output isn't null or empty
+				if (newFileName != null && !newFileName.isEmpty()) {
 
-				// then rename the file to this new name and check if everything worked fine
-				if (FileReadWriteModule.rename(selectedFile, newFile)) {
+					// calculate the new file name
+					final File newFile = new File(selectedFile.getParentFile(), newFileName);
 
-					// then remove the file from the ignored files list
-					this.mainClass.getMusicVideohandler().removeFromIgnoredFilesList(selectedFile.toPath());
+					// then rename the file to this new name and check if everything worked fine
+					if (FileReadWriteModule.rename(selectedFile, newFile)) {
 
-					// and add the renamed file to the ignored files list
-					this.mainClass.getMusicVideohandler().addIgnoredFileToIgnoredFilesList(newFile.toPath());
+						// then remove the file from the ignored files list
+						this.mainClass.getMusicVideohandler().removeFromIgnoredFilesList(selectedFile.toPath());
 
-					// and last update the table
-					updateIgnoredFileTable();
+						// and add the renamed file to the ignored files list
+						this.mainClass.getMusicVideohandler().addIgnoredFileToIgnoredFilesList(newFile.toPath());
+
+						// and last update the table
+						updateIgnoredFileTable();
+					}
 				}
 			}
 		}
@@ -379,11 +382,15 @@ public class IgnoredFilesWindowController {
 		// if something is selected
 		if (selectedEntry != null) {
 
-			// remove the element with the ignored files index from the ignored files list
-			this.mainClass.getMusicVideohandler().removeFromIgnoredFilesList(Paths.get(selectedEntry.getFilePath()));
+			if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
 
-			// then update the ignored files table
-			updateIgnoredFileTable();
+				// remove the element with the ignored files index from the ignored files list
+				this.mainClass.getMusicVideohandler()
+						.removeFromIgnoredFilesList(Paths.get(selectedEntry.getFilePath()));
+
+				// then update the ignored files table
+				updateIgnoredFileTable();
+			}
 		}
 
 	}
@@ -394,11 +401,15 @@ public class IgnoredFilesWindowController {
 	@FXML
 	private void clearList() {
 
-		// clear the ignored files list
-		this.mainClass.getMusicVideohandler().clearIgnoredFilesList();
+		if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
 
-		// then update the ignored files table
-		updateIgnoredFileTable();
+			// clear the ignored files list
+			this.mainClass.getMusicVideohandler().clearIgnoredFilesList();
+
+			// then update the ignored files table
+			updateIgnoredFileTable();
+
+		}
 
 	}
 }
