@@ -532,7 +532,9 @@ public class MainWindowController {
 				// Compare first name and last name of every person with filter text.
 				String lowerCaseFilter = newValue.toLowerCase();
 
-				if (directoryPathObject.getTime().toLowerCase().contains(lowerCaseFilter)) {
+				if (Integer.toString(directoryPathObject.getVotes()).contains(lowerCaseFilter)) {
+					return true;
+				} else if (directoryPathObject.getTime().toLowerCase().contains(lowerCaseFilter)) {
 					return true;
 				} else if (directoryPathObject.getTitle().toLowerCase().contains(lowerCaseFilter)) {
 					return true;
@@ -1281,7 +1283,26 @@ public class MainWindowController {
 				}
 
 			}
+
+			// sort the table in a specific order:
+			columnPlaylistVotes.setSortType(TableColumn.SortType.DESCENDING);
+			playlistTable.getSortOrder().add(columnPlaylistVotes);
+			columnPlaylistTime.setSortType(TableColumn.SortType.ASCENDING);
+			playlistTable.getSortOrder().add(columnPlaylistTime);
+			columnPlaylistTitle.setSortType(TableColumn.SortType.DESCENDING);
+			playlistTable.getSortOrder().add(columnPlaylistTitle);
+			columnPlaylistArtist.setSortType(TableColumn.SortType.DESCENDING);
+			playlistTable.getSortOrder().add(columnPlaylistArtist);
+			columnPlaylistAuthor.setSortType(TableColumn.SortType.DESCENDING);
+			playlistTable.getSortOrder().add(columnPlaylistAuthor);
+			columnPlaylistVotes.setSortable(true);
+			columnPlaylistTime.setSortable(true);
+			columnPlaylistTitle.setSortable(true);
+			columnPlaylistArtist.setSortable(true);
+			columnPlaylistAuthor.setSortable(true);
+			playlistTable.sort();
 		}
+
 	}
 
 	/**

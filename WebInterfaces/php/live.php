@@ -4,9 +4,13 @@
 $path = "./";
 $files = array_diff(scandir($path), array('..', '.',"form.php","process.php", "live.php", "vote.php", "ipBook.json"));
 
-# create array for unixtimes and live element strings
+# create array for final array and values for sorting
 $allData = array();
 $allTimestamps = array();
+$allVotes = array();
+$allAuthors = array();
+$allTitles = array();
+$allArtists = array();
 
 # count the elements
 $counter = 1;
@@ -59,10 +63,15 @@ foreach ($files as $file) {
 	# push the string and the current unixtime to an array
 	array_push($allData, $liveElement);
 	array_push($allTimestamps, $time);
+	array_push($allVotes, $votes);
+	array_push($allTitles, $title);
+	array_push($allArtists, $artist);
+	array_push($allAuthors, $author);
 }
 
 # sort the string array after the unixtime array with the oldest date on top
-array_multisort($allTimestamps, SORT_ASC, SORT_NUMERIC, $allData);
+# and then sort the array after votes
+array_multisort($allTitles, SORT_ASC, $allArtists, SORT_ASC, $allAuthors, SORT_ASC,$allVotes, SORT_DESC, SORT_NUMERIC, $allTimestamps, SORT_ASC, SORT_NUMERIC, $allData);
 
 # print the sorted array
 foreach($allData as $key => $value) {

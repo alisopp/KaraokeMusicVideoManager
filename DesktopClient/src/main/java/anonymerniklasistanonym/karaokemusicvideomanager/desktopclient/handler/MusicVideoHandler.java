@@ -1513,9 +1513,23 @@ public class MusicVideoHandler {
 							System.out.println("Musicvideolist length: " + this.musicVideoList.length);
 							System.out.println("number: " + contentData[1]);
 							// last but not least import it to the playlist
-							this.playlistHandler.load((long) contentData[0], (int) contentData[1],
-									this.musicVideoList[(int) contentData[1] - 1], (String) contentData[2],
-									(String) contentData[3], (boolean) contentData[4], (int) contentData[5]);
+
+							if (this.musicVideoList.length > (int) contentData[1] - 1) {
+								this.playlistHandler.load((long) contentData[0], (int) contentData[1],
+										this.musicVideoList[(int) contentData[1] - 1], (String) contentData[2],
+										(String) contentData[3], (boolean) contentData[4], (int) contentData[5]);
+							} else {
+								if (DialogHandler.confirm(Internationalization.translate("Index problem"),
+										Internationalization.translate(
+												"Press yes to solve this automatically by doing the following"),
+										Internationalization.translate(
+												"The server list seems to be another one than your local list. Setup the server again and clear the playlist to continue."))) {
+									transferHtmlParty();
+									clearPlaylist();
+
+								}
+							}
+
 						}
 					}
 
@@ -1609,19 +1623,18 @@ public class MusicVideoHandler {
 
 			// clear local playlist
 			this.playlistHandler.setPlaylistElements(null);
+		}
+		// clear network playlist if a connection is established
+		if (this.sftpController != null && this.sftpController.isConnectionEstablished()) {
 
-			// clear network playlist if a connection is established
-			if (this.sftpController != null && this.sftpController.isConnectionEstablished()) {
+			// change the directory to the one with all the playlist JSON files
+			this.sftpController.changeDirectory(this.getSftpDirectory());
+			this.sftpController.changeDirectory("php");
 
-				// change the directory to the one with all the playlist JSON files
-				this.sftpController.changeDirectory(this.getSftpDirectory());
-				this.sftpController.changeDirectory("php");
-
-				// get all JSON files and remove the ones that are playlist files
-				for (String file : this.sftpController.listFiles(".json")) {
-					if (file.matches("\\d+.json")) {
-						this.sftpController.removeFile(file);
-					}
+			// get all JSON files and remove the ones that are playlist files
+			for (String file : this.sftpController.listFiles(".json")) {
+				if (file.matches("\\d+.json")) {
+					this.sftpController.removeFile(file);
 				}
 			}
 		}
