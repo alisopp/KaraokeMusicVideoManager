@@ -5,7 +5,7 @@ import java.nio.file.Paths;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.WrongFormattedFilesTableView;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.DialogHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
@@ -322,7 +322,7 @@ public class IgnoredFilesWindowController {
 			final File selectedFile = new File(selectedEntry.getFilePath());
 
 			// show dialog to rename the file
-			final String newFileName = DialogModule.fileRenameDialog(selectedFile.getName());
+			final String newFileName = DialogHandler.renameFile(selectedFile.getName());
 
 			// if the dialogs output isn't null or empty
 			if (newFileName != null && !newFileName.isEmpty()) {

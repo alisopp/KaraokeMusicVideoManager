@@ -2,7 +2,7 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frame
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller.MainWindowController;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.DialogHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -61,7 +61,7 @@ public class MainWindow {
 		this.windowTitle = this.mainClass.getMusicVideohandler().getProgramName();
 
 		// set the window size constraints
-		this.normalWindowSize = new int[] { 600, 600 };
+		this.normalWindowSize = new int[] { 700, 600 };
 		this.minimalWindowSize = new int[] { 540, 450 };
 
 	}
@@ -164,7 +164,7 @@ public class MainWindow {
 			if (!this.mainClass.getMusicVideohandler().compareSettings()) {
 
 				// if they are different open a special dialog
-				DialogModule.mainStageClose(e, this.mainClass.getMusicVideohandler());
+				DialogHandler.mainStageClose(e, this.mainClass.getMusicVideohandler());
 				return;
 			}
 		}

@@ -4,9 +4,12 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.DialogHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class DialogTest extends Application {
 
@@ -15,13 +18,24 @@ public class DialogTest extends Application {
 		// Dialogs.chooseFile(primaryStage, "title", null, null, 1);
 		// Dialogs.chooseDirectory(primaryStage, "title", null);
 
+		DialogHandler.confirm("information", "This", "Text");
+
+		// DialogHandler.infoMessage("information", "This");
+		// DialogHandler.infoMessage("ERROR", "there was an Error", "This error");
+		// DialogHandler.errorMessage("information", "This");
+		// DialogHandler.errorMessage("ERROR", "there was an Error", "This error");
+
+		DialogModule.alertTextInputTwoBoxes("title", "head", "input 1", "input 2", "prompt1", "prompt2", "Label1",
+				"Label2", "Button text", null, WindowModule.getWindowIcons(), StageStyle.UNIFIED, true, true, false,
+				false, true);
+
 		Exception ex = new FileNotFoundException("Could not find file blabla.txt");
 		StringWriter stringWriter = new StringWriter();
 		PrintWriter printWriter = new PrintWriter(stringWriter);
 		ex.printStackTrace(printWriter);
 		String exceptionText = stringWriter.toString();
 
-		DialogModule.exceptionDialog("A exception was thrown!", "short descripton", "detailed descripton", exceptionText);
+		DialogHandler.error("A exception was thrown!", "short descripton", "detailed descripton", exceptionText);
 		// System.exit(0);
 	}
 

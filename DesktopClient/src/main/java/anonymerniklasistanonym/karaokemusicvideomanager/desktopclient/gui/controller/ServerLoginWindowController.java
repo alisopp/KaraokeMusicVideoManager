@@ -1,10 +1,9 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.DialogHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.translations.Internationalization;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -151,9 +150,8 @@ public class ServerLoginWindowController {
 		} else {
 
 			// if the login didn't worked out show a dialog
-			DialogModule.informationAlert(
-					Internationalization.translate("SFTP connection could not be established") + "!",
-					Internationalization.translate("Please try to login again"), AlertType.INFORMATION);
+			DialogHandler.inform(Internationalization.translate("SFTP connection could not be established") + "!",
+					Internationalization.translate("Please try to login again"));
 		}
 
 	}

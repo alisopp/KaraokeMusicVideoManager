@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.WrongFormattedFilesTableView;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.DialogHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
@@ -309,7 +309,7 @@ public class WrongFormattedFilesWindowController {
 			if (selectedFile.exists() && selectedFile.isFile()) {
 
 				// show dialog to rename the file
-				String a = DialogModule.fileRenameDialog(selectedFile.getName());
+				String a = DialogHandler.renameFile(selectedFile.getName());
 
 				// if the dialogs response isn't null
 				if (a != null) {

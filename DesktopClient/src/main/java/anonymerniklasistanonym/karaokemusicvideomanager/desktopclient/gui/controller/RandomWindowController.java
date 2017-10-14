@@ -3,7 +3,7 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.contr
 import java.util.Random;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.DialogHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
@@ -214,7 +214,7 @@ public class RandomWindowController {
 	private void addVideoMain(int position, boolean addAll) {
 
 		// open a dialog to input name and comment
-		final String[] authorComment = DialogModule.playlistDialog(this.mainWindowController.getLastName(), "");
+		final String[] authorComment = DialogHandler.createPlaylistEntry(this.mainWindowController.getLastName());
 
 		// if at least the author wasn't null
 		if (authorComment != null && authorComment[0] != null) {
