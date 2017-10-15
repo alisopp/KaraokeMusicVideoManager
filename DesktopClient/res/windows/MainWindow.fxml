@@ -178,6 +178,7 @@
                                       <items>
                                         <MenuItem fx:id="contextPlaylistRemove" mnemonicParsing="false" onAction="#removeEntry" text="Remove from Playlist" />
                                           <MenuItem fx:id="contextPlaylistEdit" mnemonicParsing="false" onAction="#editEntry" text="Edit Author and Comment" />
+                                          <MenuItem fx:id="contextPlaylistVotes" mnemonicParsing="false" onAction="#setVotes" text="Set Votes" />
                                           <MenuItem fx:id="contextPlaylistClear" mnemonicParsing="false" onAction="#clearSelectionPlaylistTable" text="Clear Selection" />
                                           <MenuItem fx:id="contextPlaylistRefresh" mnemonicParsing="false" onAction="#refreshMusicVideoPlaylistTable" text="Refresh Table" />
                                       </items>

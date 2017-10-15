@@ -1473,7 +1473,7 @@ public class MusicVideoHandler {
 							if (this.musicVideoList.length > (int) contentData[1] - 1 && (int) contentData[1] > 0) {
 								this.playlistHandler.load((long) contentData[0], (int) contentData[1],
 										this.musicVideoList[(int) contentData[1] - 1], (String) contentData[2],
-										(String) contentData[3], (boolean) contentData[4], (int) contentData[5]);
+										(String) contentData[3], (boolean) contentData[4], (int) contentData[5], file);
 							} else {
 								if (DialogHandler.confirm(Internationalization.translate("Index problem"),
 										Internationalization.translate(
@@ -1581,7 +1581,7 @@ public class MusicVideoHandler {
 		// go into the playlist directory
 		this.sftpController.changeDirectory(this.programDataHandler.getWorkingDirectorySftp());
 		this.sftpController.changeDirectory("php");
-		String fileLocation = Long.toString(element.getUnixTime()) + ".json";
+		String fileLocation = element.getFileName();
 		this.sftpController.removeFile(fileLocation);
 	}
 
@@ -1931,6 +1931,19 @@ public class MusicVideoHandler {
 			}
 		}
 
+	}
+
+	public void setVotes(int index, int voteNumber) {
+
+		// check if a connection was established
+		if (sftpConnectionEstablished()) {
+			MusicVideoPlaylistElement editedPlaylistEntry = this.playlistHandler.setVotes(voteNumber, index);
+			// remove the old playlist entry
+			removeEntryFromPlaylist(index);
+
+			// then upload the edited playlist entry
+			uploadPlaylistEntry(editedPlaylistEntry);
+		}
 	}
 
 }

@@ -55,8 +55,9 @@ public class MusicVideoPlaylistHandler {
 		this.playlistElements[index].getVotes();
 	}
 
-	public void setVotes(int vote, int index) {
+	public MusicVideoPlaylistElement setVotes(int vote, int index) {
 		this.playlistElements[index].setVotes(vote);
+		return this.playlistElements[index];
 	}
 
 	/**
@@ -126,10 +127,29 @@ public class MusicVideoPlaylistHandler {
 	}
 
 	public MusicVideoPlaylistElement load(long unixTime, int musicVideoIndex, MusicVideo musicVideo, String author,
+			String comment, boolean createdLocally, int votes, String fileName) {
+		// create new entry
+		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(unixTime, musicVideoIndex, musicVideo,
+				author, comment, true, votes, fileName);
+
+		MusicVideoPlaylistElement[] oldPlaylist = this.playlistElements;
+		MusicVideoPlaylistElement[] newPlaylist = new MusicVideoPlaylistElement[] { newEntry };
+
+		if (oldPlaylist != null) {
+			setPlaylistElements(Stream.concat(Arrays.stream(oldPlaylist), Arrays.stream(newPlaylist))
+					.toArray(MusicVideoPlaylistElement[]::new));
+		} else {
+			setPlaylistElements(newPlaylist);
+		}
+
+		return newEntry;
+	}
+
+	public MusicVideoPlaylistElement load(long unixTime, int musicVideoIndex, MusicVideo musicVideo, String author,
 			String comment, boolean createdLocally, int votes) {
 		// create new entry
 		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(unixTime, musicVideoIndex, musicVideo,
-				author, comment, true, votes);
+				author, comment, true, votes, "nada");
 
 		MusicVideoPlaylistElement[] oldPlaylist = this.playlistElements;
 		MusicVideoPlaylistElement[] newPlaylist = new MusicVideoPlaylistElement[] { newEntry };

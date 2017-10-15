@@ -48,6 +48,11 @@ public final class MusicVideoPlaylistElement {
 	private int votes;
 
 	/**
+	 * Name of the file on the server
+	 */
+	private final String fileName;
+
+	/**
 	 * Constructor: All possibilities
 	 * 
 	 * @param musicVideoFile
@@ -68,6 +73,7 @@ public final class MusicVideoPlaylistElement {
 		this.createdLocally = createdLocally;
 		this.unixTime = Instant.now().getEpochSecond();
 		this.votes = 0;
+		this.fileName = "nada";
 	}
 
 	/**
@@ -91,6 +97,7 @@ public final class MusicVideoPlaylistElement {
 		this.createdLocally = createdLocally;
 		this.unixTime = Instant.now().getEpochSecond();
 		this.votes = 0;
+		this.fileName = "nada";
 	}
 
 	/**
@@ -107,6 +114,7 @@ public final class MusicVideoPlaylistElement {
 		this.createdLocally = true;
 		this.unixTime = Instant.now().getEpochSecond();
 		this.votes = 0;
+		this.fileName = "nada";
 	}
 
 	/**
@@ -123,7 +131,7 @@ public final class MusicVideoPlaylistElement {
 	 * @param votes
 	 */
 	public MusicVideoPlaylistElement(long unixTime, int musicVideoIndex, MusicVideo musicVideoFile, String author,
-			String comment, boolean createdLocally, int votes) {
+			String comment, boolean createdLocally, int votes, String fileName) {
 		this.musicVideoIndex = musicVideoIndex;
 		this.musicVideoFile = musicVideoFile;
 		this.author = author;
@@ -131,6 +139,7 @@ public final class MusicVideoPlaylistElement {
 		this.createdLocally = createdLocally;
 		this.unixTime = unixTime;
 		this.votes = votes;
+		this.fileName = fileName;
 	}
 
 	/**
@@ -199,7 +208,10 @@ public final class MusicVideoPlaylistElement {
 
 	public void setVotes(int vote) {
 		this.votes = vote;
+	}
 
+	public String getFileName() {
+		return this.fileName;
 	}
 
 }

@@ -260,4 +260,21 @@ public class DialogHandler {
 
 	}
 
+	/**
+	 * Playlist "SET VOTES" dialog
+	 * 
+	 * @param author
+	 *            (String | Name of current user or last author)
+	 * @return String[] = { new author, new comment} or null
+	 */
+	public static String setVotesPlaylist(String votes) {
+
+		String title = Internationalization.translate("Set votes");
+		String header = Internationalization.translate("Enter a new positive vote number");
+
+		return DialogModule.alertTextInput(title, header, votes,
+				new Image(ClassResourceReaderModule.getInputStream("images/icons/upvote.png")),
+				WindowModule.getWindowIcons(), StageStyle.UNIFIED);
+	}
+
 }

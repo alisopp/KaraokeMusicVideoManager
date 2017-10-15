@@ -179,9 +179,11 @@ public class MainWindowController {
 	 */
 	@FXML
 	private MenuItem contextPlaylistRemove;
-
-	// music video playlist table context menu
-
+	/**
+	 * music video playlist table context menu > rename file
+	 */
+	@FXML
+	private MenuItem contextPlaylistVotes;
 	/**
 	 * music video playlist table context menu > remove the current selected
 	 * directory
@@ -448,6 +450,7 @@ public class MainWindowController {
 
 		this.contextPlaylistRemove.setText(Internationalization.translate("Remove playlist entry"));
 		this.contextPlaylistEdit.setText(Internationalization.translate("Edit playlist entry"));
+		this.contextPlaylistVotes.setText(Internationalization.translate("Set votes"));
 		this.contextPlaylistClear.setText(Internationalization.translate("Clear Selection"));
 		this.contextPlaylistRefresh.setText(Internationalization.translate("Refresh"));
 
@@ -679,6 +682,7 @@ public class MainWindowController {
 
 		this.contextPlaylistRemove.setGraphic(WindowModule.createMenuIcon("remove"));
 		this.contextPlaylistEdit.setGraphic(WindowModule.createMenuIcon("rename"));
+		this.contextPlaylistVotes.setGraphic(WindowModule.createMenuIcon("upvote"));
 		this.contextPlaylistClear.setGraphic(WindowModule.createMenuIcon("clear"));
 		this.contextPlaylistRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
 
@@ -1424,12 +1428,16 @@ public class MainWindowController {
 
 			// check if connected else set votes invisible
 			if (this.mainClass.getMusicVideohandler().sftpConnectionEstablished()) {
+
+				this.contextPlaylistVotes.setVisible(true);
+
 				this.columnPlaylistVotes.setVisible(true);
 				this.columnPlaylistVotes.setSortType(TableColumn.SortType.DESCENDING);
 				this.playlistTable.getSortOrder().add(this.columnPlaylistVotes);
 				this.columnPlaylistVotes.setSortable(true);
 			} else {
 				this.columnPlaylistVotes.setVisible(false);
+				this.contextPlaylistVotes.setVisible(false);
 			}
 
 			// sort the table in a specific order:
@@ -1800,6 +1808,32 @@ public class MainWindowController {
 
 	public void setLastName(String newName) {
 		this.lastName = newName;
+	}
+
+	@FXML
+	public void setVotes() {
+
+		MusicVideoPlaylistTableView selectedEntry = this.playlistTable.getSelectionModel().getSelectedItem();
+
+		// if something is selected
+		if (selectedEntry != null) {
+			int index = selectedEntry.getIndex();
+
+			String voteNumber = DialogHandler.setVotesPlaylist(Integer.toString(selectedEntry.getVotes()));
+
+			try {
+				int voteNumberNotString = Integer.parseInt(voteNumber);
+
+				if (voteNumberNotString >= 0) {
+					this.mainClass.getMusicVideohandler().setVotes(index, voteNumberNotString);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+		refreshMusicVideoPlaylistTable();
 	}
 
 }
