@@ -11,6 +11,7 @@
 
   ;Define name of the product
   !define PRODUCT "KaraokeMusicVideoManager"
+  !define PRODUCT_SHORTCUT "Karaoke MusicVideoManager"
   !define DOCDIR "$PROFILE\${PRODUCT}"
   !define ABOUTURL "https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager"
   !define INSTALLATIONURL "https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager"
@@ -162,8 +163,8 @@ Section "${PRODUCT} (Required)"
 
   ;Create start menu shortcut for uninstaller and search machine plugin
   CreateDirectory "$SMPROGRAMS\${PRODUCT}"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT}\${PRODUCT}.lnk" "$INSTDIR\${PRODUCT}.jar" "" "$INSTDIR\icon.ico" 0
-  CreateShortCut "$SMPROGRAMS\${PRODUCT}\Uninstall ${PRODUCT}.lnk" "$INSTDIR\${PRODUCT}_uninstaller.exe" "" "$INSTDIR\${PRODUCT}_uninstaller.exe" 0
+  CreateShortCut "$SMPROGRAMS\${PRODUCT}\${PRODUCT_SHORTCUT}.lnk" "$INSTDIR\${PRODUCT}.jar" "" "$INSTDIR\icon.ico" 0
+  CreateShortCut "$SMPROGRAMS\${PRODUCT}\Uninstall ${PRODUCT_SHORTCUT}.lnk" "$INSTDIR\${PRODUCT}_uninstaller.exe" "" "$INSTDIR\${PRODUCT}_uninstaller.exe" 0
 
   ;Create uninstaller
   WriteUninstaller "${PRODUCT}_uninstaller.exe"

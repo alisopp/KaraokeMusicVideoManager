@@ -1377,19 +1377,11 @@ public class MusicVideoHandler {
 
 	public void addMusicVideoToPlaylist(int index, String author, String comment) {
 
+		System.out.println(">> Playlist: Add " + this.musicVideoList[index - 1].getTitle() + " from " + author);
+
 		// add MusicVideoPlaylistElement to the playlist
 		MusicVideoPlaylistElement newElement = this.playlistHandler.add(index, this.musicVideoList[index - 1], author,
 				comment);
-		if (sftpConnectionEstablished()) {
-			uploadPlaylistEntry(newElement);
-		}
-	}
-
-	public void addMusicVideoToPlaylistRandom(int number, int index, String author, String comment) {
-
-		// add MusicVideoPlaylistElement to the playlist
-		MusicVideoPlaylistElement newElement = this.playlistHandler.addRandom(number, index,
-				this.musicVideoList[index - 1], author, comment);
 		if (sftpConnectionEstablished()) {
 			uploadPlaylistEntry(newElement);
 		}
@@ -1530,12 +1522,28 @@ public class MusicVideoHandler {
 	 */
 	public void uploadPlaylistEntry(MusicVideoPlaylistElement element) {
 
-		// create filename
-		final String fileName = Long.toString(element.getUnixTime()) + ".json";
-
 		// then change into the php directory
 		this.sftpController.changeDirectory(this.programDataHandler.getWorkingDirectorySftp());
 		this.sftpController.changeDirectory("php");
+
+		final String[] listFiles = this.sftpController.listFiles(".json");
+
+		int highestNumber = -1;
+
+		if (listFiles != null) {
+
+			int tempNumber = highestNumber;
+
+			for (int i = 0; i < listFiles.length; i++) {
+
+				if (listFiles[i].matches("\\d+.json")) {
+					tempNumber = Integer.parseInt(listFiles[i].substring(0, listFiles[i].lastIndexOf('.')));
+					if (highestNumber < tempNumber) {
+						highestNumber = tempNumber;
+					}
+				}
+			}
+		}
 
 		// then transfer the new file
 		// by crating an input stream of the content string
@@ -1543,7 +1551,7 @@ public class MusicVideoHandler {
 				.stringToInputStream(this.playlistHandler.writePlaylistEntryFile(element));
 
 		// and then sending it with a filename to the server
-		this.sftpController.transferFile(stream, fileName);
+		this.sftpController.transferFile(stream, (Integer.toString(highestNumber + 1) + ".json"));
 
 	}
 

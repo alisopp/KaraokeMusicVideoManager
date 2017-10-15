@@ -237,8 +237,8 @@ public class RandomWindowController {
 				for (int i = 0; i < this.labelContent.length; i++) {
 
 					// and add each element
-					this.mainClass.getMusicVideohandler().addMusicVideoToPlaylistRandom(i,
-							this.labelContent[i].getIndex(), authorComment[0], authorComment[1]);
+					this.mainClass.getMusicVideohandler().addMusicVideoToPlaylist(this.labelContent[i].getIndex(),
+							authorComment[0], authorComment[1]);
 				}
 
 			} else {
@@ -265,7 +265,7 @@ public class RandomWindowController {
 	 * Add an entry in the random list to the playlist
 	 */
 	private void addAllVideos() {
-		addVideoMain(0, false);
+		addVideoMain(0, true);
 	}
 
 	/**

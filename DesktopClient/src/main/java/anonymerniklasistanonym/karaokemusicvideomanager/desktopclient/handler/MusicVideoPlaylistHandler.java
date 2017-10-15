@@ -2,11 +2,8 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import javax.json.Json;
@@ -38,14 +35,14 @@ public class MusicVideoPlaylistHandler {
 			// Arrays.stream(playlistElements).forEach(x ->
 			// System.out.println(x.getUnixTimeString()));
 
-			Set<Long> set = new HashSet<Long>();
+			// Set<Long> set = new HashSet<Long>();
 			ArrayList<MusicVideoPlaylistElement> newList = new ArrayList<MusicVideoPlaylistElement>(
 					playlistElements.length);
 
 			for (int i = 0; i < playlistElements.length; i++) {
-				if (set.add(playlistElements[i].getUnixTime())) {
-					newList.add(playlistElements[i]);
-				}
+				// if (set.add(playlistElements[i].getUnixTime())) {
+				newList.add(playlistElements[i]);
+				// }
 			}
 			// Arrays.stream(newList.toArray(new MusicVideoPlaylistElement[0])).forEach(x ->
 			// System.out.println(x.getUnixTimeString()));
@@ -133,25 +130,6 @@ public class MusicVideoPlaylistHandler {
 		// create new entry
 		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(unixTime, musicVideoIndex, musicVideo,
 				author, comment, true, votes);
-
-		MusicVideoPlaylistElement[] oldPlaylist = this.playlistElements;
-		MusicVideoPlaylistElement[] newPlaylist = new MusicVideoPlaylistElement[] { newEntry };
-
-		if (oldPlaylist != null) {
-			setPlaylistElements(Stream.concat(Arrays.stream(oldPlaylist), Arrays.stream(newPlaylist))
-					.toArray(MusicVideoPlaylistElement[]::new));
-		} else {
-			setPlaylistElements(newPlaylist);
-		}
-
-		return newEntry;
-	}
-
-	public MusicVideoPlaylistElement addRandom(int number, int musicVideoIndex, MusicVideo musicVideo, String author,
-			String comment) {
-		// create new entry
-		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(Instant.now().getEpochSecond() + number,
-				musicVideoIndex, musicVideo, author, comment, true, 0);
 
 		MusicVideoPlaylistElement[] oldPlaylist = this.playlistElements;
 		MusicVideoPlaylistElement[] newPlaylist = new MusicVideoPlaylistElement[] { newEntry };
