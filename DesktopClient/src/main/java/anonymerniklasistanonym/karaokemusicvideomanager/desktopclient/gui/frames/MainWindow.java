@@ -153,7 +153,7 @@ public class MainWindow {
 	public void onCloseDialog(WindowEvent e) {
 
 		// check if there is no existing settings file
-		if (this.mainClass.getMusicVideohandler().getAlwaysSave() == true
+		if (this.mainClass.getMusicVideohandler().getAlwaysSave()
 				|| (!this.mainClass.getMusicVideohandler().settingsFileExist()
 						&& !this.mainClass.getMusicVideohandler().windowsSettingsFileExists())) {
 

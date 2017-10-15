@@ -132,14 +132,17 @@ public class IgnoredFilesWindowController {
 	 * Window text that should be translated on language change/load
 	 */
 	private void translateText() {
-		columnFilePath.setText(Internationalization.translate("File Paths"));
-		contextRename.setText(Internationalization.translate("Rename File"));
-		contextExplorer.setText(Internationalization.translate("Show Directory of File"));
-		contextIgnore.setText(Internationalization.translate("Remove file from list"));
-		contextClear.setText(Internationalization.translate("Clear Selection"));
-		contextRefresh.setText(Internationalization.translate("Refresh"));
-		buttonClearList.setText(Internationalization.translate("Remove All Files from Ignored Files"));
-		searchLabel.setText(Internationalization.translate("Search for ignored files") + ":");
+
+		this.searchLabel.setText(Internationalization.translate("Search for ignored files") + ":");
+
+		this.columnFilePath.setText(Internationalization.translate("File Paths"));
+		this.contextRename.setText(Internationalization.translate("Rename File"));
+		this.contextExplorer.setText(Internationalization.translate("Show Directory of File"));
+		this.contextIgnore.setText(Internationalization.translate("Remove file from list"));
+		this.contextClear.setText(Internationalization.translate("Clear Selection"));
+		this.contextRefresh.setText(Internationalization.translate("Refresh"));
+
+		this.buttonClearList.setText(Internationalization.translate("Remove All Files from Ignored Files"));
 
 	}
 
@@ -156,15 +159,15 @@ public class IgnoredFilesWindowController {
 		 */
 
 		// 0. Initialize the columns.
-		columnFilePath.setCellValueFactory(cellData -> cellData.getValue().getFilePathProperty());
+		this.columnFilePath.setCellValueFactory(cellData -> cellData.getValue().getFilePathProperty());
 
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
-		wrongFormattedFilesTableData = FXCollections.observableArrayList();
-		FilteredList<WrongFormattedFilesTableView> filteredDataDirectory = new FilteredList<>(
-				wrongFormattedFilesTableData, p -> true);
+		this.wrongFormattedFilesTableData = FXCollections.observableArrayList();
+		final FilteredList<WrongFormattedFilesTableView> filteredDataDirectory = new FilteredList<>(
+				this.wrongFormattedFilesTableData, p -> true);
 
 		// 2. Set the filter Predicate whenever the filter changes.
-		searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+		this.searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
 			filteredDataDirectory.setPredicate(directoryPathObject -> {
 				// If filter text is empty, display all persons.
 				if (newValue == null || newValue.isEmpty()) {
@@ -172,7 +175,7 @@ public class IgnoredFilesWindowController {
 				}
 
 				// Compare first name and last name of every person with filter text.
-				String lowerCaseFilter = newValue.toLowerCase();
+				final String lowerCaseFilter = newValue.toLowerCase();
 
 				if (directoryPathObject.getFilePath().toLowerCase().contains(lowerCaseFilter)) {
 					return true; // Filter matches first name.
@@ -184,25 +187,28 @@ public class IgnoredFilesWindowController {
 		});
 
 		// 3. Wrap the FilteredList in a SortedList.
-		SortedList<WrongFormattedFilesTableView> sortedDataDirectory = new SortedList<>(filteredDataDirectory);
+		final SortedList<WrongFormattedFilesTableView> sortedDataDirectory = new SortedList<>(filteredDataDirectory);
 
 		// 4. Bind the SortedList comparator to the TableView comparator.
-		sortedDataDirectory.comparatorProperty().bind(wrongFormattedFilesTable.comparatorProperty());
+		sortedDataDirectory.comparatorProperty().bind(this.wrongFormattedFilesTable.comparatorProperty());
 
 		// 5. Add sorted (and filtered) data to the table.
-		wrongFormattedFilesTable.setItems(sortedDataDirectory);
+		this.wrongFormattedFilesTable.setItems(sortedDataDirectory);
 
 		// Set icons/images
-		contextRename.setGraphic(WindowModule.createMenuIcon("rename"));
-		contextExplorer.setGraphic(WindowModule.createMenuIcon("directory"));
-		contextIgnore.setGraphic(WindowModule.createMenuIcon("ignore"));
-		contextClear.setGraphic(WindowModule.createMenuIcon("clear"));
-		contextRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
-		buttonClearList.setGraphic(WindowModule.createMenuIcon("ignore"));
-		searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
+		this.searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
+
+		this.contextRename.setGraphic(WindowModule.createMenuIcon("rename"));
+		this.contextExplorer.setGraphic(WindowModule.createMenuIcon("directory"));
+		this.contextIgnore.setGraphic(WindowModule.createMenuIcon("ignore"));
+		this.contextClear.setGraphic(WindowModule.createMenuIcon("clear"));
+		this.contextRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
+
+		this.buttonClearList.setGraphic(WindowModule.createMenuIcon("ignore"));
 
 		// translate the windows text
 		translateText();
+
 	}
 
 	/**
@@ -215,8 +221,8 @@ public class IgnoredFilesWindowController {
 		refreshIgnoredFileTable();
 
 		// at the end refresh the playlist and music video table of the main window
-		mainWindowController.refreshMusicVideoTable();
-		mainWindowController.refreshMusicVideoPlaylistTable();
+		this.mainWindowController.refreshMusicVideoTable();
+		this.mainWindowController.refreshMusicVideoPlaylistTable();
 
 	}
 
@@ -229,14 +235,15 @@ public class IgnoredFilesWindowController {
 		final File[] ignoredFiles = this.mainClass.getMusicVideohandler().getIgnoredFiles();
 
 		// clear the whole table
-		wrongFormattedFilesTableData.clear();
+		this.wrongFormattedFilesTableData.clear();
 
 		// overwrite the table with the new list (if there is one)
 		if (ignoredFiles != null) {
 
 			// add an entry for every path in the list
 			for (int i = 0; i < ignoredFiles.length; i++) {
-				wrongFormattedFilesTableData.add(new WrongFormattedFilesTableView(ignoredFiles[i].getAbsolutePath()));
+				this.wrongFormattedFilesTableData
+						.add(new WrongFormattedFilesTableView(ignoredFiles[i].getAbsolutePath()));
 			}
 		}
 
@@ -248,7 +255,8 @@ public class IgnoredFilesWindowController {
 	private void openFile() {
 
 		// get the currently selected entry in the table
-		WrongFormattedFilesTableView selectedEntry = wrongFormattedFilesTable.getSelectionModel().getSelectedItem();
+		final WrongFormattedFilesTableView selectedEntry = this.wrongFormattedFilesTable.getSelectionModel()
+				.getSelectedItem();
 
 		// if something is selected
 		if (selectedEntry != null) {
@@ -266,7 +274,7 @@ public class IgnoredFilesWindowController {
 	private void openFileLeftClick() {
 
 		// check if the left mouse key was clicked
-		if (leftMouseKeyWasPressed) {
+		if (this.leftMouseKeyWasPressed) {
 
 			// open the file
 			openFile();
@@ -279,7 +287,7 @@ public class IgnoredFilesWindowController {
 	 */
 	@FXML
 	private void clearRowSelection() {
-		wrongFormattedFilesTable.getSelectionModel().clearSelection();
+		this.wrongFormattedFilesTable.getSelectionModel().clearSelection();
 	}
 
 	/**
@@ -289,13 +297,13 @@ public class IgnoredFilesWindowController {
 	private void mousePressed(MouseEvent e) {
 
 		// reset mouse key
-		leftMouseKeyWasPressed = false;
+		this.leftMouseKeyWasPressed = false;
 
 		// check if left mouse key is pressed
 		if (e.isPrimaryButtonDown()) {
 
 			// save information
-			leftMouseKeyWasPressed = true;
+			this.leftMouseKeyWasPressed = true;
 		}
 
 	}
@@ -403,8 +411,8 @@ public class IgnoredFilesWindowController {
 
 			// then update the ignored files table
 			updateIgnoredFileTable();
-
 		}
 
 	}
+
 }

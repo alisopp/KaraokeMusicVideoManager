@@ -54,6 +54,11 @@ public class MusicVideoHandler {
 	private final File settingsFile;
 
 	/**
+	 * The default name for the settings file when installed on windows
+	 */
+	private final File windowsSettingsFile;
+
+	/**
 	 * The table column names (needed for export)
 	 */
 	private String[] columnNames;
@@ -81,6 +86,8 @@ public class MusicVideoHandler {
 
 		this.programDataHandler = new ProgramDataHandler();
 		this.settingsFile = new File("settings.json");
+		this.windowsSettingsFile = new File(
+				System.getProperty("user.home") + "/KaraokeMusicVideoManager/" + this.settingsFile);
 		this.columnNames = new String[] { "#", Internationalization.translate("Artist"),
 				Internationalization.translate("Title") };
 		this.playlistHandler = new MusicVideoPlaylistHandler();
@@ -166,9 +173,8 @@ public class MusicVideoHandler {
 	public boolean settingsFileExist() {
 		if (this.settingsFile.exists()) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
@@ -176,29 +182,21 @@ public class MusicVideoHandler {
 	 * on windows
 	 */
 	public boolean windowsSettingsFileExists() {
-		if (Paths.get(".").toAbsolutePath().toString().contains("(x86)")
-				|| Paths.get(".").toAbsolutePath().toString().contains("(x64)")) {
-			File windowsSettingsFile = Paths.get(System.getProperty("user.home") + "/MusicVideoManager/" + settingsFile)
-					.toFile();
-			if (windowsSettingsFile.getParentFile().exists()) {
-				if (windowsSettingsFile.exists()) {
+
+		// check if the system is windows
+		if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+
+			// check if this is executed in the install directory
+			if (Paths.get(".").toAbsolutePath().toString().contains("(x86)")
+					|| Paths.get(".").toAbsolutePath().toString().contains("(x64)")) {
+
+				// and then check if the windows settings file exists
+				if (this.windowsSettingsFile.exists()) {
 					return true;
 				}
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Get if a settings file exists or nor
-	 */
-	public boolean installedOnWindows() {
-
-		if (this.settingsFile.exists()) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	/**
@@ -211,28 +209,18 @@ public class MusicVideoHandler {
 		if (settingsFileExist()) {
 
 			System.out.println("<< Settings file found");
-			loadSettings(settingsFile);
+			loadSettings(this.settingsFile);
+			return;
 
-		} else if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+		} else if (windowsSettingsFileExists()) {
 
-			// if the current directory is the home folder of the user
-			if (Paths.get(".").toAbsolutePath().toString().contains("(x86)")
-					|| Paths.get(".").toAbsolutePath().toString().contains("(x64)")) {
-				File windowsSettingsFile = Paths
-						.get(System.getProperty("user.home") + "/Karaoke MusicVideoManager/" + settingsFile).toFile();
+			System.out.println("<< Windows settings file found");
 
-				if (windowsSettingsFile.getParentFile().exists()) {
-					System.out.println("Windows Folder found");
-					// try to find a settings file
-					if (windowsSettingsFile.exists()) {
-						System.out.println("Settings found");
-						loadSettings(windowsSettingsFile);
-					}
-				}
-			}
-		} else {
-			System.out.println("<< Settings file not found");
+			loadSettings(this.windowsSettingsFile);
+			return;
+
 		}
+		System.out.println("<< Settings file not found");
 	}
 
 	/**
@@ -240,23 +228,12 @@ public class MusicVideoHandler {
 	 */
 	public boolean saveSettingsToFile() {
 
-		File settingsFileToSave = this.settingsFile;
-
-		if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-
-			// if the current directory is the home folder of the user
-			if (Paths.get(".").toAbsolutePath().toString().contains("(x86)")
-					|| Paths.get(".").toAbsolutePath().toString().contains("(x64)")) {
-
-				File windowsSettingsFile = Paths
-						.get(System.getProperty("user.home") + "/Karaoke MusicVideoManager/" + settingsFile).toFile();
-
-				FileReadWriteModule.createDirectory(windowsSettingsFile.getParentFile());
-
-				settingsFileToSave = windowsSettingsFile;
-			}
+		if (windowsSettingsFileExists()) {
+			return saveSettings(this.windowsSettingsFile);
+		} else {
+			return saveSettings(this.settingsFile);
 		}
-		return saveSettings(settingsFileToSave);
+
 	}
 
 	/**
@@ -1314,33 +1291,12 @@ public class MusicVideoHandler {
 	 */
 	public boolean compareSettings() {
 
-		File settingsFileNew = this.settingsFile;
-		if (Paths.get(".").toAbsolutePath().toString().contains("(x86)")
-				|| Paths.get(".").toAbsolutePath().toString().contains("(x64)")) {
-			File windowsSettingsFile = Paths.get(System.getProperty("user.home") + "/MusicVideoManager/" + settingsFile)
-					.toFile();
-			if (windowsSettingsFile.getParentFile().exists()) {
-				if (windowsSettingsFile.exists()) {
-					settingsFileNew = windowsSettingsFile;
-				}
-			}
+		if (windowsSettingsFileExists()) {
+			return this.programDataHandler.compareSettingsFileToCurrent(this.windowsSettingsFile);
+		} else {
+			return this.programDataHandler.compareSettingsFileToCurrent(this.settingsFile);
 		}
 
-		return this.programDataHandler.compareSettingsFileToCurrent(settingsFileNew);
-	}
-
-	/**
-	 * Returns FALSE if the new settings data from the file is different to the
-	 * current settings data. If they aren't the same TRUE will be returned.
-	 * 
-	 * @param settingsFilePathNew
-	 *            (File | File that contains settingsData in JSON format)
-	 * @return theyAreTheSame (Boolean)
-	 */
-	public boolean compareSettingsWindows() {
-		File windowsSettingsFile = Paths
-				.get(System.getProperty("user.home") + "/MusicVideoManager/" + this.settingsFile).toFile();
-		return this.programDataHandler.compareSettingsFileToCurrent(windowsSettingsFile);
 	}
 
 	/**
