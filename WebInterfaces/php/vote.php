@@ -14,6 +14,12 @@ $json = json_decode($str, true);
 $votes = $json['votes'];
 
 
+# reset to 0 if vote number is smaller
+if ($votes < 0) {
+	$votes = 0;
+}
+
+
 # Check if only the votes are asked
 if ($type == 'get') {
 	echo $votes;
@@ -48,7 +54,9 @@ if (file_exists($ipAddressBook)) {
 				return;
 			# and decrimination remove the upvote because one was contained
 			} elseif ($type == 'dec') {
-				$votes = $votes - 1;
+				if ($votes > 0) {
+					$votes = $votes - 1;
+				}
 			}
 
 		# if decrimination save all not 

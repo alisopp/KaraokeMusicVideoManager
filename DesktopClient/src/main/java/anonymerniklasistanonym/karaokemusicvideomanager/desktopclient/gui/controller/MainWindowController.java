@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Random;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoPlaylistTableView;
@@ -972,6 +973,7 @@ public class MainWindowController {
 					Internationalization.translate("You are already logged in. Click OK to logout."))) {
 				this.mainWindow.getMusicVideohandler().sftpDisconnect();
 				this.networkButton.setSelected(false);
+				refreshMusicVideoPlaylistTable();
 			} else {
 				this.networkButton.setSelected(true);
 			}
@@ -1063,44 +1065,58 @@ public class MainWindowController {
 	}
 
 	/**
-	 * Open the server login window
+	 * Open the random music video files window
 	 */
 	@FXML
 	private void openRandomWindow() {
-		try {
 
-			// load the whole FXML window
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getClassLoader().getResource("windows/RandomMusicVideoWindow.fxml"));
+		if (this.mainWindow.getMusicVideohandler().getMusicVideoList() != null) {
 
-			// >> load the window itself
-			Parent root1 = (Parent) loader.load();
+			if (this.mainWindow.getMusicVideohandler().getMusicVideoList().length >= 5) {
+				try {
 
-			// >> load the controller to the window and give him the main window
-			RandomWindowController windowController = loader.getController();
-			windowController.setWindowController(this.mainWindow, this);
+					// load the whole FXML window
+					FXMLLoader loader = new FXMLLoader();
+					loader.setLocation(getClass().getClassLoader().getResource("windows/RandomMusicVideoWindow.fxml"));
 
-			// create a stage
-			Stage stage = new Stage(StageStyle.DECORATED);
-			stage.setScene(new Scene(root1));
-			stage.setResizable(true);
-			stage.setMinHeight(300);
-			stage.setMinWidth(650);
+					// >> load the window itself
+					Parent root1 = (Parent) loader.load();
 
-			stage.setTitle(Internationalization.translate("Random music video files"));
+					// >> load the controller to the window and give him the main window
+					RandomWindowController windowController = loader.getController();
+					windowController.setWindowController(this.mainWindow, this);
 
-			// try to add a window icon
-			try {
-				stage.getIcons().addAll(WindowModule.getWindowIcons());
-			} catch (Exception e) {
-				System.err.println("Exception while loding icons");
+					// create a stage
+					Stage stage = new Stage(StageStyle.DECORATED);
+					stage.setScene(new Scene(root1));
+					stage.setResizable(true);
+					stage.setMinHeight(360);
+					stage.setMinWidth(650);
+
+					stage.setTitle(Internationalization.translate("Random music video files"));
+
+					// try to add a window icon
+					try {
+						stage.getIcons().addAll(WindowModule.getWindowIcons());
+					} catch (Exception e) {
+						System.err.println("Exception while loding icons");
+					}
+
+					stage.show();
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else if (this.mainWindow.getMusicVideohandler().getMusicVideoList().length >= 1) {
+
+				final Random randomGenerator = new Random();
+				final int randomNumber = randomGenerator
+						.nextInt(this.mainWindow.getMusicVideohandler().getMusicVideoList().length);
+				this.mainWindow.getMusicVideohandler().openMusicVideo(randomNumber);
+
 			}
-
-			stage.show();
-
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+
 	}
 
 	/**
@@ -1291,21 +1307,31 @@ public class MainWindowController {
 
 			}
 
+			// reset table sort
+			playlistTable.getSortOrder().clear();
+
+			// check if connected else set votes invisible
+			if (this.mainWindow.getMusicVideohandler().sftpConnectionEstablished()) {
+				columnPlaylistVotes.setVisible(true);
+				columnPlaylistVotes.setSortType(TableColumn.SortType.DESCENDING);
+				playlistTable.getSortOrder().add(columnPlaylistVotes);
+				columnPlaylistVotes.setSortable(true);
+			} else {
+				columnPlaylistVotes.setVisible(false);
+			}
+
 			// sort the table in a specific order:
-			columnPlaylistVotes.setSortType(TableColumn.SortType.DESCENDING);
-			playlistTable.getSortOrder().add(columnPlaylistVotes);
 			columnPlaylistTime.setSortType(TableColumn.SortType.ASCENDING);
 			playlistTable.getSortOrder().add(columnPlaylistTime);
+			columnPlaylistTime.setSortable(true);
 			columnPlaylistTitle.setSortType(TableColumn.SortType.DESCENDING);
 			playlistTable.getSortOrder().add(columnPlaylistTitle);
+			columnPlaylistTitle.setSortable(true);
 			columnPlaylistArtist.setSortType(TableColumn.SortType.DESCENDING);
 			playlistTable.getSortOrder().add(columnPlaylistArtist);
+			columnPlaylistArtist.setSortable(true);
 			columnPlaylistAuthor.setSortType(TableColumn.SortType.DESCENDING);
 			playlistTable.getSortOrder().add(columnPlaylistAuthor);
-			columnPlaylistVotes.setSortable(true);
-			columnPlaylistTime.setSortable(true);
-			columnPlaylistTitle.setSortable(true);
-			columnPlaylistArtist.setSortable(true);
 			columnPlaylistAuthor.setSortable(true);
 			playlistTable.sort();
 		}

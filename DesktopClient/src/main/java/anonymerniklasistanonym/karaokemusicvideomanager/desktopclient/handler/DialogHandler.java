@@ -35,7 +35,7 @@ public class DialogHandler {
 	public static void mainStageClose(WindowEvent mainWindowEvent, MusicVideoHandler saveTheSettings) {
 
 		// create a JavaFX Alert pop-up window
-		Alert alert = new Alert(AlertType.WARNING);
+		Alert alert = new Alert(AlertType.CONFIRMATION);
 
 		// with the following title and text
 		alert.setTitle(Internationalization.translate("Save changes") + "?");

@@ -238,32 +238,32 @@ public class JsonModule {
 	}
 
 	/**
-	 * Compare two JSON contents
+	 * Compare two JSON strings
 	 * 
-	 * @param jsonBuilder
-	 *            (JsonObjectBuilder)
-	 * @return jsonDataString (String)
+	 * @param one
+	 *            (String | JSON data 1 in String)
+	 * @param two
+	 *            (String | JSON data 2 in String)
+	 * @return true if both are the same, false if they are different
 	 */
 	public static boolean compareJsonStrings(String one, String two) {
 
 		System.out.print(">> Compare two JSON strings");
 
+		// check if they both aren't null
 		if (one != null || two != null) {
-			try {
-				if (loadJsonFromString(one).equals(loadJsonFromString(two))) {
-					System.out.println(" << The strings are the same!");
-					return true;
-				} else {
-					System.out.println(" << The strings are not the same!");
-					return false;
-				}
 
-			} catch (Exception e) {
-				e.printStackTrace();
+			// compare the JSON objects after creating one from each string
+			if (loadJsonFromString(one).equals(loadJsonFromString(two))) {
+				System.out.println(" << The strings are the same!");
+				return true;
+			} else {
+				System.out.println(" << The strings are not the same!");
 				return false;
 			}
+
 		} else {
-			System.err.println(" << The Strings can't be null!");
+			System.err.println(" << The strings can't be null!");
 			return false;
 		}
 

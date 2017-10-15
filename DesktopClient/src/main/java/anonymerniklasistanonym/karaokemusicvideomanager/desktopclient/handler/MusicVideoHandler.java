@@ -76,6 +76,9 @@ public class MusicVideoHandler {
 	 * Constructor that creates an empty/default program data object
 	 */
 	public MusicVideoHandler() {
+
+		System.out.println(">> MusicVideoHandler constructor");
+
 		this.programDataHandler = new ProgramDataHandler();
 		this.settingsFile = new File("settings.json");
 		this.columnNames = new String[] { "#", Internationalization.translate("Artist"),
@@ -83,7 +86,7 @@ public class MusicVideoHandler {
 		this.playlistHandler = new MusicVideoPlaylistHandler();
 		this.sftpController = new SftpHandler();
 		this.faviconSizes = new int[] { 16, 32, 48, 64, 94, 128, 160, 180, 194, 256, 512 };
-		this.programName = Internationalization.translate("MusicVideoManager");
+		this.programName = Internationalization.translate("Karaoke MusicVideoManager");
 	}
 
 	// Methods
@@ -203,19 +206,23 @@ public class MusicVideoHandler {
 	 */
 	public void loadSettingsFromFile() {
 
-		System.out.println("current path: " + Paths.get(".").toAbsolutePath().normalize().toString());
+		System.out.println(">> Search for a settings file (\"" + settingsFile.toString() + "\")");
+
 		if (settingsFileExist()) {
+
+			System.out.println("<< Settings file found");
 			loadSettings(settingsFile);
+
 		} else if (System.getProperty("os.name").toLowerCase().contains("windows")) {
 
 			// if the current directory is the home folder of the user
 			if (Paths.get(".").toAbsolutePath().toString().contains("(x86)")
 					|| Paths.get(".").toAbsolutePath().toString().contains("(x64)")) {
 				File windowsSettingsFile = Paths
-						.get(System.getProperty("user.home") + "/MusicVideoManager/" + settingsFile).toFile();
+						.get(System.getProperty("user.home") + "/Karaoke MusicVideoManager/" + settingsFile).toFile();
 
 				if (windowsSettingsFile.getParentFile().exists()) {
-					System.out.println("Folder found");
+					System.out.println("Windows Folder found");
 					// try to find a settings file
 					if (windowsSettingsFile.exists()) {
 						System.out.println("Settings found");
@@ -223,6 +230,8 @@ public class MusicVideoHandler {
 					}
 				}
 			}
+		} else {
+			System.out.println("<< Settings file not found");
 		}
 	}
 
@@ -240,7 +249,7 @@ public class MusicVideoHandler {
 					|| Paths.get(".").toAbsolutePath().toString().contains("(x64)")) {
 
 				File windowsSettingsFile = Paths
-						.get(System.getProperty("user.home") + "/MusicVideoManager/" + settingsFile).toFile();
+						.get(System.getProperty("user.home") + "/Karaoke MusicVideoManager/" + settingsFile).toFile();
 
 				FileReadWriteModule.createDirectory(windowsSettingsFile.getParentFile());
 
@@ -787,7 +796,7 @@ public class MusicVideoHandler {
 		// string builder for all links
 		StringBuilder specialHead = new StringBuilder("");
 
-		String name = "Karaoke Music Video Manager";
+		String name = getProgramName();
 		specialHead.append("<title>" + name + "</title>");
 		specialHead.append("<meta name=\"apple-mobile-web-app-title\" content=\"" + name + "\">");
 		specialHead.append("<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">");
@@ -1267,7 +1276,7 @@ public class MusicVideoHandler {
 
 		// read the settingsData
 		if (setSettingsData(this.programDataHandler.readSettings(settingsFilePath))) {
-			updateMusicVideoList();
+			// updateMusicVideoList(); disabled for preloader
 			return true;
 		} else {
 			return false;
@@ -1514,7 +1523,7 @@ public class MusicVideoHandler {
 							System.out.println("number: " + contentData[1]);
 							// last but not least import it to the playlist
 
-							if (this.musicVideoList.length > (int) contentData[1] - 1) {
+							if (this.musicVideoList.length > (int) contentData[1] - 1 && (int) contentData[1] > 0) {
 								this.playlistHandler.load((long) contentData[0], (int) contentData[1],
 										this.musicVideoList[(int) contentData[1] - 1], (String) contentData[2],
 										(String) contentData[3], (boolean) contentData[4], (int) contentData[5]);

@@ -70,8 +70,8 @@ foreach ($files as $file) {
 }
 
 # sort the string array after the unixtime array with the oldest date on top
-# and then sort the array after votes
-array_multisort($allTitles, SORT_ASC, $allArtists, SORT_ASC, $allAuthors, SORT_ASC,$allVotes, SORT_DESC, SORT_NUMERIC, $allTimestamps, SORT_ASC, SORT_NUMERIC, $allData);
+# and then sort the array after votes and more
+array_multisort($allVotes, SORT_DESC, SORT_NUMERIC, $allTimestamps, SORT_ASC, SORT_NUMERIC, $allTitles, SORT_ASC, SORT_STRING, $allArtists, SORT_ASC, SORT_STRING, $allAuthors, SORT_ASC, SORT_STRING, $allData);
 
 # print the sorted array
 foreach($allData as $key => $value) {

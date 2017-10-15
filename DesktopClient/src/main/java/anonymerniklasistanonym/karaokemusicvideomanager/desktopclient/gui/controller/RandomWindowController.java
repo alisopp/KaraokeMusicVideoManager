@@ -1,12 +1,12 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.controller;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.DialogHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoRandomElement;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.translations.Internationalization;
 import javafx.fxml.FXML;
@@ -364,25 +364,47 @@ public class RandomWindowController {
 	}
 
 	/**
+	 * Create an array with random number where no number is doubled contained
+	 * 
+	 * @param minNumber
+	 *            (Integer | minimal number in array)
+	 * @param maxNumber
+	 *            (Integer | maximal number in array)
+	 * @param sizeOfArray
+	 *            (Integer | how many numbers should be in the array)
+	 * @return Integer[]
+	 */
+	public Integer[] arrayWithRandomNumbersNoDuplicates(int minNumber, int maxNumber, int sizeOfArray) {
+
+		ArrayList<Integer> randomNonDuplicateInteger = new ArrayList<Integer>();
+		Random randomnumberGenerator = new Random();
+
+		while (randomNonDuplicateInteger.size() < sizeOfArray) {
+			int random = randomnumberGenerator.nextInt((maxNumber - minNumber) + 1) + minNumber;
+
+			if (!randomNonDuplicateInteger.contains(random)) {
+				randomNonDuplicateInteger.add(random);
+			}
+		}
+		return randomNonDuplicateInteger.toArray(new Integer[0]);
+
+	}
+
+	/**
 	 * Update/Create the random music video table
 	 */
 	@FXML
 	private void refreshRandom() {
 
-		// get all files
-		final MusicVideo[] allFiles = this.mainClass.getMusicVideohandler().getMusicVideoList();
-
-		// create a random number generator
-		final Random randomGenerator = new Random();
+		Integer[] a = arrayWithRandomNumbersNoDuplicates(0,
+				this.mainClass.getMusicVideohandler().getMusicVideoList().length - 1, labelContent.length);
 
 		// do for every label
-		for (int i = 0; i < this.allLabels.length; i++) {
-
-			// get a random Integer between 0 and label.length
-			final int randomNumber = randomGenerator.nextInt(allFiles.length);
+		for (int i = 0; i < labelContent.length; i++) {
 
 			// create a random music video element with this number and save it
-			this.labelContent[i] = new MusicVideoRandomElement(allFiles[randomNumber], randomNumber);
+			this.labelContent[i] = new MusicVideoRandomElement(
+					this.mainClass.getMusicVideohandler().getMusicVideoList()[a[i]], a[i]);
 
 			// set the text to each label of this entry
 			this.allLabels[i].setText(this.labelContent[i].getMusicVideo().getTitle() + " "

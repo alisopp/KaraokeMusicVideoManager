@@ -14,7 +14,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 /**
- * Main window creator.
+ * Main window creator class.
  *
  * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
  *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
@@ -53,6 +53,8 @@ public class MainWindow {
 	 *            (Main | needed to use the resources from the main class in here)
 	 */
 	public MainWindow(Main mainClass) {
+
+		System.out.println(">> Main window constructor");
 
 		// connect to the main class
 		this.mainClass = mainClass;

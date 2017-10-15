@@ -1,10 +1,13 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui;
 
+import java.util.Locale;
+
 import com.sun.javafx.application.LauncherImpl;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.CustomPreloader;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.MainWindow;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.MusicVideoHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.translations.Internationalization;
 import javafx.application.Application;
 import javafx.application.Preloader;
 import javafx.stage.Stage;
@@ -34,69 +37,72 @@ public class Main extends Application {
 	 */
 	private MainWindow mainWindowCreator;
 
-	/**
-	 * Method that runs after the preloader was initialized and before the main
-	 * window get's created/shown
-	 */
 	@Override
 	public void init() throws Exception {
 
-		System.out.println(">> App initalisation started");
+		System.out.println(">> Progam initialization started");
 
-		// save/add a MusicVideoHandler
+		// set the language in relation to the current Java Runtime
+		Internationalization.setBundle(Locale.getDefault());
+
+		// create a MusicVideoHandler
 		this.musicVideoHandler = new MusicVideoHandler();
-
-		LauncherImpl.notifyPreloader(this, new Preloader.ProgressNotification(20));
+		setPreloaderProgress(10);
 
 		// try to load settings from a "settings.json" file
 		this.musicVideoHandler.loadSettingsFromFile();
+		setPreloaderProgress(35);
 
-		LauncherImpl.notifyPreloader(this, new Preloader.ProgressNotification(80));
+		// create a music video list
+		this.musicVideoHandler.updateMusicVideoList();
+		setPreloaderProgress(55);
 
-		// create a main window which will get all the data
+		// create/load the main window and transfer the MusicVideoHandler
 		this.mainWindowCreator = new MainWindow(this);
+		setPreloaderProgress(75);
 
-		LauncherImpl.notifyPreloader(this, new Preloader.ProgressNotification(85));
-
+		// create the main window scene
 		this.mainWindowCreator.createScene();
+		setPreloaderProgress(100);
 
-		LauncherImpl.notifyPreloader(this, new Preloader.ProgressNotification(100));
+		System.out.println("<< Progam initialization finished");
 
-		System.out.println("<< App initalisation finished");
 	}
 
-	/**
-	 * Open the main window stage
-	 */
 	@Override
 	public void start(Stage primaryStage) {
 
-		System.out.println(">> App open stage");
+		System.out.println(">> Open main window");
 
-		// get the created main window Stage back and set it as main stage
+		// create the main window stage and show it
 		primaryStage = this.mainWindowCreator.createStage();
-
-		// show it
 		primaryStage.show();
 
-		System.out.println("<< App open stage finished");
+		System.out.println("MAIN WINDOW");
 
 	}
 
 	/**
-	 * ---------------------- MAIN METHOD ----------------------
+	 * ------- MAIN METHOD ---------------------------------------------------------
+	 * >> start JavaFx with a preloader (without: "launch(args);")
+	 * ------------------------------------------------------------------------------
 	 */
 	public static void main(String[] args) {
-
-		// start JavaFx with a preloader
 		LauncherImpl.launchApplication(Main.class, CustomPreloader.class, args);
-
-		// start JavaFx without a preloader: launch(args);
-
 	}
 
 	/**
-	 * Get the primary Stage
+	 * Set preloader progress
+	 * 
+	 * @param progress
+	 *            (Integer | New progress [0-100])
+	 */
+	private void setPreloaderProgress(int progress) {
+		LauncherImpl.notifyPreloader(this, new Preloader.ProgressNotification(progress));
+	}
+
+	/**
+	 * Get the primary Stage of the program
 	 * 
 	 * @return (Stage | main Stage)
 	 */
@@ -105,7 +111,7 @@ public class Main extends Application {
 	}
 
 	/**
-	 * Get the MusicVideoHandler
+	 * Get the MusicVideoHandler of the program
 	 * 
 	 * @return (MusicVideoHandler)
 	 */

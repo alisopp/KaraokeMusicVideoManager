@@ -118,3 +118,39 @@ if __name__ == '__main__':
         # remove the created images
         for image in images:
             os.remove(image[0] + ".png")
+
+    # create a directory for the files to export
+    if not os.path.exists("demo_files_small"):
+        os.makedirs("demo_files_small")
+
+    # number of video files wanted
+    number_of_files = 5
+
+    # Let the user know about this
+    print("Exporting {} video files:".format(number_of_files))
+
+    # determine how many leading zeroes we need for every number
+    number_of_zeroes = "%0" + str(len(str(number_of_files))) + "d"
+
+    # create all files
+    for x in range(number_of_files):
+
+        # format the current number with the right amount of leading zeroes
+        x = number_of_zeroes % (x + 1)
+
+        # these are the images we want to create
+        images = [("demo_files_small/start", "Hi :)", x), ("demo_files_small/end", "Bye!", x)]
+
+        # create a random background color for all of the pictures
+        bg_color = random_color()
+
+        # create the images
+        for image in images:
+            create_image(image[0] + ".png", (1280, 720), image[1], bg_color, image[2])
+
+        # create the video out of the created images (each image has 3s view time)
+        create_video([x[0] + ".png" for x in images], "demo_files_small/Example Artist #" + str(x) + " - Example Title #" + str(x) + ".avi", 1.0, 3)
+
+        # remove the created images
+        for image in images:
+            os.remove(image[0] + ".png")
