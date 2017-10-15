@@ -31,46 +31,52 @@ public class SftpHandler {
 	/**
 	 * SFTP user name for login
 	 */
-	private String userName = null;
+	private String userName;
 	/**
 	 * SFTP password for user name for login
 	 */
-	private String userPassword = null;
+	private String userPassword;
 
 	/**
 	 * IP address of SFTP server for login
 	 */
-	private String serverAddress = null;
+	private String serverAddress;
 
 	/**
 	 * The current working directory of the SFTP server
 	 */
-	private String currentWorkingDirectory = null;
+	private String currentWorkingDirectory;
 
 	/**
 	 * Login/out to/of STFP server class
 	 */
-	private Session session = null;
+	private Session session;
 	/**
 	 * Connect with session class to SFTP server
 	 */
-	private Channel channel = null;
+	private Channel channel;
 	/**
 	 * SFTP connection channel
 	 */
-	private ChannelSftp channelSftp = null;
+	private ChannelSftp channelSftp;
 
 	/**
 	 * True if a connection is currently established
 	 */
-	private boolean connectionEstablished = false;
+	private boolean connectionEstablished;
 
-	public boolean isConnectionEstablished() {
-		return connectionEstablished;
-	}
-
+	/**
+	 * Empty constructor
+	 */
 	public SftpHandler() {
-
+		this.userName = null;
+		this.userPassword = null;
+		this.serverAddress = null;
+		this.currentWorkingDirectory = null;
+		this.session = null;
+		this.channel = null;
+		this.channelSftp = null;
+		this.connectionEstablished = false;
 	}
 
 	/**
@@ -90,6 +96,10 @@ public class SftpHandler {
 		this.userPassword = userPassword;
 		this.serverAddress = serverAddress;
 		this.currentWorkingDirectory = serverFilePath;
+		this.session = null;
+		this.channel = null;
+		this.channelSftp = null;
+		this.connectionEstablished = false;
 	}
 
 	/**
@@ -107,8 +117,24 @@ public class SftpHandler {
 		this.userPassword = userPassword;
 		this.serverAddress = serverAddress;
 		this.currentWorkingDirectory = null;
+		this.session = null;
+		this.channel = null;
+		this.channelSftp = null;
+		this.connectionEstablished = false;
 	}
 
+	/**
+	 * Setup SFTP source without starting a connection
+	 * 
+	 * @param userName
+	 *            (user name | String)
+	 * @param userPassword
+	 *            (password for user name | String)
+	 * @param serverAddress
+	 *            (IP address of server | String)
+	 * @param serverFilePath
+	 *            (Directory of index.html file | String)
+	 */
 	public void connect(String userName, String userPassword, String serverAddress, String serverFilePath) {
 		this.userName = userName;
 		this.userPassword = userPassword;
@@ -184,7 +210,7 @@ public class SftpHandler {
 
 		System.out.print(">> Change Directory to " + path);
 
-		if (!connectionEstablished) {
+		if (!this.connectionEstablished) {
 			System.err.println(" << You need first to establish a connection!");
 			return;
 		}
@@ -216,7 +242,7 @@ public class SftpHandler {
 
 		System.out.print(">> Create directory " + this.currentWorkingDirectory + "/" + directoryName);
 
-		if (!connectionEstablished) {
+		if (!this.connectionEstablished) {
 			System.err.println(" << You need first to establish a connection!");
 			return;
 		}
@@ -227,7 +253,7 @@ public class SftpHandler {
 		}
 
 		try {
-			channelSftp.lstat(directoryName);
+			this.channelSftp.lstat(directoryName);
 			System.out.println(" << Directory already exists!");
 			return;
 
@@ -256,7 +282,7 @@ public class SftpHandler {
 	 */
 	private String[] listFilesMain(String filetype) {
 
-		if (!connectionEstablished) {
+		if (!this.connectionEstablished) {
 			System.out.println("You need first to establish a connection!");
 			return null;
 		}
@@ -316,7 +342,7 @@ public class SftpHandler {
 	 */
 	public boolean retrieveFile(String localFile, String remoteFile) {
 
-		if (!connectionEstablished) {
+		if (!this.connectionEstablished) {
 			System.out.println("You need first to establish a connection!");
 			return false;
 		}
@@ -362,7 +388,7 @@ public class SftpHandler {
 	 */
 	public boolean removeFile(String pathOfRemoteFile) {
 
-		if (!connectionEstablished) {
+		if (!this.connectionEstablished) {
 			System.out.println("You need first to establish a connection!");
 			return false;
 		}
@@ -397,7 +423,7 @@ public class SftpHandler {
 	 */
 	public boolean removeEmptyDirectory(String pathOfRemoteDirectory) {
 
-		if (!connectionEstablished) {
+		if (!this.connectionEstablished) {
 			System.out.println("You need first to establish a connection!");
 			return false;
 		}
@@ -410,7 +436,7 @@ public class SftpHandler {
 		System.out.print(">> Remove directory " + pathOfRemoteDirectory);
 
 		try {
-			channelSftp.rmdir(pathOfRemoteDirectory);
+			this.channelSftp.rmdir(pathOfRemoteDirectory);
 
 			System.out.println(" << Directory succssessfully removed.");
 			return true;
@@ -433,7 +459,7 @@ public class SftpHandler {
 	 */
 	private void transferFile(String pathLocalFile, String folderPath) {
 
-		if (!connectionEstablished) {
+		if (!this.connectionEstablished) {
 			System.out.println("You need first to establish a connection!");
 			return;
 		}
@@ -493,7 +519,7 @@ public class SftpHandler {
 	 */
 	public void transferFile(InputStream fileInputStream, String filename) {
 
-		if (!connectionEstablished) {
+		if (!this.connectionEstablished) {
 			System.out.println("You need first to establish a connection!");
 			return;
 		}
@@ -558,7 +584,7 @@ public class SftpHandler {
 	 */
 	public String retrieveFileInputStreamString(String remoteFile) {
 
-		if (!connectionEstablished) {
+		if (!this.connectionEstablished) {
 			System.out.println("You need first to establish a connection!");
 			return null;
 		}
@@ -573,7 +599,7 @@ public class SftpHandler {
 		try {
 
 			@SuppressWarnings("resource")
-			java.util.Scanner s = new java.util.Scanner(channelSftp.get(remoteFile)).useDelimiter("\\A");
+			java.util.Scanner s = new java.util.Scanner(this.channelSftp.get(remoteFile)).useDelimiter("\\A");
 			String content = s.hasNext() ? s.next() : "";
 			s.close();
 			System.out.println("Content");
@@ -585,4 +611,14 @@ public class SftpHandler {
 		}
 
 	}
+
+	/**
+	 * Return if a connection is established
+	 * 
+	 * @return true if this is the case else false
+	 */
+	public boolean isConnectionEstablished() {
+		return this.connectionEstablished;
+	}
+
 }

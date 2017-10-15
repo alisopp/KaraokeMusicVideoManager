@@ -122,13 +122,16 @@ public class WrongFormattedFilesWindowController {
 	}
 
 	private void translateText() {
-		columnFilePath.setText(Internationalization.translate("File Paths"));
-		contextRename.setText(Internationalization.translate("Rename File"));
-		contextExplorer.setText(Internationalization.translate("Show Directory of File"));
-		contextIgnore.setText(Internationalization.translate("Ignore File"));
-		contextClear.setText(Internationalization.translate("Clear Selection"));
-		contextRefresh.setText(Internationalization.translate("Refresh"));
-		searchLabel.setText(Internationalization.translate("Search for wrong formatted files") + ":");
+
+		this.columnFilePath.setText(Internationalization.translate("File Paths"));
+		this.contextRename.setText(Internationalization.translate("Rename File"));
+		this.contextExplorer.setText(Internationalization.translate("Show Directory of File"));
+		this.contextIgnore.setText(Internationalization.translate("Ignore File"));
+		this.contextClear.setText(Internationalization.translate("Clear Selection"));
+		this.contextRefresh.setText(Internationalization.translate("Refresh"));
+
+		this.searchLabel.setText(Internationalization.translate("Search for wrong formatted files") + ":");
+
 	}
 
 	/**
@@ -144,15 +147,15 @@ public class WrongFormattedFilesWindowController {
 		 */
 
 		// 0. Initialize the columns.
-		columnFilePath.setCellValueFactory(cellData -> cellData.getValue().getFilePathProperty());
+		this.columnFilePath.setCellValueFactory(cellData -> cellData.getValue().getFilePathProperty());
 
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
-		wrongFormattedFilesTableData = FXCollections.observableArrayList();
+		this.wrongFormattedFilesTableData = FXCollections.observableArrayList();
 		final FilteredList<WrongFormattedFilesTableView> filteredDataDirectory = new FilteredList<>(
-				wrongFormattedFilesTableData, p -> true);
+				this.wrongFormattedFilesTableData, p -> true);
 
 		// 2. Set the filter Predicate whenever the filter changes.
-		searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+		this.searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
 			filteredDataDirectory.setPredicate(directoryPathObject -> {
 				// If filter text is empty, display all persons.
 				if (newValue == null || newValue.isEmpty()) {
@@ -160,7 +163,7 @@ public class WrongFormattedFilesWindowController {
 				}
 
 				// Compare first name and last name of every person with filter text.
-				String lowerCaseFilter = newValue.toLowerCase();
+				final String lowerCaseFilter = newValue.toLowerCase();
 
 				if (directoryPathObject.getFilePath().toLowerCase().contains(lowerCaseFilter)) {
 					return true; // Filter matches first name.
@@ -178,21 +181,16 @@ public class WrongFormattedFilesWindowController {
 		sortedDataDirectory.comparatorProperty().bind(wrongFormattedFilesTable.comparatorProperty());
 
 		// 5. Add sorted (and filtered) data to the table.
-		wrongFormattedFilesTable.setItems(sortedDataDirectory);
+		this.wrongFormattedFilesTable.setItems(sortedDataDirectory);
 
-		/**
-		 * Set icons/images
-		 */
+		// Set icons/images
+		this.contextRename.setGraphic(WindowModule.createMenuIcon("rename"));
+		this.contextExplorer.setGraphic(WindowModule.createMenuIcon("directory"));
+		this.contextIgnore.setGraphic(WindowModule.createMenuIcon("ignore"));
+		this.contextClear.setGraphic(WindowModule.createMenuIcon("clear"));
+		this.contextRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
 
-		// Context menu
-		contextRename.setGraphic(WindowModule.createMenuIcon("rename"));
-		contextExplorer.setGraphic(WindowModule.createMenuIcon("directory"));
-		contextIgnore.setGraphic(WindowModule.createMenuIcon("ignore"));
-		contextClear.setGraphic(WindowModule.createMenuIcon("clear"));
-		contextRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
-
-		// label
-		searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
+		this.searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
 
 		translateText();
 	}
@@ -204,17 +202,18 @@ public class WrongFormattedFilesWindowController {
 	private void updateWrongFileTable() {
 
 		// get the current wrong formatted files list
-		Path[] wrongFormattedFiles = this.mainClass.getMusicVideohandler().getWrongFormattedFiles();
+		final Path[] wrongFormattedFiles = this.mainClass.getMusicVideohandler().getWrongFormattedFiles();
 
 		// overwrite the table with the new list
-		if (wrongFormattedFiles != null) {
+		if (this.mainClass.getMusicVideohandler().getWrongFormattedFiles() != null) {
 
 			// clear the whole table
-			wrongFormattedFilesTableData.clear();
+			this.wrongFormattedFilesTableData.clear();
 
 			// add an entry for every path in the list
-			for (int i = 0; i < wrongFormattedFiles.length; i++) {
-				wrongFormattedFilesTableData.add(new WrongFormattedFilesTableView(wrongFormattedFiles[i].toString()));
+			for (int i = 0; i < this.mainClass.getMusicVideohandler().getWrongFormattedFiles().length; i++) {
+				this.wrongFormattedFilesTableData
+						.add(new WrongFormattedFilesTableView(wrongFormattedFiles[i].toString()));
 			}
 		}
 
@@ -226,7 +225,8 @@ public class WrongFormattedFilesWindowController {
 	private void openFile() {
 
 		// get the currently selected entry in the table
-		WrongFormattedFilesTableView selectedEntry = wrongFormattedFilesTable.getSelectionModel().getSelectedItem();
+		WrongFormattedFilesTableView selectedEntry = this.wrongFormattedFilesTable.getSelectionModel()
+				.getSelectedItem();
 
 		// if something is selected
 		if (selectedEntry != null) {
@@ -244,13 +244,13 @@ public class WrongFormattedFilesWindowController {
 	private void openTopFile() {
 
 		// select the top row
-		wrongFormattedFilesTable.getSelectionModel().select(0);
+		this.wrongFormattedFilesTable.getSelectionModel().select(0);
 
 		// open the file
 		openFile();
 
 		// clear the selection again
-		wrongFormattedFilesTable.getSelectionModel().clearSelection();
+		this.wrongFormattedFilesTable.getSelectionModel().clearSelection();
 
 	}
 
@@ -261,7 +261,8 @@ public class WrongFormattedFilesWindowController {
 	private void openFileLeftClick() {
 
 		// check if the left mouse key was clicked
-		if (leftMouseKeyWasPressed) {
+		if (this.leftMouseKeyWasPressed) {
+
 			// only then try to open the file
 			openFile();
 		}
@@ -273,7 +274,7 @@ public class WrongFormattedFilesWindowController {
 	 */
 	@FXML
 	private void clearRowSelection() {
-		wrongFormattedFilesTable.getSelectionModel().clearSelection();
+		this.wrongFormattedFilesTable.getSelectionModel().clearSelection();
 	}
 
 	/**
@@ -283,11 +284,11 @@ public class WrongFormattedFilesWindowController {
 	private void mousePressed(MouseEvent e) {
 
 		// reset mouse key
-		leftMouseKeyWasPressed = false;
+		this.leftMouseKeyWasPressed = false;
 
 		// check if left mouse key is pressed
 		if (e.isPrimaryButtonDown()) {
-			leftMouseKeyWasPressed = true;
+			this.leftMouseKeyWasPressed = true;
 		}
 
 	}
@@ -299,34 +300,35 @@ public class WrongFormattedFilesWindowController {
 	private void renameFile() {
 
 		// get the currently selected entry in the table
-		WrongFormattedFilesTableView selectedEntry = wrongFormattedFilesTable.getSelectionModel().getSelectedItem();
+		WrongFormattedFilesTableView selectedEntry = this.wrongFormattedFilesTable.getSelectionModel()
+				.getSelectedItem();
 
 		// if something is selected
 		if (selectedEntry != null) {
 
 			// check if the file really exists and isn't a directory
-			File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
+			final File selectedFile = Paths.get(selectedEntry.getFilePath()).toFile();
 			if (selectedFile.exists() && selectedFile.isFile()) {
 
 				if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished()
 						|| DialogHandler.confirmDialog()) {
 
 					// show dialog to rename the file
-					String a = DialogHandler.renameFile(selectedFile.getName());
+					final String newFileName = DialogHandler.renameFile(selectedFile.getName());
 
 					// if the dialogs response isn't null
-					if (a != null) {
+					if (newFileName != null) {
 
 						// rename the selected file
 						FileReadWriteModule.rename(selectedFile,
-								Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
+								Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + newFileName).toFile());
 
 						// then update the wrong file table
 						updateWrongFileTable();
 
 						// and then update also the playlist and music video table
-						mainWindowController.refreshMusicVideoTable();
-						mainWindowController.refreshMusicVideoPlaylistTable();
+						this.mainWindowController.refreshMusicVideoTable();
+						this.mainWindowController.refreshMusicVideoPlaylistTable();
 					}
 				}
 			}
@@ -369,6 +371,7 @@ public class WrongFormattedFilesWindowController {
 		// if something is selected
 		if (selectedEntry != null) {
 
+			// add warning message if connected to a server
 			if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
 
 				// add the selected entry to the ignored files list

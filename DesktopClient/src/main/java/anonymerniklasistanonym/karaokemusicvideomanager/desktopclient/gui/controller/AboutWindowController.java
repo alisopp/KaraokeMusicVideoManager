@@ -13,12 +13,27 @@ import javafx.scene.text.Text;
  */
 public class AboutWindowController {
 
+	/**
+	 * The program is open source...
+	 */
 	@FXML
 	private Text about01;
+
+	/**
+	 * Author link...
+	 */
 	@FXML
 	private Text about02;
+
+	/**
+	 * Code link...
+	 */
 	@FXML
 	private Text about03;
+
+	/**
+	 * Version number link...
+	 */
 	@FXML
 	private Text about04;
 
@@ -27,17 +42,22 @@ public class AboutWindowController {
 		translateText();
 	}
 
+	/**
+	 * Window text that should be translated on language change/load
+	 */
 	private void translateText() {
+
 		about01.setText(Internationalization.translate("This program is completely open source on Github"));
 		about02.setText(
 				Internationalization.translate("Author") + ": Niklas | https://github.com/AnonymerNiklasistanonym");
 		about03.setText(Internationalization.translate("Code")
 				+ ": https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager");
 		about04.setText(Internationalization.translate("Version") + ": v2.0.0");
+
 	}
 
 	/**
-	 * Open the link to the GitHub repository
+	 * Open the link to the GitHub repository in the default browser
 	 */
 	@FXML
 	private void openGitHubLinkRepository() {
@@ -45,7 +65,7 @@ public class AboutWindowController {
 	}
 
 	/**
-	 * Open the link to the authors GitHub profile
+	 * Open the link to the authors GitHub profile in the default browser
 	 */
 	@FXML
 	private void openGitHubLinkProfile() {

@@ -41,13 +41,19 @@ public class CustomPreloader extends Preloader {
 	/**
 	 * Progress bar of this preloader
 	 */
-	private ProgressBar preloaderProgressBar;
+	private final ProgressBar preloaderProgressBar;
 
 	/**
 	 * Constructor
 	 */
 	public CustomPreloader() {
+
 		System.out.println(">> Preloader constructor");
+
+		this.preloaderStage = null;
+		this.preloaderScene = null;
+		this.preloaderProgressBar = new ProgressBar(100.00);
+		;
 	}
 
 	@Override
@@ -65,7 +71,6 @@ public class CustomPreloader extends Preloader {
 		versionAndNameText.setFill(Color.GREY);
 
 		// setup the preloader progress bar which starts at 0 and goes to 100
-		this.preloaderProgressBar = new ProgressBar(100.00);
 		this.preloaderProgressBar.setProgress(0);
 		this.preloaderProgressBar.setStyle("-fx-padding: 10 10 10 10;");
 
@@ -89,10 +94,10 @@ public class CustomPreloader extends Preloader {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
+		System.out.println(">> Open Preloader stage");
+
 		// connect the stage to the handleStateChangeNotification method
 		this.preloaderStage = primaryStage;
-
-		System.out.println(">> Open Preloader stage");
 
 		// add the created scene to the primary stage
 		this.preloaderStage.setScene(this.preloaderScene);
@@ -112,7 +117,7 @@ public class CustomPreloader extends Preloader {
 
 		// get the current process and change the progress bar
 		if (info instanceof ProgressNotification) {
-			preloaderProgressBar.setProgress(((ProgressNotification) info).getProgress() / 100);
+			this.preloaderProgressBar.setProgress(((ProgressNotification) info).getProgress() / 100);
 		}
 
 	}

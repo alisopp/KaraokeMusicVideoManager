@@ -61,7 +61,7 @@ public class MusicVideoHandler {
 	/**
 	 * The sizes of the browser icons
 	 */
-	private int[] faviconSizes;
+	private final int[] faviconSizes;
 
 	/**
 	 * Handles the SFTP
@@ -448,14 +448,15 @@ public class MusicVideoHandler {
 	 */
 	public ArrayList<MusicVideo> scanDirectory(Path path) {
 
-		ArrayList<MusicVideo> musicvideosinFolder = new ArrayList<MusicVideo>();
+		final ArrayList<MusicVideo> musicvideosinFolder = new ArrayList<MusicVideo>();
 
 		System.out.println(">> Finding MusicVideo files");
 
-		Path[] filesInDirectory = scanDirectoryForFiles(path);
+		final Path[] filesInDirectory = scanDirectoryForFiles(path);
+
 		for (int i = 0; i < filesInDirectory.length; i++) {
 
-			MusicVideo musicVideoFile = isFileMusicVideo(filesInDirectory[i]);
+			final MusicVideo musicVideoFile = isFileMusicVideo(filesInDirectory[i]);
 
 			if (musicVideoFile != null) {
 				musicvideosinFolder.add(musicVideoFile);
@@ -483,10 +484,10 @@ public class MusicVideoHandler {
 		}
 
 		// get all files in the directory by saving it in this list
-		ArrayList<Path> filesInDirectory = new ArrayList<Path>();
+		final ArrayList<Path> filesInDirectory = new ArrayList<Path>();
 
 		// and collecting it from this stream
-		try (DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
+		try (final DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
 
 			System.out.print(">> Scan " + path + " for files");
 			for (Path child : ds) {
@@ -513,13 +514,15 @@ public class MusicVideoHandler {
 	 */
 	public ArrayList<Path> scanDirectoryForWrongFiles(Path path) {
 
-		ArrayList<Path> wrongFormattedFiles = new ArrayList<Path>();
+		final ArrayList<Path> wrongFormattedFiles = new ArrayList<Path>();
 
 		System.out.println(">> Finding wrong formatted files");
 
-		for (Path filePath : scanDirectoryForFiles(path)) {
-			if (isFileMusicVideoButWrong(filePath)) {
-				wrongFormattedFiles.add(filePath);
+		final Path[] filesInDirectory = scanDirectoryForFiles(path);
+
+		for (int i = 0; i < filesInDirectory.length; i++) {
+			if (isFileMusicVideoButWrong(filesInDirectory[i])) {
+				wrongFormattedFiles.add(filesInDirectory[i]);
 			}
 		}
 
@@ -543,7 +546,7 @@ public class MusicVideoHandler {
 		}
 
 		// collect music video files with an ArrayList
-		ArrayList<MusicVideo> collectMusicVideos = new ArrayList<MusicVideo>();
+		final ArrayList<MusicVideo> collectMusicVideos = new ArrayList<MusicVideo>();
 
 		// by iterating over the path list
 		final Path[] pathList = this.programDataHandler.getPathList();
@@ -552,7 +555,7 @@ public class MusicVideoHandler {
 		}
 
 		// convert then the ArrayList to a normal Array
-		MusicVideo[] newMusicVideoList = collectMusicVideos.toArray(new MusicVideo[0]);
+		final MusicVideo[] newMusicVideoList = collectMusicVideos.toArray(new MusicVideo[0]);
 
 		// sort it
 		Arrays.sort(newMusicVideoList, new MusicVideo());
@@ -577,14 +580,16 @@ public class MusicVideoHandler {
 			return null;
 		}
 
-		ArrayList<Path> newMusicVideoList = new ArrayList<Path>();
+		final ArrayList<Path> newMusicVideoList = new ArrayList<Path>();
 
-		for (Path directory : this.programDataHandler.getPathList()) {
-			newMusicVideoList.addAll(scanDirectoryForWrongFiles(directory));
+		final Path[] filesInDirectory = this.programDataHandler.getPathList();
+
+		for (int i = 0; i < filesInDirectory.length; i++) {
+			newMusicVideoList.addAll(scanDirectoryForWrongFiles(filesInDirectory[i]));
 		}
 
 		// convert ArrayList to a normal Array
-		Path[] newList = newMusicVideoList.toArray(new Path[0]);
+		final Path[] newList = newMusicVideoList.toArray(new Path[0]);
 
 		// sort all paths
 		Arrays.sort(newList);
@@ -613,8 +618,8 @@ public class MusicVideoHandler {
 			return false;
 		}
 
-		MusicVideo videoToOpen = musicVideoList[index];
-		File fileToOpen = videoToOpen.getPath().toFile();
+		final MusicVideo videoToOpen = musicVideoList[index];
+		final File fileToOpen = videoToOpen.getPath().toFile();
 
 		if (videoToOpen == null || fileToOpen == null) {
 			System.err.println("The music video object's path is null!");
@@ -702,28 +707,21 @@ public class MusicVideoHandler {
 			}
 		}
 
-		String fileType = null, pathOfFile = filePath.getFileName().toString();
+		final String pathOfFile = filePath.getFileName().toString();
 
-		int lastIndexOfPoint = pathOfFile.lastIndexOf('.');
-		boolean containsArtistAndTitle = pathOfFile.contains(" - ");
-
-		boolean rightFileEnd = false;
+		final int lastIndexOfPoint = pathOfFile.lastIndexOf('.');
+		final boolean containsArtistAndTitle = pathOfFile.contains(" - ");
 
 		if (lastIndexOfPoint > 0) {
-			fileType = pathOfFile.substring(lastIndexOfPoint + 1);
-		} else {
-			return false;
-		}
+			final String fileType = pathOfFile.substring(lastIndexOfPoint + 1);
 
-		for (String supportedFileTypes : this.programDataHandler.getAcceptedFileTypes()) {
-			if (supportedFileTypes.equalsIgnoreCase(fileType)) {
-
-				rightFileEnd = true;
+			for (int i = 0; i < this.programDataHandler.getAcceptedFileTypes().length; i++) {
+				if (this.programDataHandler.getAcceptedFileTypes()[i].equalsIgnoreCase(fileType)) {
+					if (!containsArtistAndTitle) {
+						return true;
+					}
+				}
 			}
-		}
-
-		if (rightFileEnd && !containsArtistAndTitle) {
-			return true;
 		}
 
 		return false;
@@ -1394,6 +1392,7 @@ public class MusicVideoHandler {
 	public void reset() {
 		this.programDataHandler = new ProgramDataHandler();
 		this.playlistHandler = new MusicVideoPlaylistHandler();
+		this.sftpController = new SftpHandler();
 		updateMusicVideoList();
 	}
 

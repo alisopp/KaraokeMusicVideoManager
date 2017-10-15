@@ -128,6 +128,9 @@ public class IgnoredFilesWindowController {
 
 	}
 
+	/**
+	 * Window text that should be translated on language change/load
+	 */
 	private void translateText() {
 		columnFilePath.setText(Internationalization.translate("File Paths"));
 		contextRename.setText(Internationalization.translate("Rename File"));
@@ -135,7 +138,6 @@ public class IgnoredFilesWindowController {
 		contextIgnore.setText(Internationalization.translate("Remove file from list"));
 		contextClear.setText(Internationalization.translate("Clear Selection"));
 		contextRefresh.setText(Internationalization.translate("Refresh"));
-
 		buttonClearList.setText(Internationalization.translate("Remove All Files from Ignored Files"));
 		searchLabel.setText(Internationalization.translate("Search for ignored files") + ":");
 
@@ -190,23 +192,16 @@ public class IgnoredFilesWindowController {
 		// 5. Add sorted (and filtered) data to the table.
 		wrongFormattedFilesTable.setItems(sortedDataDirectory);
 
-		/**
-		 * Set icons/images
-		 */
-
-		// Context menu icons
+		// Set icons/images
 		contextRename.setGraphic(WindowModule.createMenuIcon("rename"));
 		contextExplorer.setGraphic(WindowModule.createMenuIcon("directory"));
 		contextIgnore.setGraphic(WindowModule.createMenuIcon("ignore"));
 		contextClear.setGraphic(WindowModule.createMenuIcon("clear"));
 		contextRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
-
-		// button icon
 		buttonClearList.setGraphic(WindowModule.createMenuIcon("ignore"));
-
-		// label icon
 		searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
 
+		// translate the windows text
 		translateText();
 	}
 

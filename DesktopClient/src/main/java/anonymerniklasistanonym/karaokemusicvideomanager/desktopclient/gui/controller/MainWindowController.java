@@ -99,14 +99,27 @@ public class MainWindowController {
 	private TableColumn<MusicVideoPlaylistTableView, Number> columnPlaylistVotes;
 
 	// the tabs
+
+	/**
+	 * The tab of all tabs
+	 */
 	@FXML
 	private TabPane tabView;
+	/**
+	 * The music video list table tab
+	 */
 	@FXML
-	private Tab musicVideoTableTab;
+	private Tab musicVideoListTab;
+	/**
+	 * The music video playlist table tab
+	 */
 	@FXML
-	private Tab playlistTab;
+	private Tab musicVideoPlaylistTab;
+	/**
+	 * The music video source folder table tab
+	 */
 	@FXML
-	private Tab sourceTab;
+	private Tab musicVideoSourceFolderTab;
 
 	// music video files table context menu
 
@@ -186,8 +199,62 @@ public class MainWindowController {
 	@FXML
 	private MenuItem contextPlaylistRefresh;
 
-	// menu buttons
+	// Buttons
 
+	/**
+	 * Network toggle button
+	 */
+	@FXML
+	private ToggleButton networkButton;
+	/**
+	 * YouTube button
+	 */
+	@FXML
+	private Button youTubeButton;
+	/**
+	 * Random button
+	 */
+	@FXML
+	private Button randomButton;
+
+	/**
+	 * Add a directory to the path list button
+	 */
+	@FXML
+	private Button buttonAddDirectory;
+	/**
+	 * Open the wrong formatted files window button
+	 */
+	@FXML
+	private Button buttonWrongFormattedFiles;
+	/**
+	 * Open the ignored files window button
+	 */
+	@FXML
+	private Button buttonIgnoredFiles;
+	/**
+	 * Save the current playlist button
+	 */
+	@FXML
+	private Button buttonSavePlaylist;
+	/**
+	 * Load a playlist button
+	 */
+	@FXML
+	private Button buttonLoadPlaylist;
+	/**
+	 * Clear the current playlist button
+	 */
+	@FXML
+	private Button buttonClearPlaylist;
+
+	// Menu bar
+
+	/**
+	 * Export music video list menu
+	 */
+	@FXML
+	private Menu menuExport;
 	/**
 	 * export menu button > CSV export
 	 */
@@ -220,6 +287,90 @@ public class MainWindowController {
 	private MenuItem menuButtonHtmlParty;
 
 	/**
+	 * Save the current configuration
+	 */
+	@FXML
+	private MenuItem menuButtonSaveConfiguration;
+	/**
+	 * Load a configuration
+	 */
+	@FXML
+	private MenuItem menuButtonLoadConfiguration;
+	/**
+	 * Save the current configuration custom (with dialog)
+	 */
+	@FXML
+	private MenuItem menuButtonSaveConfigurationCustom;
+	/**
+	 * Load a configuration custom (with dialog)
+	 */
+	@FXML
+	private MenuItem menuButtonLoadConfigurationCustom;
+	/**
+	 * Reset everything
+	 */
+	@FXML
+	private MenuItem menuButtonResetConfiguration;
+
+	/**
+	 * Network menu
+	 */
+	@FXML
+	private Menu menuNetwork;
+	/**
+	 * Setup menu for the SFTP server connection -> formats to export on expand
+	 */
+	@FXML
+	private Menu menuButtonSftp;
+	/**
+	 * Export static music video list to server
+	 */
+	@FXML
+	private MenuItem menuButtonSftpStatic;
+	/**
+	 * Export static music video list to server with search
+	 */
+	@FXML
+	private MenuItem menuButtonSftpSearch;
+	/**
+	 * Export static music video list to server with search and playlist
+	 */
+	@FXML
+	private MenuItem menuButtonSftpParty;
+	/**
+	 * Reset saved server settings
+	 */
+	@FXML
+	private MenuItem menuButtonSftpReset;
+	/**
+	 * Reset server voting playlist
+	 */
+	@FXML
+	private MenuItem menuButtonSftpVotingReset;
+
+	/**
+	 * Configuration menu (settings save/load)
+	 */
+	@FXML
+	private Menu menuConfiguration;
+
+	/**
+	 * Additional settings menu
+	 */
+	@FXML
+	private Menu menuSettings;
+	/**
+	 * Save current settings on save
+	 */
+	@FXML
+	private CheckMenuItem menuButtonAlwaysSave;
+
+	/**
+	 * About this program menu
+	 */
+	@FXML
+	private Menu menuAbout;
+	/**
 	 * about menu button > about button
 	 */
 	@FXML
@@ -229,85 +380,6 @@ public class MainWindowController {
 	 */
 	@FXML
 	private MenuItem helpButton;
-
-	// window buttons
-
-	/**
-	 * network toggle button
-	 */
-	@FXML
-	private ToggleButton networkButton;
-	/**
-	 * YouTube button
-	 */
-	@FXML
-	private Button youTubeButton;
-	/**
-	 * Random button
-	 */
-	@FXML
-	private Button randomButton;
-
-	/**
-	 * Add a directory to the path list button
-	 */
-	@FXML
-	private Button buttonAddDirectory;
-	/**
-	 * Open the wrong formatted files window button
-	 */
-	@FXML
-	private Button buttonWrongFormattedFiles;
-	/**
-	 * Open the ignored files window button
-	 */
-	@FXML
-	private Button buttonIgnoredFiles;
-
-	@FXML
-	private Button buttonSavePlaylist;
-	@FXML
-	private Button buttonLoadPlaylist;
-	@FXML
-	private Button buttonClearPlaylist;
-
-	@FXML
-	private MenuItem menuButtonSaveConfiguration;
-	@FXML
-	private MenuItem menuButtonLoadConfiguration;
-	@FXML
-	private MenuItem menuButtonSaveConfigurationCustom;
-	@FXML
-	private MenuItem menuButtonLoadConfigurationCustom;
-	@FXML
-	private MenuItem menuButtonResetConfiguration;
-
-	@FXML
-	private MenuItem menuButtonSftpStatic;
-	@FXML
-	private MenuItem menuButtonSftpSearch;
-	@FXML
-	private MenuItem menuButtonSftpParty;
-	@FXML
-	private MenuItem menuButtonSftpReset;
-	@FXML
-	private MenuItem menuButtonSftpVotingReset;
-	@FXML
-	private Menu menuButtonSftp;
-
-	@FXML
-	private CheckMenuItem menuButtonAlwaysSave;
-
-	@FXML
-	private Menu menuExport;
-	@FXML
-	private Menu menuNetwork;
-	@FXML
-	private Menu menuConfiguration;
-	@FXML
-	private Menu menuSettings;
-	@FXML
-	private Menu menuAbout;
 
 	// other
 
@@ -332,88 +404,104 @@ public class MainWindowController {
 	private boolean leftMouseKeyWasPressed;
 
 	/**
-	 * Main class
+	 * Last inputed name and to begin the user name
 	 */
-	private Main mainWindow;
 	private String lastName;
 
-	private void translateText() {
-		columnArtist.setText(Internationalization.translate("Artist"));
-		columnTitle.setText(Internationalization.translate("Title"));
-
-		columnPlaylistTime.setText(Internationalization.translate("Time"));
-		columnPlaylistTitle.setText(Internationalization.translate("Title"));
-		columnPlaylistArtist.setText(Internationalization.translate("Artist"));
-		columnPlaylistAuthor.setText(Internationalization.translate("Author"));
-		columnPlaylistComment.setText(Internationalization.translate("Comment"));
-		columnPlaylistVotes.setText(Internationalization.translate("Votes"));
-
-		columnFilePath.setText(Internationalization.translate("Directory path"));
-
-		searchLabel.setText(Internationalization.translate("Search") + ":");
-
-		// Context menu
-		contextMusicVideoPlaylist.setText(Internationalization.translate("Add to playlist"));
-		contextMusicVideoDirectory.setText(Internationalization.translate("Show Directory of File"));
-		contextMusicVideoIgnore.setText(Internationalization.translate("Ignore File"));
-		contextMusicVideoClear.setText(Internationalization.translate("Clear Selection"));
-		contextMusicVideoRefresh.setText(Internationalization.translate("Refresh"));
-		contextPathRemove.setText(Internationalization.translate("Remove directory"));
-		contextPathClear.setText(Internationalization.translate("Clear Selection"));
-		contextPathRefresh.setText(Internationalization.translate("Refresh"));
-		contextMusicVideoRename.setText(Internationalization.translate("Rename File"));
-		contextPlaylistRemove.setText(Internationalization.translate("Remove playlist entry"));
-		contextPlaylistEdit.setText(Internationalization.translate("Edit playlist entry"));
-		contextPlaylistClear.setText(Internationalization.translate("Clear Selection"));
-		contextPlaylistRefresh.setText(Internationalization.translate("Refresh"));
-
-		// other buttons
-		buttonWrongFormattedFiles.setText(Internationalization.translate("Wrong Formatted Files"));
-		buttonIgnoredFiles.setText(Internationalization.translate("Ignored Files"));
-		buttonAddDirectory.setText(Internationalization.translate("Add directory"));
-		networkButton.setText(Internationalization.translate("Network"));
-		aboutButton.setText(Internationalization.translate("About"));
-		randomButton.setText(Internationalization.translate("Random"));
-		helpButton.setText(Internationalization.translate("Help"));
-		buttonLoadPlaylist.setText(Internationalization.translate("Load playlist"));
-		buttonSavePlaylist.setText(Internationalization.translate("Save playlist"));
-		buttonClearPlaylist.setText(Internationalization.translate("Clear playlist"));
-
-		// menu buttons
-		menuButtonWebsites.setText(Internationalization.translate("Websites"));
-		menuButtonHtmlStatic.setText(Internationalization.translate("Static website"));
-		menuButtonHtmlSearch.setText(Internationalization.translate("Searchable website"));
-		menuButtonHtmlParty.setText(Internationalization.translate("Party website"));
-		menuButtonSaveConfiguration.setText(Internationalization.translate("Save configuration"));
-		menuButtonLoadConfiguration.setText(Internationalization.translate("Load configuration"));
-		menuButtonSaveConfigurationCustom.setText(
-				Internationalization.translate("Save configuration") + " " + Internationalization.translate("custom"));
-		menuButtonLoadConfigurationCustom.setText(
-				Internationalization.translate("Load configuration") + " " + Internationalization.translate("custom"));
-		menuButtonResetConfiguration.setText(Internationalization.translate("Reset configuration"));
-		menuButtonSftp.setText(Internationalization.translate("Setup the server"));
-		menuButtonSftpVotingReset.setText(Internationalization.translate("Voting reset"));
-		menuButtonSftpReset.setText(Internationalization.translate("Reset network configuration"));
-		menuButtonSftpStatic.setText(Internationalization.translate("Static website"));
-		menuButtonSftpSearch.setText(Internationalization.translate("Searchable website"));
-		menuButtonSftpParty.setText(Internationalization.translate("Party website"));
-		menuButtonAlwaysSave.setText(Internationalization.translate("Always save Settings on Exit"));
-
-		musicVideoTableTab.setText(Internationalization.translate("Music Video List"));
-		playlistTab.setText(Internationalization.translate("Music Video Playlist"));
-		sourceTab.setText(Internationalization.translate("Source Directories"));
-
-		menuExport.setText(Internationalization.translate("Export"));
-		menuNetwork.setText(Internationalization.translate("Network"));
-		menuSettings.setText(Internationalization.translate("Settings"));
-		menuAbout.setText(Internationalization.translate("About"));
-		menuConfiguration
-				.setText(Internationalization.translate("Save") + " & " + Internationalization.translate("Restore"));
-	}
+	/**
+	 * Main class
+	 */
+	private Main mainClass;
 
 	/**
-	 * This method get's called when the FXML file get's loaded
+	 * Window text that should be translated on language change/load
 	 */
+	private void translateText() {
+
+		// search
+		this.searchLabel.setText(Internationalization.translate("Search") + ":");
+
+		// table columns
+		this.columnArtist.setText(Internationalization.translate("Artist"));
+		this.columnTitle.setText(Internationalization.translate("Title"));
+
+		this.columnPlaylistTime.setText(Internationalization.translate("Time"));
+		this.columnPlaylistTitle.setText(Internationalization.translate("Title"));
+		this.columnPlaylistArtist.setText(Internationalization.translate("Artist"));
+		this.columnPlaylistAuthor.setText(Internationalization.translate("Author"));
+		this.columnPlaylistComment.setText(Internationalization.translate("Comment"));
+		this.columnPlaylistVotes.setText(Internationalization.translate("Votes"));
+
+		this.columnFilePath.setText(Internationalization.translate("Directory path"));
+
+		// context menu
+		this.contextMusicVideoPlaylist.setText(Internationalization.translate("Add to playlist"));
+		this.contextMusicVideoDirectory.setText(Internationalization.translate("Show Directory of File"));
+		this.contextMusicVideoIgnore.setText(Internationalization.translate("Ignore File"));
+		this.contextMusicVideoClear.setText(Internationalization.translate("Clear Selection"));
+		this.contextMusicVideoRefresh.setText(Internationalization.translate("Refresh"));
+		this.contextMusicVideoRename.setText(Internationalization.translate("Rename File"));
+
+		this.contextPathRemove.setText(Internationalization.translate("Remove directory"));
+		this.contextPathClear.setText(Internationalization.translate("Clear Selection"));
+		this.contextPathRefresh.setText(Internationalization.translate("Refresh"));
+
+		this.contextPlaylistRemove.setText(Internationalization.translate("Remove playlist entry"));
+		this.contextPlaylistEdit.setText(Internationalization.translate("Edit playlist entry"));
+		this.contextPlaylistClear.setText(Internationalization.translate("Clear Selection"));
+		this.contextPlaylistRefresh.setText(Internationalization.translate("Refresh"));
+
+		// buttons
+		this.networkButton.setText(Internationalization.translate("Network"));
+		this.randomButton.setText(Internationalization.translate("Random"));
+
+		this.buttonLoadPlaylist.setText(Internationalization.translate("Load playlist"));
+		this.buttonSavePlaylist.setText(Internationalization.translate("Save playlist"));
+		this.buttonClearPlaylist.setText(Internationalization.translate("Clear playlist"));
+
+		this.buttonWrongFormattedFiles.setText(Internationalization.translate("Wrong Formatted Files"));
+		this.buttonIgnoredFiles.setText(Internationalization.translate("Ignored Files"));
+		this.buttonAddDirectory.setText(Internationalization.translate("Add directory"));
+
+		// menu bar
+		this.menuExport.setText(Internationalization.translate("Export"));
+		this.menuButtonWebsites.setText(Internationalization.translate("Websites"));
+		this.menuButtonHtmlStatic.setText(Internationalization.translate("Static website"));
+		this.menuButtonHtmlSearch.setText(Internationalization.translate("Searchable website"));
+		this.menuButtonHtmlParty.setText(Internationalization.translate("Party website"));
+
+		this.menuConfiguration
+				.setText(Internationalization.translate("Save") + " & " + Internationalization.translate("Restore"));
+		this.menuButtonSaveConfiguration.setText(Internationalization.translate("Save configuration"));
+		this.menuButtonLoadConfiguration.setText(Internationalization.translate("Load configuration"));
+		this.menuButtonSaveConfigurationCustom.setText(
+				Internationalization.translate("Save configuration") + " " + Internationalization.translate("custom"));
+		this.menuButtonLoadConfigurationCustom.setText(
+				Internationalization.translate("Load configuration") + " " + Internationalization.translate("custom"));
+		this.menuButtonResetConfiguration.setText(Internationalization.translate("Reset configuration"));
+
+		this.menuNetwork.setText(Internationalization.translate("Network"));
+		this.menuButtonSftp.setText(Internationalization.translate("Setup the server"));
+		this.menuButtonSftpVotingReset.setText(Internationalization.translate("Voting reset"));
+		this.menuButtonSftpReset.setText(Internationalization.translate("Reset network configuration"));
+		this.menuButtonSftpStatic.setText(Internationalization.translate("Static website"));
+		this.menuButtonSftpSearch.setText(Internationalization.translate("Searchable website"));
+		this.menuButtonSftpParty.setText(Internationalization.translate("Party website"));
+
+		this.menuSettings.setText(Internationalization.translate("Settings"));
+		this.menuButtonAlwaysSave.setText(Internationalization.translate("Always save Settings on Exit"));
+
+		this.menuAbout.setText(Internationalization.translate("About"));
+		this.aboutButton.setText(Internationalization.translate("About"));
+		this.helpButton.setText(Internationalization.translate("Help"));
+
+		// tabs
+		this.musicVideoListTab.setText(Internationalization.translate("Music Video List"));
+		this.musicVideoPlaylistTab.setText(Internationalization.translate("Music Video Playlist"));
+		this.musicVideoSourceFolderTab.setText(Internationalization.translate("Source Directories"));
+
+	}
+
 	@FXML
 	private void initialize() {
 
@@ -424,16 +512,16 @@ public class MainWindowController {
 		 */
 
 		// 0. Initialize the columns.
-		columnIndex.setCellValueFactory(cellData -> cellData.getValue().getIndexProperty());
-		columnArtist.setCellValueFactory(cellData -> cellData.getValue().getArtistProperty());
-		columnTitle.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
+		this.columnIndex.setCellValueFactory(cellData -> cellData.getValue().getIndexProperty());
+		this.columnArtist.setCellValueFactory(cellData -> cellData.getValue().getArtistProperty());
+		this.columnTitle.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
 
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
-		tableDataMusicVideo = FXCollections.observableArrayList();
-		FilteredList<MusicVideoTableView> filteredData = new FilteredList<>(tableDataMusicVideo, p -> true);
+		this.tableDataMusicVideo = FXCollections.observableArrayList();
+		final FilteredList<MusicVideoTableView> filteredData = new FilteredList<>(this.tableDataMusicVideo, p -> true);
 
 		// 2. Set the filter Predicate whenever the filter changes.
-		searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+		this.searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
 			filteredData.setPredicate(musicVideoObject -> {
 				// If filter text is empty, display all persons.
 				if (newValue == null || newValue.isEmpty()) {
@@ -441,7 +529,19 @@ public class MainWindowController {
 				}
 
 				// Compare first name and last name of every person with filter text.
-				String lowerCaseFilter = newValue.toLowerCase();
+				final String lowerCaseFilter = newValue.toLowerCase();
+
+				// try to recognize numbers and find them in the search too
+				try {
+					final int number = Integer.parseInt(newValue);
+
+					if (musicVideoObject.getIndex() == number) {
+						return true;
+					}
+
+				} catch (Exception e) {
+
+				}
 
 				if (musicVideoObject.getArtist().toLowerCase().contains(lowerCaseFilter)) {
 					return true; // Filter matches first name.
@@ -453,13 +553,13 @@ public class MainWindowController {
 		});
 
 		// 3. Wrap the FilteredList in a SortedList.
-		SortedList<MusicVideoTableView> sortedData = new SortedList<>(filteredData);
+		final SortedList<MusicVideoTableView> sortedData = new SortedList<>(filteredData);
 
 		// 4. Bind the SortedList comparator to the TableView comparator.
-		sortedData.comparatorProperty().bind(musicVideoTable.comparatorProperty());
+		sortedData.comparatorProperty().bind(this.musicVideoTable.comparatorProperty());
 
 		// 5. Add sorted (and filtered) data to the table.
-		musicVideoTable.setItems(sortedData);
+		this.musicVideoTable.setItems(sortedData);
 
 		/*
 		 * The following code is mostly copied from the wonderful tutorial by Marco
@@ -468,15 +568,15 @@ public class MainWindowController {
 		 */
 
 		// 0. Initialize the columns.
-		columnFilePath.setCellValueFactory(cellData -> cellData.getValue().getFilePathProperty());
+		this.columnFilePath.setCellValueFactory(cellData -> cellData.getValue().getFilePathProperty());
 
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
-		tableDataDirectory = FXCollections.observableArrayList();
-		FilteredList<MusicVideoSourceDirectoriesTableView> filteredDataDirectory = new FilteredList<>(
-				tableDataDirectory, p -> true);
+		this.tableDataDirectory = FXCollections.observableArrayList();
+		final FilteredList<MusicVideoSourceDirectoriesTableView> filteredDataDirectory = new FilteredList<>(
+				this.tableDataDirectory, p -> true);
 
 		// 2. Set the filter Predicate whenever the filter changes.
-		searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+		this.searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
 			filteredDataDirectory.setPredicate(directoryPathObject -> {
 				// If filter text is empty, display all persons.
 				if (newValue == null || newValue.isEmpty()) {
@@ -484,7 +584,7 @@ public class MainWindowController {
 				}
 
 				// Compare first name and last name of every person with filter text.
-				String lowerCaseFilter = newValue.toLowerCase();
+				final String lowerCaseFilter = newValue.toLowerCase();
 
 				if (directoryPathObject.getFilePath().toLowerCase().contains(lowerCaseFilter)) {
 					return true; // Filter matches first name.
@@ -496,13 +596,14 @@ public class MainWindowController {
 		});
 
 		// 3. Wrap the FilteredList in a SortedList.
-		SortedList<MusicVideoSourceDirectoriesTableView> sortedDataDirectory = new SortedList<>(filteredDataDirectory);
+		final SortedList<MusicVideoSourceDirectoriesTableView> sortedDataDirectory = new SortedList<>(
+				filteredDataDirectory);
 
 		// 4. Bind the SortedList comparator to the TableView comparator.
-		sortedDataDirectory.comparatorProperty().bind(directoryPathTable.comparatorProperty());
+		sortedDataDirectory.comparatorProperty().bind(this.directoryPathTable.comparatorProperty());
 
 		// 5. Add sorted (and filtered) data to the table.
-		directoryPathTable.setItems(sortedDataDirectory);
+		this.directoryPathTable.setItems(sortedDataDirectory);
 
 		/*
 		 * The following code is mostly copied from the wonderful tutorial by Marco
@@ -511,20 +612,21 @@ public class MainWindowController {
 		 */
 
 		// 0. Initialize the columns.
-		columnPlaylistTime.setCellValueFactory(cellData -> cellData.getValue().getTimeProperty());
-		columnPlaylistTitle.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
-		columnPlaylistArtist.setCellValueFactory(cellData -> cellData.getValue().getArtistProperty());
-		columnPlaylistAuthor.setCellValueFactory(cellData -> cellData.getValue().getAuthorProperty());
-		columnPlaylistComment.setCellValueFactory(cellData -> cellData.getValue().getCommentProperty());
-		columnPlaylistVotes.setCellValueFactory(cellData -> cellData.getValue().getVotesProperty());
+		this.columnPlaylistTime.setCellValueFactory(cellData -> cellData.getValue().getTimeProperty());
+		this.columnPlaylistTitle.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
+		this.columnPlaylistArtist.setCellValueFactory(cellData -> cellData.getValue().getArtistProperty());
+		this.columnPlaylistAuthor.setCellValueFactory(cellData -> cellData.getValue().getAuthorProperty());
+		this.columnPlaylistComment.setCellValueFactory(cellData -> cellData.getValue().getCommentProperty());
+		this.columnPlaylistVotes.setCellValueFactory(cellData -> cellData.getValue().getVotesProperty());
 
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
-		tableDataPlaylist = FXCollections.observableArrayList();
-		FilteredList<MusicVideoPlaylistTableView> filteredDataParty = new FilteredList<>(tableDataPlaylist, p -> true);
+		this.tableDataPlaylist = FXCollections.observableArrayList();
+		FilteredList<MusicVideoPlaylistTableView> filteredDataParty = new FilteredList<>(this.tableDataPlaylist,
+				p -> true);
 
 		// 2. Set the filter Predicate whenever the filter changes.
-		searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
-			filteredDataParty.setPredicate(directoryPathObject -> {
+		this.searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+			filteredDataParty.setPredicate(playlistEntryObject -> {
 				// If filter text is empty, display all persons.
 				if (newValue == null || newValue.isEmpty()) {
 					return true;
@@ -533,17 +635,17 @@ public class MainWindowController {
 				// Compare first name and last name of every person with filter text.
 				String lowerCaseFilter = newValue.toLowerCase();
 
-				if (Integer.toString(directoryPathObject.getVotes()).contains(lowerCaseFilter)) {
+				if (Integer.toString(playlistEntryObject.getVotes()).contains(lowerCaseFilter)) {
 					return true;
-				} else if (directoryPathObject.getTime().toLowerCase().contains(lowerCaseFilter)) {
+				} else if (playlistEntryObject.getTime().toLowerCase().contains(lowerCaseFilter)) {
 					return true;
-				} else if (directoryPathObject.getTitle().toLowerCase().contains(lowerCaseFilter)) {
+				} else if (playlistEntryObject.getTitle().toLowerCase().contains(lowerCaseFilter)) {
 					return true;
-				} else if (directoryPathObject.getArtist().toLowerCase().contains(lowerCaseFilter)) {
+				} else if (playlistEntryObject.getArtist().toLowerCase().contains(lowerCaseFilter)) {
 					return true;
-				} else if (directoryPathObject.getAuthor().toLowerCase().contains(lowerCaseFilter)) {
+				} else if (playlistEntryObject.getAuthor().toLowerCase().contains(lowerCaseFilter)) {
 					return true;
-				} else if (directoryPathObject.getComment().toLowerCase().contains(lowerCaseFilter)) {
+				} else if (playlistEntryObject.getComment().toLowerCase().contains(lowerCaseFilter)) {
 					return true;
 				} else {
 					// nothing matches
@@ -556,85 +658,95 @@ public class MainWindowController {
 		SortedList<MusicVideoPlaylistTableView> sortedDataPlaylist = new SortedList<>(filteredDataParty);
 
 		// 4. Bind the SortedList comparator to the TableView comparator.
-		sortedDataPlaylist.comparatorProperty().bind(playlistTable.comparatorProperty());
+		sortedDataPlaylist.comparatorProperty().bind(this.playlistTable.comparatorProperty());
 
 		// 5. Add sorted (and filtered) data to the table.
-		playlistTable.setItems(sortedDataPlaylist);
+		this.playlistTable.setItems(sortedDataPlaylist);
 
-		/**
-		 * Set menu icons
-		 */
+		// set menu icons
+		this.searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
 
-		// Context menu
-		contextMusicVideoPlaylist.setGraphic(WindowModule.createMenuIcon("playlist"));
-		contextMusicVideoDirectory.setGraphic(WindowModule.createMenuIcon("directory"));
-		contextMusicVideoIgnore.setGraphic(WindowModule.createMenuIcon("ignore"));
-		contextMusicVideoClear.setGraphic(WindowModule.createMenuIcon("clear"));
-		contextMusicVideoRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
-		contextPathRemove.setGraphic(WindowModule.createMenuIcon("remove"));
-		contextPathClear.setGraphic(WindowModule.createMenuIcon("clear"));
-		contextPathRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
-		contextMusicVideoRename.setGraphic(WindowModule.createMenuIcon("rename"));
-		contextPlaylistRemove.setGraphic(WindowModule.createMenuIcon("remove"));
-		contextPlaylistEdit.setGraphic(WindowModule.createMenuIcon("rename"));
-		contextPlaylistClear.setGraphic(WindowModule.createMenuIcon("clear"));
-		contextPlaylistRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
+		this.contextMusicVideoPlaylist.setGraphic(WindowModule.createMenuIcon("playlist"));
+		this.contextMusicVideoDirectory.setGraphic(WindowModule.createMenuIcon("directory"));
+		this.contextMusicVideoIgnore.setGraphic(WindowModule.createMenuIcon("ignore"));
+		this.contextMusicVideoClear.setGraphic(WindowModule.createMenuIcon("clear"));
+		this.contextMusicVideoRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
+		this.contextMusicVideoRename.setGraphic(WindowModule.createMenuIcon("rename"));
 
-		// other buttons
-		buttonWrongFormattedFiles.setGraphic(WindowModule.createMenuIcon("wrongFormattedFiles"));
-		buttonIgnoredFiles.setGraphic(WindowModule.createMenuIcon("ignore"));
-		buttonAddDirectory.setGraphic(WindowModule.createMenuIcon("add"));
-		networkButton.setGraphic(WindowModule.createMenuIcon("network"));
-		youTubeButton.setGraphic(WindowModule.createMenuIcon("youTube"));
-		aboutButton.setGraphic(WindowModule.createMenuIcon("about"));
-		randomButton.setGraphic(WindowModule.createMenuIcon("random"));
-		helpButton.setGraphic(WindowModule.createMenuIcon("help"));
-		buttonLoadPlaylist.setGraphic(WindowModule.createMenuIcon("load"));
-		buttonSavePlaylist.setGraphic(WindowModule.createMenuIcon("save"));
-		buttonClearPlaylist.setGraphic(WindowModule.createMenuIcon("remove"));
+		this.contextPathRemove.setGraphic(WindowModule.createMenuIcon("remove"));
+		this.contextPathClear.setGraphic(WindowModule.createMenuIcon("clear"));
+		this.contextPathRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
 
-		// menu buttons
-		menuButtonWebsites.setGraphic(WindowModule.createMenuIcon("html_static"));
-		menuButtonCsv.setGraphic(WindowModule.createMenuIcon("csv"));
-		menuButtonJson.setGraphic(WindowModule.createMenuIcon("json"));
-		menuButtonHtmlStatic.setGraphic(WindowModule.createMenuIcon("html_static"));
-		menuButtonHtmlSearch.setGraphic(WindowModule.createMenuIcon("html_search"));
-		menuButtonHtmlParty.setGraphic(WindowModule.createMenuIcon("html_playlist"));
-		menuButtonSaveConfiguration.setGraphic(WindowModule.createMenuIcon("save"));
-		menuButtonLoadConfiguration.setGraphic(WindowModule.createMenuIcon("load"));
-		menuButtonSaveConfigurationCustom.setGraphic(WindowModule.createMenuIcon("save"));
-		menuButtonLoadConfigurationCustom.setGraphic(WindowModule.createMenuIcon("load"));
-		menuButtonResetConfiguration.setGraphic(WindowModule.createMenuIcon("reset"));
-		menuButtonSftp.setGraphic(WindowModule.createMenuIcon("network"));
-		menuButtonSftpVotingReset.setGraphic(WindowModule.createMenuIcon("reset"));
-		menuButtonSftpReset.setGraphic(WindowModule.createMenuIcon("remove"));
-		menuButtonSftpStatic.setGraphic(WindowModule.createMenuIcon("html_static"));
-		menuButtonSftpSearch.setGraphic(WindowModule.createMenuIcon("html_search"));
-		menuButtonSftpParty.setGraphic(WindowModule.createMenuIcon("html_playlist"));
+		this.contextPlaylistRemove.setGraphic(WindowModule.createMenuIcon("remove"));
+		this.contextPlaylistEdit.setGraphic(WindowModule.createMenuIcon("rename"));
+		this.contextPlaylistClear.setGraphic(WindowModule.createMenuIcon("clear"));
+		this.contextPlaylistRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
 
-		// label
-		searchLabel.setGraphic(WindowModule.createMenuIcon("search"));
+		this.networkButton.setGraphic(WindowModule.createMenuIcon("network"));
+		this.youTubeButton.setGraphic(WindowModule.createMenuIcon("youTube"));
+		this.randomButton.setGraphic(WindowModule.createMenuIcon("random"));
 
+		this.buttonWrongFormattedFiles.setGraphic(WindowModule.createMenuIcon("wrongFormattedFiles"));
+		this.buttonIgnoredFiles.setGraphic(WindowModule.createMenuIcon("ignore"));
+		this.buttonAddDirectory.setGraphic(WindowModule.createMenuIcon("add"));
+
+		this.buttonLoadPlaylist.setGraphic(WindowModule.createMenuIcon("load"));
+		this.buttonSavePlaylist.setGraphic(WindowModule.createMenuIcon("save"));
+		this.buttonClearPlaylist.setGraphic(WindowModule.createMenuIcon("remove"));
+
+		this.menuButtonWebsites.setGraphic(WindowModule.createMenuIcon("html_static"));
+		this.menuButtonCsv.setGraphic(WindowModule.createMenuIcon("csv"));
+		this.menuButtonJson.setGraphic(WindowModule.createMenuIcon("json"));
+		this.menuButtonHtmlStatic.setGraphic(WindowModule.createMenuIcon("html_static"));
+		this.menuButtonHtmlSearch.setGraphic(WindowModule.createMenuIcon("html_search"));
+		this.menuButtonHtmlParty.setGraphic(WindowModule.createMenuIcon("html_playlist"));
+
+		this.menuButtonSaveConfiguration.setGraphic(WindowModule.createMenuIcon("save"));
+		this.menuButtonLoadConfiguration.setGraphic(WindowModule.createMenuIcon("load"));
+		this.menuButtonSaveConfigurationCustom.setGraphic(WindowModule.createMenuIcon("save"));
+		this.menuButtonLoadConfigurationCustom.setGraphic(WindowModule.createMenuIcon("load"));
+		this.menuButtonResetConfiguration.setGraphic(WindowModule.createMenuIcon("reset"));
+
+		this.menuButtonSftp.setGraphic(WindowModule.createMenuIcon("network"));
+		this.menuButtonSftpVotingReset.setGraphic(WindowModule.createMenuIcon("reset"));
+		this.menuButtonSftpReset.setGraphic(WindowModule.createMenuIcon("remove"));
+		this.menuButtonSftpStatic.setGraphic(WindowModule.createMenuIcon("html_static"));
+		this.menuButtonSftpSearch.setGraphic(WindowModule.createMenuIcon("html_search"));
+		this.menuButtonSftpParty.setGraphic(WindowModule.createMenuIcon("html_playlist"));
+
+		this.aboutButton.setGraphic(WindowModule.createMenuIcon("about"));
+		this.helpButton.setGraphic(WindowModule.createMenuIcon("help"));
+
+		// disable some buttons on start
 		this.menuButtonSftp.setDisable(true);
 		this.menuButtonSftpVotingReset.setDisable(true);
 
+		// set last name to current user name
 		this.lastName = System.getProperty("user.name");
 
+		// translate the text in the main window
 		translateText();
+
 	}
 
-	public void setMainWindow(Main window) {
-		this.mainWindow = window;
+	/**
+	 * Connect Main class with this class
+	 * 
+	 * @param mainClass
+	 *            (Main)
+	 */
+	public void setMainWindow(Main mainClass) {
+		this.mainClass = mainClass;
 
 		refreshMusicVideoTableWithoutUpdate();
 		refreshMusicVideoDirectoryTable();
 		refreshMusicVideoPlaylistTable();
 
-		this.menuButtonAlwaysSave.setSelected(this.mainWindow.getMusicVideohandler().getAlwaysSave());
+		this.menuButtonAlwaysSave.setSelected(this.mainClass.getMusicVideohandler().getAlwaysSave());
 
 		// select source path tab if there are no music videos
-		if (this.mainWindow.getMusicVideohandler().getMusicVideoList() == null) {
-			tabView.getSelectionModel().select(this.sourceTab);
+		if (this.mainClass.getMusicVideohandler().getMusicVideoList() == null) {
+			tabView.getSelectionModel().select(this.musicVideoSourceFolderTab);
 		}
 	}
 
@@ -645,23 +757,23 @@ public class MainWindowController {
 	private void openSelectedVideoFile() {
 
 		// get the selected tab
-		Tab selectedTab = tabView.getSelectionModel().getSelectedItem();
+		final Tab selectedTab = tabView.getSelectionModel().getSelectedItem();
 
-		if (selectedTab == musicVideoTableTab) {
+		if (selectedTab == musicVideoListTab) {
 
 			// get the currently selected entry
-			MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
+			final MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
 
 			// if entry isn't null
 			if (selectedEntry != null) {
 				// open the music video file with the index
-				this.mainWindow.getMusicVideohandler().openMusicVideo(selectedEntry.getIndex() - 1);
+				this.mainClass.getMusicVideohandler().openMusicVideo(selectedEntry.getIndex() - 1);
 			} else {
 				// search on YouTube
 				searchOnYouTube();
 			}
 
-		} else if (selectedTab == playlistTab) {
+		} else if (selectedTab == musicVideoPlaylistTab) {
 
 			// select the top item
 			this.playlistTable.getSelectionModel().select(0);
@@ -675,7 +787,7 @@ public class MainWindowController {
 			// clear the selection
 			this.playlistTable.getSelectionModel().clearSelection();
 
-		} else if (selectedTab == sourceTab) {
+		} else if (selectedTab == musicVideoSourceFolderTab) {
 
 			// select the top item
 			this.directoryPathTable.getSelectionModel().select(0);
@@ -700,10 +812,11 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void mousePressed(MouseEvent e) {
-		leftMouseKeyWasPressed = false;
+
+		this.leftMouseKeyWasPressed = false;
 
 		if (e.isPrimaryButtonDown()) {
-			leftMouseKeyWasPressed = true;
+			this.leftMouseKeyWasPressed = true;
 		}
 	}
 
@@ -712,7 +825,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void openMusicVideoFileLeftClick() {
-		if (leftMouseKeyWasPressed == true) {
+		if (this.leftMouseKeyWasPressed == true) {
 			openSelectedVideoFile();
 		}
 	}
@@ -722,7 +835,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void openDirectoryLeftClick() {
-		if (leftMouseKeyWasPressed == true) {
+		if (this.leftMouseKeyWasPressed == true) {
 			showSelectedDirectoryInExplorer();
 		}
 	}
@@ -734,12 +847,12 @@ public class MainWindowController {
 	private void openTopMusicVideoFile() {
 
 		// get the selected tab
-		Tab selectedTab = tabView.getSelectionModel().getSelectedItem();
+		final Tab selectedTab = tabView.getSelectionModel().getSelectedItem();
 
-		if (selectedTab == musicVideoTableTab) {
+		if (selectedTab == musicVideoListTab) {
 
 			// select the top item
-			this.musicVideoTable.getSelectionModel().select(0);
+			this.musicVideoTable.getSelectionModel().selectFirst();
 
 			// open the selected item externally
 			openSelectedVideoFile();
@@ -747,7 +860,7 @@ public class MainWindowController {
 			// clear the selection
 			this.musicVideoTable.getSelectionModel().clearSelection();
 
-		} else if (selectedTab == playlistTab) {
+		} else if (selectedTab == musicVideoPlaylistTab) {
 
 			// select the top item
 			this.playlistTable.getSelectionModel().select(0);
@@ -758,7 +871,7 @@ public class MainWindowController {
 			// clear the selection
 			this.playlistTable.getSelectionModel().clearSelection();
 
-		} else if (selectedTab == sourceTab) {
+		} else if (selectedTab == musicVideoSourceFolderTab) {
 
 			// select the top item
 			this.directoryPathTable.getSelectionModel().select(0);
@@ -799,16 +912,16 @@ public class MainWindowController {
 		this.searchBox.setText("");
 
 		// get the selected tab
-		Tab selectedTab = tabView.getSelectionModel().getSelectedItem();
+		final Tab selectedTab = tabView.getSelectionModel().getSelectedItem();
 
 		// change the text in the search box respective to the selected tab
-		if (selectedTab == musicVideoTableTab) {
+		if (selectedTab == musicVideoListTab) {
 			this.searchBox.setPromptText(Internationalization.translate("Search for") + " "
 					+ Internationalization.translate("music videos") + "...");
-		} else if (selectedTab == playlistTab) {
+		} else if (selectedTab == musicVideoPlaylistTab) {
 			this.searchBox.setPromptText(Internationalization.translate("Search for") + " "
 					+ Internationalization.translate("playlist entries") + "...");
-		} else if (selectedTab == sourceTab) {
+		} else if (selectedTab == musicVideoSourceFolderTab) {
 			this.searchBox.setPromptText(Internationalization.translate("Search for") + " "
 					+ Internationalization.translate("directories") + "...");
 		}
@@ -823,7 +936,7 @@ public class MainWindowController {
 	private void searchOnYouTube() {
 
 		// Text we want to search on YouTube
-		String searchQuery = searchBox.getText();
+		final String searchQuery = searchBox.getText();
 
 		// The URL of YouTube
 		String youTubeUrl = "https://www.youtube.com";
@@ -833,7 +946,7 @@ public class MainWindowController {
 
 			try {
 				// encode the text to a browser query
-				String textToSearchQuery = URLEncoder.encode(searchQuery, "UTF-8");
+				final String textToSearchQuery = URLEncoder.encode(searchQuery, "UTF-8");
 				// add the search query to the YouTube URL
 				youTubeUrl += "/results?search_query=" + textToSearchQuery;
 			} catch (UnsupportedEncodingException e) {
@@ -853,20 +966,20 @@ public class MainWindowController {
 	@FXML
 	private void addSourceFolderDialog() {
 
-		if (!this.mainWindow.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
+		if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
 
 			// get a directory
-			File directory = DialogHandler.chooseDirectory(this.mainWindow.getPrimaryStage(),
+			final File directory = DialogHandler.chooseDirectory(this.mainClass.getPrimaryStage(),
 					Internationalization.translate("Select a new source directory"), null);
 
 			// if the directory isn't null
 			if (directory != null) {
 
 				// add it to the path list
-				this.mainWindow.getMusicVideohandler().addPathToPathList(directory.toPath());
+				this.mainClass.getMusicVideohandler().addPathToPathList(directory.toPath());
 
 				// update the music video table list
-				this.mainWindow.getMusicVideohandler().updateMusicVideoList();
+				this.mainClass.getMusicVideohandler().updateMusicVideoList();
 
 				// update all JavaFx tables
 				refreshMusicVideoTable();
@@ -884,17 +997,17 @@ public class MainWindowController {
 		try {
 
 			// load the whole FXML window
-			FXMLLoader loader = new FXMLLoader();
+			final FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getClassLoader().getResource("windows/AboutWindow.fxml"));
 
 			// >> load the window itself
-			Parent root1 = (Parent) loader.load();
+			final Parent root1 = (Parent) loader.load();
 
 			// >> load the controller to the window
 			loader.getController();
 
 			// create a stage
-			Stage stage = new Stage(StageStyle.UTILITY);
+			final Stage stage = new Stage(StageStyle.UTILITY);
 			stage.setScene(new Scene(root1));
 			stage.setResizable(false);
 			stage.setTitle(Internationalization.translate("About"));
@@ -913,10 +1026,10 @@ public class MainWindowController {
 	@FXML
 	private void openServerLoginWindow() {
 
-		if (!this.mainWindow.getMusicVideohandler().sftpConnectionEstablished()) {
+		if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished()) {
 
-			if ((this.mainWindow.getMusicVideohandler().getPlaylistHandler() != null
-					&& this.mainWindow.getMusicVideohandler().getPlaylistHandler().getPlaylistElements() == null)
+			if ((this.mainClass.getMusicVideohandler().getPlaylistHandler() != null
+					&& this.mainClass.getMusicVideohandler().getPlaylistHandler().getPlaylistElements() == null)
 					|| DialogHandler.confirm(Internationalization.translate("Do you really want to continue") + "?",
 							Internationalization
 									.translate("If you login to the server you will lose your current playlist") + "!",
@@ -927,14 +1040,14 @@ public class MainWindowController {
 				try {
 
 					// load the whole FXML window
-					FXMLLoader loader = new FXMLLoader();
+					final FXMLLoader loader = new FXMLLoader();
 					loader.setLocation(getClass().getClassLoader().getResource("windows/ServerLoginWindow.fxml"));
 
 					// >> load the window itself
-					Parent root1 = (Parent) loader.load();
+					final Parent root1 = (Parent) loader.load();
 
 					// create a stage
-					Stage stage = new Stage(StageStyle.DECORATED);
+					final Stage stage = new Stage(StageStyle.DECORATED);
 					stage.setScene(new Scene(root1));
 					stage.setResizable(false);
 					stage.setWidth(400);
@@ -957,8 +1070,8 @@ public class MainWindowController {
 					});
 
 					// Connection to the Controller to the stage
-					ServerLoginWindowController windowController = loader.getController();
-					windowController.setServerLoginWindow(this.mainWindow, stage);
+					final ServerLoginWindowController windowController = loader.getController();
+					windowController.setServerLoginWindow(this.mainClass, stage);
 
 					// show the stage
 					stage.show();
@@ -971,7 +1084,7 @@ public class MainWindowController {
 			if (DialogHandler.confirm(Internationalization.translate("Logout") + "?",
 					Internationalization.translate("Do you want to log out") + "?",
 					Internationalization.translate("You are already logged in. Click OK to logout."))) {
-				this.mainWindow.getMusicVideohandler().sftpDisconnect();
+				this.mainClass.getMusicVideohandler().sftpDisconnect();
 				this.networkButton.setSelected(false);
 				refreshMusicVideoPlaylistTable();
 			} else {
@@ -990,18 +1103,18 @@ public class MainWindowController {
 		try {
 
 			// load the whole FXML window
-			FXMLLoader loader = new FXMLLoader();
+			final FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getClassLoader().getResource("windows/WrongFomattedFilesWindow.fxml"));
 
 			// >> load the window itself
-			Parent root1 = (Parent) loader.load();
+			final Parent root1 = (Parent) loader.load();
 
 			// >> load the controller to the window and give him the main window
-			WrongFormattedFilesWindowController windowController = loader.getController();
-			windowController.setWindowController(this.mainWindow, this);
+			final WrongFormattedFilesWindowController windowController = loader.getController();
+			windowController.setWindowController(this.mainClass, this);
 
 			// create a stage
-			Stage stage = new Stage(StageStyle.DECORATED);
+			final Stage stage = new Stage(StageStyle.DECORATED);
 			stage.setScene(new Scene(root1));
 			stage.setResizable(true);
 			stage.setMinWidth(500);
@@ -1031,18 +1144,18 @@ public class MainWindowController {
 		try {
 
 			// load the whole FXML window
-			FXMLLoader loader = new FXMLLoader();
+			final FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getClassLoader().getResource("windows/IgnoredFilesWindow.fxml"));
 
 			// >> load the window itself
-			Parent root1 = (Parent) loader.load();
+			final Parent root1 = (Parent) loader.load();
 
 			// >> load the controller to the window and give him the main window
-			IgnoredFilesWindowController windowController = loader.getController();
-			windowController.setWindowController(this.mainWindow, this);
+			final IgnoredFilesWindowController windowController = loader.getController();
+			windowController.setWindowController(this.mainClass, this);
 
 			// create a stage
-			Stage stage = new Stage(StageStyle.DECORATED);
+			final Stage stage = new Stage(StageStyle.DECORATED);
 			stage.setScene(new Scene(root1));
 			stage.setResizable(true);
 			stage.setMinWidth(450);
@@ -1070,24 +1183,24 @@ public class MainWindowController {
 	@FXML
 	private void openRandomWindow() {
 
-		if (this.mainWindow.getMusicVideohandler().getMusicVideoList() != null) {
+		if (this.mainClass.getMusicVideohandler().getMusicVideoList() != null) {
 
-			if (this.mainWindow.getMusicVideohandler().getMusicVideoList().length >= 5) {
+			if (this.mainClass.getMusicVideohandler().getMusicVideoList().length >= 5) {
 				try {
 
 					// load the whole FXML window
-					FXMLLoader loader = new FXMLLoader();
+					final FXMLLoader loader = new FXMLLoader();
 					loader.setLocation(getClass().getClassLoader().getResource("windows/RandomMusicVideoWindow.fxml"));
 
 					// >> load the window itself
-					Parent root1 = (Parent) loader.load();
+					final Parent root1 = (Parent) loader.load();
 
 					// >> load the controller to the window and give him the main window
-					RandomWindowController windowController = loader.getController();
-					windowController.setWindowController(this.mainWindow, this);
+					final RandomWindowController windowController = loader.getController();
+					windowController.setWindowController(this.mainClass, this);
 
 					// create a stage
-					Stage stage = new Stage(StageStyle.DECORATED);
+					final Stage stage = new Stage(StageStyle.DECORATED);
 					stage.setScene(new Scene(root1));
 					stage.setResizable(true);
 					stage.setMinHeight(360);
@@ -1107,12 +1220,12 @@ public class MainWindowController {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			} else if (this.mainWindow.getMusicVideohandler().getMusicVideoList().length >= 1) {
+			} else if (this.mainClass.getMusicVideohandler().getMusicVideoList().length >= 1) {
 
 				final Random randomGenerator = new Random();
 				final int randomNumber = randomGenerator
-						.nextInt(this.mainWindow.getMusicVideohandler().getMusicVideoList().length);
-				this.mainWindow.getMusicVideohandler().openMusicVideo(randomNumber);
+						.nextInt(this.mainClass.getMusicVideohandler().getMusicVideoList().length);
+				this.mainClass.getMusicVideohandler().openMusicVideo(randomNumber);
 
 			}
 		}
@@ -1126,16 +1239,16 @@ public class MainWindowController {
 	private void removeDirectory() {
 
 		// get the currently selected directory/path
-		MusicVideoSourceDirectoriesTableView selectedEntry = this.directoryPathTable.getSelectionModel()
+		final MusicVideoSourceDirectoriesTableView selectedEntry = this.directoryPathTable.getSelectionModel()
 				.getSelectedItem();
 
 		// if something was selected
 		if (selectedEntry != null) {
 
-			if (!this.mainWindow.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
+			if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
 
 				// remove this entry from the path list
-				this.mainWindow.getMusicVideohandler().removeFromPathList(Paths.get(selectedEntry.getFilePath()));
+				this.mainClass.getMusicVideohandler().removeFromPathList(Paths.get(selectedEntry.getFilePath()));
 
 				// update now both tables
 				refreshMusicVideoDirectoryTable();
@@ -1151,7 +1264,7 @@ public class MainWindowController {
 	private boolean showSelectedDirectoryInExplorer() {
 
 		// get the currently selected entry
-		MusicVideoSourceDirectoriesTableView selectedEntry = this.directoryPathTable.getSelectionModel()
+		final MusicVideoSourceDirectoriesTableView selectedEntry = this.directoryPathTable.getSelectionModel()
 				.getSelectedItem();
 
 		// if entry isn't null
@@ -1171,13 +1284,13 @@ public class MainWindowController {
 	private void showDirectoryInExplorerMusicVideoList() {
 
 		// get the currently selected entry
-		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
+		final MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
 
 		// if entry isn't null
 		if (selectedEntry != null) {
 
 			// get the path of the music video object over the table index - 1
-			MusicVideo selectedFile = this.mainWindow.getMusicVideohandler()
+			final MusicVideo selectedFile = this.mainClass.getMusicVideohandler()
 					.getMusicVideoList()[selectedEntry.getIndex() - 1];
 
 			// open the selected music video file externally
@@ -1192,25 +1305,26 @@ public class MainWindowController {
 	private void addVideoToPlaylist() {
 
 		// get the currently selected entry
-		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
+		final MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
 
 		// if entry not null
 		if (selectedEntry != null) {
 
 			// get the table index
-			int a = selectedEntry.getIndex();
+			final int playlistEntryIndex = selectedEntry.getIndex();
 
 			// dialog to get author and optional a comment
-			String[] authorComment = DialogHandler.createPlaylistEntry(lastName);
+			final String[] authorAndComment = DialogHandler.createPlaylistEntry(lastName);
 
 			// if author not null add it to the playlist
-			if (authorComment != null && authorComment[0] != null) {
-				this.lastName = authorComment[0];
-				if (authorComment[1] == null) {
-					authorComment[1] = "";
+			if (authorAndComment != null && authorAndComment[0] != null) {
+				this.lastName = authorAndComment[0];
+				if (authorAndComment[1] == null) {
+					authorAndComment[1] = "";
 				}
 
-				this.mainWindow.getMusicVideohandler().addMusicVideoToPlaylist(a, authorComment[0], authorComment[1]);
+				this.mainClass.getMusicVideohandler().addMusicVideoToPlaylist(playlistEntryIndex, authorAndComment[0],
+						authorAndComment[1]);
 				refreshMusicVideoPlaylistTable();
 			}
 
@@ -1224,7 +1338,7 @@ public class MainWindowController {
 	public void refreshMusicVideoTable() {
 
 		// update the music video data
-		this.mainWindow.getMusicVideohandler().updateMusicVideoList();
+		this.mainClass.getMusicVideohandler().updateMusicVideoList();
 
 		refreshMusicVideoTableWithoutUpdate();
 	}
@@ -1232,13 +1346,13 @@ public class MainWindowController {
 	/**
 	 * Refresh the music video file table
 	 */
-	public void refreshMusicVideoTableWithoutUpdate() {
+	private void refreshMusicVideoTableWithoutUpdate() {
 
 		// get music video data
-		MusicVideo[] listOfVideos = this.mainWindow.getMusicVideohandler().getMusicVideoList();
+		final MusicVideo[] listOfVideos = this.mainClass.getMusicVideohandler().getMusicVideoList();
 
 		// clear table
-		tableDataMusicVideo.clear();
+		this.tableDataMusicVideo.clear();
 
 		// add music video data
 		if (listOfVideos != null) {
@@ -1256,15 +1370,15 @@ public class MainWindowController {
 	public void refreshMusicVideoDirectoryTable() {
 
 		// get music video data
-		Path[] listOfPaths = this.mainWindow.getMusicVideohandler().getPathList();
+		final Path[] listOfPaths = this.mainClass.getMusicVideohandler().getPathList();
 
 		// clear table
-		tableDataDirectory.clear();
+		this.tableDataDirectory.clear();
 
 		// add music video data
 		if (listOfPaths != null) {
-			for (Path directory : listOfPaths) {
-				tableDataDirectory.add(new MusicVideoSourceDirectoriesTableView(directory.toString()));
+			for (int i = 0; i < listOfPaths.length; i++) {
+				tableDataDirectory.add(new MusicVideoSourceDirectoriesTableView(listOfPaths[i].toString()));
 			}
 		}
 	}
@@ -1278,62 +1392,60 @@ public class MainWindowController {
 		// clear the table
 		this.tableDataPlaylist.clear();
 
-		if (this.mainWindow.getMusicVideohandler().sftpConnectionEstablished()) {
+		if (this.mainClass.getMusicVideohandler().sftpConnectionEstablished()) {
 			// retrieve SFTP playlist
-			this.mainWindow.getMusicVideohandler().sftpRetrievePlaylist();
+			this.mainClass.getMusicVideohandler().sftpRetrievePlaylist();
 		}
 
 		// get music video data
-		MusicVideoPlaylistElement[] listOfEntries = this.mainWindow.getMusicVideohandler().getPlaylistHandler()
+		final MusicVideoPlaylistElement[] listOfEntries = this.mainClass.getMusicVideohandler().getPlaylistHandler()
 				.getPlaylistElements();
 
 		// add music video data
 		if (listOfEntries != null) {
-			int i = 0;
-			for (MusicVideoPlaylistElement element : listOfEntries) {
-				System.out.println("Refresh and add file by " + element.getAuthor());
-				MusicVideo a = this.mainWindow.getMusicVideohandler()
-						.getMusicVideoOfPlaylistItem(element.getMusicVideoFile().getPath());
+			for (int i = 0; i < listOfEntries.length; i++) {
+				System.out.println("Refresh and add file by " + listOfEntries[i].getAuthor());
+				final MusicVideo playlistMusicVideoFile = this.mainClass.getMusicVideohandler()
+						.getMusicVideoOfPlaylistItem(listOfEntries[i].getMusicVideoFile().getPath());
 
-				if (a != null) {
-					tableDataPlaylist.add(new MusicVideoPlaylistTableView(i, element.getMusicVideoIndex(),
-							element.getUnixTimeString(), a.getTitle(), a.getArtist(), element.getAuthor(),
-							element.getComment(), element.getVotes()));
-					i++;
+				if (playlistMusicVideoFile != null) {
+					tableDataPlaylist.add(new MusicVideoPlaylistTableView(i, listOfEntries[i].getMusicVideoIndex(),
+							listOfEntries[i].getUnixTimeString(), playlistMusicVideoFile.getTitle(),
+							playlistMusicVideoFile.getArtist(), listOfEntries[i].getAuthor(),
+							listOfEntries[i].getComment(), listOfEntries[i].getVotes()));
 				} else {
 					System.err.println(
 							"File not added because it's either ignored or not in the current music video list!");
 				}
-
 			}
 
 			// reset table sort
-			playlistTable.getSortOrder().clear();
+			this.playlistTable.getSortOrder().clear();
 
 			// check if connected else set votes invisible
-			if (this.mainWindow.getMusicVideohandler().sftpConnectionEstablished()) {
-				columnPlaylistVotes.setVisible(true);
-				columnPlaylistVotes.setSortType(TableColumn.SortType.DESCENDING);
-				playlistTable.getSortOrder().add(columnPlaylistVotes);
-				columnPlaylistVotes.setSortable(true);
+			if (this.mainClass.getMusicVideohandler().sftpConnectionEstablished()) {
+				this.columnPlaylistVotes.setVisible(true);
+				this.columnPlaylistVotes.setSortType(TableColumn.SortType.DESCENDING);
+				this.playlistTable.getSortOrder().add(this.columnPlaylistVotes);
+				this.columnPlaylistVotes.setSortable(true);
 			} else {
-				columnPlaylistVotes.setVisible(false);
+				this.columnPlaylistVotes.setVisible(false);
 			}
 
 			// sort the table in a specific order:
-			columnPlaylistTime.setSortType(TableColumn.SortType.ASCENDING);
-			playlistTable.getSortOrder().add(columnPlaylistTime);
-			columnPlaylistTime.setSortable(true);
-			columnPlaylistTitle.setSortType(TableColumn.SortType.DESCENDING);
-			playlistTable.getSortOrder().add(columnPlaylistTitle);
-			columnPlaylistTitle.setSortable(true);
-			columnPlaylistArtist.setSortType(TableColumn.SortType.DESCENDING);
-			playlistTable.getSortOrder().add(columnPlaylistArtist);
-			columnPlaylistArtist.setSortable(true);
-			columnPlaylistAuthor.setSortType(TableColumn.SortType.DESCENDING);
-			playlistTable.getSortOrder().add(columnPlaylistAuthor);
-			columnPlaylistAuthor.setSortable(true);
-			playlistTable.sort();
+			this.columnPlaylistTime.setSortType(TableColumn.SortType.ASCENDING);
+			this.playlistTable.getSortOrder().add(this.columnPlaylistTime);
+			this.columnPlaylistTime.setSortable(true);
+			this.columnPlaylistTitle.setSortType(TableColumn.SortType.DESCENDING);
+			this.playlistTable.getSortOrder().add(this.columnPlaylistTitle);
+			this.columnPlaylistTitle.setSortable(true);
+			this.columnPlaylistArtist.setSortType(TableColumn.SortType.DESCENDING);
+			this.playlistTable.getSortOrder().add(this.columnPlaylistArtist);
+			this.columnPlaylistArtist.setSortable(true);
+			this.columnPlaylistAuthor.setSortType(TableColumn.SortType.DESCENDING);
+			this.playlistTable.getSortOrder().add(this.columnPlaylistAuthor);
+			this.columnPlaylistAuthor.setSortable(true);
+			this.playlistTable.sort();
 		}
 
 	}
@@ -1345,14 +1457,14 @@ public class MainWindowController {
 	private void ignoreMusicVideoFile() {
 
 		// get the currently selected entry
-		MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
+		final MusicVideoTableView selectedEntry = this.musicVideoTable.getSelectionModel().getSelectedItem();
 
 		if (selectedEntry != null) {
 
-			if (!this.mainWindow.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
-				MusicVideo selectedFile = this.mainWindow.getMusicVideohandler()
+			if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
+				final MusicVideo selectedFile = this.mainClass.getMusicVideohandler()
 						.getMusicVideoList()[selectedEntry.getIndex() - 1];
-				this.mainWindow.getMusicVideohandler().addIgnoredFileToIgnoredFilesList(selectedFile.getPath());
+				this.mainClass.getMusicVideohandler().addIgnoredFileToIgnoredFilesList(selectedFile.getPath());
 
 				// update the music video list after this
 				refreshMusicVideoTable();
@@ -1365,7 +1477,7 @@ public class MainWindowController {
 	 * Add network: Check if a working network connection is established
 	 */
 	private void checkNetwork() {
-		if (this.mainWindow.getMusicVideohandler().sftpConnectionEstablished()) {
+		if (this.mainClass.getMusicVideohandler().sftpConnectionEstablished()) {
 			this.networkButton.setSelected(true);
 			this.menuButtonSftp.setDisable(false);
 			this.menuButtonSftpVotingReset.setDisable(false);
@@ -1385,13 +1497,13 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void exportHtmlStatic() {
-		File htmlFileDestination = DialogHandler.chooseDirectory(this.mainWindow.getPrimaryStage(),
+		final File htmlFileDestination = DialogHandler.chooseDirectory(this.mainClass.getPrimaryStage(),
 				Internationalization.translate("Export music video list to") + " "
 						+ Internationalization.translate("a static HTML website"),
 				null);
 
 		if (htmlFileDestination != null) {
-			this.mainWindow.getMusicVideohandler().saveHtmlList(htmlFileDestination.toPath(), true);
+			this.mainClass.getMusicVideohandler().saveHtmlList(htmlFileDestination.toPath(), true);
 		}
 	}
 
@@ -1400,13 +1512,13 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void exportHtmlSearch() {
-		File htmlFileDestination = DialogHandler.chooseDirectory(this.mainWindow.getPrimaryStage(),
+		final File htmlFileDestination = DialogHandler.chooseDirectory(this.mainClass.getPrimaryStage(),
 				Internationalization.translate("Export music video list to") + " "
 						+ Internationalization.translate("a static HTML website with a search"),
 				null);
 
 		if (htmlFileDestination != null) {
-			this.mainWindow.getMusicVideohandler().saveHtmlSearch(htmlFileDestination.toPath(), true);
+			this.mainClass.getMusicVideohandler().saveHtmlSearch(htmlFileDestination.toPath(), true);
 		}
 	}
 
@@ -1415,13 +1527,13 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void exportHtmlParty() {
-		File htmlFileDestination = DialogHandler.chooseDirectory(this.mainWindow.getPrimaryStage(),
+		final File htmlFileDestination = DialogHandler.chooseDirectory(this.mainClass.getPrimaryStage(),
 				Internationalization.translate("Export music video list to") + " "
 						+ Internationalization.translate("a party HTML/PHP website structure"),
 				null);
 
 		if (htmlFileDestination != null) {
-			this.mainWindow.getMusicVideohandler().saveHtmlParty(htmlFileDestination.toPath(), true);
+			this.mainClass.getMusicVideohandler().saveHtmlParty(htmlFileDestination.toPath(), true);
 		}
 	}
 
@@ -1430,14 +1542,14 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void exportCsv() {
-		ExtensionFilter csvFilter = new ExtensionFilter(Internationalization.translate("CSV file"), "*.csv");
-		File[] csvFile = DialogHandler.chooseFile(this.mainWindow.getPrimaryStage(),
+		final ExtensionFilter csvFilter = new ExtensionFilter(Internationalization.translate("CSV file"), "*.csv");
+		final File[] csvFile = DialogHandler.chooseFile(this.mainClass.getPrimaryStage(),
 				Internationalization.translate("Export music video list to") + " "
 						+ Internationalization.translate("a CSV file"),
 				null, new ExtensionFilter[] { csvFilter }, DialogModule.CHOOSE_ACTION.SAVE);
 
 		if (csvFile != null && csvFile[0] != null) {
-			this.mainWindow.getMusicVideohandler().saveCsv(csvFile[0].toPath());
+			this.mainClass.getMusicVideohandler().saveCsv(csvFile[0].toPath());
 		}
 	}
 
@@ -1446,49 +1558,49 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void exportJson() {
-		ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("JSON file"), "*.json");
-		File[] jsonFile = DialogHandler.chooseFile(this.mainWindow.getPrimaryStage(),
+		final ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("JSON file"), "*.json");
+		final File[] jsonFile = DialogHandler.chooseFile(this.mainClass.getPrimaryStage(),
 				Internationalization.translate("Export music video list to") + " "
 						+ Internationalization.translate("a JSON file"),
 				null, new ExtensionFilter[] { jsonFilter }, DialogModule.CHOOSE_ACTION.SAVE);
 
 		if (jsonFile != null && jsonFile[0] != null) {
-			this.mainWindow.getMusicVideohandler().saveJson(jsonFile[0].toPath());
+			this.mainClass.getMusicVideohandler().saveJson(jsonFile[0].toPath());
 		}
 	}
 
 	@FXML
 	private void saveConfiguartion() {
-		this.mainWindow.getMusicVideohandler().saveSettingsToFile();
+		this.mainClass.getMusicVideohandler().saveSettingsToFile();
 	}
 
 	@FXML
 	private void loadConfiguartion() {
-		this.mainWindow.getMusicVideohandler().loadSettingsFromFile();
+		this.mainClass.getMusicVideohandler().loadSettingsFromFile();
 		refreshMusicVideoTable();
 		refreshMusicVideoDirectoryTable();
 	}
 
 	@FXML
 	private void saveConfiguartionCustom() {
-		ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("JSON file"), "*.json");
-		File[] jsonFile = DialogHandler.chooseFile(this.mainWindow.getPrimaryStage(),
+		final ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("JSON file"), "*.json");
+		final File[] jsonFile = DialogHandler.chooseFile(this.mainClass.getPrimaryStage(),
 				Internationalization.translate("Save configuration"), null, new ExtensionFilter[] { jsonFilter },
 				DialogModule.CHOOSE_ACTION.SAVE);
 		if (jsonFile != null && jsonFile[0] != null) {
-			File saveToThis = Paths.get(jsonFile[0].getAbsolutePath() + ".json").toFile();
-			this.mainWindow.getMusicVideohandler().saveSettings(saveToThis);
+			final File saveToThis = Paths.get(jsonFile[0].getAbsolutePath() + ".json").toFile();
+			this.mainClass.getMusicVideohandler().saveSettings(saveToThis);
 		}
 	}
 
 	@FXML
 	private void loadConfiguartionCustom() {
-		ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("JSON file"), "*.json");
-		File[] jsonFile = DialogHandler.chooseFile(this.mainWindow.getPrimaryStage(),
+		final ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("JSON file"), "*.json");
+		final File[] jsonFile = DialogHandler.chooseFile(this.mainClass.getPrimaryStage(),
 				Internationalization.translate("Load configuration"), null, new ExtensionFilter[] { jsonFilter },
 				DialogModule.CHOOSE_ACTION.NORMAL);
 		if (jsonFile != null && jsonFile[0] != null) {
-			this.mainWindow.getMusicVideohandler().loadSettings(jsonFile[0]);
+			this.mainClass.getMusicVideohandler().loadSettings(jsonFile[0]);
 		}
 		refreshMusicVideoTable();
 		refreshMusicVideoDirectoryTable();
@@ -1499,7 +1611,7 @@ public class MainWindowController {
 		if (DialogHandler.confirm(Internationalization.translate("Confirm to continue"),
 				Internationalization.translate("Reset Everything"),
 				Internationalization.translate("Do you really want to reset EVERYTHING") + "!?")) {
-			this.mainWindow.getMusicVideohandler().reset();
+			this.mainClass.getMusicVideohandler().reset();
 			refreshMusicVideoTable();
 			refreshMusicVideoDirectoryTable();
 			refreshMusicVideoPlaylistTable();
@@ -1508,7 +1620,7 @@ public class MainWindowController {
 	}
 
 	@FXML
-	public void openGitHubHelpLink() {
+	private void openGitHubHelpLink() {
 		ExternalApplicationModule.openUrl("https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager");
 	}
 
@@ -1516,22 +1628,22 @@ public class MainWindowController {
 	private void renameFile() {
 
 		// get the currently selected entry in the table
-		MusicVideoTableView selectedEntry = musicVideoTable.getSelectionModel().getSelectedItem();
+		final MusicVideoTableView selectedEntry = musicVideoTable.getSelectionModel().getSelectedItem();
 
 		// if something is selected
 		if (selectedEntry != null) {
 
-			if (!this.mainWindow.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
-				Path pathOfSelectedFile = this.mainWindow.getMusicVideohandler()
+			if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
+				final Path pathOfSelectedFile = this.mainClass.getMusicVideohandler()
 						.getMusicVideoList()[selectedEntry.getIndex() - 1].getPath();
 				// check if the file really exists and isn't a directory
-				File selectedFile = pathOfSelectedFile.toFile();
+				final File selectedFile = pathOfSelectedFile.toFile();
 				if (selectedFile.exists() && selectedFile.isFile()) {
 					// show dialog to rename the file
-					String a = DialogHandler.renameFile(selectedFile.getName());
-					if (a != null) {
+					final String newFileName = DialogHandler.renameFile(selectedFile.getName());
+					if (newFileName != null) {
 						FileReadWriteModule.rename(selectedFile,
-								Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + a).toFile());
+								Paths.get(selectedFile.getParentFile().getAbsolutePath() + "/" + newFileName).toFile());
 						refreshMusicVideoTable();
 					}
 				}
@@ -1554,7 +1666,7 @@ public class MainWindowController {
 
 		// if something is selected
 		if (selectedEntry != null) {
-			this.mainWindow.getMusicVideohandler().openMusicVideo(selectedEntry.getMusicVideoIndex() - 1);
+			this.mainClass.getMusicVideohandler().openMusicVideo(selectedEntry.getMusicVideoIndex() - 1);
 			return true;
 		}
 		return false;
@@ -1568,14 +1680,14 @@ public class MainWindowController {
 					Internationalization.translate("There is no playlist") + "!");
 		} else {
 			ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("Json File"), "*.json");
-			File[] fileName = DialogHandler.chooseFile(this.mainWindow.getPrimaryStage(),
+			File[] fileName = DialogHandler.chooseFile(this.mainClass.getPrimaryStage(),
 					Internationalization.translate("Save current playlist"), null, new ExtensionFilter[] { jsonFilter },
 					DialogModule.CHOOSE_ACTION.SAVE);
 			if (fileName != null && fileName[0] != null) {
 				File realFileName = new File(fileName[0].getParent() + "/" + fileName[0].getName());
 				this.tableDataPlaylist.clear();
 				this.refreshMusicVideoPlaylistTable();
-				this.mainWindow.getMusicVideohandler().savePlaylist(realFileName);
+				this.mainClass.getMusicVideohandler().savePlaylist(realFileName);
 			}
 		}
 
@@ -1588,11 +1700,11 @@ public class MainWindowController {
 						Internationalization.translate("Do you really want to clear your current playlist") + "?",
 						Internationalization.translate("The current playlist will be cleared if you continue"))) {
 			ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("JSON file"), "*.json");
-			File[] fileName = DialogHandler.chooseFile(this.mainWindow.getPrimaryStage(),
+			File[] fileName = DialogHandler.chooseFile(this.mainClass.getPrimaryStage(),
 					Internationalization.translate("Load a saved playlist"), null, new ExtensionFilter[] { jsonFilter },
 					DialogModule.CHOOSE_ACTION.NORMAL);
 			if (fileName != null && fileName[0] != null) {
-				this.mainWindow.getMusicVideohandler().loadPlaylist(fileName[0]);
+				this.mainClass.getMusicVideohandler().loadPlaylist(fileName[0]);
 			}
 			refreshMusicVideoPlaylistTable();
 		}
@@ -1610,7 +1722,7 @@ public class MainWindowController {
 
 		// if something is selected
 		if (selectedEntry != null) {
-			this.mainWindow.getMusicVideohandler().removeEntryFromPlaylist(selectedEntry.getIndex());
+			this.mainClass.getMusicVideohandler().removeEntryFromPlaylist(selectedEntry.getIndex());
 		}
 		refreshMusicVideoPlaylistTable();
 
@@ -1631,7 +1743,7 @@ public class MainWindowController {
 				if (authorComment[1] == null) {
 					authorComment[1] = "";
 				}
-				this.mainWindow.getMusicVideohandler().editMusicVideoToPlaylist(selectedEntry.getIndex(),
+				this.mainClass.getMusicVideohandler().editMusicVideoToPlaylist(selectedEntry.getIndex(),
 						authorComment[0], authorComment[1]);
 				refreshMusicVideoPlaylistTable();
 			}
@@ -1641,34 +1753,34 @@ public class MainWindowController {
 
 	@FXML
 	private void sftpVotingReset() {
-		this.mainWindow.getMusicVideohandler().resetVotingSftp();
+		this.mainClass.getMusicVideohandler().resetVotingSftp();
 	}
 
 	@FXML
 	private void sftpReset() {
-		this.mainWindow.getMusicVideohandler().resetSftp();
+		this.mainClass.getMusicVideohandler().resetSftp();
 		checkNetwork();
 	}
 
 	@FXML
 	private void sftpParty() {
-		this.mainWindow.getMusicVideohandler().transferHtmlParty();
+		this.mainClass.getMusicVideohandler().transferHtmlParty();
 	}
 
 	@FXML
 	private void sftpStatic() {
-		this.mainWindow.getMusicVideohandler().transferHtmlStatic();
+		this.mainClass.getMusicVideohandler().transferHtmlStatic();
 	}
 
 	@FXML
 	private void sftpSearch() {
-		this.mainWindow.getMusicVideohandler().transferHtmlSearch();
+		this.mainClass.getMusicVideohandler().transferHtmlSearch();
 	}
 
 	@FXML
 	public void changeAlwaysSave() {
-		this.menuButtonAlwaysSave.setSelected(this.mainWindow.getMusicVideohandler()
-				.setAlwaysSave(!this.mainWindow.getMusicVideohandler().getAlwaysSave()));
+		this.menuButtonAlwaysSave.setSelected(this.mainClass.getMusicVideohandler()
+				.setAlwaysSave(!this.mainClass.getMusicVideohandler().getAlwaysSave()));
 	}
 
 	@FXML
@@ -1676,7 +1788,7 @@ public class MainWindowController {
 		if (!this.tableDataPlaylist.isEmpty() && DialogHandler.confirm(Internationalization.translate("Clear playlist"),
 				Internationalization.translate("Do you really want to clear your current playlist") + "?",
 				Internationalization.translate("If you enter yes all playlist elements will be removed") + "!")) {
-			this.mainWindow.getMusicVideohandler().clearPlaylist();
+			this.mainClass.getMusicVideohandler().clearPlaylist();
 			this.tableDataPlaylist.clear();
 		}
 

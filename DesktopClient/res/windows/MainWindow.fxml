@@ -127,7 +127,7 @@
          <children>
             <TabPane fx:id="tabView" style="-fx-border-color: transparent; -fx-background-color: white;" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="ALWAYS">
               <tabs>
-                <Tab fx:id="musicVideoTableTab" onSelectionChanged="#clearSearch" text="Music Video List">
+                <Tab fx:id="musicVideoListTab" onSelectionChanged="#clearSearch" text="Music Video List">
                      <content>
                         <VBox>
                            <children>
@@ -157,7 +157,7 @@
                         </VBox>
                      </content>
                 </Tab>
-                <Tab fx:id="playlistTab" onSelectionChanged="#clearSearch" text="Playlist">
+                <Tab fx:id="musicVideoPlaylistTab" onSelectionChanged="#clearSearch" text="Playlist">
                      <content>
                         <VBox style="-fx-background-color: white;">
                            <children>
@@ -198,7 +198,7 @@
                         </VBox>
                      </content>
                 </Tab>
-                  <Tab fx:id="sourceTab" onSelectionChanged="#clearSearch" text="Source Folder/s">
+                  <Tab fx:id="musicVideoSourceFolderTab" onSelectionChanged="#clearSearch" text="Source Folder/s">
                      <content>
                         <VBox style="-fx-background-color: white;">
                            <children>

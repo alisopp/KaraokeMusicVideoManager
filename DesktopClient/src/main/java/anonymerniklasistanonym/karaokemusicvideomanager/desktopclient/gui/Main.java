@@ -116,7 +116,7 @@ public class Main extends Application {
 	 * @return (MusicVideoHandler)
 	 */
 	public MusicVideoHandler getMusicVideohandler() {
-		return musicVideoHandler;
+		return this.musicVideoHandler;
 	}
 
 }

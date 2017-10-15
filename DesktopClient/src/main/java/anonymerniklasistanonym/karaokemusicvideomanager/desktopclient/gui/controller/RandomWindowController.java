@@ -152,7 +152,7 @@ public class RandomWindowController {
 				this.randomLable5 };
 
 		// create an array that has as many elements as the labels
-		this.labelContent = new MusicVideoRandomElement[allLabels.length];
+		this.labelContent = new MusicVideoRandomElement[this.allLabels.length];
 
 		// now refresh/create the random music video list
 		refreshRandom();
@@ -160,22 +160,25 @@ public class RandomWindowController {
 
 	}
 
+	/**
+	 * Window text that should be translated on language change/load
+	 */
 	private void translateText() {
 
-		randomPlay1.setText(Internationalization.translate("play"));
-		randomPlay2.setText(Internationalization.translate("play"));
-		randomPlay3.setText(Internationalization.translate("play"));
-		randomPlay4.setText(Internationalization.translate("play"));
-		randomPlay5.setText(Internationalization.translate("play"));
+		this.randomPlay1.setText(Internationalization.translate("play"));
+		this.randomPlay2.setText(Internationalization.translate("play"));
+		this.randomPlay3.setText(Internationalization.translate("play"));
+		this.randomPlay4.setText(Internationalization.translate("play"));
+		this.randomPlay5.setText(Internationalization.translate("play"));
 
-		randomAdd1.setText(Internationalization.translate("add"));
-		randomAdd2.setText(Internationalization.translate("add"));
-		randomAdd3.setText(Internationalization.translate("add"));
-		randomAdd4.setText(Internationalization.translate("add"));
-		randomAdd5.setText(Internationalization.translate("add"));
+		this.randomAdd1.setText(Internationalization.translate("add"));
+		this.randomAdd2.setText(Internationalization.translate("add"));
+		this.randomAdd3.setText(Internationalization.translate("add"));
+		this.randomAdd4.setText(Internationalization.translate("add"));
+		this.randomAdd5.setText(Internationalization.translate("add"));
 
-		buttonRefresh.setText(Internationalization.translate("Refresh"));
-		buttonAddAll.setText(Internationalization.translate("Add all to Playlist"));
+		this.buttonRefresh.setText(Internationalization.translate("Refresh"));
+		this.buttonAddAll.setText(Internationalization.translate("Add all to Playlist"));
 
 	}
 
@@ -204,7 +207,7 @@ public class RandomWindowController {
 		}
 
 		// "refresh" button
-		buttonRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
+		this.buttonRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
 
 	}
 
@@ -396,15 +399,15 @@ public class RandomWindowController {
 	@FXML
 	private void refreshRandom() {
 
-		Integer[] a = arrayWithRandomNumbersNoDuplicates(0,
-				this.mainClass.getMusicVideohandler().getMusicVideoList().length - 1, labelContent.length);
+		Integer[] randomNumbers = arrayWithRandomNumbersNoDuplicates(0,
+				this.mainClass.getMusicVideohandler().getMusicVideoList().length - 1, this.labelContent.length);
 
 		// do for every label
-		for (int i = 0; i < labelContent.length; i++) {
+		for (int i = 0; i < this.labelContent.length; i++) {
 
 			// create a random music video element with this number and save it
 			this.labelContent[i] = new MusicVideoRandomElement(
-					this.mainClass.getMusicVideohandler().getMusicVideoList()[a[i]], a[i]);
+					this.mainClass.getMusicVideohandler().getMusicVideoList()[randomNumbers[i]], randomNumbers[i]);
 
 			// set the text to each label of this entry
 			this.allLabels[i].setText(this.labelContent[i].getMusicVideo().getTitle() + " "

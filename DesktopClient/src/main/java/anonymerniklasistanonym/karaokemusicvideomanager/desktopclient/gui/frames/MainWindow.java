@@ -76,7 +76,7 @@ public class MainWindow {
 		try {
 
 			// load the whole FXML window
-			FXMLLoader loader = new FXMLLoader();
+			final FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getClassLoader().getResource("windows/MainWindow.fxml"));
 
 			// load the window itself
