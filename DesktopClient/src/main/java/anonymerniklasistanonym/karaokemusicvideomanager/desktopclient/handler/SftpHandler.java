@@ -566,11 +566,17 @@ public class SftpHandler {
 	 */
 	private void transferFolder(File directory, String directoryString) {
 
-		for (File fileInDirectory : directory.listFiles()) {
+		if (directory != null && directoryString != null) {
 
-			transferFile(fileInDirectory.getAbsolutePath(), directoryString);
+			final File[] fileList = directory.listFiles();
 
+			if (fileList != null) {
+				for (int i = 0; i < fileList.length; i++) {
+					transferFile(fileList[i].getAbsolutePath(), directoryString);
+				}
+			}
 		}
+
 	}
 
 	/**

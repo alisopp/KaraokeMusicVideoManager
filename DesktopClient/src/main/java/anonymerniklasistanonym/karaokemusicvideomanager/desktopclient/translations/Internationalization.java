@@ -51,18 +51,24 @@ public class Internationalization {
 
 			System.out.println(">> Set new language: " + newLocale.toString());
 
+			// set new locale and load the new language package
 			locale = newLocale;
 			bundle = ResourceBundle.getBundle(bundleName, locale);
 
 			System.out.println("<< New language package loaded");
 
 		} catch (NullPointerException n) {
+
+			// if bundle name or locale is null load the default package (English)
 			n.printStackTrace();
-			System.err.println("<< New language package not loaded!");
+			System.err.println("<< New language package not loaded because locale is null!");
 			setBundle();
+
 		} catch (MissingResourceException m) {
+
+			// if no package with this locale was found load the default package (English)
 			m.printStackTrace();
-			System.err.println("<< New language package not loaded!");
+			System.err.println("<< New language package with new locale not found!");
 			setBundle();
 		}
 

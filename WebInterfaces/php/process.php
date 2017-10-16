@@ -11,15 +11,12 @@ $files = array_diff(glob("*.json"), array("ipBook.json"));
 $highest_number = 0;
 foreach ($files as $filename) {
 	$withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename);
-	echo "<script type='text/javascript'>alert('" . $filename . " and without extension " . $withoutExt . "');</script>";
-	;
+
 	if ($highest_number < intval($withoutExt)) {
 		$highest_number = intval($withoutExt);
 	}
 }
-
 $file_name = ($highest_number + 1) . ".json";
-
 
 # Write JSON file with the timestamp as filename
 $fp = fopen($file_name, 'w') or die("<script type='text/javascript'>alert('fopen failed!');location.href='../html/html_party_live.html';</script>");

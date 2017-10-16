@@ -72,7 +72,10 @@ public class ProgramData {
 	 *            the pathList to set
 	 */
 	public void setPathList(Path[] pathList) {
+
+		// sort the array alphabetical
 		Arrays.sort(pathList);
+
 		this.pathList = pathList;
 	}
 

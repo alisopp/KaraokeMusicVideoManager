@@ -74,9 +74,11 @@ public class Main extends Application {
 
 		System.out.println(">> Open main window");
 
+		this.primaryStage = primaryStage;
+
 		// create the main window stage and show it
-		primaryStage = this.mainWindowCreator.createStage();
-		primaryStage.show();
+		this.primaryStage = this.mainWindowCreator.createStage();
+		this.primaryStage.show();
 
 		System.out.println("MAIN WINDOW");
 

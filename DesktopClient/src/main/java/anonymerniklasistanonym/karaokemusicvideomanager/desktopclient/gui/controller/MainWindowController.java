@@ -1496,6 +1496,7 @@ public class MainWindowController {
 			this.networkButton.setSelected(false);
 			this.menuButtonSftp.setDisable(true);
 			this.menuButtonSftpVotingReset.setDisable(true);
+
 		}
 
 	}

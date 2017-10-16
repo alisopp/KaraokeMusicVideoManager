@@ -299,9 +299,13 @@ public class FileReadWriteModule {
 
 				// collect the files in the directory
 				String[] entries = directory.list();
-				for (String currentFile : entries) {
-					// and delete them
-					deleteFile(new File(directory.getPath(), currentFile));
+
+				if (entries != null) {
+					for (int i = 0; i < entries.length; i++) {
+
+						// and delete them
+						deleteFile(new File(directory.getPath(), entries[i]));
+					}
 				}
 
 				// then delete the directory
