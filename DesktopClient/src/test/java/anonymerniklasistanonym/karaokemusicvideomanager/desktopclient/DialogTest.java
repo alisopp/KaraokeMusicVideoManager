@@ -22,7 +22,7 @@ public class DialogTest extends Application {
 		exceptionDialog();
 
 		DialogModule.alertTextInputTwoBoxes("title", "head", "input 1", "input 2", "prompt1", "prompt2", "Label1",
-				"Label2", "Button text", null, WindowModule.getWindowIcons(), StageStyle.UNIFIED, true, true, false,
+				"Label2", "Button text", null, WindowModule.getWindowIcons(), StageStyle.DECORATED, true, true, false,
 				false, true);
 	}
 

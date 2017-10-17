@@ -131,7 +131,7 @@ public class DialogHandler {
 	 */
 	public static boolean confirm(String title, String header, String contentOfTextField) {
 		return DialogModule.alertConfirm(title, header, contentOfTextField, AlertType.CONFIRMATION, null,
-				WindowModule.getWindowIcons(), StageStyle.UNIFIED);
+				WindowModule.getWindowIcons(), StageStyle.DECORATED);
 	}
 
 	/**
@@ -153,7 +153,7 @@ public class DialogHandler {
 
 		return DialogModule.alertTextInputTwoBoxes(title, header, author, "", inputPrompt1, inputPrompt2, inputLabel1,
 				inputLabel2, buttonText, new Image(ClassResourceReaderModule.getInputStream("images/icons/add.png")),
-				WindowModule.getWindowIcons(), StageStyle.UNIFIED, true, false, false, false, false);
+				WindowModule.getWindowIcons(), StageStyle.DECORATED, true, false, false, false, false);
 
 	}
 
@@ -179,7 +179,7 @@ public class DialogHandler {
 		return DialogModule.alertTextInputTwoBoxes(title, header, author, comment, inputPrompt1, inputPrompt2,
 				inputLabel1, inputLabel2, buttonText,
 				new Image(ClassResourceReaderModule.getInputStream("images/icons/rename.png")),
-				WindowModule.getWindowIcons(), StageStyle.UNIFIED, true, false, false, false, true);
+				WindowModule.getWindowIcons(), StageStyle.DECORATED, true, false, false, false, true);
 
 	}
 
@@ -193,7 +193,7 @@ public class DialogHandler {
 	 */
 	public static void error(String title, String text) {
 		DialogModule.alertWindow(title, null, text, null, AlertType.ERROR, WindowModule.getWindowIcons(),
-				StageStyle.UNIFIED);
+				StageStyle.DECORATED);
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class DialogHandler {
 	 */
 	public static void error(String title, String header, String text, String expandableContent) {
 		DialogModule.alertWindow(title, header, text, expandableContent, AlertType.ERROR, WindowModule.getWindowIcons(),
-				StageStyle.UNIFIED);
+				StageStyle.DECORATED);
 	}
 
 	/**
@@ -223,7 +223,7 @@ public class DialogHandler {
 	 */
 	public static void inform(String title, String text) {
 		DialogModule.alertWindow(title, null, text, null, AlertType.INFORMATION, WindowModule.getWindowIcons(),
-				StageStyle.UNIFIED);
+				StageStyle.DECORATED);
 	}
 
 	/**
@@ -240,7 +240,7 @@ public class DialogHandler {
 		Image image = new Image(ClassResourceReaderModule.getInputStream("images/icons/rename.png"));
 
 		return DialogModule.alertTextInput(title, header, contentOfTextField, image, WindowModule.getWindowIcons(),
-				StageStyle.UNIFIED);
+				StageStyle.DECORATED);
 
 	}
 
@@ -256,7 +256,7 @@ public class DialogHandler {
 				"Because you are connected with a server the websites music video list and the playlist won't work right if you continue")
 				+ "!";
 		return DialogModule.alertConfirm(title, header, contentOfTextField, AlertType.CONFIRMATION, null,
-				WindowModule.getWindowIcons(), StageStyle.UNIFIED);
+				WindowModule.getWindowIcons(), StageStyle.DECORATED);
 
 	}
 
@@ -274,7 +274,7 @@ public class DialogHandler {
 
 		return DialogModule.alertTextInput(title, header, votes,
 				new Image(ClassResourceReaderModule.getInputStream("images/icons/upvote.png")),
-				WindowModule.getWindowIcons(), StageStyle.UNIFIED);
+				WindowModule.getWindowIcons(), StageStyle.DECORATED);
 	}
 
 }

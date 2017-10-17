@@ -1053,7 +1053,7 @@ public class MusicVideoHandler {
 
 			outputFolder = outputFolder.toAbsolutePath();
 
-			String phpFolder = outputFolder.toString() + this.phpDirectoryName;
+			String phpFolder = outputFolder.toString() + "/" + this.phpDirectoryName;
 
 			// create the favicon directory
 			FileReadWriteModule.createDirectory(new File(phpFolder));
