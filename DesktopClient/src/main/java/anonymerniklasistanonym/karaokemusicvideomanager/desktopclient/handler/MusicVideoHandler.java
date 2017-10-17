@@ -54,6 +54,11 @@ public class MusicVideoHandler {
 	private final File settingsFile;
 
 	/**
+	 * The default directory for the settings file when installed on windows
+	 */
+	private final File windowsSettingsFileDirectory;
+
+	/**
 	 * The default file for the settings file when installed on windows
 	 */
 	private final File windowsSettingsFile;
@@ -99,6 +104,7 @@ public class MusicVideoHandler {
 
 		this.programDataHandler = new ProgramDataHandler();
 		this.settingsFile = new File("settings.json");
+		this.windowsSettingsFileDirectory = new File(System.getProperty("user.home") + "/KaraokeMusicVideoManager");
 		this.windowsSettingsFile = new File(
 				System.getProperty("user.home") + "/KaraokeMusicVideoManager/" + this.settingsFile);
 		this.columnNames = new String[] { "#", Internationalization.translate("Artist"),
@@ -195,6 +201,24 @@ public class MusicVideoHandler {
 	 */
 	public boolean windowsSettingsFileExists() {
 
+		// check if the program is installed on Windows
+		if (isInstalledOnWindows()) {
+
+			// and then check if the windows settings file exists
+			if (this.windowsSettingsFile.exists()) {
+				return true;
+			}
+
+		}
+		return false;
+	}
+
+	/**
+	 * Get if a settings file exists in the users home directory if he installed it
+	 * on windows
+	 */
+	public boolean isInstalledOnWindows() {
+
 		// check if the system is windows
 		if (System.getProperty("os.name").toLowerCase().contains("windows")) {
 
@@ -202,10 +226,7 @@ public class MusicVideoHandler {
 			if (Paths.get(".").toAbsolutePath().toString().contains("(x86)")
 					|| Paths.get(".").toAbsolutePath().toString().contains("(x64)")) {
 
-				// and then check if the windows settings file exists
-				if (this.windowsSettingsFile.exists()) {
-					return true;
-				}
+				return true;
 			}
 		}
 		return false;
@@ -240,7 +261,8 @@ public class MusicVideoHandler {
 	 */
 	public boolean saveSettingsToFile() {
 
-		if (windowsSettingsFileExists()) {
+		if (isInstalledOnWindows()) {
+			FileReadWriteModule.createDirectory(this.windowsSettingsFileDirectory);
 			return saveSettings(this.windowsSettingsFile);
 		} else {
 			return saveSettings(this.settingsFile);
