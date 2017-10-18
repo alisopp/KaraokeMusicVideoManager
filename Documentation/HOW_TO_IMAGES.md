@@ -48,6 +48,7 @@ All images are based on the images:
 
 * [`installer.svg`](../ImageResources/installer.svg) the installer page image source
 * [`logo.svg`](../ImageResources/logo.svg) the installer icon/favicon/program icon image source
+* [`preloader.svg`](../ImageResources/preloader.svg) the preloader image source
 * All the `.svg` images in the folder [`icons`](../ImageResources/icons) are the image source for all the other program icons
 
 <br>
@@ -58,6 +59,7 @@ The original workflow is that the vector images get created/edited in Microsoft 
 
 * [`installer.pptx`](../ImageResources/ProjectFiles/installer.pptx) in this presentation is the installer page
 * [`logo.pptx`](../ImageResources/ProjectFiles/logo.pptx) in this presentation is the logo
+* [`preloader.pptx`](../ImageResources/ProjectFiles/preloader.pptx) in this presentation is the preloader image
 * [`icons.pptx`](../ImageResources/ProjectFiles/icons.pptx) in this presentation are all the other
 
 After editing/creating every presentation get's converted to a `.pdf` file (within PowerPoint).
