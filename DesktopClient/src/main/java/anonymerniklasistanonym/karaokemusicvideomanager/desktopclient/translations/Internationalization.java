@@ -104,6 +104,9 @@ public class Internationalization {
 		return text;
 	}
 
+	/**
+	 * @return current language/locale as a String (String)
+	 */
 	public static String getLocaleString() {
 		return locale.getLanguage();
 	}

@@ -217,13 +217,13 @@ public class RandomWindowController {
 	private void addVideoMain(int position, boolean addAll) {
 
 		// open a dialog to input name and comment
-		final String[] authorComment = DialogHandler.createPlaylistEntry(this.mainWindowController.getLastName());
+		final String[] authorComment = DialogHandler.createPlaylistEntry(this.mainWindowController.getNameOfAuthor());
 
 		// if at least the author wasn't null
 		if (authorComment != null && authorComment[0] != null) {
 
 			// save the new name in the main controller class
-			this.mainWindowController.setLastName(authorComment[0]);
+			this.mainWindowController.setNameOfAuthor(authorComment[0]);
 
 			// set the comment to "" if it was null
 			if (authorComment[1] == null) {

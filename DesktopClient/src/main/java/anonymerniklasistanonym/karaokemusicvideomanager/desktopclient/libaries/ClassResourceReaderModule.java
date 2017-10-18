@@ -38,6 +38,7 @@ public class ClassResourceReaderModule {
 			e.printStackTrace();
 		}
 		return null;
+
 	}
 
 	/**

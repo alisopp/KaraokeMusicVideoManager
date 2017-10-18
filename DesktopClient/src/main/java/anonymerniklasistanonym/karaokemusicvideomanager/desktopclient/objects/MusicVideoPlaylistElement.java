@@ -5,10 +5,10 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Properties of every music video element in the playlist
+ * The properties of every music video element in the playlist
  * 
- * @author AnonymerNiklasistanonym
- *
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
+ *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  */
 public final class MusicVideoPlaylistElement {
 
@@ -38,7 +38,7 @@ public final class MusicVideoPlaylistElement {
 	private final boolean createdLocally;
 
 	/**
-	 * Playlist integer
+	 * Index of music video file in list
 	 */
 	private final int musicVideoIndex;
 
@@ -53,8 +53,15 @@ public final class MusicVideoPlaylistElement {
 	private final String fileName;
 
 	/**
-	 * Constructor: All possibilities
+	 * Format of time
+	 */
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+	/**
+	 * Constructor: Local creation of a playlist file
 	 * 
+	 * @param musicVideoIndex
+	 *            (Integer)
 	 * @param musicVideoFile
 	 *            (MusicVideo)
 	 * @param author
@@ -62,23 +69,35 @@ public final class MusicVideoPlaylistElement {
 	 * @param comment
 	 *            (String)
 	 * @param createdLocally
-	 *            (Boolean)
+	 *            (boolean)
 	 */
 	public MusicVideoPlaylistElement(int musicVideoIndex, MusicVideo musicVideoFile, String author, String comment,
 			boolean createdLocally) {
+
 		this.musicVideoIndex = musicVideoIndex;
 		this.musicVideoFile = musicVideoFile;
 		this.author = author;
 		this.comment = comment;
 		this.createdLocally = createdLocally;
+
+		// set on creation the current time as unixTime
 		this.unixTime = Instant.now().getEpochSecond();
+
+		// set votes at the begin to zero
 		this.votes = 0;
-		this.fileName = "nada";
+
+		// set file name to null if there is none
+		this.fileName = null;
+
 	}
 
 	/**
-	 * Constructor: All possibilities without comment
+	 * Constructor: For loading playlist files
 	 * 
+	 * @param unixTime
+	 *            (long | Creation time)
+	 * @param musicVideoIndex
+	 *            (Index)
 	 * @param musicVideoFile
 	 *            (MusicVideo)
 	 * @param author
@@ -86,49 +105,11 @@ public final class MusicVideoPlaylistElement {
 	 * @param comment
 	 *            (String)
 	 * @param createdLocally
-	 *            (Boolean)
-	 */
-	public MusicVideoPlaylistElement(int musicVideoIndex, MusicVideo musicVideoFile, String author,
-			boolean createdLocally) {
-		this.musicVideoIndex = musicVideoIndex;
-		this.musicVideoFile = musicVideoFile;
-		this.author = author;
-		this.comment = null;
-		this.createdLocally = createdLocally;
-		this.unixTime = Instant.now().getEpochSecond();
-		this.votes = 0;
-		this.fileName = "nada";
-	}
-
-	/**
-	 * Constructor: Local fast creation
-	 * 
-	 * @param musicVideoFile
-	 *            (MusicVideo)
-	 */
-	public MusicVideoPlaylistElement(int musicVideoIndex, MusicVideo musicVideoFile) {
-		this.musicVideoIndex = musicVideoIndex;
-		this.musicVideoFile = musicVideoFile;
-		this.author = null;
-		this.comment = null;
-		this.createdLocally = true;
-		this.unixTime = Instant.now().getEpochSecond();
-		this.votes = 0;
-		this.fileName = "nada";
-	}
-
-	/**
-	 * Constructor: For loading files
-	 * 
-	 * @param musicVideoFile
-	 *            (MusicVideo)
-	 * @param author
-	 *            (String)
-	 * @param comment
-	 *            (String)
-	 * @param createdLocally
-	 *            (Boolean)
+	 *            (boolean)
 	 * @param votes
+	 *            (Integer)
+	 * @param fileName
+	 *            (String)
 	 */
 	public MusicVideoPlaylistElement(long unixTime, int musicVideoIndex, MusicVideo musicVideoFile, String author,
 			String comment, boolean createdLocally, int votes, String fileName) {
@@ -172,44 +153,80 @@ public final class MusicVideoPlaylistElement {
 	/**
 	 * Get if element was created locally or on the server
 	 * 
-	 * @return createdLocally (Boolean | true if locally created)
+	 * @return createdLocally (boolean | true if locally created)
 	 */
 	public boolean isCreatedLocally() {
 		return this.createdLocally;
 	}
 
-	public MusicVideoPlaylistElement edit(String author, String comment) {
+	/**
+	 * Edit author and comment
+	 * 
+	 * @param author
+	 *            (String)
+	 * @param comment
+	 *            (String)
+	 * @return the new edited object (MusicVideoPlaylistElement)
+	 */
+	public MusicVideoPlaylistElement editAuthorComment(String author, String comment) {
+
+		// edit author and comment
 		this.author = author;
 		this.comment = comment;
 
+		// return the new object
 		return this;
+
 	}
 
+	/**
+	 * @return creation time of object (long)
+	 */
 	public long getUnixTime() {
 		return this.unixTime;
 	}
 
+	/**
+	 * @return creation time of object in human readable format (String)
+	 */
 	public String getUnixTimeString() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		return Instant.ofEpochSecond(this.unixTime).atZone(ZoneId.systemDefault()).format(formatter);
 	}
 
+	/**
+	 * @return get the index of the music video file (Integer)
+	 */
 	public int getMusicVideoIndex() {
 		return this.musicVideoIndex;
 	}
 
+	/**
+	 * @return was the file locally created or on a server (boolean)
+	 */
 	public boolean getCreatedLocally() {
 		return this.createdLocally;
 	}
 
+	/**
+	 * @return votes of the object (Integer)
+	 */
 	public int getVotes() {
 		return this.votes;
 	}
 
+	/**
+	 * Set votes of the object
+	 * 
+	 * @param vote
+	 *            (Integer)
+	 */
 	public void setVotes(int vote) {
 		this.votes = vote;
 	}
 
+	/**
+	 * @return get the file name of the file that contains the playlist entry
+	 */
 	public String getFileName() {
 		return this.fileName;
 	}

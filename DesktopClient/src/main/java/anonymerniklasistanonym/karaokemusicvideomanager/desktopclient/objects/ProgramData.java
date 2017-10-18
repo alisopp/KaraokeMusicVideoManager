@@ -48,7 +48,10 @@ public class ProgramData {
 	private File[] ignoredFilesList;
 
 	/**
-	 * Constructor [empty]
+	 * Constructor to create a new settings data object (ProgramData)
+	 * 
+	 * @param acceptedFileTypes
+	 *            (String[] | File types that should be accepted)
 	 */
 	public ProgramData(String[] acceptedFileTypes) {
 		this.pathList = null;
@@ -61,7 +64,7 @@ public class ProgramData {
 	}
 
 	/**
-	 * @return the pathList
+	 * @return the pathList (Path[])
 	 */
 	public Path[] getPathList() {
 		return pathList;
@@ -69,18 +72,18 @@ public class ProgramData {
 
 	/**
 	 * @param pathList
-	 *            the pathList to set
+	 *            (Path[] | New path list to overwrite old list)
 	 */
 	public void setPathList(Path[] pathList) {
 
-		// sort the array alphabetical
+		// sort the array alphabetical before setting it
 		Arrays.sort(pathList);
-
 		this.pathList = pathList;
+
 	}
 
 	/**
-	 * @return the acceptedFileTypes
+	 * @return the acceptedFileTypes (String[])
 	 */
 	public String[] getAcceptedFileTypes() {
 		return acceptedFileTypes;
@@ -88,14 +91,14 @@ public class ProgramData {
 
 	/**
 	 * @param acceptedFileTypes
-	 *            the acceptedFileTypes to set
+	 *            (String[] | New accepted file types to overwrite old list)
 	 */
 	public void setAcceptedFileTypes(String[] acceptedFileTypes) {
 		this.acceptedFileTypes = acceptedFileTypes;
 	}
 
 	/**
-	 * @return the userNameSftp
+	 * @return the userNameSftp (String)
 	 */
 	public String getUserNameSftp() {
 		return userNameSftp;
@@ -103,14 +106,14 @@ public class ProgramData {
 
 	/**
 	 * @param userNameSftp
-	 *            the userNameSftp to set
+	 *            (String | The user name for the SFTP access to the server)
 	 */
 	public void setUserNameSftp(String userNameSftp) {
 		this.userNameSftp = userNameSftp;
 	}
 
 	/**
-	 * @return the ipAddressSftp
+	 * @return the ipAddressSftp (String)
 	 */
 	public String getIpAddressSftp() {
 		return ipAddressSftp;
@@ -118,14 +121,14 @@ public class ProgramData {
 
 	/**
 	 * @param ipAddressSftp
-	 *            the ipAddressSftp to set
+	 *            (String | Set the ipAddressSftp)
 	 */
 	public void setIpAddressSftp(String ipAddressSftp) {
 		this.ipAddressSftp = ipAddressSftp;
 	}
 
 	/**
-	 * @return the workingDirectorySftp
+	 * @return the workingDirectorySftp (String)
 	 */
 	public String getWorkingDirectorySftp() {
 		return workingDirectorySftp;
@@ -133,30 +136,30 @@ public class ProgramData {
 
 	/**
 	 * @param workingDirectorySftp
-	 *            the workingDirectorySftp to set
+	 *            (String | Set the servers distributing web directory)
 	 */
 	public void setWorkingDirectorySftp(String workingDirectorySftp) {
 		this.workingDirectorySftp = workingDirectorySftp;
 	}
 
 	/**
-	 * @return the alwaysSaveSettings
+	 * @return the alwaysSaveSettings (boolean)
 	 */
-	public Boolean getAlwaysSaveSettings() {
+	public boolean getAlwaysSaveSettings() {
 		return alwaysSaveSettings;
 	}
 
 	/**
 	 * @param alwaysSaveSettings
-	 *            the alwaysSaveSettings to set
+	 *            (boolean | Set always save)
 	 * @return
 	 */
-	public boolean setAlwaysSaveSettings(Boolean alwaysSaveSettings) {
+	public boolean setAlwaysSaveSettings(boolean alwaysSaveSettings) {
 		return this.alwaysSaveSettings = alwaysSaveSettings;
 	}
 
 	/**
-	 * @return the ignoredFilesList
+	 * @return the ignoredFilesList (File[])
 	 */
 	public File[] getIgnoredFilesList() {
 		return ignoredFilesList;
@@ -164,7 +167,7 @@ public class ProgramData {
 
 	/**
 	 * @param ignoredFilesList
-	 *            the ignoredFilesList to set
+	 *            (File[] | the ignoredFilesList to set)
 	 */
 	public void setIgnoredFilesList(File[] ignoredFilesList) {
 		this.ignoredFilesList = ignoredFilesList;

@@ -408,7 +408,7 @@ public class MainWindowController {
 	/**
 	 * Last inputed name and to begin the user name
 	 */
-	private String lastName;
+	private String nameOfAuthor;
 
 	/**
 	 * Main class
@@ -726,7 +726,7 @@ public class MainWindowController {
 		this.menuButtonSftpVotingReset.setDisable(true);
 
 		// set last name to current user name
-		this.lastName = System.getProperty("user.name");
+		this.nameOfAuthor = System.getProperty("user.name");
 
 		// translate the text in the main window
 		translateText();
@@ -1318,11 +1318,11 @@ public class MainWindowController {
 			final int playlistEntryIndex = selectedEntry.getIndex();
 
 			// dialog to get author and optional a comment
-			final String[] authorAndComment = DialogHandler.createPlaylistEntry(lastName);
+			final String[] authorAndComment = DialogHandler.createPlaylistEntry(nameOfAuthor);
 
 			// if author not null add it to the playlist
 			if (authorAndComment != null && authorAndComment[0] != null) {
-				this.lastName = authorAndComment[0];
+				this.nameOfAuthor = authorAndComment[0];
 				if (authorAndComment[1] == null) {
 					authorAndComment[1] = "";
 				}
@@ -1748,7 +1748,7 @@ public class MainWindowController {
 					selectedEntry.getComment());
 
 			if (authorComment != null && authorComment[0] != null) {
-				this.lastName = authorComment[0];
+				this.nameOfAuthor = authorComment[0];
 				if (authorComment[1] == null) {
 					authorComment[1] = "";
 				}
@@ -1803,38 +1803,52 @@ public class MainWindowController {
 
 	}
 
-	public String getLastName() {
-		return this.lastName;
+	public String getNameOfAuthor() {
+		return this.nameOfAuthor;
 	}
 
-	public void setLastName(String newName) {
-		this.lastName = newName;
+	public void setNameOfAuthor(String newName) {
+		this.nameOfAuthor = newName;
 	}
 
 	@FXML
 	public void setVotes() {
 
-		MusicVideoPlaylistTableView selectedEntry = this.playlistTable.getSelectionModel().getSelectedItem();
+		final MusicVideoPlaylistTableView selectedEntry = this.playlistTable.getSelectionModel().getSelectedItem();
 
 		// if something is selected
 		if (selectedEntry != null) {
-			int index = selectedEntry.getIndex();
 
-			String voteNumber = DialogHandler.setVotesPlaylist(Integer.toString(selectedEntry.getVotes()));
+			// get index of playlist element
+			final int index = selectedEntry.getIndex();
 
-			try {
-				int voteNumberNotString = Integer.parseInt(voteNumber);
+			// get vote number as a String
+			final String voteNumber = DialogHandler.setVotesPlaylist(Integer.toString(selectedEntry.getVotes()));
 
-				if (voteNumberNotString >= 0) {
-					this.mainClass.getMusicVideohandler().setVotes(index, voteNumberNotString);
+			if (index >= 0 && voteNumber != null) {
+
+				try {
+
+					// try to get a number from the String
+					int voteNumberNotString = Integer.parseInt(voteNumber);
+
+					// if the number is bigger or zero set it as new vote number
+					if (voteNumberNotString >= 0) {
+
+						this.mainClass.getMusicVideohandler().setVotes(index, voteNumberNotString);
+
+						// then refresh the table
+						refreshMusicVideoPlaylistTable();
+
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					DialogHandler.error(Internationalization.translate("Wrong input"),
+							Internationalization.translate("You need to enter a number greater or equal to 0") + "!");
 				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
-
 		}
-		refreshMusicVideoPlaylistTable();
+
 	}
 
 }

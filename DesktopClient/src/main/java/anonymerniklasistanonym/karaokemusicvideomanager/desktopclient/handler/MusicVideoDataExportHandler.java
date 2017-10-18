@@ -16,7 +16,6 @@ public class MusicVideoDataExportHandler {
 	 * @return table (String)
 	 */
 	public static String generateHtmlTableDataStatic(Object[][] data) {
-
 		return createHtmlTableRows(data, "", false);
 	}
 
@@ -26,7 +25,6 @@ public class MusicVideoDataExportHandler {
 	 * @return table (String)
 	 */
 	public static String generateHtmlTableDataSearch(Object[][] data) {
-
 		return createHtmlTableRows(data, " class=\"item\"", false);
 	}
 
@@ -36,7 +34,6 @@ public class MusicVideoDataExportHandler {
 	 * @return table (String)
 	 */
 	public static String generateHtmlTableDataParty(Object[][] data) {
-
 		return createHtmlTableRows(data, " class=\"item\"", true);
 	}
 

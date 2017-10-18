@@ -175,7 +175,7 @@ public class MusicVideoPlaylistHandler {
 	 *            (String | New comment)
 	 */
 	public MusicVideoPlaylistElement edit(int index, String author, String comment) {
-		return this.playlistElements[index].edit(author, comment);
+		return this.playlistElements[index].editAuthorComment(author, comment);
 	}
 
 	/**

@@ -15,10 +15,12 @@ public final class MusicVideo implements Comparator<MusicVideo> {
 	 * The path of the music video file
 	 */
 	private final Path path;
+
 	/**
 	 * The name/title of the music video file
 	 */
 	private final String title;
+
 	/**
 	 * The artist/s of the music video file
 	 */
@@ -87,17 +89,23 @@ public final class MusicVideo implements Comparator<MusicVideo> {
 	 */
 	@Override
 	public int compare(MusicVideo o1, MusicVideo o2) {
+
 		// check how the artist names are compared to each other
 		int areTheArtistsTheSame = o1.getArtist().toUpperCase().compareTo(o2.getArtist().toUpperCase());
+
 		// if the artist are the same artist (==0)
 		if (areTheArtistsTheSame == 0) {
+
 			// return the compare value for the title to sort titles from
 			// the same artist also alphabetically
 			return String.CASE_INSENSITIVE_ORDER.compare(o1.getTitle().toUpperCase(), o2.getTitle().toUpperCase());
+
 		} else {
+
 			// if the artist is not the same return the compare Integer
 			// calculated before
 			return areTheArtistsTheSame;
 		}
 	}
+
 }
