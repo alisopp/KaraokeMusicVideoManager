@@ -150,7 +150,7 @@ public class MainWindow {
 	/**
 	 * Do this on request of closing the main window
 	 */
-	public void onCloseDialog(WindowEvent e) {
+	private void onCloseDialog(WindowEvent e) {
 
 		// check if there is no existing settings file
 		if (this.mainClass.getMusicVideohandler().getAlwaysSave()

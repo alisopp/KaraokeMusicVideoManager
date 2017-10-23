@@ -43,7 +43,7 @@ public class JsonModule {
 	 *            (JsonObject)
 	 * @return jsonDataString (String)
 	 */
-	public static String saveJsonToString(JsonObject jsonObject) {
+	public static String toString(JsonObject jsonObject) {
 
 		try {
 			return jsonObject.toString();
@@ -61,10 +61,10 @@ public class JsonModule {
 	 *            (JsonObjectBuilder)
 	 * @return jsonDataString (String)
 	 */
-	public static String dumpJsonObjectToString(JsonObjectBuilder jsonBuilder) {
+	public static String toString(JsonObjectBuilder jsonBuilder) {
 
 		try {
-			return saveJsonToString(jsonBuilder.build());
+			return jsonBuilder.build().toString();
 
 		} catch (Exception e) {
 			e.printStackTrace();

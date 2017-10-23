@@ -1,8 +1,6 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -91,6 +89,8 @@ public final class ProgramDataHandler {
 
 		} else {
 			System.out.println("<< Path list was empty!");
+
+			this.settings.setPathList(null);
 		}
 	}
 
@@ -122,10 +122,21 @@ public final class ProgramDataHandler {
 		return true;
 	}
 
+	/**
+	 * Get the accepted file types for music video files
+	 * 
+	 * @return list of accepted file types (String[])
+	 */
 	public String[] getAcceptedFileTypes() {
 		return this.settings.getAcceptedFileTypes();
 	}
 
+	/**
+	 * Set the accepted file types list
+	 * 
+	 * @param acceptedFileTypes
+	 *            (String[])
+	 */
 	public void setAcceptedFileTypes(String[] acceptedFileTypes) {
 
 		System.out.println(">> Set accepted file types:");
@@ -156,42 +167,98 @@ public final class ProgramDataHandler {
 
 	}
 
+	/**
+	 * Get the current user name of the SFTP server
+	 * 
+	 * @return user name (String)
+	 */
 	public String getUsernameSftp() {
 		return this.settings.getUserNameSftp();
 	}
 
+	/**
+	 * Set user name for SFTP server account
+	 * 
+	 * @param usernameSftp
+	 *            (String | User name)
+	 */
 	public void setUsernameSftp(String usernameSftp) {
 		this.settings.setUserNameSftp(usernameSftp);
 	}
 
+	/**
+	 * Get current IP address of server
+	 * 
+	 * @return ipAddressSftp (String)
+	 */
 	public String getIpAddressSftp() {
 		return this.settings.getIpAddressSftp();
 	}
 
+	/**
+	 * Set IP address of server
+	 * 
+	 * @param ipAddressSftp
+	 *            (String | IP address)
+	 */
 	public void setIpAddressSftp(String ipAddressSftp) {
 		this.settings.setIpAddressSftp(ipAddressSftp);
 	}
 
+	/**
+	 * Get working directory of server
+	 * 
+	 * @return current working directory of server (String)
+	 */
 	public String getWorkingDirectorySftp() {
 		return this.settings.getWorkingDirectorySftp();
 	}
 
+	/**
+	 * Set working directory on server
+	 * 
+	 * @param workingDirectorySftp
+	 *            (String)
+	 */
 	public void setWorkingDirectorySftp(String workingDirectorySftp) {
 		this.settings.setWorkingDirectorySftp(workingDirectorySftp);
 	}
 
+	/**
+	 * Get if activated that settings should be saved without dialog on exit
+	 * 
+	 * @return save on exit (boolean)
+	 */
 	public boolean getAlwaysSaveSettings() {
 		return this.settings.getAlwaysSaveSettings();
 	}
 
-	public boolean setAlwaysSaveSettings(boolean alwaysSaveSettings) {
-		return this.settings.setAlwaysSaveSettings(alwaysSaveSettings);
+	/**
+	 * Set always save on close settings option
+	 * 
+	 * @param newValue
+	 *            (boolean | Save on exit without dialog)
+	 * @return new current value (boolean)
+	 */
+	public boolean setAlwaysSaveSettings(boolean newValue) {
+		return this.settings.setAlwaysSaveSettings(newValue);
 	}
 
+	/**
+	 * Get the ignored files list
+	 * 
+	 * @return ignored files list (File[])
+	 */
 	public File[] getIgnoredFiles() {
 		return this.settings.getIgnoredFilesList();
 	}
 
+	/**
+	 * Set the ignored files list
+	 * 
+	 * @param filesToIgnore
+	 *            (File[])
+	 */
 	public void setIgnoredFiles(File[] filesToIgnore) {
 
 		System.out.println(">> Set ignored files:");
@@ -301,6 +368,11 @@ public final class ProgramDataHandler {
 
 	}
 
+	/**
+	 * Create a (JSON) String where all current settings are contained
+	 * 
+	 * @return current settings (String)
+	 */
 	public String createSettings() {
 
 		try {
@@ -344,7 +416,7 @@ public final class ProgramDataHandler {
 					mainJsonBuilder.add("always-save", Boolean.TRUE);
 				}
 
-				return JsonModule.dumpJsonObjectToString(mainJsonBuilder);
+				return JsonModule.toString(mainJsonBuilder);
 
 			}
 		} catch (Exception e) {
@@ -488,16 +560,25 @@ public final class ProgramDataHandler {
 
 	}
 
+	/**
+	 * Compare current settings to a settings file
+	 * 
+	 * @param oldSettingsFile
+	 *            (File | "Old" settings in a external file)
+	 * @return false if different, true if the same (b
+	 */
 	public boolean compareSettingsFileToCurrent(File oldSettingsFile) {
 
 		String oldFile = FileReadWriteModule.readTextFile(oldSettingsFile)[0];
 		String newFile = createSettings();
 
 		if (oldFile != null && newFile != null) {
+
 			System.out.println("old file:");
 			System.out.println(oldFile);
 			System.out.println("new file:");
 			System.out.println(newFile);
+
 			return JsonModule.compareJsonStrings(oldFile, newFile);
 		} else {
 			return false;
@@ -505,43 +586,70 @@ public final class ProgramDataHandler {
 
 	}
 
-	public void removeFromPathList(Path filePathToRemove) {
-		// new path list that has the capacity of the old one - 1
-		ArrayList<Path> newPathList = new ArrayList<Path>(getPathList().length - 1);
+	/**
+	 * Remove a source folder path from the path list
+	 * 
+	 * @param sourceFolderToRemove
+	 */
+	public boolean removeFromPathList(Path sourceFolderToRemove) {
 
-		for (Path path : getPathList()) {
-			try {
-				if (!Files.isSameFile(path, filePathToRemove)) {
-					newPathList.add(path);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		// check if given path isn't null
+		if (sourceFolderToRemove == null) {
+			System.err.println("Path coudn't be removed because it is null!");
+			return false;
 		}
 
-		// convert path list array list to array without sorting (not needed)
-		setPathList(newPathList.toArray(new Path[0]));
+		System.out.println(">> Remove path from the path list: " + sourceFolderToRemove);
+
+		// create a array list from all current paths
+		ArrayList<Path> newPathList = new ArrayList<>(Arrays.asList(getPathList()));
+
+		// try to remove the given path -> if not do not change the current path list
+		if (newPathList.remove(sourceFolderToRemove)) {
+
+			System.out.println("<< Path was succsessfully removed");
+			setPathList(newPathList.toArray(new Path[0]));
+			return true;
+
+		} else {
+
+			System.err.println("<< Path was not removed!");
+			return false;
+		}
 
 	}
 
-	public void removeFromIgnoredFilesList(Path selectedFile) {
+	/**
+	 * Remove a file from the ignored files list
+	 * 
+	 * @param fileToRemove
+	 *            (Path)
+	 */
+	public boolean removeFromIgnoredFilesList(Path fileToRemove) {
 
-		// new ignored files list that has the capacity of the old one - 1
-		ArrayList<File> newPathList = new ArrayList<File>(getIgnoredFiles().length - 1);
-
-		for (File path : getIgnoredFiles()) {
-			try {
-				if (!Files.isSameFile(path.toPath(), selectedFile)) {
-					newPathList.add(path);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				newPathList.add(path);
-			}
+		// check if given path isn't null
+		if (fileToRemove == null) {
+			System.err.println("Path coudn't be removed because it is null!");
+			return false;
 		}
 
-		// convert ignored files list array list to array
-		setIgnoredFiles(newPathList.toArray(new File[0]));
+		System.out.println(">> Remove path from the ignored files list: " + fileToRemove);
+
+		// create a array list from all current paths
+		ArrayList<File> newIgnoredFilesList = new ArrayList<>(Arrays.asList(getIgnoredFiles()));
+
+		// try to remove the given path -> if not do not change the current path list
+		if (newIgnoredFilesList.remove(fileToRemove.toFile())) {
+
+			System.out.println("<< Path was succsessfully removed");
+			setIgnoredFiles(newIgnoredFilesList.toArray(new File[0]));
+			return true;
+
+		} else {
+
+			System.err.println("<< Path was not removed!");
+			return false;
+		}
 
 	}
 

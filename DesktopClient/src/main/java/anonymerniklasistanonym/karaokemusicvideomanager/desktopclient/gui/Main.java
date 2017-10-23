@@ -86,7 +86,7 @@ public class Main extends Application {
 
 	/**
 	 * ------- MAIN METHOD ---------------------------------------------------------
-	 * >> start JavaFx with a preloader (without: "launch(args);")
+	 * >> start JavaFx with a loading screen (without: "launch(args);")
 	 * ------------------------------------------------------------------------------
 	 */
 	public static void main(String[] args) {

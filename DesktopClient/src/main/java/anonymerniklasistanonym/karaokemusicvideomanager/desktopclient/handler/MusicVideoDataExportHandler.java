@@ -8,6 +8,12 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.J
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoPlaylistElement;
 
+/**
+ * Class that handles the export of the music video list data
+ * 
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
+ *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
+ */
 public class MusicVideoDataExportHandler {
 
 	/**
@@ -186,7 +192,7 @@ public class MusicVideoDataExportHandler {
 		jsonObject.add("music-videos", tableBody);
 
 		// return the whole object
-		return JsonModule.dumpJsonObjectToString(jsonObject);
+		return JsonModule.toString(jsonObject);
 	}
 
 	/**
@@ -218,7 +224,7 @@ public class MusicVideoDataExportHandler {
 
 		jsonObject.add("playlist", playlist);
 
-		return JsonModule.dumpJsonObjectToString(jsonObject);
+		return JsonModule.toString(jsonObject);
 	}
 
 }

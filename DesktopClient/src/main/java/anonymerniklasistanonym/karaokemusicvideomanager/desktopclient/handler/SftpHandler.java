@@ -208,6 +208,11 @@ public class SftpHandler {
 	 */
 	public void changeDirectory(String path) {
 
+		if (path == null || path.isEmpty()) {
+			System.err.println("Directory not changed because argument null or empty");
+			return;
+		}
+
 		System.out.print(">> Change Directory to " + path);
 
 		if (!this.connectionEstablished) {
@@ -239,6 +244,11 @@ public class SftpHandler {
 	 *            (String)
 	 */
 	public void makeDirectory(String directoryName) {
+
+		if (directoryName == null || directoryName.isEmpty()) {
+			System.err.println("Directory not created because argument null or empty");
+			return;
+		}
 
 		System.out.print(">> Create directory " + this.currentWorkingDirectory + "/" + directoryName);
 

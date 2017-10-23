@@ -1,7 +1,5 @@
 package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables;
 
-import java.nio.file.Path;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -26,16 +24,6 @@ public class MusicVideoSourceDirectoriesTableView {
 	 */
 	public MusicVideoSourceDirectoriesTableView(String filePath) {
 		this.filePath = new SimpleStringProperty(filePath);
-	}
-
-	/**
-	 * MusicVideoSourceDirectoriesTableView constructor #2
-	 * 
-	 * @param filePath
-	 *            (Path | Absolute path to directory)
-	 */
-	public MusicVideoSourceDirectoriesTableView(Path filePath) {
-		this.filePath = new SimpleStringProperty(filePath.toString());
 	}
 
 	/**

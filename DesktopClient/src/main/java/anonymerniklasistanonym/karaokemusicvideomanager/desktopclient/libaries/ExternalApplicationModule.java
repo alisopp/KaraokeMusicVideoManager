@@ -40,7 +40,13 @@ public class ExternalApplicationModule {
 
 		if (Desktop.isDesktopSupported()) {
 			try {
-				Desktop.getDesktop().browse(new URI(urlToOpen));
+				if (System.getProperty("os.name").contains("nux")) {
+					System.out.println(">> Linux detected - use xdg-open <<");
+					Runtime runtime = Runtime.getRuntime();
+					runtime.exec("xdg-open " + urlToOpen);
+				} else {
+					Desktop.getDesktop().browse(new URI(urlToOpen));
+				}
 				return true;
 			} catch (IOException | URISyntaxException e) {
 				e.printStackTrace();

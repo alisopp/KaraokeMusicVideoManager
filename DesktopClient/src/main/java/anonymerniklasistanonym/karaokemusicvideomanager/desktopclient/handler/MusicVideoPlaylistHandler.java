@@ -16,6 +16,12 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.J
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideo;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoPlaylistElement;
 
+/**
+ * Class that handles the music video playlist (the list and the entries)
+ * 
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
+ *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
+ */
 public class MusicVideoPlaylistHandler {
 
 	private MusicVideoPlaylistElement[] playlistElements;
@@ -51,10 +57,25 @@ public class MusicVideoPlaylistHandler {
 
 	}
 
-	public void getVotes(int index) {
-		this.playlistElements[index].getVotes();
+	/**
+	 * Get the votes of a music video playlist entry
+	 * 
+	 * @param index
+	 *            (Integer | Index in playlist)
+	 */
+	public int getVotes(int index) {
+		return this.playlistElements[index].getVotes();
 	}
 
+	/**
+	 * Change the vote number of a playlist entry
+	 * 
+	 * @param vote
+	 *            (Integer | New vote number)
+	 * @param index
+	 *            (Integer | Index of music video file in musicVideoList)
+	 * @return changed MusicVideoPlaylistElement (MusicVideoPlaylistElement)
+	 */
 	public MusicVideoPlaylistElement setVotes(int vote, int index) {
 		this.playlistElements[index].setVotes(vote);
 		return this.playlistElements[index];
@@ -126,42 +147,71 @@ public class MusicVideoPlaylistHandler {
 		return elementToRemove;
 	}
 
+	/**
+	 * Load a playlist entry to the music video playlist
+	 * 
+	 * @param unixTime
+	 *            (Long)
+	 * @param musicVideoIndex
+	 *            (Integer)
+	 * @param musicVideo
+	 *            (MusicVideo)
+	 * @param author
+	 *            (String)
+	 * @param comment
+	 *            (String)
+	 * @param createdLocally
+	 *            (boolean)
+	 * @param votes
+	 *            (Integer)
+	 * @param fileName
+	 *            (String | Name of file on server to delete it later)
+	 * @return the new entry (MusicVideoPlaylistElement)
+	 */
 	public MusicVideoPlaylistElement load(long unixTime, int musicVideoIndex, MusicVideo musicVideo, String author,
 			String comment, boolean createdLocally, int votes, String fileName) {
 		// create new entry
 		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(unixTime, musicVideoIndex, musicVideo,
 				author, comment, true, votes, fileName);
 
-		MusicVideoPlaylistElement[] oldPlaylist = this.playlistElements;
-		MusicVideoPlaylistElement[] newPlaylist = new MusicVideoPlaylistElement[] { newEntry };
+		if (newEntry != null) {
 
-		if (oldPlaylist != null) {
-			setPlaylistElements(Stream.concat(Arrays.stream(oldPlaylist), Arrays.stream(newPlaylist))
-					.toArray(MusicVideoPlaylistElement[]::new));
-		} else {
-			setPlaylistElements(newPlaylist);
+			MusicVideoPlaylistElement[] oldPlaylist = this.playlistElements;
+			MusicVideoPlaylistElement[] newPlaylist = new MusicVideoPlaylistElement[] { newEntry };
+
+			if (oldPlaylist != null) {
+				setPlaylistElements(Stream.concat(Arrays.stream(oldPlaylist), Arrays.stream(newPlaylist))
+						.toArray(MusicVideoPlaylistElement[]::new));
+			} else {
+				setPlaylistElements(newPlaylist);
+			}
 		}
 
 		return newEntry;
 	}
 
+	/**
+	 * Load a playlist entry to the music video playlist
+	 * 
+	 * @param unixTime
+	 *            (Long)
+	 * @param musicVideoIndex
+	 *            (Integer)
+	 * @param musicVideo
+	 *            (MusicVideo)
+	 * @param author
+	 *            (String)
+	 * @param comment
+	 *            (String)
+	 * @param createdLocally
+	 *            (boolean)
+	 * @param votes
+	 *            (Integer)
+	 * @return the new entry (MusicVideoPlaylistElement)
+	 */
 	public MusicVideoPlaylistElement load(long unixTime, int musicVideoIndex, MusicVideo musicVideo, String author,
 			String comment, boolean createdLocally, int votes) {
-		// create new entry
-		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(unixTime, musicVideoIndex, musicVideo,
-				author, comment, true, votes, "nada");
-
-		MusicVideoPlaylistElement[] oldPlaylist = this.playlistElements;
-		MusicVideoPlaylistElement[] newPlaylist = new MusicVideoPlaylistElement[] { newEntry };
-
-		if (oldPlaylist != null) {
-			setPlaylistElements(Stream.concat(Arrays.stream(oldPlaylist), Arrays.stream(newPlaylist))
-					.toArray(MusicVideoPlaylistElement[]::new));
-		} else {
-			setPlaylistElements(newPlaylist);
-		}
-
-		return newEntry;
+		return load(unixTime, musicVideoIndex, musicVideo, author, comment, true, votes, null);
 	}
 
 	/**
@@ -179,7 +229,11 @@ public class MusicVideoPlaylistHandler {
 	}
 
 	/**
-	 * Read JSON data and extract all settings information.
+	 * Read from a playlist entry (JSON) file a plalyist entry data
+	 * 
+	 * @param file
+	 *            (File | File that contains a playlist entry)
+	 * @return playlist entry data (Object[])
 	 */
 	public static Object[] readPlaylistEntryFile(File file) {
 		System.out.println("READ PLAYLIST ENTRY FILE");
@@ -272,7 +326,11 @@ public class MusicVideoPlaylistHandler {
 	}
 
 	/**
-	 * Read JSON data and extract all settings information.
+	 * Convert a playlist entry to (JSON) String
+	 * 
+	 * @param playlistElement
+	 *            (MusicVideoPlaylistElement | plalyist entry)
+	 * @return plalist entry as a String (String)
 	 */
 	public String writePlaylistEntryFile(MusicVideoPlaylistElement playlistElement) {
 		System.out.println("WRITE PLAYLIST ENTRY FILE");
@@ -307,7 +365,7 @@ public class MusicVideoPlaylistHandler {
 
 			mainJsonBuilder.add("votes", playlistElement.getVotes());
 
-			return JsonModule.dumpJsonObjectToString(mainJsonBuilder);
+			return JsonModule.toString(mainJsonBuilder);
 
 		} catch (
 
@@ -316,6 +374,14 @@ public class MusicVideoPlaylistHandler {
 		}
 	}
 
+	/**
+	 * Load a playlist from a playlist file
+	 * 
+	 * @param file
+	 *            (File | File that contains the playlist data)
+	 * @param musicVideoList
+	 *            (MusicVideo[] | The current music video list)
+	 */
 	public void loadPlaylistData(File file, MusicVideo[] musicVideoList) {
 		if (file == null || file.isDirectory()) {
 			System.err.println("Playlist element could not be loaded because the file doesn't exist!");
@@ -334,7 +400,11 @@ public class MusicVideoPlaylistHandler {
 	}
 
 	/**
-	 * Read JSON data and extract all settings information.
+	 * Convert a String of text to data to create a playlist entry
+	 * 
+	 * @param contentOfFile
+	 *            (String)
+	 * @return playlist entry data or null (Object[])
 	 */
 	public Object[] readPlaylistEntryFile(String contentOfFile) {
 		System.out.println("READ PLAYLIST ENTRY FILE");
@@ -428,8 +498,12 @@ public class MusicVideoPlaylistHandler {
 		}
 	}
 
+	/**
+	 * Reset the whole voting of the playlist
+	 */
 	public void resetPlaylistVoting() {
 
+		// set votes for every element to 0
 		for (int i = 0; i < this.playlistElements.length; i++) {
 			this.playlistElements[i].setVotes(0);
 		}

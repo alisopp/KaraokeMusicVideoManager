@@ -9,7 +9,8 @@ import java.util.Arrays;
 /**
  * Static methods that help with loading class resources
  * 
- * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com>
+ * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
+ *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  */
 public class ClassResourceReaderModule {
 

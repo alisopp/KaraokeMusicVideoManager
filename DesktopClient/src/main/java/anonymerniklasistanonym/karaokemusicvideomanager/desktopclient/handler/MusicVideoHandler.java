@@ -291,7 +291,7 @@ public class MusicVideoHandler {
 			return false;
 		}
 
-		System.out.print(">> Add path " + directoryPath.toAbsolutePath() + " to path list.");
+		System.out.print(">> Add path " + directoryPath + " to path list.");
 
 		// check if the path exists
 		if (!directoryPath.toFile().exists()) {
@@ -306,7 +306,7 @@ public class MusicVideoHandler {
 		}
 
 		// the rest does the settings class with the absolute path of the given path
-		return this.programDataHandler.addPathToPathList(directoryPath.toAbsolutePath());
+		return this.programDataHandler.addPathToPathList(directoryPath.toAbsolutePath().normalize());
 
 	}
 
@@ -1388,11 +1388,13 @@ public class MusicVideoHandler {
 	 */
 	public void removeFromPathList(Path filePathToRemove) {
 
-		// remove the path
-		this.programDataHandler.removeFromPathList(filePathToRemove);
+		// try to remove the path
+		if (this.programDataHandler.removeFromPathList(filePathToRemove)) {
 
-		// update the music video list
-		updateMusicVideoList();
+			// update the music video list if path list now different
+			updateMusicVideoList();
+		}
+
 	}
 
 	/**
@@ -1414,20 +1416,40 @@ public class MusicVideoHandler {
 		return this.programDataHandler.getIgnoredFiles();
 	}
 
+	/**
+	 * Remove a file from the ignored Files list
+	 * 
+	 * @param selectedFile
+	 *            (Path)
+	 */
 	public void removeFromIgnoredFilesList(Path selectedFile) {
 
-		// remove the file
-		this.programDataHandler.removeFromIgnoredFilesList(selectedFile);
+		// try to remove the file
+		if (this.programDataHandler.removeFromIgnoredFilesList(selectedFile)) {
 
-		// update the music video list now
-		updateMusicVideoList();
+			// update the music video list if the new ignored files list is different
+			updateMusicVideoList();
+		}
 
 	}
 
+	/**
+	 * @return MusicVideoPlaylistHandler which handles the playlist
+	 */
 	public MusicVideoPlaylistHandler getPlaylistHandler() {
 		return this.playlistHandler;
 	}
 
+	/**
+	 * Add a music video to the current playlist
+	 * 
+	 * @param index
+	 *            (Integer | Position of music video in the musicVideoList)
+	 * @param author
+	 *            (String | Author of playlist entry)
+	 * @param comment
+	 *            (String | Comment of author)
+	 */
 	public void addMusicVideoToPlaylist(int index, String author, String comment) {
 
 		System.out.println(">> Playlist: Add " + this.musicVideoList[index - 1].getTitle() + " from " + author);
@@ -1435,16 +1457,21 @@ public class MusicVideoHandler {
 		// add MusicVideoPlaylistElement to the playlist
 		MusicVideoPlaylistElement newElement = this.playlistHandler.add(index, this.musicVideoList[index - 1], author,
 				comment);
+
+		// if connected to server upload playlist entry
 		if (sftpConnectionEstablished()) {
 			uploadPlaylistEntry(newElement);
 		}
 	}
 
-	private void addMusicVideoToPlaylist(long unixTime, int index, MusicVideo musicVideo, String author, String comment,
-			boolean createdLocally) {
+	private void loadMusicVideoToPlaylist(long unixTime, int index, MusicVideo musicVideo, String author,
+			String comment, boolean createdLocally) {
+
+		// load MusicVideoPlaylistElement to the playlist
 		MusicVideoPlaylistElement newElement = this.playlistHandler.load(unixTime, index, musicVideo, author, comment,
 				createdLocally, 0);
 
+		// if connected to server upload playlist entry
 		if (sftpConnectionEstablished()) {
 			uploadPlaylistEntry(newElement);
 		}
@@ -1728,7 +1755,7 @@ public class MusicVideoHandler {
 								final boolean createdLocally = jsonObject.asJsonObject().getBoolean("created-locally");
 
 								// then add the music video to the playlist
-								addMusicVideoToPlaylist(unixTime, indexInList + 1, this.musicVideoList[indexInList],
+								loadMusicVideoToPlaylist(unixTime, indexInList + 1, this.musicVideoList[indexInList],
 										author, comment, createdLocally);
 							}
 						}
@@ -1943,6 +1970,9 @@ public class MusicVideoHandler {
 		return this.programName;
 	}
 
+	/**
+	 * Reset plalyist voting
+	 */
 	public void resetVotingSftp() {
 
 		// check if a connection was established

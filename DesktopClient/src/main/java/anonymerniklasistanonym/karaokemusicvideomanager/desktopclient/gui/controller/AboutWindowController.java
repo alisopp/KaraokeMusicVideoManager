@@ -13,6 +13,8 @@ import javafx.scene.text.Text;
  */
 public class AboutWindowController {
 
+	// FXML views
+
 	/**
 	 * The program is open source...
 	 */

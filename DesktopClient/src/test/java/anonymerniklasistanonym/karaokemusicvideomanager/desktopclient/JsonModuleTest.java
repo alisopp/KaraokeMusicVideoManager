@@ -28,7 +28,7 @@ public class JsonModuleTest {
 		jsonBuilder.add("name", "Falco");
 		jsonBuilder.add("age", BigDecimal.valueOf(3));
 		jsonBuilder.add("biteable", Boolean.FALSE);
-		System.out.println(JsonModule.dumpJsonObjectToString(jsonBuilder));
+		System.out.println(JsonModule.toString(jsonBuilder));
 
 		// Get Json data:
 		String jsonContent = "{\"name\":\"Falco\",\"age\":3,\"bitable\":false}";

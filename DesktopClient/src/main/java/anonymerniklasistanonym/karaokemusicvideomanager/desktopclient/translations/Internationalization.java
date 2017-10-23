@@ -20,7 +20,7 @@ public class Internationalization {
 	/**
 	 * The current ResourceBundle
 	 */
-	public static ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
+	private static ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
 
 	/**
 	 * The current Locale/language code
@@ -30,7 +30,7 @@ public class Internationalization {
 	/**
 	 * Set/Reset the current bundle to the default bundle (English)
 	 */
-	public static void setBundle() {
+	private static void setBundle() {
 
 		bundle = ResourceBundle.getBundle(bundleName);
 		locale = Locale.US;
