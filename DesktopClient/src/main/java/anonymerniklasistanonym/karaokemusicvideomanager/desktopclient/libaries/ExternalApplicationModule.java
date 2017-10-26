@@ -39,20 +39,15 @@ public class ExternalApplicationModule {
 		System.out.println(">> Try to externaly open the URL " + urlToOpen);
 
 		if (Desktop.isDesktopSupported()) {
-			try {
-				if (System.getProperty("os.name").contains("nux")) {
-					System.out.println(">> Linux detected - use xdg-open <<");
-					Runtime runtime = Runtime.getRuntime();
-					runtime.exec("xdg-open " + urlToOpen);
-				} else {
+			new Thread(() -> {
+				try {
 					Desktop.getDesktop().browse(new URI(urlToOpen));
+					System.out.println("<< URL successfully externally opened");
+				} catch (IOException | URISyntaxException e1) {
+					System.err.println("<< URL was not externally opened!");
+					e1.printStackTrace();
 				}
-				return true;
-			} catch (IOException | URISyntaxException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			}).start();
 		}
 		return false;
 	}
@@ -82,16 +77,18 @@ public class ExternalApplicationModule {
 
 		System.out.println(">> Try to externaly open the file " + file.getAbsolutePath());
 
-		try {
-			Desktop.getDesktop().open(file);
-			System.out.println("<< Succsessfully opened \"" + file.getName() + "\"");
-			return true;
-		} catch (IOException e) {
-			System.err.println("<< File could not be opened/read/found!");
-		} catch (Exception e) {
-			System.err.println("<< Unknown error!");
-			e.printStackTrace();
+		if (Desktop.isDesktopSupported()) {
+			new Thread(() -> {
+				try {
+					Desktop.getDesktop().open(file);
+					System.out.println("<< File successfully externally opened");
+				} catch (IOException e1) {
+					System.err.println("<< File was not externally opened!");
+					e1.printStackTrace();
+				}
+			}).start();
 		}
+
 		return false;
 	}
 
