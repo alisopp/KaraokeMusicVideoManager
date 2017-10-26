@@ -71,7 +71,7 @@
                 </Menu>
                 <Menu fx:id="menuSettings" mnemonicParsing="false" text="Settings">
                   <items>
-                        <CheckMenuItem fx:id="menuButtonAlwaysSave" mnemonicParsing="false" onAction="#changeAlwaysSave" text="Always Save Changes on Exit Without Dialog" />
+                        <CheckMenuItem fx:id="menuButtonAlwaysSave" mnemonicParsing="false" onAction="#toggleAlwaysSave" text="Always Save Changes on Exit Without Dialog" />
                   </items>
                 </Menu>
                   <Menu fx:id="menuAbout" mnemonicParsing="false" text="About">

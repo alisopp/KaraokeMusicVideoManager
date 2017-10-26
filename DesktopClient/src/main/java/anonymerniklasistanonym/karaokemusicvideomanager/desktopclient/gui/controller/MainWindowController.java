@@ -1578,11 +1578,17 @@ public class MainWindowController {
 		}
 	}
 
+	/**
+	 * Save configuration in the default file
+	 */
 	@FXML
 	private void saveConfiguartion() {
 		this.mainClass.getMusicVideohandler().saveSettingsToFile();
 	}
 
+	/**
+	 * Load configuration from the default file
+	 */
 	@FXML
 	private void loadConfiguartion() {
 		this.mainClass.getMusicVideohandler().loadSettingsFromFile();
@@ -1590,8 +1596,12 @@ public class MainWindowController {
 		refreshMusicVideoDirectoryTable();
 	}
 
+	/**
+	 * Save configuration/settings file with the system dialog
+	 */
 	@FXML
 	private void saveConfiguartionCustom() {
+
 		final ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("JSON file"), "*.json");
 		final File[] jsonFile = DialogHandler.chooseFile(this.mainClass.getPrimaryStage(),
 				Internationalization.translate("Save configuration"), null, new ExtensionFilter[] { jsonFilter },
@@ -1602,8 +1612,12 @@ public class MainWindowController {
 		}
 	}
 
+	/**
+	 * Load with a dialog a saved settings file from the file system
+	 */
 	@FXML
 	private void loadConfiguartionCustom() {
+
 		final ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("JSON file"), "*.json");
 		final File[] jsonFile = DialogHandler.chooseFile(this.mainClass.getPrimaryStage(),
 				Internationalization.translate("Load configuration"), null, new ExtensionFilter[] { jsonFilter },
@@ -1613,14 +1627,22 @@ public class MainWindowController {
 		}
 		refreshMusicVideoTable();
 		refreshMusicVideoDirectoryTable();
+
 	}
 
+	/**
+	 * Reset the configuration/settings of the program
+	 */
 	@FXML
 	private void resetConfiguartion() {
+
+		// ask the user if he really wants that
 		if (DialogHandler.confirm(Internationalization.translate("Confirm to continue"),
 				Internationalization.translate("Reset Everything"),
 				Internationalization.translate("Do you really want to reset EVERYTHING") + "!?")) {
 			this.mainClass.getMusicVideohandler().reset();
+
+			// update tables so that the tables are empty
 			refreshMusicVideoTable();
 			refreshMusicVideoDirectoryTable();
 			refreshMusicVideoPlaylistTable();
@@ -1628,11 +1650,17 @@ public class MainWindowController {
 
 	}
 
+	/**
+	 * Open the GitHub link to the repository
+	 */
 	@FXML
 	private void openGitHubHelpLink() {
 		ExternalApplicationModule.openUrl("https://github.com/AnonymerNiklasistanonym/KaraokeMusicVideoManager");
 	}
 
+	/**
+	 * Open a dialog to change the current selected music video files file name
+	 */
 	@FXML
 	private void renameFile() {
 
@@ -1661,6 +1689,10 @@ public class MainWindowController {
 
 	}
 
+	/**
+	 * Open a music video on click of the row - but only if the left muse key was
+	 * clicked
+	 */
 	@FXML
 	private void openMusicVideoPlaylistFileLeftClick() {
 		if (this.leftMouseKeyWasPressed) {
@@ -1668,6 +1700,11 @@ public class MainWindowController {
 		}
 	}
 
+	/**
+	 * Open a selected music video
+	 * 
+	 * @return if video was opened (boolean)
+	 */
 	private boolean openSelectedPlaylistVideoFile() {
 
 		// get the currently selected entry in the table
@@ -1682,6 +1719,9 @@ public class MainWindowController {
 
 	}
 
+	/**
+	 * Save the current playlist with a dialog to choose a file/create one
+	 */
 	@FXML
 	private void savePlaylistDialog() {
 		if (this.tableDataPlaylist.isEmpty()) {
@@ -1702,8 +1742,12 @@ public class MainWindowController {
 
 	}
 
+	/**
+	 * Open a dialog to choose a settings file
+	 */
 	@FXML
 	private void loadPlaylistDialog() {
+
 		if (this.tableDataPlaylist.isEmpty()
 				|| DialogHandler.confirm(Internationalization.translate("This action has consequences"),
 						Internationalization.translate("Do you really want to clear your current playlist") + "?",
@@ -1717,15 +1761,23 @@ public class MainWindowController {
 			}
 			refreshMusicVideoPlaylistTable();
 		}
+
 	}
 
+	/**
+	 * Clear the selection of the playlist entries
+	 */
 	@FXML
 	private void clearSelectionPlaylistTable() {
 		this.playlistTable.getSelectionModel().clearSelection();
 	}
 
+	/**
+	 * Remove the current selected music video playlist entry
+	 */
 	@FXML
 	private void removeEntry() {
+
 		// get the currently selected entry in the table
 		MusicVideoPlaylistTableView selectedEntry = this.playlistTable.getSelectionModel().getSelectedItem();
 
@@ -1737,8 +1789,12 @@ public class MainWindowController {
 
 	}
 
+	/**
+	 * Edit the current playlist entry (author/comment)
+	 */
 	@FXML
 	private void editEntry() {
+
 		// get the currently selected entry in the table
 		MusicVideoPlaylistTableView selectedEntry = this.playlistTable.getSelectionModel().getSelectedItem();
 
@@ -1756,44 +1812,66 @@ public class MainWindowController {
 						authorComment[0], authorComment[1]);
 				refreshMusicVideoPlaylistTable();
 			}
-
 		}
+
 	}
 
+	/**
+	 * Reset the voting on the SFTP server
+	 */
 	@FXML
 	private void sftpVotingReset() {
 		this.mainClass.getMusicVideohandler().resetVotingSftp();
 	}
 
+	/**
+	 * Reset all SFTP settings
+	 */
 	@FXML
 	private void sftpReset() {
 		this.mainClass.getMusicVideohandler().resetSftp();
 		checkNetwork();
 	}
 
+	/**
+	 * Transfer all files to the SFTP server for setting up a "party"
+	 */
 	@FXML
 	private void sftpParty() {
 		this.mainClass.getMusicVideohandler().transferHtmlParty();
 	}
 
+	/**
+	 * Transfer all files to the SFTP server for setting up a list
+	 */
 	@FXML
 	private void sftpStatic() {
 		this.mainClass.getMusicVideohandler().transferHtmlStatic();
 	}
 
+	/**
+	 * Transfer all files to the SFTP server for setting up a list and a search
+	 */
 	@FXML
 	private void sftpSearch() {
 		this.mainClass.getMusicVideohandler().transferHtmlSearch();
 	}
 
+	/**
+	 * Change/Toggle the always save setting
+	 */
 	@FXML
-	public void changeAlwaysSave() {
+	public void toggleAlwaysSave() {
 		this.menuButtonAlwaysSave.setSelected(this.mainClass.getMusicVideohandler()
 				.setAlwaysSave(!this.mainClass.getMusicVideohandler().getAlwaysSave()));
 	}
 
+	/**
+	 * Clear the video playlist table (remove all elements/entries)
+	 */
 	@FXML
 	private void clearMusicVideoPlaylistTable() {
+
 		if (!this.tableDataPlaylist.isEmpty() && DialogHandler.confirm(Internationalization.translate("Clear playlist"),
 				Internationalization.translate("Do you really want to clear your current playlist") + "?",
 				Internationalization.translate("If you enter yes all playlist elements will be removed") + "!")) {
@@ -1803,14 +1881,28 @@ public class MainWindowController {
 
 	}
 
+	/**
+	 * @return (String) name of the author (of the last change/account atht he first
+	 *         time)
+	 */
 	public String getNameOfAuthor() {
 		return this.nameOfAuthor;
 	}
 
+	/**
+	 * Set the new author name
+	 * 
+	 * @param newName
+	 *            (String | Name of author)
+	 */
 	public void setNameOfAuthor(String newName) {
 		this.nameOfAuthor = newName;
 	}
 
+	/**
+	 * Set the vote number for the current selected entry (Open a dialog for setting
+	 * a new number)
+	 */
 	@FXML
 	public void setVotes() {
 

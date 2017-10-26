@@ -24,12 +24,22 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.Mu
  */
 public class MusicVideoPlaylistHandler {
 
+	/**
+	 * List that contains all MusicVideoPlaylistElements
+	 */
 	private MusicVideoPlaylistElement[] playlistElements;
 
+	/**
+	 * @return the list that contains all MusicVideoPlaylistElements
+	 */
 	public MusicVideoPlaylistElement[] getPlaylistElements() {
 		return playlistElements;
 	}
 
+	/**
+	 * @param playlistElements
+	 *            (MusicVideoPlaylistElement[] | new list with playlist elements)
+	 */
 	public void setPlaylistElements(MusicVideoPlaylistElement[] playlistElements) {
 
 		if (playlistElements == null) {
@@ -418,12 +428,12 @@ public class MusicVideoPlaylistHandler {
 
 		try {
 
-			int playlistElementDataSongIndex;
-			long playlistElementDataUnixTime;
-			String playlistElementDataAuthor;
-			String playlistElementDataComment;
-			boolean playlistElementPlaceCreated;
-			int playlistElementDataVoteNumber;
+			final int playlistElementDataSongIndex;
+			final long playlistElementDataUnixTime;
+			final String playlistElementDataAuthor;
+			final String playlistElementDataComment;
+			final boolean playlistElementPlaceCreated;
+			final int playlistElementDataVoteNumber;
 
 			// convert string to a JSON object
 			JsonObject jsonObject = JsonModule.loadJsonFromString(contentOfFile);
