@@ -38,7 +38,7 @@ public class ProgramData {
 	private String workingDirectorySftp;
 
 	/**
-	 * SFTP - Working directory
+	 * Always save settings on close
 	 */
 	private Boolean alwaysSaveSettings;
 
@@ -46,6 +46,11 @@ public class ProgramData {
 	 * Files that should be ignored
 	 */
 	private File[] ignoredFilesList;
+
+	/**
+	 * Remove a started video from the playlist
+	 */
+	private boolean removeStartedVideoFromPlayist;
 
 	/**
 	 * Constructor to create a new settings data object (ProgramData)
@@ -61,6 +66,7 @@ public class ProgramData {
 		this.workingDirectorySftp = null;
 		this.alwaysSaveSettings = false;
 		this.ignoredFilesList = null;
+		this.removeStartedVideoFromPlayist = false;
 	}
 
 	/**
@@ -165,7 +171,7 @@ public class ProgramData {
 	 * @return the ignoredFilesList (File[])
 	 */
 	public File[] getIgnoredFilesList() {
-		return ignoredFilesList;
+		return this.ignoredFilesList;
 	}
 
 	/**
@@ -174,6 +180,14 @@ public class ProgramData {
 	 */
 	public void setIgnoredFilesList(File[] ignoredFilesList) {
 		this.ignoredFilesList = ignoredFilesList;
+	}
+
+	public boolean getRemoveStartedVideoFromPlayist() {
+		return this.removeStartedVideoFromPlayist;
+	}
+
+	public boolean setRemoveStartedVideoFromPlayist(boolean newValue) {
+		return this.removeStartedVideoFromPlayist = newValue;
 	}
 
 }

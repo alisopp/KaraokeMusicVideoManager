@@ -2023,4 +2023,12 @@ public class MusicVideoHandler {
 		}
 	}
 
+	public boolean getPlaylistRemoveStartedVideo() {
+		return this.programDataHandler.getRemoveStartedVideoFromPlayist();
+	}
+
+	public boolean setPlaylistRemoveStartedVideo(boolean newValue) {
+		return this.programDataHandler.setRemoveStartedVideoFromPlayist(newValue);
+	}
+
 }

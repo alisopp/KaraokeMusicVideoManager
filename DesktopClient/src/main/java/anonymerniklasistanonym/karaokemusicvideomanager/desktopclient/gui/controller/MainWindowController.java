@@ -200,6 +200,12 @@ public class MainWindowController {
 	 */
 	@FXML
 	private MenuItem contextPlaylistRefresh;
+	/**
+	 * music video playlist table context menu > add removed music video entry to
+	 * the table
+	 */
+	@FXML
+	private MenuItem contextPlaylistUndo;
 
 	// Buttons
 
@@ -366,6 +372,11 @@ public class MainWindowController {
 	 */
 	@FXML
 	private CheckMenuItem menuButtonAlwaysSave;
+	/**
+	 * Remove a started video from the playlist
+	 */
+	@FXML
+	private CheckMenuItem menuButtonPlaylistRemove;
 
 	/**
 	 * About this program menu
@@ -414,6 +425,7 @@ public class MainWindowController {
 	 * Main class
 	 */
 	private Main mainClass;
+	private MusicVideoPlaylistElement latestStartedMusicVideoPlaylistEntry;
 
 	/**
 	 * Window text that should be translated on language change/load
@@ -453,6 +465,7 @@ public class MainWindowController {
 		this.contextPlaylistVotes.setText(Internationalization.translate("Set votes"));
 		this.contextPlaylistClear.setText(Internationalization.translate("Clear Selection"));
 		this.contextPlaylistRefresh.setText(Internationalization.translate("Refresh"));
+		this.contextPlaylistUndo.setText(Internationalization.translate("Add removed playlist entry"));
 
 		// buttons
 		this.networkButton.setText(Internationalization.translate("Network"));
@@ -493,6 +506,7 @@ public class MainWindowController {
 
 		this.menuSettings.setText(Internationalization.translate("Settings"));
 		this.menuButtonAlwaysSave.setText(Internationalization.translate("Always save Settings on Exit"));
+		this.menuButtonPlaylistRemove.setText(Internationalization.translate("Remove playlist entry after playing it"));
 
 		this.menuAbout.setText(Internationalization.translate("About"));
 		this.aboutButton.setText(Internationalization.translate("About"));
@@ -685,6 +699,7 @@ public class MainWindowController {
 		this.contextPlaylistVotes.setGraphic(WindowModule.createMenuIcon("upvote"));
 		this.contextPlaylistClear.setGraphic(WindowModule.createMenuIcon("clear"));
 		this.contextPlaylistRefresh.setGraphic(WindowModule.createMenuIcon("refresh"));
+		this.contextPlaylistUndo.setGraphic(WindowModule.createMenuIcon("add"));
 
 		this.networkButton.setGraphic(WindowModule.createMenuIcon("network"));
 		this.youTubeButton.setGraphic(WindowModule.createMenuIcon("youTube"));
@@ -724,6 +739,10 @@ public class MainWindowController {
 		// disable some buttons on start
 		this.menuButtonSftp.setDisable(true);
 		this.menuButtonSftpVotingReset.setDisable(true);
+		this.contextPlaylistUndo.setVisible(false);
+
+		// no last removed element at start
+		this.latestStartedMusicVideoPlaylistEntry = null;
 
 		// set last name to current user name
 		this.nameOfAuthor = System.getProperty("user.name");
@@ -747,6 +766,8 @@ public class MainWindowController {
 		refreshMusicVideoPlaylistTable();
 
 		this.menuButtonAlwaysSave.setSelected(this.mainClass.getMusicVideohandler().getAlwaysSave());
+		this.menuButtonPlaylistRemove
+				.setSelected(this.mainClass.getMusicVideohandler().getPlaylistRemoveStartedVideo());
 
 		// select source path tab if there are no music videos
 		if (this.mainClass.getMusicVideohandler().getMusicVideoList() == null) {
@@ -1506,6 +1527,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void exportHtmlStatic() {
+
 		final File htmlFileDestination = DialogHandler.chooseDirectory(this.mainClass.getPrimaryStage(),
 				Internationalization.translate("Export music video list to") + " "
 						+ Internationalization.translate("a static HTML website"),
@@ -1514,6 +1536,7 @@ public class MainWindowController {
 		if (htmlFileDestination != null) {
 			this.mainClass.getMusicVideohandler().saveHtmlList(htmlFileDestination.toPath(), true);
 		}
+
 	}
 
 	/**
@@ -1521,6 +1544,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void exportHtmlSearch() {
+
 		final File htmlFileDestination = DialogHandler.chooseDirectory(this.mainClass.getPrimaryStage(),
 				Internationalization.translate("Export music video list to") + " "
 						+ Internationalization.translate("a static HTML website with a search"),
@@ -1529,6 +1553,7 @@ public class MainWindowController {
 		if (htmlFileDestination != null) {
 			this.mainClass.getMusicVideohandler().saveHtmlSearch(htmlFileDestination.toPath(), true);
 		}
+
 	}
 
 	/**
@@ -1536,6 +1561,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void exportHtmlParty() {
+
 		final File htmlFileDestination = DialogHandler.chooseDirectory(this.mainClass.getPrimaryStage(),
 				Internationalization.translate("Export music video list to") + " "
 						+ Internationalization.translate("a party HTML/PHP website structure"),
@@ -1544,6 +1570,7 @@ public class MainWindowController {
 		if (htmlFileDestination != null) {
 			this.mainClass.getMusicVideohandler().saveHtmlParty(htmlFileDestination.toPath(), true);
 		}
+
 	}
 
 	/**
@@ -1551,6 +1578,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void exportCsv() {
+
 		final ExtensionFilter csvFilter = new ExtensionFilter(Internationalization.translate("CSV file"), "*.csv");
 		final File[] csvFile = DialogHandler.chooseFile(this.mainClass.getPrimaryStage(),
 				Internationalization.translate("Export music video list to") + " "
@@ -1560,6 +1588,7 @@ public class MainWindowController {
 		if (csvFile != null && csvFile[0] != null) {
 			this.mainClass.getMusicVideohandler().saveCsv(csvFile[0].toPath());
 		}
+
 	}
 
 	/**
@@ -1567,6 +1596,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void exportJson() {
+
 		final ExtensionFilter jsonFilter = new ExtensionFilter(Internationalization.translate("JSON file"), "*.json");
 		final File[] jsonFile = DialogHandler.chooseFile(this.mainClass.getPrimaryStage(),
 				Internationalization.translate("Export music video list to") + " "
@@ -1576,6 +1606,7 @@ public class MainWindowController {
 		if (jsonFile != null && jsonFile[0] != null) {
 			this.mainClass.getMusicVideohandler().saveJson(jsonFile[0].toPath());
 		}
+
 	}
 
 	/**
@@ -1610,6 +1641,7 @@ public class MainWindowController {
 			final File saveToThis = Paths.get(jsonFile[0].getAbsolutePath() + ".json").toFile();
 			this.mainClass.getMusicVideohandler().saveSettings(saveToThis);
 		}
+
 	}
 
 	/**
@@ -1713,6 +1745,13 @@ public class MainWindowController {
 		// if something is selected
 		if (selectedEntry != null) {
 			this.mainClass.getMusicVideohandler().openMusicVideo(selectedEntry.getMusicVideoIndex() - 1);
+			if (this.mainClass.getMusicVideohandler().getPlaylistRemoveStartedVideo()) {
+				this.latestStartedMusicVideoPlaylistEntry = this.mainClass.getMusicVideohandler().getPlaylistHandler()
+						.getPlaylistElements()[selectedEntry.getIndex()];
+				this.contextPlaylistUndo.setVisible(true);
+				this.mainClass.getMusicVideohandler().removeEntryFromPlaylist(selectedEntry.getIndex());
+				refreshMusicVideoPlaylistTable();
+			}
 			return true;
 		}
 		return false;
@@ -1783,6 +1822,9 @@ public class MainWindowController {
 
 		// if something is selected
 		if (selectedEntry != null) {
+			this.latestStartedMusicVideoPlaylistEntry = this.mainClass.getMusicVideohandler().getPlaylistHandler()
+					.getPlaylistElements()[selectedEntry.getIndex()];
+			this.contextPlaylistUndo.setVisible(true);
 			this.mainClass.getMusicVideohandler().removeEntryFromPlaylist(selectedEntry.getIndex());
 		}
 		refreshMusicVideoPlaylistTable();
@@ -1864,6 +1906,33 @@ public class MainWindowController {
 	public void toggleAlwaysSave() {
 		this.menuButtonAlwaysSave.setSelected(this.mainClass.getMusicVideohandler()
 				.setAlwaysSave(!this.mainClass.getMusicVideohandler().getAlwaysSave()));
+	}
+
+	/**
+	 * Change/Toggle the always remove a started video from the playlist setting
+	 */
+	@FXML
+	public void togglePlaylistRemoveStartedVideo() {
+		this.menuButtonPlaylistRemove.setSelected(this.mainClass.getMusicVideohandler()
+				.setPlaylistRemoveStartedVideo(!this.mainClass.getMusicVideohandler().getPlaylistRemoveStartedVideo()));
+	}
+
+	/**
+	 * Change/Toggle the always remove a started video from the playlist setting
+	 */
+	@FXML
+	public void addRemovedPlaylistEntry() {
+
+		final MusicVideoPlaylistElement latestElement = this.latestStartedMusicVideoPlaylistEntry;
+		if (latestElement != null) {
+			this.mainClass.getMusicVideohandler().getPlaylistHandler().load(latestElement.getUnixTime(),
+					latestElement.getMusicVideoIndex(), latestElement.getMusicVideoFile(), latestElement.getAuthor(),
+					latestElement.getComment(), latestElement.getCreatedLocally(), latestElement.getVotes());
+			this.latestStartedMusicVideoPlaylistEntry = null;
+			this.contextPlaylistUndo.setVisible(false);
+			refreshMusicVideoPlaylistTable();
+		}
+
 	}
 
 	/**

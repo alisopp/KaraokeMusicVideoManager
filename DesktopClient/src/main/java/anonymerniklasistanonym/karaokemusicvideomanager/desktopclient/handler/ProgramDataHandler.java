@@ -416,6 +416,10 @@ public final class ProgramDataHandler {
 					mainJsonBuilder.add("always-save", Boolean.TRUE);
 				}
 
+				if (this.settings.getRemoveStartedVideoFromPlayist() != false) {
+					mainJsonBuilder.add("remove-started-video-from-playlist", Boolean.TRUE);
+				}
+
 				return JsonModule.toString(mainJsonBuilder);
 
 			}
@@ -551,6 +555,16 @@ public final class ProgramDataHandler {
 				System.err.println(" << No always save setting");
 			}
 
+			// -> (try to) get if always a started video should be removed from the playlist
+			boolean keyValueAlwaysRemoveFromPlaylist = JsonModule.getValueBoolean(jsonObject,
+					"remove-started-video-from-playlist");
+
+			if (keyValueAlwaysRemoveFromPlaylist != false) {
+				newSettingsData.setRemoveStartedVideoFromPlayist(true);
+			} else {
+				System.err.println(" << No always remove started video from playlist setting");
+			}
+
 			return newSettingsData;
 
 		} catch (Exception e) {
@@ -651,6 +665,14 @@ public final class ProgramDataHandler {
 			return false;
 		}
 
+	}
+
+	public boolean getRemoveStartedVideoFromPlayist() {
+		return this.settings.getRemoveStartedVideoFromPlayist();
+	}
+
+	public boolean setRemoveStartedVideoFromPlayist(boolean newValue) {
+		return this.settings.setRemoveStartedVideoFromPlayist(newValue);
 	}
 
 }

@@ -72,6 +72,7 @@
                 <Menu fx:id="menuSettings" mnemonicParsing="false" text="Settings">
                   <items>
                         <CheckMenuItem fx:id="menuButtonAlwaysSave" mnemonicParsing="false" onAction="#toggleAlwaysSave" text="Always Save Changes on Exit Without Dialog" />
+                        <CheckMenuItem fx:id="menuButtonPlaylistRemove" mnemonicParsing="false" onAction="#togglePlaylistRemoveStartedVideo" text="Remove video from playlist after starting it" />
                   </items>
                 </Menu>
                   <Menu fx:id="menuAbout" mnemonicParsing="false" text="About">
@@ -181,6 +182,7 @@
                                           <MenuItem fx:id="contextPlaylistVotes" mnemonicParsing="false" onAction="#setVotes" text="Set Votes" />
                                           <MenuItem fx:id="contextPlaylistClear" mnemonicParsing="false" onAction="#clearSelectionPlaylistTable" text="Clear Selection" />
                                           <MenuItem fx:id="contextPlaylistRefresh" mnemonicParsing="false" onAction="#refreshMusicVideoPlaylistTable" text="Refresh Table" />
+                                          <MenuItem fx:id="contextPlaylistUndo" mnemonicParsing="false" onAction="#addRemovedPlaylistEntry" text="Add removed playlist entry" />
                                       </items>
                                     </ContextMenu>
                                  </contextMenu>

@@ -31,6 +31,7 @@ public class MusicVideoPlaylistHandler {
 
 	/**
 	 * @return the list that contains all MusicVideoPlaylistElements
+	 *         (MusicVideoPlaylistElement[])
 	 */
 	public MusicVideoPlaylistElement[] getPlaylistElements() {
 		return playlistElements;
