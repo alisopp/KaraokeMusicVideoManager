@@ -1464,12 +1464,12 @@ public class MusicVideoHandler {
 		}
 	}
 
-	private void loadMusicVideoToPlaylist(long unixTime, int index, MusicVideo musicVideo, String author,
-			String comment, boolean createdLocally) {
+	public void loadMusicVideoToPlaylist(long unixTime, int index, MusicVideo musicVideo, String author, String comment,
+			boolean createdLocally, int votes) {
 
 		// load MusicVideoPlaylistElement to the playlist
 		MusicVideoPlaylistElement newElement = this.playlistHandler.load(unixTime, index, musicVideo, author, comment,
-				createdLocally, 0);
+				createdLocally, votes);
 
 		// if connected to server upload playlist entry
 		if (sftpConnectionEstablished()) {
@@ -1601,6 +1601,8 @@ public class MusicVideoHandler {
 	 *            (MusicVideoPlaylistElement)
 	 */
 	public void uploadPlaylistEntry(MusicVideoPlaylistElement element) {
+
+		System.out.println("Upload MusicVideoPlaylistEntry...");
 
 		// then change into the php directory
 		this.sftpController.changeDirectory(this.programDataHandler.getWorkingDirectorySftp());
@@ -1756,7 +1758,7 @@ public class MusicVideoHandler {
 
 								// then add the music video to the playlist
 								loadMusicVideoToPlaylist(unixTime, indexInList + 1, this.musicVideoList[indexInList],
-										author, comment, createdLocally);
+										author, comment, createdLocally, 0);
 							}
 						}
 					}

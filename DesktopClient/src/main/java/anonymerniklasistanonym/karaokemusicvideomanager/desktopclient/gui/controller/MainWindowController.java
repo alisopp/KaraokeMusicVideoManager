@@ -1925,7 +1925,7 @@ public class MainWindowController {
 
 		final MusicVideoPlaylistElement latestElement = this.latestStartedMusicVideoPlaylistEntry;
 		if (latestElement != null) {
-			this.mainClass.getMusicVideohandler().getPlaylistHandler().load(latestElement.getUnixTime(),
+			this.mainClass.getMusicVideohandler().loadMusicVideoToPlaylist(latestElement.getUnixTime(),
 					latestElement.getMusicVideoIndex(), latestElement.getMusicVideoFile(), latestElement.getAuthor(),
 					latestElement.getComment(), latestElement.getCreatedLocally(), latestElement.getVotes());
 			this.latestStartedMusicVideoPlaylistEntry = null;
