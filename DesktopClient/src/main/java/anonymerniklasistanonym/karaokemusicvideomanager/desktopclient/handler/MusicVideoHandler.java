@@ -1635,6 +1635,18 @@ public class MusicVideoHandler {
 		// and then sending it with a filename to the server
 		this.sftpController.transferFile(stream, (Integer.toString(highestNumber + 1) + ".json"));
 
+		// change permissions
+		this.sftpController.changeDirectory("../");
+		// this.sftpController.changePermissions(this.phpDirectoryName, 509);
+		this.sftpController.changePermissions(this.phpDirectoryName, 777);
+		this.sftpController.changeDirectory(this.phpDirectoryName);
+		final String[] fileList = this.sftpController.listFiles(".json");
+		for (int i = 0; i < fileList.length; i++) {
+			if (fileList[i].matches("\\d+.json")) {
+				this.sftpController.changePermissions(fileList[i], 777);
+			}
+		}
+
 	}
 
 	/**

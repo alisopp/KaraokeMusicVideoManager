@@ -1864,6 +1864,7 @@ public class MainWindowController {
 	@FXML
 	private void sftpVotingReset() {
 		this.mainClass.getMusicVideohandler().resetVotingSftp();
+		refreshMusicVideoPlaylistTable();
 	}
 
 	/**
@@ -1873,6 +1874,7 @@ public class MainWindowController {
 	private void sftpReset() {
 		this.mainClass.getMusicVideohandler().resetSftp();
 		checkNetwork();
+		refreshMusicVideoPlaylistTable();
 	}
 
 	/**

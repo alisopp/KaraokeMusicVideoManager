@@ -637,4 +637,41 @@ public class SftpHandler {
 		return this.connectionEstablished;
 	}
 
+	/**
+	 * Change the permissions of a file
+	 * 
+	 * @param pathOfRemoteFile
+	 *            (String | file that should have the new permissions)
+	 * @param permissions
+	 *            (Integer | Octal representation of the new permissions)
+	 * @return deletionSuccsessfull (Boolean)
+	 */
+	public boolean changePermissions(String pathOfRemoteDirectory, int permissions) {
+
+		if (!this.connectionEstablished) {
+			System.out.println("You need first to establish a connection!");
+			return false;
+		}
+
+		if ((pathOfRemoteDirectory == null || pathOfRemoteDirectory.isEmpty())) {
+			System.err.println("Permissions could not be changed because of the directroy is null or empty!");
+			return false;
+		}
+
+		System.out.print(">> Change the permissions of the file " + pathOfRemoteDirectory + " (" + permissions + ")");
+
+		try {
+			channelSftp.chmod(Integer.parseInt(Integer.toString(permissions), 8), pathOfRemoteDirectory);
+
+			System.out.println(" << Directory has new permissions.");
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println(" << Unknown Error.");
+			return false;
+		}
+
+	}
+
 }
