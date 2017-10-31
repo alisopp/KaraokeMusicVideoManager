@@ -17,6 +17,7 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 
@@ -171,9 +172,17 @@ public class SftpHandler {
 				changeDirectory(currentWorkingDirectory);
 			}
 
+		} catch (JSchException e) {
+			e.printStackTrace();
+			this.connectionEstablished = false;
+			System.err.println(" << User/Host name is invalid or session could not be opened!");
+
+			disconnectSFTP();
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			this.connectionEstablished = false;
+			System.err.println(" << Unknown error!");
 
 			disconnectSFTP();
 		}
@@ -192,10 +201,11 @@ public class SftpHandler {
 				this.channel.disconnect();
 			if (this.session != null)
 				this.session.disconnect();
-			this.connectionEstablished = false;
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		} finally {
+			this.connectionEstablished = false;
 		}
 
 	}
@@ -205,24 +215,25 @@ public class SftpHandler {
 	 * 
 	 * @param path
 	 *            (String ["/home", "/home/user", ...])
+	 * @return Program now in new directory? (Boolean)
 	 */
-	public void changeDirectory(String path) {
+	public boolean changeDirectory(String path) {
+
+		if (!this.connectionEstablished) {
+			System.err.println(" << You need first to establish a connection!");
+			return false;
+		}
 
 		if (path == null || path.isEmpty()) {
 			System.err.println("Directory not changed because argument null or empty");
-			return;
+			return false;
 		}
 
 		System.out.print(">> Change Directory to " + path);
 
-		if (!this.connectionEstablished) {
-			System.err.println(" << You need first to establish a connection!");
-			return;
-		}
-
 		if (path.equals("")) {
 			System.err.println(" << Directory doesn't need to be changed!");
-			return;
+			return true;
 		}
 
 		try {
@@ -230,9 +241,17 @@ public class SftpHandler {
 			this.channelSftp.cd(path);
 			this.currentWorkingDirectory = this.channelSftp.pwd();
 			System.out.println(" << Directory changed to " + path);
+			return true;
+
+		} catch (SftpException ex) {
+			ex.printStackTrace();
+			System.err.println(" << SFTP connection error!");
+			return false;
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			System.err.println(" << Unknown error!");
+			return false;
 		}
 
 	}
@@ -245,15 +264,13 @@ public class SftpHandler {
 	 */
 	public void makeDirectory(String directoryName) {
 
-		if (directoryName == null || directoryName.isEmpty()) {
-			System.err.println("Directory not created because argument null or empty");
+		if (!this.connectionEstablished) {
+			System.err.println(" << You need first to establish a connection!");
 			return;
 		}
 
-		System.out.print(">> Create directory " + this.currentWorkingDirectory + "/" + directoryName);
-
-		if (!this.connectionEstablished) {
-			System.err.println(" << You need first to establish a connection!");
+		if (directoryName == null || directoryName.isEmpty()) {
+			System.err.println("Directory not created because argument null or empty");
 			return;
 		}
 
@@ -261,6 +278,8 @@ public class SftpHandler {
 			System.err.println(" << Directory has no name!");
 			return;
 		}
+
+		System.out.print(">> Create directory " + this.currentWorkingDirectory + "/" + directoryName);
 
 		try {
 			this.channelSftp.lstat(directoryName);
@@ -293,13 +312,18 @@ public class SftpHandler {
 	private String[] listFilesMain(String filetype) {
 
 		if (!this.connectionEstablished) {
-			System.out.println("You need first to establish a connection!");
+			System.err.println("You need first to establish a connection!");
 			return null;
 		}
 
-		try {
+		if (filetype == null) {
+			System.err.println("Filetype can't be null!");
+			return null;
+		}
 
-			// this.channelSftp.cd(this.serverFilePath); // Change Directory on SFTP Server
+		System.out.println(">> Retrieve file list of all following files: *." + filetype);
+
+		try {
 
 			// String list for entries:
 			List<String> fileEntries = new LinkedList<String>();
@@ -312,10 +336,17 @@ public class SftpHandler {
 				fileEntries.add(entry.getFilename());
 			}
 
+			System.out.println(" << File list succssessfully retrieved.");
 			return fileEntries.toArray(new String[0]);
+
+		} catch (SftpException ex) {
+			ex.printStackTrace();
+			System.err.println(" << SFTP connection error!");
+			return null;
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			System.err.println(" << Unknown error!");
 			return null;
 		}
 
@@ -353,7 +384,7 @@ public class SftpHandler {
 	public boolean retrieveFile(String localFile, String remoteFile) {
 
 		if (!this.connectionEstablished) {
-			System.out.println("You need first to establish a connection!");
+			System.err.println("You need first to establish a connection!");
 			return false;
 		}
 
@@ -379,11 +410,16 @@ public class SftpHandler {
 			bos.close();
 
 			System.out.println(" << File succssessfully retrieved.");
-
 			return true;
+
+		} catch (SftpException ex) {
+			ex.printStackTrace();
+			System.err.println(" << SFTP connection error!");
+			return false;
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			System.err.println(" << Unknown error!");
 			return false;
 		}
 
@@ -399,7 +435,7 @@ public class SftpHandler {
 	public boolean removeFile(String pathOfRemoteFile) {
 
 		if (!this.connectionEstablished) {
-			System.out.println("You need first to establish a connection!");
+			System.err.println("You need first to establish a connection!");
 			return false;
 		}
 
@@ -411,14 +447,19 @@ public class SftpHandler {
 		System.out.print(">> Remove file " + pathOfRemoteFile);
 
 		try {
-			channelSftp.rm(pathOfRemoteFile);
 
+			channelSftp.rm(pathOfRemoteFile);
 			System.out.println(" << File succssessfully removed.");
 			return true;
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(" << Unknown Error.");
+		} catch (SftpException ex) {
+			ex.printStackTrace();
+			System.err.println(" << SFTP connection error!");
+			return false;
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			System.err.println(" << Unknown error!");
 			return false;
 		}
 
@@ -434,7 +475,7 @@ public class SftpHandler {
 	public boolean removeEmptyDirectory(String pathOfRemoteDirectory) {
 
 		if (!this.connectionEstablished) {
-			System.out.println("You need first to establish a connection!");
+			System.err.println("You need first to establish a connection!");
 			return false;
 		}
 
@@ -446,14 +487,19 @@ public class SftpHandler {
 		System.out.print(">> Remove directory " + pathOfRemoteDirectory);
 
 		try {
-			this.channelSftp.rmdir(pathOfRemoteDirectory);
 
+			this.channelSftp.rmdir(pathOfRemoteDirectory);
 			System.out.println(" << Directory succssessfully removed.");
 			return true;
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(" << Unknown Error.");
+		} catch (SftpException ex) {
+			ex.printStackTrace();
+			System.err.println(" << SFTP connection error!");
+			return false;
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			System.err.println(" << Unknown error!");
 			return false;
 		}
 
@@ -463,14 +509,19 @@ public class SftpHandler {
 	 * Transfer a local file to the current working directory
 	 * 
 	 * @param pathLocalFile
-	 *            (String)
+	 *            (String | Local file path)
 	 * @param folderPath
-	 *            (String)
+	 *            (String | File/Directory path on SFTP server)
 	 */
 	private void transferFile(String pathLocalFile, String folderPath) {
 
 		if (!this.connectionEstablished) {
-			System.out.println("You need first to establish a connection!");
+			System.err.println("You need first to establish a connection!");
+			return;
+		}
+
+		if (pathLocalFile == null || folderPath == null) {
+			System.err.println("File transfer not possible because either location or source is null!");
 			return;
 		}
 
@@ -527,30 +578,42 @@ public class SftpHandler {
 	 * 
 	 * @param pathLocalFile
 	 */
-	public void transferFile(InputStream fileInputStream, String filename) {
+	public boolean transferFile(InputStream fileInputStream, String filename) {
 
 		if (!this.connectionEstablished) {
-			System.out.println("You need first to establish a connection!");
-			return;
+			System.err.println("You need first to establish a connection!");
+			return false;
 		}
 
-		System.out.println(">>> Transfer " + filename + " to " + this.currentWorkingDirectory);
-
-		if (filename != null && fileInputStream != null) {
-
-			try {
-
-				this.channelSftp.put(fileInputStream, filename);
-
-				System.out.println("<<< file succsessfully transferred");
-
-			} catch (Exception ex) {
-				System.err.println("Exception found while transfer the response.");
-				ex.printStackTrace();
-			} finally {
-
-			}
+		if (filename == null || filename.isEmpty()) {
+			System.err.println("File could not be transfered because of it's null or empty!");
+			return false;
 		}
+
+		if (fileInputStream == null) {
+			System.err.println("File could not be transfered because of its InputStream is null or empty!");
+			return false;
+		}
+
+		System.out.println(">> Transfer " + filename + " to " + this.currentWorkingDirectory);
+
+		try {
+
+			this.channelSftp.put(fileInputStream, filename);
+			System.out.println(" << File succsessfully transferred");
+			return true;
+
+		} catch (SftpException ex) {
+			ex.printStackTrace();
+			System.err.println(" << SFTP connection error!");
+			return false;
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			System.err.println(" << Unknown error!");
+			return false;
+		}
+
 	}
 
 	/**
@@ -576,15 +639,42 @@ public class SftpHandler {
 	 */
 	private void transferFolder(File directory, String directoryString) {
 
-		if (directory != null && directoryString != null) {
+		if (!this.connectionEstablished) {
+			System.err.println("You need first to establish a connection!");
+			return;
+		}
 
+		if (directory == null || directoryString == null) {
+			System.err.println("File transfer not possible because either location or source is null!");
+			return;
+		}
+
+		if (directory.isFile()) {
+			System.err.println("File transfer not possible because directory is not a directory!");
+			return;
+		}
+
+		try {
+
+			// list all files of the directory
 			final File[] fileList = directory.listFiles();
 
+			// if the list is not null transfer all files in this directory
 			if (fileList != null) {
 				for (int i = 0; i < fileList.length; i++) {
 					transferFile(fileList[i].getAbsolutePath(), directoryString);
 				}
 			}
+
+		} catch (SecurityException e) {
+			e.printStackTrace();
+			System.err.println(" << SFTP connection security error!");
+			return;
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			System.err.println(" << Unknown error!");
+			return;
 		}
 
 	}
@@ -601,7 +691,7 @@ public class SftpHandler {
 	public String retrieveFileInputStreamString(String remoteFile) {
 
 		if (!this.connectionEstablished) {
-			System.out.println("You need first to establish a connection!");
+			System.err.println("You need first to establish a connection!");
 			return null;
 		}
 
@@ -614,6 +704,7 @@ public class SftpHandler {
 
 		try {
 
+			// get file text content
 			@SuppressWarnings("resource")
 			java.util.Scanner s = new java.util.Scanner(this.channelSftp.get(remoteFile)).useDelimiter("\\A");
 			String content = s.hasNext() ? s.next() : "";
@@ -621,8 +712,14 @@ public class SftpHandler {
 			System.out.println("Content");
 			return content;
 
+		} catch (SftpException ex) {
+			ex.printStackTrace();
+			System.err.println(" << SFTP connection error!");
+			return null;
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			System.err.println(" << Unknown error!");
 			return null;
 		}
 
@@ -641,7 +738,7 @@ public class SftpHandler {
 	 * Change the permissions of a file
 	 * 
 	 * @param pathOfRemoteFile
-	 *            (String | file that should have the new permissions)
+	 *            (String | File that should have the new permissions)
 	 * @param permissions
 	 *            (Integer | Octal representation of the new permissions)
 	 * @return deletionSuccsessfull (Boolean)
@@ -649,26 +746,37 @@ public class SftpHandler {
 	public boolean changePermissions(String pathOfRemoteDirectory, int permissions) {
 
 		if (!this.connectionEstablished) {
-			System.out.println("You need first to establish a connection!");
+			System.err.println("You need first to establish a connection!");
 			return false;
 		}
 
-		if ((pathOfRemoteDirectory == null || pathOfRemoteDirectory.isEmpty())) {
-			System.err.println("Permissions could not be changed because of the directroy is null or empty!");
+		if (pathOfRemoteDirectory == null || pathOfRemoteDirectory.isEmpty()) {
+			System.err.println("Permissions could not be changed because of the file is null or empty!");
+			return false;
+		}
+
+		if (String.valueOf(permissions).length() != 3) {
+			System.err.println("The permissions need to have 3 digits! (777, 775, ...)");
 			return false;
 		}
 
 		System.out.print(">> Change the permissions of the file " + pathOfRemoteDirectory + " (" + permissions + ")");
 
 		try {
-			channelSftp.chmod(Integer.parseInt(Integer.toString(permissions), 8), pathOfRemoteDirectory);
 
-			System.out.println(" << Directory has new permissions.");
+			// parse the given permission number to a "normal" format on UNIX
+			channelSftp.chmod(Integer.parseInt(Integer.toString(permissions), 8), pathOfRemoteDirectory);
+			System.out.println(" << File has new permissions.");
 			return true;
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println(" << Unknown Error.");
+		} catch (SftpException ex) {
+			ex.printStackTrace();
+			System.err.println(" << SFTP connection error!");
+			return false;
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			System.err.println(" << Unknown error!");
 			return false;
 		}
 
