@@ -39,6 +39,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -1826,8 +1828,9 @@ public class MainWindowController {
 					.getPlaylistElements()[selectedEntry.getIndex()];
 			this.contextPlaylistUndo.setVisible(true);
 			this.mainClass.getMusicVideohandler().removeEntryFromPlaylist(selectedEntry.getIndex());
+
+			refreshMusicVideoPlaylistTable();
 		}
-		refreshMusicVideoPlaylistTable();
 
 	}
 
@@ -2010,6 +2013,24 @@ public class MainWindowController {
 							Internationalization.translate("You need to enter a number greater or equal to 0") + "!");
 				}
 			}
+		}
+
+	}
+
+	@FXML
+	public void openMusicVideoFileEnter(KeyEvent key) {
+
+		if (key.getCode() == KeyCode.ENTER) {
+			openSelectedVideoFile();
+		}
+
+	}
+
+	@FXML
+	public void openPlaylistVideoFileEnter(KeyEvent key) {
+
+		if (key.getCode() == KeyCode.ENTER) {
+			openSelectedPlaylistVideoFile();
 		}
 
 	}

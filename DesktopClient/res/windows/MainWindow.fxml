@@ -32,7 +32,10 @@
                   <items>
                         <Menu fx:id="menuButtonWebsites" mnemonicParsing="false" text="Website">
                           <items>
-                            <MenuItem fx:id="menuButtonHtmlStatic" mnemonicParsing="false" onAction="#exportHtmlStatic" text="Static List" />
+                            <MenuItem fx:id="menuButtonHtmlStatic" mnemonicParsing="false" onAction="#exportHtmlStatic" text="Static List">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator></MenuItem>
                               <MenuItem fx:id="menuButtonHtmlSearch" mnemonicParsing="false" onAction="#exportHtmlSearch" text="Searchable List" />
                               <MenuItem fx:id="menuButtonHtmlParty" mnemonicParsing="false" onAction="#exportHtmlParty" text="Party List" />
                           </items>
@@ -45,9 +48,18 @@
                     <items>
                         <Menu fx:id="menuButtonSftp" disable="true" mnemonicParsing="false" text="Setup The Server">
                           <items>
-                            <MenuItem fx:id="menuButtonSftpStatic" mnemonicParsing="false" onAction="#sftpStatic" text="Static List" />
-                              <MenuItem fx:id="menuButtonSftpSearch" mnemonicParsing="false" onAction="#sftpSearch" text="Searchable List" />
-                              <MenuItem fx:id="menuButtonSftpParty" mnemonicParsing="false" onAction="#sftpParty" text="Party List" />
+                            <MenuItem fx:id="menuButtonSftpStatic" mnemonicParsing="false" onAction="#sftpStatic" text="Static List">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="DOWN" code="L" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator></MenuItem>
+                              <MenuItem fx:id="menuButtonSftpSearch" mnemonicParsing="false" onAction="#sftpSearch" text="Searchable List">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="DOWN" code="S" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator></MenuItem>
+                              <MenuItem fx:id="menuButtonSftpParty" mnemonicParsing="false" onAction="#sftpParty" text="Party List">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="DOWN" code="P" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator></MenuItem>
                           </items>
                         </Menu>
                         <MenuItem fx:id="menuButtonSftpVotingReset" mnemonicParsing="false" onAction="#sftpVotingReset" text="Reset Voting" />
@@ -60,12 +72,15 @@
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="S" control="ANY" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
-                    <MenuItem fx:id="menuButtonLoadConfiguration" mnemonicParsing="false" onAction="#loadConfiguartion" text="Load/Restore Configuration">
+                    <MenuItem fx:id="menuButtonLoadConfiguration" mnemonicParsing="false" onAction="#loadConfiguartion" text="Load/Restore Configuration" />
+                        <MenuItem fx:id="menuButtonSaveConfigurationCustom" mnemonicParsing="false" onAction="#saveConfiguartionCustom" text="Save Configuration with Custom Name">
                            <accelerator>
-                              <KeyCodeCombination alt="UP" code="L" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                              <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
-                        <MenuItem fx:id="menuButtonSaveConfigurationCustom" mnemonicParsing="false" onAction="#saveConfiguartionCustom" text="Save Configuration with Custom Name" />
-                        <MenuItem fx:id="menuButtonLoadConfigurationCustom" mnemonicParsing="false" onAction="#loadConfiguartionCustom" text="Load/Restore Configuration with Custom Name" />
+                        <MenuItem fx:id="menuButtonLoadConfigurationCustom" mnemonicParsing="false" onAction="#loadConfiguartionCustom" text="Load/Restore Configuration with Custom Name">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
                         <MenuItem fx:id="menuButtonResetConfiguration" mnemonicParsing="false" onAction="#resetConfiguartion" text="Reset Everything" />
                   </items>
                 </Menu>
@@ -83,7 +98,7 @@
                            </accelerator></MenuItem>
                         <MenuItem fx:id="helpButton" mnemonicParsing="false" onAction="#openGitHubHelpLink" text="Help">
                            <accelerator>
-                              <KeyCodeCombination alt="UP" code="H" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                              <KeyCodeCombination alt="UP" code="F1" control="ANY" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
                     </items>
@@ -132,7 +147,7 @@
                      <content>
                         <VBox>
                            <children>
-                              <TableView id="my-table" fx:id="musicVideoTable" onMouseClicked="#openMusicVideoFileLeftClick" onMousePressed="#mousePressed" onSort="#clearSelectionMusicVideoFileTable" VBox.vgrow="ALWAYS">
+                              <TableView id="my-table" fx:id="musicVideoTable" onKeyPressed="#openMusicVideoFileEnter" onMouseClicked="#openMusicVideoFileLeftClick" onMousePressed="#mousePressed" onSort="#clearSelectionMusicVideoFileTable" VBox.vgrow="ALWAYS">
                                 <columns>
                                   <TableColumn fx:id="columnIndex" editable="false" prefWidth="10.0" style="-fx-alignment: CENTER_RIGHT;" text="#" />
                                     <TableColumn fx:id="columnArtist" editable="false" minWidth="90.0" text="Artist" />
@@ -149,7 +164,10 @@
                                           <MenuItem fx:id="contextMusicVideoRename" mnemonicParsing="false" onAction="#renameFile" text="Rename File" />
                                           <MenuItem fx:id="contextMusicVideoIgnore" mnemonicParsing="false" onAction="#ignoreMusicVideoFile" text="Ignore File" />
                                           <MenuItem fx:id="contextMusicVideoClear" mnemonicParsing="false" onAction="#clearSelectionMusicVideoFileTable" text="Clear Selection" />
-                                          <MenuItem fx:id="contextMusicVideoRefresh" mnemonicParsing="false" onAction="#refreshMusicVideoTable" text="Refresh Table" />
+                                          <MenuItem fx:id="contextMusicVideoRefresh" mnemonicParsing="false" onAction="#refreshMusicVideoTable" text="Refresh Table">
+                                             <accelerator>
+                                                <KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                             </accelerator></MenuItem>
                                       </items>
                                     </ContextMenu>
                                  </contextMenu>
@@ -162,7 +180,7 @@
                      <content>
                         <VBox style="-fx-background-color: white;">
                            <children>
-                              <TableView fx:id="playlistTable" onMouseClicked="#openMusicVideoPlaylistFileLeftClick" onMousePressed="#mousePressed" onSort="#clearSelectionPlaylistTable" VBox.vgrow="ALWAYS">
+                              <TableView fx:id="playlistTable" onKeyPressed="#openPlaylistVideoFileEnter" onMouseClicked="#openMusicVideoPlaylistFileLeftClick" onMousePressed="#mousePressed" onSort="#clearSelectionPlaylistTable" VBox.vgrow="ALWAYS">
                                 <columns>
                                     <TableColumn fx:id="columnPlaylistVotes" prefWidth="75.0" text="Votes" />
                                   <TableColumn fx:id="columnPlaylistTime" prefWidth="10.0" text="Time" />
@@ -177,12 +195,27 @@
                                  <contextMenu>
                                     <ContextMenu>
                                       <items>
-                                        <MenuItem fx:id="contextPlaylistRemove" mnemonicParsing="false" onAction="#removeEntry" text="Remove from Playlist" />
-                                          <MenuItem fx:id="contextPlaylistEdit" mnemonicParsing="false" onAction="#editEntry" text="Edit Author and Comment" />
-                                          <MenuItem fx:id="contextPlaylistVotes" mnemonicParsing="false" onAction="#setVotes" text="Set Votes" />
+                                        <MenuItem fx:id="contextPlaylistRemove" mnemonicParsing="false" onAction="#removeEntry" text="Remove from Playlist">
+                                             <accelerator>
+                                                <KeyCodeCombination alt="DOWN" code="R" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                                             </accelerator></MenuItem>
+                                          <MenuItem fx:id="contextPlaylistEdit" mnemonicParsing="false" onAction="#editEntry" text="Edit Author and Comment">
+                                             <accelerator>
+                                                <KeyCodeCombination alt="DOWN" code="E" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                                             </accelerator></MenuItem>
+                                          <MenuItem fx:id="contextPlaylistVotes" mnemonicParsing="false" onAction="#setVotes" text="Set Votes">
+                                             <accelerator>
+                                                <KeyCodeCombination alt="DOWN" code="V" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                                             </accelerator></MenuItem>
                                           <MenuItem fx:id="contextPlaylistClear" mnemonicParsing="false" onAction="#clearSelectionPlaylistTable" text="Clear Selection" />
-                                          <MenuItem fx:id="contextPlaylistRefresh" mnemonicParsing="false" onAction="#refreshMusicVideoPlaylistTable" text="Refresh Table" />
-                                          <MenuItem fx:id="contextPlaylistUndo" mnemonicParsing="false" onAction="#addRemovedPlaylistEntry" text="Add removed playlist entry" />
+                                          <MenuItem fx:id="contextPlaylistRefresh" mnemonicParsing="false" onAction="#refreshMusicVideoPlaylistTable" text="Refresh Table">
+                                             <accelerator>
+                                                <KeyCodeCombination alt="UP" code="F5" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                                             </accelerator></MenuItem>
+                                          <MenuItem fx:id="contextPlaylistUndo" mnemonicParsing="false" onAction="#addRemovedPlaylistEntry" text="Add removed playlist entry">
+                                             <accelerator>
+                                                <KeyCodeCombination alt="DOWN" code="U" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                                             </accelerator></MenuItem>
                                       </items>
                                     </ContextMenu>
                                  </contextMenu>
