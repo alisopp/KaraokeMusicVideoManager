@@ -19,3 +19,10 @@ target
 # no test settings file
 settings.json
 build_run_configuration_web_win.sh
+
+# node modules directory which contains all installed node modules
+node_modules/
+WebClient/package-lock.json
+
+#exclde the following .db file from not syncing
+!WebClient/music_video_manager_database.db

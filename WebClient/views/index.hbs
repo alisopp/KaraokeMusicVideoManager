@@ -1,0 +1,56 @@
+	<nav id="navbar">
+		<ul>
+			<!--
+			<a href="/post">
+			<li><i class="material-icons menu">send</i>Post</li></a>
+			<a href="/hashtag"><li><i class="material-icons menu">trending_up</i>Hashtag</li></a>
+			<a href="/person"><li><i class="material-icons menu">person</i>Person</li></a>
+			-->
+			<a href="/"><li><i class="material-icons menu">home</i>Home</li></a>
+		</ul>
+	</nav>
+	<div class="wrapper">
+		<div class="wrapper2">
+			<div class="main-form">
+				<form class="form-wrapper" action="/post"><!--action="/post">-->
+					<input class="form-control-name" type="text" name="name" placeholder="Your name..." maxlength="25" pattern="[\S]{4,25}" required><br>
+					<textarea class="form-control" placeholder="What's in your mind?" maxlength="280" minlength="4" name="post" required></textarea>
+					<i class="material-icons right">send</i>
+					<input class="submit-button" type="submit" value="Post">
+				</form>
+			</div>
+
+			<div class="main-form">
+				<form class="form-wrapper" action="/search">
+					<input class="form-control-name" type="text" name="query" maxlength="25" placeholder="What are you looking for?" value="{{this.search_query}}" required><br><br>
+					<i class="material-icons right">search</i>
+					<input class="submit-button" type="submit" value="Search">
+				</form>
+			</div>
+
+			<div class="all-posts">
+                {{#each posts}}
+				<div class="main-post">
+					<div class="header-post">
+						<div class="profile-post">
+							<a class="picture-post" href="/search?query=%40{{this.name}}">&nbsp;</a>
+							<div class="name-date-post">
+								<a href="/search?query=%40{{this.name}}" class="name-post">{{this.name}}</a>
+								<div class="date-post">{{this.relative_time}}</div>
+							</div>
+							<i class="material-icons">more_vert</i>
+						</div>
+					</div>
+					<div class="content-post">
+						{{{this.post}}}
+					</div>
+					<div class="bottom-post">
+						<div class="like-post"><i class="material-icons">thumb_up</i></div>
+						<div class="comment-post"><i class="material-icons">comment</i></div>
+						<div class="share-post"><i class="material-icons">share</i></div>
+					</div>
+				</div>
+                {{/each}}
+			</div>
+		</div>
+	</div>

@@ -1,0 +1,352 @@
+@charset "utf-8";
+
+/* The whole site: */
+
+body {
+	margin: 0;
+	padding: 0;
+	/* Font for the whole site */
+	font-family: Arial, sans-serif;
+	background: #e2e1e0;
+}
+
+/* The area where all the content (table) is: */
+
+section {
+	/* Maximum site width */
+	max-width: 1200px;
+	/* Center the whole body */
+	margin: auto;
+	margin-bottom: 170px;
+}
+
+.live-elements {
+	background: #e2e1e0;
+}
+
+.live-element {
+	max-width: 1200px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin: auto;
+	margin-bottom: 10px;
+	width: 100%;
+	background: #fff;
+	border-radius: 2px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.live-element:hover {
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+	background: #24a204;
+	color: white;
+}
+
+.live-element:hover .scroll-comment {
+	display: none;
+}
+
+.live-element:hover .upvote-counter {
+	color: white;
+}
+
+.live-element:hover .upvote-button {
+	display: block;
+}
+
+.live-element:hover .text-beta {
+	display: block;
+}
+
+.upvote-counter {
+	float: right;
+	color: #24a204;
+	height: 22px;
+	min-width: 22px;
+	text-align: center;
+	vertical-align: middle;
+	font-weight: 700;
+	padding-right: 6px;
+	font-size: 180%;
+	margin: 20px;
+	margin-top: 0;
+	margin-bottom: 30px;
+}
+
+.upvote-button {
+	display: none;
+	float: right;
+	padding-top: 2px;
+	padding-right: 20px;
+	margin: 0 auto;
+}
+
+.upvote-button-button {
+	float: right;
+	/* Add some padding between the outline of the button and the text */
+	padding: 2px 4px;
+	padding-top: 5px;
+	/* We do not want space between that button and the cell */
+	margin: 0;
+	/* Center the text */
+	text-align: center;
+	/* No underline or anything else -> we only want the text */
+	text-decoration: none;
+	display: inline-block;
+	/* Cursor changes to hand when it's over the button */
+	cursor: pointer;
+	/* Add a border, make background transparent and text black */
+	background-color: transparent;
+	color: white;
+	border: 2px solid #dddddd;
+	/* Round the corners of the button so that they are round */
+	border-radius: 6px;
+	/* Make font a bit bigger */
+	font-size: 20px;
+	/* Add animation duration */
+	-webkit-transition-duration: 0.4s;
+	transition-duration: 0.4s;
+	/* No selection border */
+	outline: 0;
+}
+
+.upvote-button-button.activated {
+	border-color: white;
+	background-color: white;
+	color: #24a204;
+}
+
+.song-and-artist {
+	margin-left: 10px;
+	font-size: 150%;
+}
+
+.playlist-number {
+	float: left;
+	margin-right: 10px;
+	font-weight: lighter;
+}
+
+.song-title {
+	float: left;
+	font-weight: bold;
+	margin-right: 7px;
+}
+
+.song-artist {
+	float: left;
+}
+
+.author-and-comment {
+	width: 100%;
+	overflow: hidden;
+	padding-left: 0;
+	padding-right: 0;
+	display: grid;
+	margin-top: 10px;
+	grid-auto-columns: max-content auto;
+}
+
+.author {
+	grid-column: 1;
+	float: left;
+	/* add this */
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 2px;
+	padding-left: 0;
+	padding-right: 0;
+	height: 20px;
+	width: auto;
+	overflow: hidden;
+}
+
+.author-text {
+	margin: 0;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.scroll-comment {
+	grid-column: 2;
+	background-color: transparent;
+	color: grey;
+	float: left;
+	/* add this */
+	border-radius: 2px;
+	font-weight: 200;
+	padding-left: 0;
+	padding-right: 0;
+	padding-top: 5px;
+	padding-bottom: 2px;
+	margin: 0;
+	width: auto;
+	overflow: hidden;
+}
+
+.text-beta {
+	margin-left: 10px;
+	margin-right: 10px;
+	display: none;
+	word-wrap: break-word;
+}
+
+.hidden-filename {
+	display: none;
+}
+
+/* Floating button properties: */
+
+.floating-button {
+	/* Set the fixed position of the floating button */
+	position: fixed;
+	bottom: 23px;
+	right: 23px;
+	/* Set width and height */
+	width: 60px;
+	height: 60px;
+	/* Make it round */
+	border-radius: 50px;
+	/* Aglin text centered */
+	text-align: center;
+	/* Give it some box shadow */
+	box-shadow: 0 0 4px rgba(0, 0, 0, .14), 0 4px 8px rgba(0, 0, 0, .28);
+	/* Add a background image */
+	/* The image is from material.io (https://material.io/icons/#ic_playlist_add - 48dp) */
+	/* and was decoded with this tool from yoksel: https://codepen.io/yoksel/details/JDqvs */
+	background: url(data:image/svg+xml,%3Csvg%20fill%3D%22%23FFFFFF%22%20height%3D%2248%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2248%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%200h24v24H0z%22%20fill%3D%22none%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M14%2010H2v2h12v-2zm0-4H2v2h12V6zm4%208v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM2%2016h8v-2H2v2z%22/%3E%0A%3C/svg%3E) no-repeat 8px;
+	/* Add color and background color */
+	background-color: #24a204;
+	color: #FFF;
+}
+
+/* Floating button on hover/touch: */
+
+.floating-button:hover {
+	/* Change the box shadow for a depth effect */
+	box-shadow: 0 0 6px rgba(0, 0, 0, .16), 0 6px 12px rgba(0, 0, 0, .32);
+	/* Add animation duration */
+	transition: box-shadow 150ms cubic-bezier(0, 0, .2, 1);
+}
+
+/* Floating button label container: */
+
+.label-container {
+	/* Set the fixed position of the text container */
+	position: fixed;
+	bottom: 40px;
+	/* Calculate the fixed position in relation to the floating button */
+	right: 93px;
+	display: table;
+	/* Hide the label container */
+	visibility: hidden;
+	/* Set a height for the lable container */
+	height: 20px;
+}
+
+/* Floating button label container text: */
+
+.label-text {
+	/* Text has no background */
+	background: rgba(70, 70, 70, .9);
+	/* Text is white */
+	color: white;
+	/* Display the text completely in the middle */
+	display: table-cell;
+	vertical-align: middle;
+	/* Add some padding and a border radius for viewing experience */
+	padding: 6px 8px;
+	border-radius: 6px;
+	/* Size of the font */
+	font-size: 81.25%;
+	/* Add some box-shadow for a better visibility */
+	box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+}
+
+/* Hide the label container when the floating button is not hovered/touched: */
+
+a.floating-button + div.label-container {
+	/* Hide the label container */
+	visibility: hidden;
+	opacity: 0;
+	/* Add a animation to the visibility */
+	transition: visibility 0s, opacity 0.5s ease;
+}
+
+/* Show the label container when the floating button is hovered/touched: */
+
+a.floating-button:hover + div.label-container {
+	/* Show the label container */
+	visibility: visible;
+	opacity: 1;
+}
+
+
+@media screen and (max-width: 50em) {
+	.live-element {
+		padding-top: 12px;
+		padding-bottom: 5px;
+		margin-bottom: 0;
+		border-radius: 0;
+		border-top: 4px solid grey;
+	}
+	.live-element:first-child {
+		border-top: 0px solid grey;
+	}
+	.upvotes {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.upvote-button {
+		margin: 0 auto;
+		text-align: center;
+		margin-top: 15px;
+		margin-bottom: 10px;
+	}
+	.live-element:hover {
+		padding-bottom: 10px;
+	}
+	.song-artist {
+	float: left;
+	margin-bottom: 10px;
+}
+	/* The area where the table is located */
+	section {
+		/* Zero space between the area and the window border */
+		padding: 0;
+	}
+}
+
+
+@media screen and (min-width: 50em) {
+	.live-element {
+		margin-top: 10px;
+		margin-bottom: 10px;
+		margin-bottom: 0;
+		border-radius: 0;
+		border-top: 0;
+	}
+	.upvote-button {
+		float: right;
+		text-align: right;
+	}
+	.upvote-button-button {
+		margin-top: -3rem;
+	}
+	.text-beta {
+	margin-right: 100px;
+	}
+	.upvotes {
+	float: right;
+	margin-right: 5px;
+}
+	/* The area where the table is located */
+	section {
+		/* A bit space between the area and the window border */
+		padding: 2rem;
+	}
+
+}
