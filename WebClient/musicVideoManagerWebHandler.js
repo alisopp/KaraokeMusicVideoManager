@@ -32,17 +32,22 @@ const sortEnumsPlaylist = [
 
 
 /**
- * Class that handles all requests for the advent calendar
- * @author Dennis Keller, Niklas Mikeler
+ * Class that handles all web requests
+ * @author AnonymerNiklasistanonym >> https://github.com/AnonymerNiklasistanonym
  */
 class MusicVideoManagerWebHandler {
 
     // Constructor
-    constructor() {
+    constructor() { console.log(">> Created MusicVideoManagerWebHandler object"); }
 
-        // Log that the object was created
-        console.log(">> Created MusicVideoManagerWebHandler object");
-
+    /**
+     * Get the playlist data
+     * @param {*} sortType 
+     * @param {*} callback 
+     */
+    getPlaylist(sortType = "UPVOTES_DESC", callback) {
+        var query = "?";
+        musicVideoManagerDatabaseHandler(query, callback);
     }
 
     /**
@@ -76,7 +81,7 @@ class MusicVideoManagerWebHandler {
         // if no return false
         return false;
     }
-    
+
 
 }
 

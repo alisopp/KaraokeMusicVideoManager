@@ -1,3 +1,4 @@
+{{!-- cssFile[{fileName}], jsFile[{fileName}], title, themeColor, autorefresh --}}
 <!DOCTYPE html>
 <html>
 
@@ -8,16 +9,14 @@
 	<meta charset="UTF-8">
 	<!-- Scale everything for example for mobile device use: -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	
-	<!-- css files -->
-	{{#each cssFile}}
-	<link rel="stylesheet" href="/stylesheets/{{fileName}}.css">
-	{{/each}}
 
-	<!-- js files -->
+	<!-- CSS files -->
+	{{#each cssFile}}
+	<link rel="stylesheet" href="/stylesheets/{{fileName}}.css"> {{/each}}
+
+	<!-- JS files -->
 	{{#each jsFile}}
-	<script src="/scripts/{{fileName}}.js"></script>
-	{{/each}}
+	<script src="/scripts/{{fileName}}.js"></script> {{/each}}
 
 
 	<!-- Information about the website -->
@@ -26,7 +25,7 @@
 	<title>{{title}}</title>
 
 	<!-- BG color -->
-	<meta name="theme-color" content="{{color}}" />
+	<meta name="theme-color" content="{{themeColor}}" />
 
 
 	<!-- Favicons -->
@@ -53,12 +52,9 @@
 
 
 	<!-- Special Chrome tags -->
-	<meta name="application-name" content="MusicVideoManager" />
-	
-	{{#if autorefresh}}
+	<meta name="application-name" content="MusicVideoManager" /> {{#if autorefresh}}
 	<!-- Tag for refreshing the page every some time (seconds) -> Use this for the live playlist -->
-	<meta http-equiv="refresh" content="30">
-	{{/if}}
+	<meta http-equiv="refresh" content="30"> {{/if}}
 
 </head>
 

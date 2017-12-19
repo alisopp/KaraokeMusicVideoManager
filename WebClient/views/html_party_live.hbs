@@ -1,266 +1,94 @@
-<!DOCTYPE html>
-<html>
+{{!-- cssFile[{fileName: "styles_party_live"}], jsFile[{fileName: "jquery.min"}], #000000 --}}
 
-<head>
-	<!-- Scale text on for example mobile devices: -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- Link to CSS file: 
-	<link rel="stylesheet" href="../css/styles_static.css">-->
-	<link rel="stylesheet" href="../css/styles_party_live.css">
 
-	<script src="../js/jquery.min.js"></script>
+<!-- Floating button with link to current playlist -->
 
-	<!-- "custom-head-begin" -->
+<!-- "floating-button-begin" -->
+<a href="/songs" class="floating-button"></a>
+<div class="label-container">
+	<div class="label-text">View Song List</div>
+</div>
+<!-- "floating-button-end" -->
 
-	<!-- BG color -->
-	<meta name="theme-color" content="#000000" />
+<!-- Section that contains the table with all found music video -->
+<section>
+	<div class="live-elements" id="refresh">
+		<!-- "begin-section-end" -->
+		<!-- "demo-playlist-begin" -->
 
-	<!-- "custom-head-end" -->
-</head>
-
-<body>
-	<!-- "body-begin" -->
-
-	<!-- Floating button with link to current playlist -->
-
-	<!-- "floating-button-begin" -->
-	<a href="html_party.html" class="floating-button"></a>
-	<div class="label-container">
-		<div class="label-text">View Song List</div>
-	</div>
-	<!-- "floating-button-end" -->
-
-	<!-- Section that contains the table with all found music video -->
-	<section>
-		<div class="live-elements" id="refresh">
-			<!-- "begin-section-end" -->
-			<!-- "demo-playlist-begin" -->
-
-			<div class="live-element">
-				<div id="number1" class="upvote-counter">
-					20
+{{#each liveElement}}
+		<div class="live-element">
+			<div id="{{this.id}}" class="upvote-counter">
+				{{this.upvotes}}
+			</div>
+			<div class="song-and-artist">
+				<div class="playlist-number">
+					{{this.positionNumber}}
 				</div>
-				<div class="song-and-artist">
-					<div class="playlist-number">
-						#1
-					</div>
-					<div class="song-title">
-						Titlesdfjks sdfjdsjfldsjklfjsdkljf
-					</div>
-					<div class="song-artist">
-						from Artist
-					</div>
+				<div class="song-title">
+					{{this.title}}
 				</div>
-				<div class="author-and-comment">
-					<div class="author">
-						<p class="author-text">Author</p>
-					</div>
-					<div class="scroll-comment">
-						<marquee behavior="scroll" direction="left" scrollamount="5">Your scrolling text goes here blablab albalbalabl abalbalbalab labal lorem ipsum ahahahahahaha</marquee>
-					</div>
-				</div>
-				<p class="text-beta">Your scrolling text goes here blablab albalbalabl abalbalbalab labal lorem ipsum ahahahahahaha</p>
-				<div class="upvotes">
-					<div class="upvote-button">
-						<button class="upvote-button-button" id="1">Vote</button>
-					</div>
+				<div class="song-artist">
+					{{this.artist}}
 				</div>
 			</div>
-
-			<!-- more for testing -->
-			<div class="live-element">
-				<div id="number2" class="upvote-counter">
-					20
+			<div class="author-and-comment">
+				<div class="author">
+					<p class="author-text">{{this.author}}</p>
 				</div>
-				<div class="song-and-artist">
-					<div class="playlist-number">
-						#2
-					</div>
-					<div class="song-title">
-						Titlesdfjks sdfjdsjfldsjklfjsdkljf
-					</div>
-					<div class="song-artist">
-						from Artist
-					</div>
-				</div>
-				<div class="author-and-comment">
-					<div class="author">
-						<p class="author-text">Author</p>
-					</div>
-					<div class="scroll-comment">
-						<marquee behavior="scroll" direction="left" scrollamount="5">Your scrolling text goes here blablab albalbalabl abalbalbalab labal lorem ipsum ahahahahahaha</marquee>
-					</div>
-				</div>
-				<p class="text-beta">Your scrolling text goes here blablab albalbalabl abalbalbalab labal lorem ipsum ahahahahahaha</p>
-				<div class="upvotes">
-					<div class="upvote-button">
-						<button id="2" class="upvote-button-button">Vote</button>
-					</div>
+				<div class="scroll-comment">
+					<marquee behavior="scroll" direction="left" scrollamount="5">{{this.comment}}</marquee>
 				</div>
 			</div>
-			<div class="live-element">
-				<div class="upvote-counter">
-					20
-				</div>
-				<div class="song-and-artist">
-					<div class="playlist-number">
-						#3
-					</div>
-					<div class="song-title">
-						Titlesdfjks sdfjdsjfldsjklfjsdkljf
-					</div>
-					<div class="song-artist">
-						from Artist
-					</div>
-				</div>
-				<div class="author-and-comment">
-					<div class="author">
-						<p class="author-text">Author</p>
-					</div>
-					<div class="scroll-comment">
-						<marquee behavior="scroll" direction="left" scrollamount="5">Your scrolling text goes here blablab albalbalabl abalbalbalab labal lorem ipsum ahahahahahaha</marquee>
-					</div>
-				</div>
-				<p class="text-beta">Your scrolling text goes here blablab albalbalabl abalbalbalab labal lorem ipsum ahahahahahaha</p>
-				<div class="upvotes">
-					<div class="upvote-button">
-						<button class="upvote-button-button">Vote</button>
-					</div>
+			<p class="text-beta">{{this.comment}}</p>
+			<div class="upvotes">
+				<div class="upvote-button">
+					<button class="upvote-button-button" id="{{this.id}}">Vote</button>
 				</div>
 			</div>
-			<div class="live-element">
-				<div class="upvote-counter">
-					20
-				</div>
-				<div class="song-and-artist">
-					<div class="playlist-number">
-						#4
-					</div>
-					<div class="song-title">
-						Titlesdfjks sdfjdsjfldsjklfjsdkljf
-					</div>
-					<div class="song-artist">
-						from Artist
-					</div>
-				</div>
-				<div class="author-and-comment">
-					<div class="author">
-						<p class="author-text">Author</p>
-					</div>
-					<div class="scroll-comment">
-						<marquee behavior="scroll" direction="left" scrollamount="5">Your scrolling text goes here blablab albalbalabl abalbalbalab labal lorem ipsum ahahahahahaha</marquee>
-					</div>
-				</div>
-				<p class="text-beta">Your scrolling text goes here blablab albalbalabl abalbalbalab labal lorem ipsum ahahahahahaha</p>
-				<div class="upvotes">
-					<div class="upvote-button">
-						<button class="upvote-button-button">Vote</button>
-					</div>
-				</div>
-			</div>
-			<div class="live-element">
-				<div class="upvote-counter">
-					20
-				</div>
-				<div class="song-and-artist">
-					<div class="playlist-number">
-						#5
-					</div>
-					<div class="song-title">
-						Titlesdfjks sdfjdsjfldsjklfjsdkljf
-					</div>
-					<div class="song-artist">
-						from Artist
-					</div>
-				</div>
-				<div class="author-and-comment">
-					<div class="author">
-						<p class="author-text">Author</p>
-					</div>
-					<div class="scroll-comment">
-						<marquee behavior="scroll" direction="left" scrollamount="5">Your scrolling text goes here blablab albalbalabl abalbalbalab labal lorem ipsum ahahahahahaha</marquee>
-					</div>
-				</div>
-				<p class="text-beta">Your scrolling text goes here blablab albalbalabl abalbalbalab labal lorem ipsum ahahahahahaha</p>
-				<div class="upvotes">
-					<div class="upvote-button">
-						<button class="upvote-button-button">Vote</button>
-					</div>
-				</div>
-			</div>
-			<div class="live-element">
-				<div class="upvote-counter">
-					20
-				</div>
-				<div class="song-and-artist">
-					<div class="playlist-number">
-						#6
-					</div>
-					<div class="song-title">
-						Titlesdfjks sdfjdsjfldsjklfjsdkljf
-					</div>
-					<div class="song-artist">
-						from Artist
-					</div>
-				</div>
-				<div class="author-and-comment">
-					<div class="author">
-						<p class="author-text">Author</p>
-					</div>
-					<div class="scroll-comment">
-						<marquee behavior="scroll" direction="left" scrollamount="5">Your scrolling text goes here blablab albalbalabl abalbalbalab labal lorem ipsum ahahahahahaha</marquee>
-					</div>
-				</div>
-				<p class="text-beta">Your scrolling text goes here blablab albalbalabl abalbalbalab labal lorem ipsum ahahahahahaha</p>
-				<div class="upvotes">
-					<div class="upvote-button">
-						<button class="upvote-button-button">Vote</button>
-					</div>
-				</div>
-			</div>
-			<div class="live-element">
-				<div class="upvote-counter">
-					20
-				</div>
-				<div class="song-and-artist">
-					<div class="playlist-number">
-						#7
-					</div>
-					<div class="song-title">
-						Titlesdfjks sdfjdsjfldsjklfjsdkljf
-					</div>
-					<div class="song-artist">
-						from Artist
-					</div>
-				</div>
-				<div class="author-and-comment">
-					<div class="author">
-						<p class="author-text">Author</p>
-					</div>
-					<div class="scroll-comment">
-						<marquee behavior="scroll" direction="left" scrollamount="5">Your scrolling text goes here blablab albalbalabl abalbalbalab labal lorem ipsum ahahahahahaha</marquee>
-					</div>
-				</div>
-				<p class="text-beta">Your scrolling text goes here blablab albalbalabl abalbalbalab labal lorem ipsum ahahahahahaha</p>
-				<div class="upvotes">
-					<div class="upvote-button">
-						<button class="upvote-button-button">Vote</button>
-					</div>
-				</div>
-			</div>
-
-			<!-- "demo-playlist-end" -->
 		</div>
-	</section>
+		{{/each}}
 
-	<script>
-		$(document).ready(function() {
+		<!-- "demo-playlist-end" -->
+	</div>
+</section>
 
-			/* bind event handlers when the page loads */
-			bindButtonClick();
+<script>
+	$(document).ready(function () {
+
+		/* bind event handlers when the page loads */
+		bindButtonClick();
 
 
-			$('live-elements').on('click', '.upvote-button-button', function() {
+		$('live-elements').on('click', '.upvote-button-button', function () {
+			var d = document.getElementById(this.id);
+			d.classList.toggle("activated");
+
+			var doThis = "get";
+
+			/* If the button is now "activated" */
+			if (d.classList.contains("activated")) {
+				/* add the votes + 1 */
+				doThis = "inc";
+			} else {
+				/* remove the vote - 1 */
+				doThis = "dec";
+			}
+
+			$.ajax({
+				url: '../php/vote.php?file=' + document.getElementById("file" + this.id).innerHTML + '&type=' + doThis,
+				success: function (result) {
+					$("#vote" + this.id).html(result);
+				}
+			});
+
+			return false;
+		});
+
+
+		function bindButtonClick() {
+			$('.upvote-button-button').click(function () {
+				/* Toggle class "activated" (add or remove the class) */
 				var d = document.getElementById(this.id);
 				d.classList.toggle("activated");
 
@@ -275,106 +103,78 @@
 					doThis = "dec";
 				}
 
+				var savedID = this.id;
+
 				$.ajax({
 					url: '../php/vote.php?file=' + document.getElementById("file" + this.id).innerHTML + '&type=' + doThis,
-					success: function(result) {
-						$("#vote" + this.id).html(result);
+					success: function (result) {
+						$("#vote" + savedID).html(result);
 					}
 				});
 
 				return false;
 			});
-
-
-			function bindButtonClick() {
-				$('.upvote-button-button').click(function() {
-					/* Toggle class "activated" (add or remove the class) */
-					var d = document.getElementById(this.id);
-					d.classList.toggle("activated");
-
-					var doThis = "get";
-
-					/* If the button is now "activated" */
-					if (d.classList.contains("activated")) {
-						/* add the votes + 1 */
-						doThis = "inc";
-					} else {
-						/* remove the vote - 1 */
-						doThis = "dec";
-					}
-
-					var savedID = this.id;
-
-					$.ajax({
-						url: '../php/vote.php?file=' + document.getElementById("file" + this.id).innerHTML + '&type=' + doThis,
-						success: function(result) {
-							$("#vote" + savedID).html(result);
-						}
-					});
-
-					return false;
-				});
-			}
-		});
-
-	</script>
-
-	<!-- "body-end" -->
-	
-
-	
-	<script>
-	
-	$(document).ready(function() {
-	/* use this for the special playlist view window */
-	/* update every 12 seconds */
-			window.setInterval(function() {
-				$.ajax({
-					url: '../php/live.php',
-					success: function(result) {
-						$("#refresh").html(result);
-						/* re-bind event handlers to '.myClickableElement' */
-									bindButtonClick();
-								}
-							});
-						}, 20000);
-						
-			function bindButtonClick() {
-				$('.upvote-button-button').click(function() {
-					/* Toggle class "activated" (add or remove the class) */
-					var d = document.getElementById(this.id);
-					d.classList.toggle("activated");
-
-					var doThis = "get";
-
-					/* If the button is now "activated" */
-					if (d.classList.contains("activated")) {
-						/* add the votes + 1 */
-						doThis = "inc";
-					} else {
-						/* remove the vote - 1 */
-						doThis = "dec";
-					}
-
-					var savedID = this.id;
-
-					$.ajax({
-						url: '../php/vote.php?file=' + document.getElementById("file" + this.id).innerHTML + '&type=' + doThis,
-						success: function(result) {
-							$("#vote" + savedID).html(result);
-						}
-					});
-
-					return false;
-				});
-			}
+		}
 	});
-	
-	</script>
-	
-	<!-- "script-repeat" -->
-	
-	
+
+</script>
+
+<!-- "body-end" -->
+
+
+
+<script>
+
+	$(document).ready(function () {
+		/* use this for the special playlist view window */
+		/* update every 12 seconds */
+		window.setInterval(function () {
+			$.ajax({
+				url: '../php/live.php',
+				success: function (result) {
+					$("#refresh").html(result);
+					/* re-bind event handlers to '.myClickableElement' */
+					bindButtonClick();
+				}
+			});
+		}, 20000);
+
+		function bindButtonClick() {
+			$('.upvote-button-button').click(function () {
+				/* Toggle class "activated" (add or remove the class) */
+				var d = document.getElementById(this.id);
+				d.classList.toggle("activated");
+
+				var doThis = "get";
+
+				/* If the button is now "activated" */
+				if (d.classList.contains("activated")) {
+					/* add the votes + 1 */
+					doThis = "inc";
+				} else {
+					/* remove the vote - 1 */
+					doThis = "dec";
+				}
+
+				var savedID = this.id;
+
+				$.ajax({
+					url: '../php/vote.php?file=' + document.getElementById("file" + this.id).innerHTML + '&type=' + doThis,
+					success: function (result) {
+						$("#vote" + savedID).html(result);
+					}
+				});
+
+				return false;
+			});
+		}
+	});
+
+</script>
+
+<!-- "script-repeat" -->
+
+
 </body>
 
 
