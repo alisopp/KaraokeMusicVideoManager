@@ -4,8 +4,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var fs = require('fs')
+var opn = require('opn');
 
-const opn = require('opn');
+// add timestamps in front of log messages
+require('console-stamp')(console, 'HH:MM:ss.l');
 
 
 /*
@@ -20,22 +23,32 @@ var edit = require('./routes/edit');
 
 var app = express();
 
-// view engine setup
+// view engine setup (handelbars)
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
+// favicon setup
 app.use(favicon(path.join(__dirname, 'public/favicons/', 'favicon.ico')));
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// logger setup ('combined' for more info)
+app.use(logger('dev'));
+app.use(logger('common', { stream: fs.createWriteStream('./access.log', { flags: 'a' }) }));
+// change timezone of logger to the current one
+// (by chk- [https://github.com/chk-] - https://github.com/expressjs/morgan/issues/66)
+logger.token('date', function() {
+  var p = new Date().toString().replace(/[A-Z]{3}\+/,'+').split(/ /);
+  return( p[2]+'/'+p[1]+'/'+p[3]+':'+p[4]+' '+p[5] );
+});
+
 
 /*
  * Custom routes use routes:
  */
-app.use('/', playlist);
+//app.use('/', playlist);
 app.use('/songs', songs);
 app.use('/add', add);
 app.use('/remove', remove);
@@ -78,6 +91,8 @@ process.argv.forEach((clCustomCommand) => {
   }
 
 });
+
+
 
 
 module.exports = app;
