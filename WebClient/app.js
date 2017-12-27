@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+const opn = require('opn');
+
 
 /*
  * Custom routes get files:
@@ -41,14 +43,14 @@ app.use('/edit', edit);
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -64,6 +66,18 @@ http.createServer(function (req, res) {
   res.end('Hello World\n');
 }).listen(80, "127.0.0.1");
 console.log('Server running at http://127.0.0.1:80/');*/
+
+
+
+// react to custom user parameters besides "npm start"
+process.argv.forEach((clCustomCommand) => {
+
+  if (clCustomCommand === 'open') {
+    // open the homepage at start with the default browser
+    opn('http://127.0.0.1:3000/');
+  }
+
+});
 
 
 module.exports = app;
