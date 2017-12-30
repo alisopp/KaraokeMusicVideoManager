@@ -31,13 +31,14 @@ $myarray = explode(",", $_REQUEST['index']);
 
 	<!-- Floating button with link to current playlist -->
 	<!-- "floating-button-begin" -->
-	<a href="#" onclick="history.back();" class="floating-button"></a>
+	<a id="quickfix" href="#" class="floating-button"></a>
+	<!--onclick="document.getElementById('my_form').submit();"-->
 	<!-- "floating-button-end" -->
 
 	<!-- Section that contains the table with all found music video -->
 	<section class="form-bg">
 
-		<form action="process.php" class="submit-form">
+		<form action="process.php" class="submit-form" id="my_form">
 			<p class="form-title">
 				<!-- "before-title" -->
 				Submit this song to the playlist:</p>
@@ -58,11 +59,32 @@ $myarray = explode(",", $_REQUEST['index']);
 			<!-- "after-input" -->
 			<br>
 			<!-- "before-submit" -->
-			<input class="submit-button" type="submit" value="Submit">
+			<input class="submit-button" onclick="history.back();" value="Go Back">
 			<!-- "after-submit" -->
 		</form>
 
 	</section>
+	<script>
+	document.getElementById("quickfix").addEventListener("click", function () {
+    var bool = true;
+
+    var form = document.forms["my_form"];
+
+    var inputs = form.getElementsByTagName("input");
+    for (var i = 0, max = inputs.length; i < max; i++) {
+        if (!inputs[i].checkValidity()) {
+            bool = false;
+        }
+    }
+
+    if (bool) {
+        form.submit();
+    } else {
+        alert("Please check your inputs - data is not complete!");
+    }
+
+	});
+	</script>
 	<!-- "body-end" -->
 </body>
 

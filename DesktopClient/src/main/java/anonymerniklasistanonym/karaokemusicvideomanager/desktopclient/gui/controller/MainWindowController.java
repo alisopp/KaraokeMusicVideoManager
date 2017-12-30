@@ -348,6 +348,12 @@ public class MainWindowController {
 	@FXML
 	private MenuItem menuButtonSftpParty;
 	/**
+	 * Export static music video list to server with search and playlist without
+	 * voting
+	 */
+	@FXML
+	private MenuItem menuButtonSftpPartyWithoutVotes;
+	/**
 	 * Reset saved server settings
 	 */
 	@FXML
@@ -357,6 +363,16 @@ public class MainWindowController {
 	 */
 	@FXML
 	private MenuItem menuButtonSftpVotingReset;
+	/**
+	 * Open website of connected/last connected IP address
+	 */
+	@FXML
+	private MenuItem menuButtonOpenWebsite;
+	/**
+	 * Open website of connected/last connected IP address with auto updates
+	 */
+	@FXML
+	private MenuItem menuButtonOpenWebsiteUpdate;
 
 	/**
 	 * Configuration menu (settings save/load)
@@ -505,6 +521,12 @@ public class MainWindowController {
 		this.menuButtonSftpStatic.setText(Internationalization.translate("Static website"));
 		this.menuButtonSftpSearch.setText(Internationalization.translate("Searchable website"));
 		this.menuButtonSftpParty.setText(Internationalization.translate("Party website"));
+		this.menuButtonSftpPartyWithoutVotes.setText(Internationalization.translate("Party website") + " ("
+				+ Internationalization.translate("no votes") + ")");
+
+		this.menuButtonOpenWebsite.setText(Internationalization.translate("Open website"));
+		this.menuButtonOpenWebsiteUpdate.setText(Internationalization.translate("Open website") + " ("
+				+ Internationalization.translate("playlist auto update") + ")");
 
 		this.menuSettings.setText(Internationalization.translate("Settings"));
 		this.menuButtonAlwaysSave.setText(Internationalization.translate("Always save Settings on Exit"));
@@ -734,6 +756,10 @@ public class MainWindowController {
 		this.menuButtonSftpStatic.setGraphic(WindowModule.createMenuIcon("html_static"));
 		this.menuButtonSftpSearch.setGraphic(WindowModule.createMenuIcon("html_search"));
 		this.menuButtonSftpParty.setGraphic(WindowModule.createMenuIcon("html_playlist"));
+		this.menuButtonSftpPartyWithoutVotes.setGraphic(WindowModule.createMenuIcon("html_playlist"));
+
+		this.menuButtonOpenWebsite.setGraphic(WindowModule.createMenuIcon("html_static"));
+		this.menuButtonOpenWebsiteUpdate.setGraphic(WindowModule.createMenuIcon("html_playlist"));
 
 		this.aboutButton.setGraphic(WindowModule.createMenuIcon("about"));
 		this.helpButton.setGraphic(WindowModule.createMenuIcon("help"));
@@ -854,6 +880,9 @@ public class MainWindowController {
 	private void openMusicVideoFileLeftClick() {
 		if (this.leftMouseKeyWasPressed == true) {
 			openSelectedVideoFile();
+
+			// update playlist
+			refreshMusicVideoPlaylistTable();
 		}
 	}
 
@@ -1352,10 +1381,13 @@ public class MainWindowController {
 
 				this.mainClass.getMusicVideohandler().addMusicVideoToPlaylist(playlistEntryIndex, authorAndComment[0],
 						authorAndComment[1]);
-				refreshMusicVideoPlaylistTable();
 			}
 
 		}
+
+		// update playlist anyhow
+		refreshMusicVideoPlaylistTable();
+
 	}
 
 	/**
@@ -1889,6 +1921,14 @@ public class MainWindowController {
 	}
 
 	/**
+	 * Transfer all files to the SFTP server for setting up a "party" without votes
+	 */
+	@FXML
+	private void sftpPartyWithoutVotes() {
+		this.mainClass.getMusicVideohandler().transferHtmlPartyWithoutVotes();
+	}
+
+	/**
 	 * Transfer all files to the SFTP server for setting up a list
 	 */
 	@FXML
@@ -2032,6 +2072,29 @@ public class MainWindowController {
 		if (key.getCode() == KeyCode.ENTER) {
 			openSelectedPlaylistVideoFile();
 		}
+
+	}
+
+	/**
+	 * Open the default website
+	 */
+	@FXML
+	private void openWebsite() {
+
+		// open the new URL
+		ExternalApplicationModule.openUrl("http://" + this.mainClass.getMusicVideohandler().getSftpIpAddress());
+
+	}
+
+	/**
+	 * Open the playlist website with updates
+	 */
+	@FXML
+	private void openWebsiteUpdate() {
+
+		// open the new URL
+		ExternalApplicationModule
+				.openUrl("http://" + this.mainClass.getMusicVideohandler().getSftpIpAddress() + "/index2.php");
 
 	}
 

@@ -17,7 +17,7 @@ HTML_HEAD = "html_head"
 PATH_PHP = "php"
 PHP_FILE_FORM = "form"
 PHP_FILE_PROCESS = "process"
-PHP_COPY_FILES = ["live", "vote"]
+PHP_COPY_FILES = ["live", "live_without_votes", "vote"]
 PATH_CSS = "css"
 CSS_FILES = ["styles_static", "styles_searchable",
              "styles_party", "styles_php_form", "styles_party_live"]

@@ -1054,10 +1054,10 @@ public class MusicVideoHandler {
 				new String[] { generateHtmlParty() });
 
 		FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.php"),
-				new String[] { generateHtmlPartyPlaylist(false) });
+				new String[] { generateHtmlPartyPlaylist(false, true, true) });
 
 		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index2.php"),
-				new String[] { generateHtmlPartyPlaylist(true) });
+				new String[] { generateHtmlPartyPlaylist(true, false, true) });
 	}
 
 	private void createPhpDirectoryWithFiles(Path outputFolder) {
@@ -1090,7 +1090,7 @@ public class MusicVideoHandler {
 
 			// paste view.php
 			FileReadWriteModule.writeTextFile(new File(phpFolder.toString() + "/live.php"),
-					new String[] { generateHtmlPartyView() });
+					new String[] { generateHtmlPartyView(true) });
 
 			// paste view.php
 			FileReadWriteModule.writeTextFile(new File(phpFolder.toString() + "/vote.php"),
@@ -1115,7 +1115,7 @@ public class MusicVideoHandler {
 		return phpProcess.toString();
 	}
 
-	private String generateHtmlPartyView() {
+	private String generateHtmlPartyView(boolean withVotes) {
 		// string builder for the whole site
 		StringBuilder phpProcess = new StringBuilder("");
 
@@ -1123,9 +1123,14 @@ public class MusicVideoHandler {
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/php.json")[0]);
 
 		// add php before everything
-		phpProcess.append(JsonModule.getValueString(phpJsonContent, "php-data-live")
-				.replace("Vote", Internationalization.translate("Vote"))
-				.replace("from", Internationalization.translate("from")));
+		if (withVotes) {
+			phpProcess.append(JsonModule.getValueString(phpJsonContent, "php-data-live")
+					.replace("Vote", Internationalization.translate("Vote"))
+					.replace("from", Internationalization.translate("from")));
+		} else {
+			phpProcess.append(JsonModule.getValueString(phpJsonContent, "php-data-live_without_votes").replace("from",
+					Internationalization.translate("from")));
+		}
 
 		return phpProcess.toString();
 	}
@@ -1204,7 +1209,7 @@ public class MusicVideoHandler {
 		return phpProcess.toString();
 	}
 
-	private String generateHtmlPartyPlaylist(boolean b) {
+	private String generateHtmlPartyPlaylist(boolean b, boolean floatingButton, boolean withVotes) {
 
 		// string builder for the whole site
 		StringBuilder phpPlaylist = new StringBuilder("");
@@ -1243,15 +1248,22 @@ public class MusicVideoHandler {
 		// close head and open body
 		phpPlaylist.append("</style></head><body>");
 
-		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "floating-button-html_party_live")
-				.replace("html_party.html", "list.html")
-				.replace("View Song List", Internationalization.translate("View Song List")));
-
+		if (floatingButton) {
+			phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "floating-button-html_party_live")
+					.replace("html_party.html", "list.html")
+					.replace("View Song List", Internationalization.translate("View Song List")));
+		}
 		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "section-start-html_party_live"));
 
-		phpPlaylist.append(JsonModule.getValueString(phpJsonContent, "php-data-live")
-				.replace("path = \"./\"", "path = \"php/\"").replace("Vote", Internationalization.translate("Vote"))
-				.replace("from", Internationalization.translate("from")));
+		if (withVotes) {
+			phpPlaylist.append(JsonModule.getValueString(phpJsonContent, "php-data-live")
+					.replace("path = \"./\"", "path = \"php/\"").replace("Vote", Internationalization.translate("Vote"))
+					.replace("from", Internationalization.translate("from")));
+		} else {
+			phpPlaylist.append(JsonModule.getValueString(phpJsonContent, "php-data-live_without_votes")
+					.replace("path = \"./\"", "path = \"php/\"")
+					.replace("from", Internationalization.translate("from")));
+		}
 
 		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "after-table-html_party_live"));
 
@@ -1865,7 +1877,7 @@ public class MusicVideoHandler {
 	}
 
 	public static enum TYPE_OF_HTML {
-		STATIC, SEARCH, PARTY;
+		STATIC, SEARCH, PARTY, PARTY_NO_VOTES;
 	}
 
 	/**
@@ -1929,16 +1941,27 @@ public class MusicVideoHandler {
 				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlSearch()),
 						"index.html");
 
-			} else if (type == TYPE_OF_HTML.PARTY) {
+			} else if (type == TYPE_OF_HTML.PARTY || type == TYPE_OF_HTML.PARTY_NO_VOTES) {
 
 				// search list with all music video elements and post buttons
 				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlParty()),
 						"list.html");
 				// playlist view PHP list
-				this.sftpController.transferFile(
-						FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist(false)), "index.php");
-				this.sftpController.transferFile(
-						FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist(true)), "index2.php");
+				if (type == TYPE_OF_HTML.PARTY) {
+					this.sftpController.transferFile(
+							FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist(false, true, true)),
+							"index.php");
+					this.sftpController.transferFile(
+							FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist(true, false, true)),
+							"index2.php");
+				} else {
+					this.sftpController.transferFile(
+							FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist(false, true, false)),
+							"index.php");
+					this.sftpController.transferFile(
+							FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist(true, false, false)),
+							"index2.php");
+				}
 
 				// create a directory for the PHP documents and change into it
 				this.sftpController.makeDirectory(this.phpDirectoryName);
@@ -1947,11 +1970,17 @@ public class MusicVideoHandler {
 				// PHP music video submit form
 				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlPartyForm()),
 						"form.php");
+
 				// PHP process document to add a submit to the playlist
 				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlPartyProcess()),
 						"process.php");
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlPartyView()),
-						"live.php");
+				if (type == TYPE_OF_HTML.PARTY) {
+					this.sftpController.transferFile(
+							FileReadWriteModule.stringToInputStream(generateHtmlPartyView(true)), "live.php");
+				} else {
+					this.sftpController.transferFile(
+							FileReadWriteModule.stringToInputStream(generateHtmlPartyView(false)), "live.php");
+				}
 				// PHP process document to add a submit to the playlist
 				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlPartyVote()),
 						"vote.php");
@@ -1964,6 +1993,13 @@ public class MusicVideoHandler {
 	 */
 	public void transferHtmlParty() {
 		transferHtmlMain(true, TYPE_OF_HTML.PARTY);
+	}
+
+	/**
+	 * Transfer website collection for party setup (PHP list with playlist)
+	 */
+	public void transferHtmlPartyWithoutVotes() {
+		transferHtmlMain(true, TYPE_OF_HTML.PARTY_NO_VOTES);
 	}
 
 	/**

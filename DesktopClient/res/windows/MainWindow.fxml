@@ -60,10 +60,25 @@
                                  <accelerator>
                                     <KeyCodeCombination alt="DOWN" code="P" control="UP" meta="UP" shift="UP" shortcut="UP" />
                                  </accelerator></MenuItem>
+                              <MenuItem fx:id="menuButtonSftpPartyWithoutVotes" mnemonicParsing="false" onAction="#sftpPartyWithoutVotes" text="Party List without votes">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="DOWN" code="U" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator>
+                              </MenuItem>
                           </items>
                         </Menu>
                         <MenuItem fx:id="menuButtonSftpVotingReset" mnemonicParsing="false" onAction="#sftpVotingReset" text="Reset Voting" />
                       <MenuItem fx:id="menuButtonSftpReset" mnemonicParsing="false" onAction="#sftpReset" text="Reset Network Settings" />
+                        <MenuItem fx:id="menuButtonOpenWebsite" mnemonicParsing="false" onAction="#openWebsite" text="Open Website">
+                           <accelerator>
+                              <KeyCodeCombination alt="ANY" code="W" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
+                        <MenuItem fx:id="menuButtonOpenWebsiteUpdate" mnemonicParsing="false" onAction="#openWebsiteUpdate" text="Open Website (with auto updates)">
+                           <accelerator>
+                              <KeyCodeCombination alt="ANY" code="Q" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
                     </items>
                   </Menu>
                 <Menu fx:id="menuConfiguration" mnemonicParsing="false" text="Save &amp; Restore">
