@@ -1,0 +1,11 @@
+{
+    "title": "Title",
+    "cssFile": [{
+        "fileName": "css filename"
+    }],
+    "jsFile": [{
+        "fileName": "js filename"
+    }],
+    "autorefresh": true,
+    "body": "Body content"
+}

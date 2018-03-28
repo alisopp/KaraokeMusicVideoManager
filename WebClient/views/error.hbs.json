@@ -1,0 +1,7 @@
+{
+    "message": "Error Message",
+    "error": {
+        "status": "Error Status",
+        "stack": "Error Stack"
+    }
+}
