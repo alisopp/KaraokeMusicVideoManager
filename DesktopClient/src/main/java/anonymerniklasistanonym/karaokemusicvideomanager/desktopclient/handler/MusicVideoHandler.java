@@ -1476,20 +1476,6 @@ public class MusicVideoHandler {
 		}
 	}
 
-	public void loadMusicVideoToPlaylist(long unixTime, int index, MusicVideo musicVideo, String author, String comment,
-			boolean createdLocally, int votes) {
-
-		// load MusicVideoPlaylistElement to the playlist
-		MusicVideoPlaylistElement newElement = this.playlistHandler.load(unixTime, index, musicVideo, author, comment,
-				createdLocally, votes);
-
-		// if connected to server upload playlist entry
-		if (sftpConnectionEstablished()) {
-			uploadPlaylistEntry(newElement);
-		}
-
-	}
-
 	public void editMusicVideoToPlaylist(int index, String author, String comment) {
 
 		MusicVideoPlaylistElement newElement = this.playlistHandler.edit(index, author, comment);
@@ -1563,9 +1549,19 @@ public class MusicVideoHandler {
 							// last but not least import it to the playlist
 
 							if (this.musicVideoList.length > (int) contentData[1] - 1 && (int) contentData[1] > 0) {
-								this.playlistHandler.load((long) contentData[0], (int) contentData[1],
-										this.musicVideoList[(int) contentData[1] - 1], (String) contentData[2],
-										(String) contentData[3], (boolean) contentData[4], (int) contentData[5], file);
+								// create new entry
+								long unixTime = (long) contentData[0];
+								int musicVideoIndex = (int) contentData[1];
+								MusicVideo musicVideo = this.musicVideoList[(int) contentData[1] - 1];
+								String author = (String) contentData[2];
+								String comment = (String) contentData[3];
+								boolean isLocally = (boolean) contentData[4];
+								int votes = (int) contentData[5];
+								
+								MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(unixTime, musicVideoIndex, musicVideo,
+										author, comment, isLocally, votes, file);
+								
+								this.playlistHandler.load(newEntry, file);
 							} else {
 								if (DialogHandler.confirm(Internationalization.translate("Index problem"),
 										Internationalization.translate(
@@ -1780,9 +1776,11 @@ public class MusicVideoHandler {
 								final long unixTime = Long.parseLong(jsonObject.asJsonObject().get("time").toString());
 								final boolean createdLocally = jsonObject.asJsonObject().getBoolean("created-locally");
 
+								MusicVideoPlaylistElement element = new MusicVideoPlaylistElement(unixTime, 
+										indexInList + 1, musicVideoList[indexInList],
+										author, comment, createdLocally, 0, null);
 								// then add the music video to the playlist
-								loadMusicVideoToPlaylist(unixTime, indexInList + 1, this.musicVideoList[indexInList],
-										author, comment, createdLocally, 0);
+								playlistHandler.loadMusicVideoToPlaylist(element);
 							}
 						}
 					}

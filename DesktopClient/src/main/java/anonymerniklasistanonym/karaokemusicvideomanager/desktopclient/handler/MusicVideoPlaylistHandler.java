@@ -28,6 +28,7 @@ public class MusicVideoPlaylistHandler {
 	 * List that contains all MusicVideoPlaylistElements
 	 */
 	private MusicVideoPlaylistElement[] playlistElements;
+	private int latestStartedMusicVideoPlaylistEntry;
 
 	/**
 	 * @return the list that contains all MusicVideoPlaylistElements
@@ -179,12 +180,7 @@ public class MusicVideoPlaylistHandler {
 	 *            (String | Name of file on server to delete it later)
 	 * @return the new entry (MusicVideoPlaylistElement)
 	 */
-	public MusicVideoPlaylistElement load(long unixTime, int musicVideoIndex, MusicVideo musicVideo, String author,
-			String comment, boolean createdLocally, int votes, String fileName) {
-		// create new entry
-		MusicVideoPlaylistElement newEntry = new MusicVideoPlaylistElement(unixTime, musicVideoIndex, musicVideo,
-				author, comment, true, votes, fileName);
-
+	public MusicVideoPlaylistElement load(MusicVideoPlaylistElement newEntry, String fileName) {
 		if (newEntry != null) {
 
 			MusicVideoPlaylistElement[] oldPlaylist = this.playlistElements;
@@ -220,9 +216,8 @@ public class MusicVideoPlaylistHandler {
 	 *            (Integer)
 	 * @return the new entry (MusicVideoPlaylistElement)
 	 */
-	public MusicVideoPlaylistElement load(long unixTime, int musicVideoIndex, MusicVideo musicVideo, String author,
-			String comment, boolean createdLocally, int votes) {
-		return load(unixTime, musicVideoIndex, musicVideo, author, comment, true, votes, null);
+	public MusicVideoPlaylistElement load(MusicVideoPlaylistElement newEntry) {
+		return load(newEntry, null);
 	}
 
 	/**
@@ -246,7 +241,7 @@ public class MusicVideoPlaylistHandler {
 	 *            (File | File that contains a playlist entry)
 	 * @return playlist entry data (Object[])
 	 */
-	public static Object[] readPlaylistEntryFile(File file) {
+	public MusicVideoPlaylistElement readPlaylistEntryFile(File file, MusicVideo[] musicVideoList) {
 		System.out.println("READ PLAYLIST ENTRY FILE");
 
 		if (file == null) {
@@ -327,8 +322,11 @@ public class MusicVideoPlaylistHandler {
 
 			playlistElementPlaceCreated = keyValuePlaceCreated;
 
-			return new Object[] { playlistElementDataUnixTime, playlistElementDataSongIndex, playlistElementDataAuthor,
-					playlistElementDataComment, playlistElementPlaceCreated };
+			MusicVideoPlaylistElement element = new MusicVideoPlaylistElement(playlistElementDataUnixTime, 
+					playlistElementDataSongIndex, musicVideoList[playlistElementDataSongIndex - 1],
+					playlistElementDataAuthor, playlistElementDataComment, playlistElementPlaceCreated, 0, file.getPath());
+			
+			return element;
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -398,13 +396,11 @@ public class MusicVideoPlaylistHandler {
 			System.err.println("Playlist element could not be loaded because the file doesn't exist!");
 			return;
 		}
-		Object[] data = readPlaylistEntryFile(file);
+		MusicVideoPlaylistElement element = readPlaylistEntryFile(file, musicVideoList);
 
-		if (data != null) {
+		if (element != null) {
 
-			load((long) data[0], (int) data[1] + 1, musicVideoList[(int) data[1]], (String) data[2], (String) data[3],
-					(boolean) data[4], (int) data[5]);
-
+			load(element);
 			return;
 		}
 		System.err.println("Playlist element could not be loaded");
@@ -519,6 +515,23 @@ public class MusicVideoPlaylistHandler {
 			this.playlistElements[i].setVotes(0);
 		}
 
+	}
+	
+	public void setLatestElementIndex(int index) {
+		this.latestStartedMusicVideoPlaylistEntry = index;
+	}
+
+	public MusicVideoPlaylistElement loadMusicVideoToPlaylist(MusicVideoPlaylistElement element) {
+	
+		// load MusicVideoPlaylistElement to the playlist
+		
+		if (element == null)
+			element = getPlaylistElements()[this.latestStartedMusicVideoPlaylistEntry];
+		
+		load(element);
+	
+		return element;
+	
 	}
 
 }

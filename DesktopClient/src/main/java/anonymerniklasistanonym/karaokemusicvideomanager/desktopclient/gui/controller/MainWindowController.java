@@ -443,8 +443,6 @@ public class MainWindowController {
 	 * Main class
 	 */
 	private Main mainClass;
-	private MusicVideoPlaylistElement latestStartedMusicVideoPlaylistEntry;
-
 	/**
 	 * Window text that should be translated on language change/load
 	 */
@@ -768,9 +766,6 @@ public class MainWindowController {
 		this.menuButtonSftp.setDisable(true);
 		this.menuButtonSftpVotingReset.setDisable(true);
 		this.contextPlaylistUndo.setVisible(false);
-
-		// no last removed element at start
-		this.latestStartedMusicVideoPlaylistEntry = null;
 
 		// set last name to current user name
 		this.nameOfAuthor = System.getProperty("user.name");
@@ -1780,8 +1775,7 @@ public class MainWindowController {
 		if (selectedEntry != null) {
 			this.mainClass.getMusicVideohandler().openMusicVideo(selectedEntry.getMusicVideoIndex() - 1);
 			if (this.mainClass.getMusicVideohandler().getPlaylistRemoveStartedVideo()) {
-				this.latestStartedMusicVideoPlaylistEntry = this.mainClass.getMusicVideohandler().getPlaylistHandler()
-						.getPlaylistElements()[selectedEntry.getIndex()];
+				this.mainClass.getMusicVideohandler().getPlaylistHandler().setLatestElementIndex(selectedEntry.getIndex());
 				this.contextPlaylistUndo.setVisible(true);
 				this.mainClass.getMusicVideohandler().removeEntryFromPlaylist(selectedEntry.getIndex());
 				refreshMusicVideoPlaylistTable();
@@ -1856,8 +1850,7 @@ public class MainWindowController {
 
 		// if something is selected
 		if (selectedEntry != null) {
-			this.latestStartedMusicVideoPlaylistEntry = this.mainClass.getMusicVideohandler().getPlaylistHandler()
-					.getPlaylistElements()[selectedEntry.getIndex()];
+			this.mainClass.getMusicVideohandler().getPlaylistHandler().setLatestElementIndex(selectedEntry.getIndex());
 			this.contextPlaylistUndo.setVisible(true);
 			this.mainClass.getMusicVideohandler().removeEntryFromPlaylist(selectedEntry.getIndex());
 
@@ -1968,16 +1961,15 @@ public class MainWindowController {
 	@FXML
 	public void addRemovedPlaylistEntry() {
 
-		final MusicVideoPlaylistElement latestElement = this.latestStartedMusicVideoPlaylistEntry;
-		if (latestElement != null) {
-			this.mainClass.getMusicVideohandler().loadMusicVideoToPlaylist(latestElement.getUnixTime(),
-					latestElement.getMusicVideoIndex(), latestElement.getMusicVideoFile(), latestElement.getAuthor(),
-					latestElement.getComment(), latestElement.getCreatedLocally(), latestElement.getVotes());
-			this.latestStartedMusicVideoPlaylistEntry = null;
-			this.contextPlaylistUndo.setVisible(false);
-			refreshMusicVideoPlaylistTable();
+		MusicVideoPlaylistElement element = this.mainClass.getMusicVideohandler().getPlaylistHandler().loadMusicVideoToPlaylist(null);
+		
+		// if connected to server upload playlist entry
+		if (this.mainClass.getMusicVideohandler().sftpConnectionEstablished()) {
+			this.mainClass.getMusicVideohandler().uploadPlaylistEntry(element);
 		}
-
+		
+		this.contextPlaylistUndo.setVisible(false);
+		refreshMusicVideoPlaylistTable();
 	}
 
 	/**
