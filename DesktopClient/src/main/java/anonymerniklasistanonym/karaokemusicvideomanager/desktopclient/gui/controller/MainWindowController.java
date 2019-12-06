@@ -7,6 +7,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
 
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.generator.HtmlContentPartyGenerator;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.generator.HtmlContentSearchGenerator;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.generator.HtmlContentStaticGenerator;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoPlaylistTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoSourceDirectoriesTableView;
@@ -1910,7 +1913,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void sftpParty() {
-		this.mainClass.getMusicVideohandler().transferHtmlParty();
+		this.mainClass.getMusicVideohandler().transferHtml(new HtmlContentPartyGenerator(true));
 	}
 
 	/**
@@ -1918,7 +1921,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void sftpPartyWithoutVotes() {
-		this.mainClass.getMusicVideohandler().transferHtmlPartyWithoutVotes();
+		this.mainClass.getMusicVideohandler().transferHtml(new HtmlContentPartyGenerator(false));
 	}
 
 	/**
@@ -1926,7 +1929,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void sftpStatic() {
-		this.mainClass.getMusicVideohandler().transferHtmlStatic();
+		this.mainClass.getMusicVideohandler().transferHtml(new HtmlContentStaticGenerator());
 	}
 
 	/**
@@ -1934,7 +1937,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void sftpSearch() {
-		this.mainClass.getMusicVideohandler().transferHtmlSearch();
+		this.mainClass.getMusicVideohandler().transferHtml(new HtmlContentSearchGenerator());
 	}
 
 	/**

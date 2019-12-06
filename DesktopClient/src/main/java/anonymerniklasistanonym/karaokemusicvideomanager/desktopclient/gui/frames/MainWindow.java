@@ -45,7 +45,7 @@ public class MainWindow {
 	 * The minimal window size
 	 */
 	private final int[] minimalWindowSize;
-
+	
 	/**
 	 * Constructor
 	 * 
@@ -60,7 +60,7 @@ public class MainWindow {
 		this.mainClass = mainClass;
 
 		// get the program name
-		this.windowTitle = this.mainClass.getMusicVideohandler().getProgramName();
+		this.windowTitle = Main.PROGRAM_NAME;
 
 		// set the window size constraints
 		this.normalWindowSize = new int[] { 700, 600 };

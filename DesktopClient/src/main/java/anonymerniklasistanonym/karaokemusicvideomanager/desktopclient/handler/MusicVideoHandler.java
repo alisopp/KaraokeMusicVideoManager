@@ -15,6 +15,11 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.generator.HtmlContentGenerator;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.generator.HtmlContentPartyGenerator;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.generator.HtmlContentSearchGenerator;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.generator.HtmlContentStaticGenerator;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.generator.HtmlPartyGenerator;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ClassResourceReaderModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
@@ -88,11 +93,6 @@ public class MusicVideoHandler {
 	 */
 	private SftpHandler sftpController;
 
-	/**
-	 * String that contains the name of the program in the started language
-	 */
-	private final String programName;
-
 	// Constructor
 
 	/**
@@ -112,7 +112,6 @@ public class MusicVideoHandler {
 		this.playlistHandler = new MusicVideoPlaylistHandler();
 		this.sftpController = new SftpHandler();
 		this.faviconSizes = new int[] { 16, 32, 48, 64, 94, 128, 160, 180, 194, 256, 512 };
-		this.programName = Internationalization.translate("Karaoke MusicVideoManager");
 		this.ipAddressFileName = "ipBook.json";
 		this.phpDirectoryName = "php";
 	}
@@ -825,202 +824,19 @@ public class MusicVideoHandler {
 
 	}
 
-	private String generateHeadName() {
-
-		// string builder for all links
-		StringBuilder specialHead = new StringBuilder("");
-
-		String name = getProgramName();
-		specialHead.append("<title>" + name + "</title>");
-		specialHead.append("<meta name=\"apple-mobile-web-app-title\" content=\"" + name + "\">");
-		specialHead.append("<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">");
-		specialHead.append("<meta name=\"application-name\" content=\"" + name + "\">");
-
-		return specialHead.toString();
-	}
-
-	private String generateFaviconLinks(String getBack) {
-
-		// string builder for all links
-		StringBuilder faviconLinks = new StringBuilder("");
-
-		// firefox svg link
-		faviconLinks.append("<link rel=\"icon\" type=\"image/svg+xml\" href=\"" + getBack + "favicons/favicon.svg\">");
-
-		// apple links
-		faviconLinks.append("<link rel=\"apple-touch-icon\" href=\"" + getBack + "favicons/favicon-180x180.png\">");
-		faviconLinks.append("<link rel=\"mask-icon\" href=\"" + getBack + "favicons/favicon.svg\" color=\"#000000\">");
-
-		// add all .png images
-		Integer[] sizes = { 16, 32, 48, 64, 94, 128, 160, 180, 194, 256, 512 };
-
-		for (Integer size : sizes) {
-			faviconLinks.append("<link rel=\"icon\" type=\"image/png\" href=\"" + getBack + "favicons/favicon-" + size
-					+ "x" + size + ".png\" sizes=\"" + size + "x" + size + "\">");
-		}
-
-		return faviconLinks.toString();
-	}
-
-	private String generateHtmlSearchPartyMain(boolean party) {
-		// string builder for the whole site
-		StringBuilder htmlStatic = new StringBuilder("");
-
-		// json data html file
-		JsonObject htmlJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/html.json")[0]);
-		JsonObject cssJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/css.json")[0]);
-		JsonObject jsJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/js.json")[0]);
-
-		// add default head
-		htmlStatic.append("<!DOCTYPE html><html lang=\"" + Internationalization.getLocaleString() + "\"><head>");
-		// add generic head
-		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "head"));
-		// add custom head for static
-		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "custom-head-html_party"));
-
-		// add title and more
-		htmlStatic.append(generateHeadName());
-
-		// add links to all the images
-		htmlStatic.append(generateFaviconLinks(""));
-
-		// add js
-		htmlStatic.append("<script>");
-		htmlStatic.append(JsonModule.getValueString(jsJsonContent, "w3"));
-
-		// add css
-		htmlStatic.append("</script><style>");
-		htmlStatic.append(JsonModule.getValueString(cssJsonContent, "styles_static"));
-		htmlStatic.append(JsonModule.getValueString(cssJsonContent, "styles_searchable"));
-
-		if (party) {
-			htmlStatic.append(JsonModule.getValueString(cssJsonContent, "styles_party"));
-		}
-
-		// close head and open body
-		htmlStatic.append("</style></head><body>");
-
-		if (party) {
-			htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "floating-button-html_party")
-					.replace("html_party_live.html", "index.php")
-					.replace("Party Playlist", Internationalization.translate("Party Playlist")));
-		}
-
-		// add section begin
-		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "section-start-html_party"));
-
-		// add the overlay / table header
-		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "overlay-html_party")
-				.replaceFirst("#", this.columnNames[0])
-				.replaceFirst("Search for artist/title",
-						Internationalization.translate("Search for") + " " + Internationalization.translate("artist")
-								+ "/" + Internationalization.translate("title") + "/"
-								+ Internationalization.translate("nummer"))
-				.replaceFirst("Title", Internationalization.translate(this.columnNames[2]))
-				.replaceFirst("Artist", Internationalization.translate(this.columnNames[1])));
-
-		// add the second table header (for print)
-		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "table-header-html_party")
-				.replaceFirst("#", this.columnNames[0])
-				.replaceFirst("Artist", Internationalization.translate(this.columnNames[1]))
-				.replaceFirst("Title", Internationalization.translate(this.columnNames[2])));
-
-		if (party) {
-			htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "form-start-html_party")
-					.replaceFirst("../php/form.php", this.phpDirectoryName + "/form.php"));
-		}
-
-		// table data
-		if (party) {
-			htmlStatic.append(MusicVideoDataExportHandler.generateHtmlTableDataParty(musicVideoListToTable()));
-		} else {
-			htmlStatic.append(MusicVideoDataExportHandler.generateHtmlTableDataSearch(musicVideoListToTable()));
-		}
-
-		// add after table data
-		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "before-form-html_party"));
-
-		if (party) {
-			htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "form-end-html_party"));
-		}
-
-		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "after-table-html_party"));
-
-		htmlStatic.append("</body></html>");
-
-		return htmlStatic.toString();
-	}
-
-	private String generateHtmlParty() {
-		return generateHtmlSearchPartyMain(true);
-	}
-
-	private String generateHtmlSearch() {
-		return generateHtmlSearchPartyMain(false);
-	}
-
-	private String generateHtmlStatic() {
-
-		// string builder for the whole site
-		StringBuilder htmlStatic = new StringBuilder("");
-
-		// json data html file
-		JsonObject htmlJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/html.json")[0]);
-		JsonObject cssJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/css.json")[0]);
-
-		// add default head
-		htmlStatic.append("<!DOCTYPE html><html lang=\"" + Internationalization.getLocaleString() + "\"><head>");
-		// add generic head
-		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "head"));
-		// add custom head for static
-		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "custom-head-html_static"));
-
-		// add title and more
-		htmlStatic.append(generateHeadName());
-
-		// add links to all the images
-		htmlStatic.append(generateFaviconLinks(""));
-
-		// add css
-		htmlStatic.append("<style>");
-		htmlStatic.append(JsonModule.getValueString(cssJsonContent, "styles_static"));
-
-		// close head and open body
-		htmlStatic.append("</style></head><body>");
-		// add section begin: section-start-html_static
-		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "section-start-html_static"));
-
-		// add table header
-		String tableHeader = JsonModule.getValueString(htmlJsonContent, "table-header-html_static");
-		tableHeader = tableHeader.replaceFirst("#", this.columnNames[0]).replaceFirst("#", this.columnNames[0])
-				.replaceFirst("Artist", Internationalization.translate(this.columnNames[1]))
-				.replaceFirst("Title", Internationalization.translate(this.columnNames[2]));
-		htmlStatic.append(tableHeader);
-
-		// table data
-		htmlStatic.append(MusicVideoDataExportHandler.generateHtmlTableDataStatic(musicVideoListToTable()));
-
-		// add after table data
-		htmlStatic.append(JsonModule.getValueString(htmlJsonContent, "after-table-html_static"));
-
-		htmlStatic.append("</body></html>");
-
-		return htmlStatic.toString();
-	}
-
 	public boolean saveHtmlList(Path outputDirectory, boolean faviconsOn) {
 
 		if (faviconsOn) {
 			copyFavicons(outputDirectory);
 		}
 
+		HtmlContentGenerator generator = new HtmlContentStaticGenerator();
+		Object[][] musicVideoTable = musicVideoListToTable();
+		
+		String htmlContent = generator.generateHtml(this.phpDirectoryName, musicVideoTable, columnNames);
+		
 		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.html"),
-				new String[] { generateHtmlStatic() });
+				new String[] { htmlContent });
 	}
 
 	public boolean saveHtmlSearch(Path outputDirectory, boolean faviconsOn) {
@@ -1028,9 +844,14 @@ public class MusicVideoHandler {
 		if (faviconsOn) {
 			copyFavicons(outputDirectory);
 		}
+		
+		HtmlContentGenerator generator = new HtmlContentSearchGenerator();
+		Object[][] musicVideoTable = musicVideoListToTable();
+		
+		String htmlContent = generator.generateHtml(this.phpDirectoryName, musicVideoTable, columnNames);
 
 		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.html"),
-				new String[] { generateHtmlSearch() });
+				new String[] { htmlContent });
 	}
 
 	public boolean saveHtmlParty(Path outputDirectory, boolean faviconsOn) {
@@ -1049,15 +870,25 @@ public class MusicVideoHandler {
 
 		// delete old index.html file
 		FileReadWriteModule.deleteFile(new File(outputDirectory.toString() + "/index.html"));
+		
+		HtmlContentGenerator contentGenerator = new HtmlContentPartyGenerator();
+		Object[][] musicVideoTable = musicVideoListToTable();
+		
+		String htmlContent = contentGenerator.generateHtml(phpDirectoryName, musicVideoTable, columnNames);
 
 		FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/list.html"),
-				new String[] { generateHtmlParty() });
+				new String[] { htmlContent });
+		
+		HtmlPartyGenerator partyGenerator = new HtmlPartyGenerator();
+		String partyPlaylist = partyGenerator.generateHtmlPartyPlaylist(null, true, true);
 
 		FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index.php"),
-				new String[] { generateHtmlPartyPlaylist(false, true, true) });
+				new String[] { partyPlaylist });
+		
+		partyPlaylist = partyGenerator.generateHtmlPartyPlaylist(phpDirectoryName, true, true);
 
 		return FileReadWriteModule.writeTextFile(new File(outputDirectory.toString() + "/index2.php"),
-				new String[] { generateHtmlPartyPlaylist(true, false, true) });
+				new String[] { partyPlaylist });
 	}
 
 	private void createPhpDirectoryWithFiles(Path outputFolder) {
@@ -1079,203 +910,34 @@ public class MusicVideoHandler {
 
 			// create the favicon directory
 			FileReadWriteModule.createDirectory(new File(phpFolder));
-
+			
 			// paste process.php
+			HtmlPartyGenerator partyGenerator = new HtmlPartyGenerator();
+			String partyProcess = partyGenerator.generateHtmlPartyProcess();
 			FileReadWriteModule.writeTextFile(new File(phpFolder.toString() + "/process.php"),
-					new String[] { generateHtmlPartyProcess() });
+					new String[] { partyProcess });
 
 			// paste form.php
+			String partyForm = partyGenerator.generateHtmlPartyForm();
 			FileReadWriteModule.writeTextFile(new File(phpFolder.toString() + "/form.php"),
-					new String[] { generateHtmlPartyForm() });
+					new String[] { partyForm });
 
 			// paste view.php
+			String partyView = partyGenerator.generateHtmlPartyView(true);
 			FileReadWriteModule.writeTextFile(new File(phpFolder.toString() + "/live.php"),
-					new String[] { generateHtmlPartyView(true) });
+					new String[] { partyView });
 
 			// paste view.php
+			String partyVote = partyGenerator.generateHtmlPartyVote();
 			FileReadWriteModule.writeTextFile(new File(phpFolder.toString() + "/vote.php"),
-					new String[] { generateHtmlPartyVote() });
+					new String[] { partyVote });
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
-
-	private String generateHtmlPartyVote() {
-		// string builder for the whole site
-		StringBuilder phpProcess = new StringBuilder("");
-
-		JsonObject phpJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/php.json")[0]);
-
-		// add php before everything
-		phpProcess.append(JsonModule.getValueString(phpJsonContent, "php-data-vote"));
-
-		return phpProcess.toString();
-	}
-
-	private String generateHtmlPartyView(boolean withVotes) {
-		// string builder for the whole site
-		StringBuilder phpProcess = new StringBuilder("");
-
-		JsonObject phpJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/php.json")[0]);
-
-		// add php before everything
-		if (withVotes) {
-			phpProcess.append(JsonModule.getValueString(phpJsonContent, "php-data-live")
-					.replace("Vote", Internationalization.translate("Vote"))
-					.replace("from", Internationalization.translate("from")));
-		} else {
-			phpProcess.append(JsonModule.getValueString(phpJsonContent, "php-data-live_without_votes").replace("from",
-					Internationalization.translate("from")));
-		}
-
-		return phpProcess.toString();
-	}
-
-	private String generateHtmlPartyForm() {
-		// string builder for the whole site
-		StringBuilder phpForm = new StringBuilder("");
-
-		// JSON data HTML file
-		JsonObject htmlJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/html.json")[0]);
-		JsonObject phpJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/php.json")[0]);
-		JsonObject cssJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/css.json")[0]);
-
-		// add PHP before everything
-		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-html-form"));
-
-		// add default head
-		phpForm.append("<!DOCTYPE html><html lang=\"" + Internationalization.getLocaleString() + "\"><head>");
-		// add generic head
-		phpForm.append(JsonModule.getValueString(htmlJsonContent, "head"));
-		// add custom head for php form
-		phpForm.append(JsonModule.getValueString(phpJsonContent, "custom-head-form"));
-
-		// add title and more
-		phpForm.append(generateHeadName());
-
-		// add links to all the images
-		phpForm.append(generateFaviconLinks("../"));
-
-		// add CSS
-		phpForm.append("<style>");
-		phpForm.append(JsonModule.getValueString(cssJsonContent, "styles_php_form"));
-
-		// close head and open body
-		phpForm.append("</style></head><body>");
-
-		// add floating button for PHP form
-		phpForm.append(JsonModule.getValueString(phpJsonContent, "floating-button-form"));
-
-		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-title-form"));
-		phpForm.append(Internationalization.translate("Submit this song to the playlist") + ":");
-		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-artist-form"));
-		phpForm.append(Internationalization.translate("from") + "&nbsp;");
-		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-input-form"));
-		phpForm.append(JsonModule.getValueString(phpJsonContent, "input-form")
-				.replace("Your name/s", Internationalization.translate("Your names"))
-				.replace("Your comment", Internationalization.translate("Your comment")));
-		phpForm.append(JsonModule.getValueString(phpJsonContent, "before-submit-form"));
-		phpForm.append(JsonModule.getValueString(phpJsonContent, "submit-form").replace("Submit",
-				Internationalization.translate("Submit")));
-		phpForm.append(JsonModule.getValueString(phpJsonContent, "after-submit-form"));
-
-		phpForm.append("</body></html>");
-
-		return phpForm.toString();
-	}
-
-	private String generateHtmlPartyProcess() {
-
-		// string builder for the whole site
-		StringBuilder phpProcess = new StringBuilder("");
-
-		JsonObject phpJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/php.json")[0]);
-
-		// add php before everything
-		phpProcess.append(JsonModule.getValueString(phpJsonContent, "before-link-process")
-				.replaceAll("html/html_party_live.html", "index.php"));
-		phpProcess.append(JsonModule.getValueString(phpJsonContent, "link-process").replace("html/html_party_live.html",
-				"index.php"));
-		phpProcess.append(JsonModule.getValueString(phpJsonContent, "after-link-process"));
-
-		return phpProcess.toString();
-	}
-
-	private String generateHtmlPartyPlaylist(boolean b, boolean floatingButton, boolean withVotes) {
-
-		// string builder for the whole site
-		StringBuilder phpPlaylist = new StringBuilder("");
-
-		// json data html file
-		JsonObject htmlJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/html.json")[0]);
-		JsonObject cssJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/css.json")[0]);
-		JsonObject phpJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/php.json")[0]);
-		JsonObject jsJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/js.json")[0]);
-
-		// add default head
-		phpPlaylist.append("<!DOCTYPE html><html lang=\"" + Internationalization.getLocaleString() + "\"><head>");
-		// add generic head
-		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "head"));
-		// add custom head for static
-		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "custom-head-html_party_live"));
-
-		// add title and more
-		phpPlaylist.append(generateHeadName());
-
-		// add links to all the images
-		phpPlaylist.append(generateFaviconLinks(""));
-
-		// add js
-		phpPlaylist.append("<script>");
-		phpPlaylist.append(JsonModule.getValueString(jsJsonContent, "jquery.min"));
-
-		// add css
-		phpPlaylist.append("</script><style>");
-		phpPlaylist.append(JsonModule.getValueString(cssJsonContent, "styles_party_live"));
-
-		// close head and open body
-		phpPlaylist.append("</style></head><body>");
-
-		if (floatingButton) {
-			phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "floating-button-html_party_live")
-					.replace("html_party.html", "list.html")
-					.replace("View Song List", Internationalization.translate("View Song List")));
-		}
-		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "section-start-html_party_live"));
-
-		if (withVotes) {
-			phpPlaylist.append(JsonModule.getValueString(phpJsonContent, "php-data-live")
-					.replace("path = \"./\"", "path = \"php/\"").replace("Vote", Internationalization.translate("Vote"))
-					.replace("from", Internationalization.translate("from")));
-		} else {
-			phpPlaylist.append(JsonModule.getValueString(phpJsonContent, "php-data-live_without_votes")
-					.replace("path = \"./\"", "path = \"php/\"")
-					.replace("from", Internationalization.translate("from")));
-		}
-
-		phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "after-table-html_party_live"));
-
-		if (b) {
-			phpPlaylist.append(JsonModule.getValueString(htmlJsonContent, "repeat-script-html_party_live")
-					.replace("../php/live.php", this.phpDirectoryName + "/live.php"));
-		}
-
-		phpPlaylist.append("</body></html>");
-		return phpPlaylist.toString();
-	}
-
+	
 	/**
 	 * Save the music video list in CSV format (Excel)
 	 * 
@@ -1291,7 +953,7 @@ public class MusicVideoHandler {
 		}
 
 		return FileReadWriteModule.writeTextFile(whereToWriteTheFile.toFile(),
-				MusicVideoDataExportHandler.generateCsvContent(this.musicVideoList, this.columnNames).split("\n"));
+				MusicVideoDataExportHandler.generateCsvContent(this.musicVideoList, columnNames).split("\n"));
 	}
 
 	/**
@@ -1568,7 +1230,9 @@ public class MusicVideoHandler {
 												"Press yes to solve this automatically by doing the following"),
 										Internationalization.translate(
 												"The server list seems to be another one than your local list. Setup the server again and clear the playlist to continue."))) {
-									transferHtmlParty();
+									
+									HtmlContentGenerator generator = new HtmlContentPartyGenerator();
+									transferHtml(generator);
 									clearPlaylist();
 
 								}
@@ -1874,20 +1538,14 @@ public class MusicVideoHandler {
 
 	}
 
-	public static enum TYPE_OF_HTML {
-		STATIC, SEARCH, PARTY, PARTY_NO_VOTES;
-	}
-
 	/**
 	 * Main method to transfer HTML documents (collections) directly to a server
 	 * into a specific directory (the main directory)
 	 * 
-	 * @param favicons
-	 *            (boolean | should icons be transfered too)
 	 * @param type
-	 *            (TYPE_OF_HTML | which kind of collection should be transfered)
+	 *            (HtmlGenerator | which kind of html content should be transfered)
 	 */
-	public void transferHtmlMain(boolean favicons, TYPE_OF_HTML type) {
+	public void transferHtml(HtmlContentGenerator generator) {
 
 		// check if there even is a connection
 		if (sftpConnectionEstablished()) {
@@ -1899,123 +1557,69 @@ public class MusicVideoHandler {
 			this.sftpController.removeFile("index.html");
 			this.sftpController.removeFile("index.php");
 
-			// add icons
-			if (favicons) {
+			// create a directory for the icons and change into it
+			this.sftpController.makeDirectory("favicons");
+			this.sftpController.changeDirectory("favicons");
 
-				// create a directory for the icons and change into it
-				this.sftpController.makeDirectory("favicons");
-				this.sftpController.changeDirectory("favicons");
-
-				// copy all PNG icons
-				for (int i = 0; i < this.faviconSizes.length; i++) {
-					final String nameEnd = this.faviconSizes[i] + "x" + this.faviconSizes[i] + ".png";
-					this.sftpController.transferFile(
-							ClassResourceReaderModule.getInputStream("images/favicons/favicon-" + nameEnd),
-							"favicon-" + nameEnd);
-				}
-
-				// copy the vector graphic icon
+			// copy all PNG icons
+			for (int i = 0; i < this.faviconSizes.length; i++) {
+				final String nameEnd = this.faviconSizes[i] + "x" + this.faviconSizes[i] + ".png";
 				this.sftpController.transferFile(
-						ClassResourceReaderModule.getInputStream("images/favicons/favicon.svg"), "favicon.svg");
-
-				// open the "Windows" graphic icon
-				this.sftpController.transferFile(ClassResourceReaderModule.getInputStream("images/favicons/icon.ico"),
-						"icon.ico");
-
-				// change into default directory from login
-				this.sftpController.changeDirectory("..");
+						ClassResourceReaderModule.getInputStream("images/favicons/favicon-" + nameEnd),
+						"favicon-" + nameEnd);
 			}
 
-			// transfer the document files respective to the given TYPE_OF_HTML
-			if (type == TYPE_OF_HTML.STATIC) {
+			// copy the vector graphic icon
+			this.sftpController.transferFile(
+					ClassResourceReaderModule.getInputStream("images/favicons/favicon.svg"), "favicon.svg");
 
-				// list with all music video elements
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlStatic()),
-						"index.html");
+			// open the "Windows" graphic icon
+			this.sftpController.transferFile(ClassResourceReaderModule.getInputStream("images/favicons/icon.ico"),
+					"icon.ico");
 
-			} else if (type == TYPE_OF_HTML.SEARCH) {
-
-				// search list with all music video elements
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlSearch()),
-						"index.html");
-
-			} else if (type == TYPE_OF_HTML.PARTY || type == TYPE_OF_HTML.PARTY_NO_VOTES) {
-
-				// search list with all music video elements and post buttons
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlParty()),
-						"list.html");
+			// change into default directory from login
+			this.sftpController.changeDirectory("..");
+			
+			Object[][] musicVideoTable = musicVideoListToTable();
+			
+			String htmlContent = generator.generateHtml(this.phpDirectoryName, musicVideoTable, columnNames);
+			
+			if (!generator.isTypeParty()) {
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(htmlContent),	"index.html");
+			} else {
+				transferHtmlParty(generator);
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(htmlContent),	"list.html");
+				
+				// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! BAD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				boolean withVotes = ((HtmlContentPartyGenerator)generator).getWithVotes();
+				
+				HtmlPartyGenerator partyGenerator = new HtmlPartyGenerator();
+				String indexContent = partyGenerator.generateHtmlPartyPlaylist(null, true, withVotes);
+				String index2Content = partyGenerator.generateHtmlPartyPlaylist(phpDirectoryName, false, withVotes);
 				// playlist view PHP list
-				if (type == TYPE_OF_HTML.PARTY) {
-					this.sftpController.transferFile(
-							FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist(false, true, true)),
-							"index.php");
-					this.sftpController.transferFile(
-							FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist(true, false, true)),
-							"index2.php");
-				} else {
-					this.sftpController.transferFile(
-							FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist(false, true, false)),
-							"index.php");
-					this.sftpController.transferFile(
-							FileReadWriteModule.stringToInputStream(generateHtmlPartyPlaylist(true, false, false)),
-							"index2.php");
-				}
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(indexContent),	"index.php");
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(index2Content), "index2.php");
 
 				// create a directory for the PHP documents and change into it
 				this.sftpController.makeDirectory(this.phpDirectoryName);
 				this.sftpController.changeDirectory(this.phpDirectoryName);
 
 				// PHP music video submit form
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlPartyForm()),
-						"form.php");
+				String partyForm = partyGenerator.generateHtmlPartyForm();
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(partyForm), "form.php");
 
 				// PHP process document to add a submit to the playlist
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlPartyProcess()),
-						"process.php");
-				if (type == TYPE_OF_HTML.PARTY) {
-					this.sftpController.transferFile(
-							FileReadWriteModule.stringToInputStream(generateHtmlPartyView(true)), "live.php");
-				} else {
-					this.sftpController.transferFile(
-							FileReadWriteModule.stringToInputStream(generateHtmlPartyView(false)), "live.php");
-				}
+				String partyProcess = partyGenerator.generateHtmlPartyProcess();
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(partyProcess),	"process.php");
+
+				String partyView = partyGenerator.generateHtmlPartyView(withVotes);
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(partyView), "live.php");
+				
+				String partyVote = partyGenerator.generateHtmlPartyVote();
 				// PHP process document to add a submit to the playlist
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(generateHtmlPartyVote()),
-						"vote.php");
+				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(partyVote), "vote.php");
 			}
 		}
-	}
-
-	/**
-	 * Transfer website collection for party setup (PHP list with playlist)
-	 */
-	public void transferHtmlParty() {
-		transferHtmlMain(true, TYPE_OF_HTML.PARTY);
-	}
-
-	/**
-	 * Transfer website collection for party setup (PHP list with playlist)
-	 */
-	public void transferHtmlPartyWithoutVotes() {
-		transferHtmlMain(true, TYPE_OF_HTML.PARTY_NO_VOTES);
-	}
-
-	/**
-	 * Transfer website collection for list setup (static list)
-	 */
-	public void transferHtmlStatic() {
-		transferHtmlMain(true, TYPE_OF_HTML.STATIC);
-	}
-
-	/**
-	 * Transfer website collection for search setup (search list)
-	 */
-	public void transferHtmlSearch() {
-		transferHtmlMain(true, TYPE_OF_HTML.SEARCH);
-	}
-
-	public String getProgramName() {
-		return this.programName;
 	}
 
 	/**

@@ -36,6 +36,8 @@ public class Main extends Application {
 	 * Creates the main window
 	 */
 	private MainWindow mainWindowCreator;
+	
+	public static final String PROGRAM_NAME = "Karaoke MusicVideoManager";
 
 	@Override
 	public void init() throws Exception {
