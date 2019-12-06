@@ -1589,7 +1589,6 @@ public class MusicVideoHandler {
 			} else {
 				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(htmlContent),	"list.html");
 				
-				// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! BAD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				boolean withVotes = ((HtmlContentPartyGenerator)generator).getWithVotes();
 				
 				HtmlPartyGenerator partyGenerator = new HtmlPartyGenerator();
