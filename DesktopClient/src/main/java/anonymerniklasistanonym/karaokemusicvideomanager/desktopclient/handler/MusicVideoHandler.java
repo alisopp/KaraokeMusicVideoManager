@@ -1587,7 +1587,6 @@ public class MusicVideoHandler {
 			if (!generator.isTypeParty()) {
 				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(htmlContent),	"index.html");
 			} else {
-				transferHtmlParty(generator);
 				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(htmlContent),	"list.html");
 				
 				// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! BAD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
