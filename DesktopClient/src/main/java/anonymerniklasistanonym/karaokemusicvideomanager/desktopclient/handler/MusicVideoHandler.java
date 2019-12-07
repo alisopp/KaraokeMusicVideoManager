@@ -1112,20 +1112,16 @@ public class MusicVideoHandler {
 
 								}
 							}
-
 						}
 					}
-
 				}
-
 			}
 		}
-
 	}
 
 	public void saveSftpLogin(String ipAddressSftp, String workingDirectorySftp, String usernameSftp) {
 		this.programDataHandler.setIpAddressSftp(ipAddressSftp);
-		this.programDataHandler.setUsernameSftp(usernameSftp);
+		this.programDataHandler.setUserNameSftp(usernameSftp);
 		this.programDataHandler.setWorkingDirectorySftp(workingDirectorySftp);
 	}
 
@@ -1134,7 +1130,7 @@ public class MusicVideoHandler {
 	}
 
 	public String getSftpUsername() {
-		return this.programDataHandler.getUsernameSftp();
+		return this.programDataHandler.getUserNameSftp();
 	}
 
 	public String getSftpDirectory() {
@@ -1393,7 +1389,7 @@ public class MusicVideoHandler {
 			this.sftpController.disconnectSFTP();
 		}
 		this.programDataHandler.setIpAddressSftp(null);
-		this.programDataHandler.setUsernameSftp(null);
+		this.programDataHandler.setUserNameSftp(null);
 		this.programDataHandler.setWorkingDirectorySftp(null);
 
 	}

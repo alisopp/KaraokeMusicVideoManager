@@ -16,7 +16,6 @@ import javax.json.JsonObjectBuilder;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.JsonModule;
-import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.ProgramData;
 
 /**
  * Handler for all the settings data of the current running program
@@ -27,15 +26,57 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.Pr
 public final class ProgramDataHandler {
 
 	/**
-	 * Contains all the settings/program data
+	 * All the paths to music video files
 	 */
-	private ProgramData settings;
+	private Path[] pathList;
+
+	/**
+	 * Accepted file types
+	 */
+	private String[] acceptedFileTypes;
+
+	/**
+	 * SFTP - Login account user name
+	 */
+	private String userNameSftp;
+
+	/**
+	 * SFTP - IP address of server
+	 */
+	private String ipAddressSftp;
+
+	/**
+	 * SFTP - Working directory
+	 */
+	private String workingDirectorySftp;
+
+	/**
+	 * Always save settings on close
+	 */
+	private Boolean alwaysSaveSettings;
+
+	/**
+	 * Files that should be ignored
+	 */
+	private File[] ignoredFilesList;
+
+	/**
+	 * Remove a started video from the playlist
+	 */
+	private boolean removeStartedVideoFromPlayist;
 
 	/**
 	 * Constructor [empty]
 	 */
 	public ProgramDataHandler() {
-		this.settings = new ProgramData(new String[] { "avi", "mp4", "mkv", "wmv", "mov", "mpg", "mpeg" });
+		this.pathList = null;
+		this.acceptedFileTypes = new String[] { "avi", "mp4", "mkv", "wmv", "mov", "mpg", "mpeg" };
+		this.userNameSftp = null;
+		this.ipAddressSftp = null;
+		this.workingDirectorySftp = null;
+		this.alwaysSaveSettings = false;
+		this.ignoredFilesList = null;
+		this.removeStartedVideoFromPlayist = false;
 	}
 
 	/**
@@ -44,7 +85,7 @@ public final class ProgramDataHandler {
 	 * @return pathList (Path[])
 	 */
 	public Path[] getPathList() {
-		return this.settings.getPathList();
+		return this.pathList;
 	}
 
 	/**
@@ -78,12 +119,17 @@ public final class ProgramDataHandler {
 					System.err.println("- Found duplicate: " + containedPath);
 				}
 			}
-			this.settings.setPathList(uniqueAddresses.toArray(new Path[0]));
+			
+			this.pathList = uniqueAddresses.toArray(new Path[0]);
+			
+			if (this.pathList != null) {
+				Arrays.sort(pathList);
+			}
 
 		} else {
 			System.out.println("<< Path list was empty!");
 
-			this.settings.setPathList(null);
+			this.pathList = null;
 		}
 	}
 
@@ -102,26 +148,17 @@ public final class ProgramDataHandler {
 		}
 
 		// get old playlist and new element as an array
-		Path[] oldPlaylist = this.settings.getPathList();
+		Path[] oldPlaylist = getPathList();
 		Path[] newPathList = new Path[] { newPath };
 
 		// if there is no old playlist set it to the new array - else concat both
 		if (oldPlaylist == null) {
-			this.settings.setPathList(newPathList);
+			setPathList(newPathList);
 		} else {
-			this.settings.setPathList(
+			setPathList(
 					Stream.concat(Arrays.stream(oldPlaylist), Arrays.stream(newPathList)).toArray(Path[]::new));
 		}
 		return true;
-	}
-
-	/**
-	 * Get the accepted file types for music video files
-	 * 
-	 * @return list of accepted file types (String[])
-	 */
-	public String[] getAcceptedFileTypes() {
-		return this.settings.getAcceptedFileTypes();
 	}
 
 	/**
@@ -152,89 +189,12 @@ public final class ProgramDataHandler {
 			}
 			// sort the ArrayList
 			Collections.sort(uniqueFileTypes);
-			this.settings.setAcceptedFileTypes(uniqueFileTypes.toArray(new String[0]));
-
+			
+			this.acceptedFileTypes = uniqueFileTypes.toArray(new String[0]);
 		} else {
 			System.out.println("<< accepted file types was empty!");
 		}
 
-	}
-
-	/**
-	 * Get the current user name of the SFTP server
-	 * 
-	 * @return user name (String)
-	 */
-	public String getUsernameSftp() {
-		return this.settings.getUserNameSftp();
-	}
-
-	/**
-	 * Set user name for SFTP server account
-	 * 
-	 * @param usernameSftp
-	 *            (String | User name)
-	 */
-	public void setUsernameSftp(String usernameSftp) {
-		this.settings.setUserNameSftp(usernameSftp);
-	}
-
-	/**
-	 * Get current IP address of server
-	 * 
-	 * @return ipAddressSftp (String)
-	 */
-	public String getIpAddressSftp() {
-		return this.settings.getIpAddressSftp();
-	}
-
-	/**
-	 * Set IP address of server
-	 * 
-	 * @param ipAddressSftp
-	 *            (String | IP address)
-	 */
-	public void setIpAddressSftp(String ipAddressSftp) {
-		this.settings.setIpAddressSftp(ipAddressSftp);
-	}
-
-	/**
-	 * Get working directory of server
-	 * 
-	 * @return current working directory of server (String)
-	 */
-	public String getWorkingDirectorySftp() {
-		return this.settings.getWorkingDirectorySftp();
-	}
-
-	/**
-	 * Set working directory on server
-	 * 
-	 * @param workingDirectorySftp
-	 *            (String)
-	 */
-	public void setWorkingDirectorySftp(String workingDirectorySftp) {
-		this.settings.setWorkingDirectorySftp(workingDirectorySftp);
-	}
-
-	/**
-	 * Get if activated that settings should be saved without dialog on exit
-	 * 
-	 * @return save on exit (boolean)
-	 */
-	public boolean getAlwaysSaveSettings() {
-		return this.settings.getAlwaysSaveSettings();
-	}
-
-	/**
-	 * Set always save on close settings option
-	 * 
-	 * @param newValue
-	 *            (boolean | Save on exit without dialog)
-	 * @return new current value (boolean)
-	 */
-	public boolean setAlwaysSaveSettings(boolean newValue) {
-		return this.settings.setAlwaysSaveSettings(newValue);
 	}
 
 	/**
@@ -243,7 +203,7 @@ public final class ProgramDataHandler {
 	 * @return ignored files list (File[])
 	 */
 	public File[] getIgnoredFiles() {
-		return this.settings.getIgnoredFilesList();
+		return ignoredFilesList;
 	}
 
 	/**
@@ -280,11 +240,11 @@ public final class ProgramDataHandler {
 			}
 
 			Collections.sort(uniqueIgnoredFiles);
-			this.settings.setIgnoredFilesList(uniqueIgnoredFiles.toArray(new File[0]));
+			this.ignoredFilesList = uniqueIgnoredFiles.toArray(new File[0]);
 
 		} else {
 			System.out.println("<< ignored files list was empty!");
-			this.settings.setIgnoredFilesList(null);
+			this.ignoredFilesList = null;
 		}
 	}
 
@@ -309,16 +269,15 @@ public final class ProgramDataHandler {
 		}
 
 		// get old ignore files list and new element as an array
-		File[] oldIgnoreFileList = this.settings.getIgnoredFilesList();
+		File[] oldIgnoreFileList = this.ignoredFilesList;
 		File[] newIgnoreFileList = new File[] { newFileToIgnore };
 
 		// if there is no old ignore files list set it to the new array - else connect
 		// them
 		if (oldIgnoreFileList == null) {
-			this.settings.setIgnoredFilesList(newIgnoreFileList);
+			this.ignoredFilesList = newIgnoreFileList;
 		} else {
-			this.settings.setIgnoredFilesList(Stream
-					.concat(Arrays.stream(oldIgnoreFileList), Arrays.stream(newIgnoreFileList)).toArray(File[]::new));
+			this.ignoredFilesList = Stream.concat(Arrays.stream(oldIgnoreFileList), Arrays.stream(newIgnoreFileList)).toArray(File[]::new);
 		}
 		return true;
 	}
@@ -363,46 +322,46 @@ public final class ProgramDataHandler {
 
 		try {
 
-			if (this.settings.getPathList() != null) {
+			if (getPathList() != null) {
 				JsonObjectBuilder mainJsonBuilder = Json.createObjectBuilder();
 
 				JsonArrayBuilder pathListArray = Json.createArrayBuilder();
-				for (Path line : this.settings.getPathList()) {
+				for (Path line : getPathList()) {
 					pathListArray.add(line.toString());
 				}
 				mainJsonBuilder.add("path-list", pathListArray);
 
-				if (this.settings.getUserNameSftp() != null && this.settings.getIpAddressSftp() != null) {
+				if (getUserNameSftp() != null && getIpAddressSftp() != null) {
 					JsonObjectBuilder sftpLogin = Json.createObjectBuilder();
-					sftpLogin.add("username", this.settings.getUserNameSftp());
-					sftpLogin.add("ip-address", this.settings.getIpAddressSftp());
-					if (this.settings.getWorkingDirectorySftp() != null) {
-						sftpLogin.add("directory", this.settings.getWorkingDirectorySftp());
+					sftpLogin.add("username", getUserNameSftp());
+					sftpLogin.add("ip-address", getIpAddressSftp());
+					if (getWorkingDirectorySftp() != null) {
+						sftpLogin.add("directory", getWorkingDirectorySftp());
 					}
 					mainJsonBuilder.add("sftp-login", sftpLogin);
 				}
 
-				if (this.settings.getAcceptedFileTypes() != null) {
+				if (getAcceptedFileTypes() != null) {
 					JsonArrayBuilder acceptedFileTypesArray = Json.createArrayBuilder();
-					for (String fileType : this.settings.getAcceptedFileTypes()) {
+					for (String fileType : getAcceptedFileTypes()) {
 						acceptedFileTypesArray.add(fileType);
 					}
 					mainJsonBuilder.add("file-types", acceptedFileTypesArray);
 				}
 
-				if (this.settings.getIgnoredFilesList() != null) {
+				if (getIgnoredFilesList() != null) {
 					JsonArrayBuilder ignoredFileList = Json.createArrayBuilder();
-					for (File ignoredFile : this.settings.getIgnoredFilesList()) {
+					for (File ignoredFile : getIgnoredFilesList()) {
 						ignoredFileList.add(ignoredFile.getAbsolutePath());
 					}
 					mainJsonBuilder.add("ignored-files", ignoredFileList);
 				}
 
-				if (this.settings.getAlwaysSaveSettings() != false) {
+				if (getAlwaysSaveSettings() != false) {
 					mainJsonBuilder.add("always-save", Boolean.TRUE);
 				}
 
-				if (this.settings.getRemoveStartedVideoFromPlayist() != false) {
+				if (getRemoveStartedVideoFromPlayist() != false) {
 					mainJsonBuilder.add("remove-started-video-from-playlist", Boolean.TRUE);
 				}
 
@@ -476,7 +435,7 @@ public final class ProgramDataHandler {
 
 				try {
 					String usernameValue = JsonModule.getValueString(keyValueSftpLogin, "username").toString();
-					newSettingsData.setUsernameSftp(usernameValue);
+					newSettingsData.setUserNameSftp(usernameValue);
 				} catch (Exception e) {
 					System.out.println("No Sftp username");
 				}
@@ -653,12 +612,87 @@ public final class ProgramDataHandler {
 
 	}
 
+	/**
+	 * @return the acceptedFileTypes (String[])
+	 */
+	public String[] getAcceptedFileTypes() {
+		return acceptedFileTypes;
+	}
+
+	/**
+	 * @return the userNameSftp (String)
+	 */
+	public String getUserNameSftp() {
+		return userNameSftp;
+	}
+
+	/**
+	 * @param userNameSftp
+	 *            (String | The user name for the SFTP access to the server)
+	 */
+	public void setUserNameSftp(String userNameSftp) {
+		this.userNameSftp = userNameSftp;
+	}
+
+	/**
+	 * @return the ipAddressSftp (String)
+	 */
+	public String getIpAddressSftp() {
+		return ipAddressSftp;
+	}
+
+	/**
+	 * @param ipAddressSftp
+	 *            (String | Set the ipAddressSftp)
+	 */
+	public void setIpAddressSftp(String ipAddressSftp) {
+		this.ipAddressSftp = ipAddressSftp;
+	}
+
+	/**
+	 * @return the workingDirectorySftp (String)
+	 */
+	public String getWorkingDirectorySftp() {
+		return workingDirectorySftp;
+	}
+
+	/**
+	 * @param workingDirectorySftp
+	 *            (String | Set the servers distributing web directory)
+	 */
+	public void setWorkingDirectorySftp(String workingDirectorySftp) {
+		this.workingDirectorySftp = workingDirectorySftp;
+	}
+
+	/**
+	 * @return the alwaysSaveSettings (boolean)
+	 */
+	public boolean getAlwaysSaveSettings() {
+		return alwaysSaveSettings;
+	}
+
+	/**
+	 * @param alwaysSaveSettings
+	 *            (boolean | Set always save)
+	 * @return
+	 */
+	public boolean setAlwaysSaveSettings(boolean alwaysSaveSettings) {
+		return this.alwaysSaveSettings = alwaysSaveSettings;
+	}
+
+	/**
+	 * @return the ignoredFilesList (File[])
+	 */
+	public File[] getIgnoredFilesList() {
+		return this.ignoredFilesList;
+	}
+
 	public boolean getRemoveStartedVideoFromPlayist() {
-		return this.settings.getRemoveStartedVideoFromPlayist();
+		return this.removeStartedVideoFromPlayist;
 	}
 
 	public boolean setRemoveStartedVideoFromPlayist(boolean newValue) {
-		return this.settings.setRemoveStartedVideoFromPlayist(newValue);
+		return this.removeStartedVideoFromPlayist = newValue;
 	}
 
 }
