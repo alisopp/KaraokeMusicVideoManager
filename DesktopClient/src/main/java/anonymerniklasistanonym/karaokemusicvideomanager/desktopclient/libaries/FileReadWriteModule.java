@@ -232,104 +232,7 @@ public class FileReadWriteModule {
 			return false;
 		}
 	}
-
-	/**
-	 * Deletes a directory
-	 * 
-	 * @param directory
-	 *            (File | name of the directory that should be removed)
-	 * 
-	 * @return directoryCouldBeCreated (Boolean)
-	 */
-	public static boolean deleteDirectory(File directory) {
-
-		if (directory == null) {
-			System.err.println("Directory could not be deleted because of it's null!");
-			return false;
-		}
-
-		System.out.print(">> Delete directory: " + directory.getAbsolutePath());
-
-		if (directory.exists()) {
-
-			try {
-
-				if (directory.delete()) {
-					System.out.println("<< Directory succsessfully removed.");
-					return true;
-
-				} else {
-
-					System.err.println("<< Directory deletion failed!");
-					return false;
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				return false;
-			}
-
-		} else {
-
-			System.err.println("Directory doesn't exist!");
-			return false;
-		}
-	}
-
-	/**
-	 * Deletes a directory and all it's content (only non directories! - depth = 1!)
-	 * 
-	 * @param directory
-	 *            (File | name of the directory that should be removed)
-	 * 
-	 * @return directoryCouldBeCreated (Boolean)
-	 */
-	public static boolean deleteDirectoryWithFiles(File directory) {
-
-		if (directory == null) {
-			System.err.println("Directory could not be deleted because of it's null!");
-			return false;
-		}
-
-		System.out.print(">> Delete directory: " + directory.getAbsolutePath());
-
-		if (directory.exists()) {
-
-			try {
-
-				// collect the files in the directory
-				String[] entries = directory.list();
-
-				if (entries != null) {
-					for (int i = 0; i < entries.length; i++) {
-
-						// and delete them
-						deleteFile(new File(directory.getPath(), entries[i]));
-					}
-				}
-
-				// then delete the directory
-				if (directory.delete()) {
-					System.out.println("<< Directory succsessfully removed.");
-					return true;
-
-				} else {
-					System.err.println("<< Directory deletion failed!");
-					return false;
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				return false;
-			}
-
-		} else {
-
-			System.err.println("Directory doesn't exist!");
-			return false;
-		}
-	}
-
+	
 	/**
 	 * Copy any file to a destination (especially important for the res files)
 	 * 
@@ -386,40 +289,6 @@ public class FileReadWriteModule {
 			System.err.println("<< Rename failed!");
 			return false;
 		}
-	}
-
-	/**
-	 * Returns true if both files are the same and false if not
-	 * 
-	 * @param fileOne
-	 *            (File)
-	 * @param fileTwo
-	 *            (File)
-	 * @return true if they are the same, false if not
-	 * @throws IOException
-	 */
-	public static boolean compareFiles(File fileOne, File fileTwo) throws IOException {
-
-		if (fileOne == null || fileTwo == null) {
-			System.out.println("One of the files or both are null!");
-			return false;
-		}
-
-		if (!fileOne.exists() || !fileTwo.exists()) {
-			System.out.println("One of the files do not exist!");
-			return false;
-		}
-
-		System.out.println(">> Compare " + fileOne.getAbsolutePath() + " to " + fileTwo.getAbsolutePath());
-
-		if (fileOne.getCanonicalPath().equals(fileTwo.getCanonicalPath())) {
-			System.out.println("<< They are the same");
-			return true;
-		} else {
-			System.out.println("<< They are not the same");
-			return false;
-		}
-
 	}
 
 	public static InputStream stringToInputStream(String textFileContent) {

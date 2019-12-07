@@ -70,16 +70,6 @@ public class MusicVideoPlaylistHandler {
 	}
 
 	/**
-	 * Get the votes of a music video playlist entry
-	 * 
-	 * @param index
-	 *            (Integer | Index in playlist)
-	 */
-	public int getVotes(int index) {
-		return this.playlistElements[index].getVotes();
-	}
-
-	/**
 	 * Change the vote number of a playlist entry
 	 * 
 	 * @param vote
@@ -381,29 +371,6 @@ public class MusicVideoPlaylistHandler {
 		Exception e) {
 			return null;
 		}
-	}
-
-	/**
-	 * Load a playlist from a playlist file
-	 * 
-	 * @param file
-	 *            (File | File that contains the playlist data)
-	 * @param musicVideoList
-	 *            (MusicVideo[] | The current music video list)
-	 */
-	public void loadPlaylistData(File file, MusicVideo[] musicVideoList) {
-		if (file == null || file.isDirectory()) {
-			System.err.println("Playlist element could not be loaded because the file doesn't exist!");
-			return;
-		}
-		MusicVideoPlaylistElement element = readPlaylistEntryFile(file, musicVideoList);
-
-		if (element != null) {
-
-			load(element);
-			return;
-		}
-		System.err.println("Playlist element could not be loaded");
 	}
 
 	/**

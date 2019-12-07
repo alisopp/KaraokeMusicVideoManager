@@ -43,26 +43,6 @@ public class ClassResourceReaderModule {
 	}
 
 	/**
-	 * Load a text file into a String and return it
-	 * 
-	 * @param path
-	 *            (String | path to resource file)
-	 * @return content (String[])
-	 */
-	public static String getTextContentinOneString(String path) {
-
-		// open the file with lines
-		String[] contentOfFile = getTextContent(path);
-
-		if (contentOfFile != null) {
-			// if content isn't null convert all lines to one String
-			return Arrays.toString(contentOfFile);
-		}
-
-		return null;
-	}
-
-	/**
 	 * Load a file from the res folder (in build path)
 	 * 
 	 * @param path

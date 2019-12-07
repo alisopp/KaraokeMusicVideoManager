@@ -90,50 +90,6 @@ public class SftpHandler {
 	 * @param serverAddress
 	 *            (IP address of server | String)
 	 * @param serverFilePath
-	 *            (working directory | String)
-	 */
-	public SftpHandler(String userName, String userPassword, String serverAddress, String serverFilePath) {
-		this.userName = userName;
-		this.userPassword = userPassword;
-		this.serverAddress = serverAddress;
-		this.currentWorkingDirectory = serverFilePath;
-		this.session = null;
-		this.channel = null;
-		this.channelSftp = null;
-		this.connectionEstablished = false;
-	}
-
-	/**
-	 * Setup SFTP source without starting a connection
-	 * 
-	 * @param userName
-	 *            (user name | String)
-	 * @param userPassword
-	 *            (password for user name | String)
-	 * @param serverAddress
-	 *            (IP address of server | String)
-	 */
-	public SftpHandler(String userName, String userPassword, String serverAddress) {
-		this.userName = userName;
-		this.userPassword = userPassword;
-		this.serverAddress = serverAddress;
-		this.currentWorkingDirectory = null;
-		this.session = null;
-		this.channel = null;
-		this.channelSftp = null;
-		this.connectionEstablished = false;
-	}
-
-	/**
-	 * Setup SFTP source without starting a connection
-	 * 
-	 * @param userName
-	 *            (user name | String)
-	 * @param userPassword
-	 *            (password for user name | String)
-	 * @param serverAddress
-	 *            (IP address of server | String)
-	 * @param serverFilePath
 	 *            (Directory of index.html file | String)
 	 */
 	public void connect(String userName, String userPassword, String serverAddress, String serverFilePath) {
@@ -373,59 +329,6 @@ public class SftpHandler {
 	}
 
 	/**
-	 * Retrieves remote file and writes it to a local file
-	 * 
-	 * @param localFile
-	 *            (String | path to local new file)
-	 * @param remoteFile
-	 *            (String | path to remote to copy file)
-	 * @return everythingWorked (Boolean)
-	 */
-	public boolean retrieveFile(String localFile, String remoteFile) {
-
-		if (!this.connectionEstablished) {
-			System.err.println("You need first to establish a connection!");
-			return false;
-		}
-
-		if ((localFile == null || remoteFile == null) || (localFile.isEmpty() || remoteFile.isEmpty())) {
-			System.err.println("File could not be written because of it's null or empty!");
-			return false;
-		}
-
-		System.out.print(">> Retrieve file " + remoteFile + " to " + localFile);
-
-		try {
-
-			byte[] buffer = new byte[1024];
-			BufferedInputStream bis = new BufferedInputStream(channelSftp.get(remoteFile));
-			File newFile = new File(localFile);
-			OutputStream os = new FileOutputStream(newFile);
-			BufferedOutputStream bos = new BufferedOutputStream(os);
-			int readCount;
-			while ((readCount = bis.read(buffer)) > 0) {
-				bos.write(buffer, 0, readCount);
-			}
-			bis.close();
-			bos.close();
-
-			System.out.println(" << File succssessfully retrieved.");
-			return true;
-
-		} catch (SftpException ex) {
-			ex.printStackTrace();
-			System.err.println(" << SFTP connection error!");
-			return false;
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			System.err.println(" << Unknown error!");
-			return false;
-		}
-
-	}
-
-	/**
 	 * Removes a remote file
 	 * 
 	 * @param pathOfRemoteFile
@@ -450,46 +353,6 @@ public class SftpHandler {
 
 			channelSftp.rm(pathOfRemoteFile);
 			System.out.println(" << File succssessfully removed.");
-			return true;
-
-		} catch (SftpException ex) {
-			ex.printStackTrace();
-			System.err.println(" << SFTP connection error!");
-			return false;
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			System.err.println(" << Unknown error!");
-			return false;
-		}
-
-	}
-
-	/**
-	 * Removes an empty remote directory
-	 * 
-	 * @param pathOfRemoteDirectory
-	 *            (String)
-	 * @return deletionSuccsessfull (Boolean)
-	 */
-	public boolean removeEmptyDirectory(String pathOfRemoteDirectory) {
-
-		if (!this.connectionEstablished) {
-			System.err.println("You need first to establish a connection!");
-			return false;
-		}
-
-		if ((pathOfRemoteDirectory == null || pathOfRemoteDirectory.isEmpty())) {
-			System.err.println("Directory could not be written because of it's null or empty!");
-			return false;
-		}
-
-		System.out.print(">> Remove directory " + pathOfRemoteDirectory);
-
-		try {
-
-			this.channelSftp.rmdir(pathOfRemoteDirectory);
-			System.out.println(" << Directory succssessfully removed.");
 			return true;
 
 		} catch (SftpException ex) {
@@ -614,24 +477,6 @@ public class SftpHandler {
 			return false;
 		}
 
-	}
-
-	/**
-	 * Transfer files with paths to working directory
-	 * 
-	 * @param pathLocalFile
-	 */
-	public void transferFile(Path pathLocalFile) {
-		transferFile(pathLocalFile.toString(), "");
-	}
-
-	/**
-	 * Transfer files with strings to working directory
-	 * 
-	 * @param pathLocalFile
-	 */
-	public void transferFile(String pathLocalFile) {
-		transferFile(pathLocalFile.toString(), "");
 	}
 
 	/**

@@ -197,23 +197,6 @@ public class DialogHandler {
 	}
 
 	/**
-	 * Error alert with expandable stack trace
-	 * 
-	 * @param title
-	 *            (String | Title of alert)
-	 * @param header
-	 *            (String | Header text of alert)
-	 * @param text
-	 *            (String | Text of alert)
-	 * @param expandableContent
-	 *            (String | Expandable content like a stack trace)
-	 */
-	public static void error(String title, String header, String text, String expandableContent) {
-		DialogModule.alertWindow(title, header, text, expandableContent, AlertType.ERROR, WindowModule.getWindowIcons(),
-				StageStyle.DECORATED);
-	}
-
-	/**
 	 * Simple information alert
 	 * 
 	 * @param title

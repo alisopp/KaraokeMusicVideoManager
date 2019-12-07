@@ -32,13 +32,6 @@ public final class ProgramDataHandler {
 	private ProgramData settings;
 
 	/**
-	 * Constructor
-	 */
-	public ProgramDataHandler(String[] acceptedFileTypes) {
-		this.settings = new ProgramData(acceptedFileTypes);
-	}
-
-	/**
 	 * Constructor [empty]
 	 */
 	public ProgramDataHandler() {
@@ -328,13 +321,6 @@ public final class ProgramDataHandler {
 					.concat(Arrays.stream(oldIgnoreFileList), Arrays.stream(newIgnoreFileList)).toArray(File[]::new));
 		}
 		return true;
-	}
-
-	/**
-	 * Reset the ignored files list
-	 */
-	public void resetIgnoredFilesList() {
-		this.settings.setIgnoredFilesList(null);
 	}
 
 	/**

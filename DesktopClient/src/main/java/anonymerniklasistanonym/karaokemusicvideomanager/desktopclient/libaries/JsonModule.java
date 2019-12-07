@@ -35,25 +35,7 @@ public class JsonModule {
 			return null;
 		}
 	}
-
-	/**
-	 * Convert a JSON Object data to a string
-	 * 
-	 * @param jsonObject
-	 *            (JsonObject)
-	 * @return jsonDataString (String)
-	 */
-	public static String toString(JsonObject jsonObject) {
-
-		try {
-			return jsonObject.toString();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
+	
 	/**
 	 * Convert a JSON Object Builder to a string
 	 * 

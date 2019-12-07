@@ -151,15 +151,6 @@ public class MusicVideoHandler {
 	}
 
 	/**
-	 * Get the current settings data
-	 * 
-	 * @return settingsData (ProgramData)
-	 */
-	public ProgramDataHandler getSettingsData() {
-		return programDataHandler;
-	}
-
-	/**
 	 * Set the current settings (ProgramData)
 	 * 
 	 * @param settingsData
@@ -344,110 +335,6 @@ public class MusicVideoHandler {
 
 		// the rest does the settings class with the absolute path of the given path
 		return this.programDataHandler.addFileToIgnoredFilesList(directoryPath.toAbsolutePath().toFile());
-	}
-
-	/**
-	 * Print the music video list to the console in a table
-	 */
-	public void printMusicVideoList() {
-
-		System.out.println(">> Print music video list:");
-
-		if (this.musicVideoList == null) {
-			System.err.println("<< Music video list doesn't exist!");
-			return;
-		}
-
-		if (this.musicVideoList.length == 0) {
-			System.err.println("<< Music video list is empty!");
-			return;
-		}
-
-		MusicVideo[] musicVideoList = this.musicVideoList;
-
-		int numberOfLinesNumber = String.valueOf(musicVideoList.length).length();
-		int numberOfLinesTitle = 22;
-		int numberOfLinesArtist = 15;
-		int numberOfLinesPath = 80;
-
-		String linesNumber = String.join("", Collections.nCopies(numberOfLinesNumber + 2, "-"));
-		String linesTitle = String.join("", Collections.nCopies(numberOfLinesTitle + 2, "-"));
-		String linesArtist = String.join("", Collections.nCopies(numberOfLinesArtist + 2, "-"));
-		String linesPath = String.join("", Collections.nCopies(numberOfLinesPath + 2, "-"));
-
-		String titleForm = String.join(".", Collections.nCopies(2, String.valueOf(numberOfLinesTitle)));
-		String artistForm = String.join(".", Collections.nCopies(2, String.valueOf(numberOfLinesArtist)));
-		String pathForm = String.join(".", Collections.nCopies(2, String.valueOf(numberOfLinesPath)));
-
-		String tableDataFormat = "| %-" + numberOfLinesNumber + "d | %-" + titleForm + "s | %-" + artistForm + "s | %-"
-				+ pathForm + "s | %n";
-		String tableInfoFormat = "| %-" + numberOfLinesNumber + "s | %-" + titleForm + "s | %-" + artistForm + "s | %-"
-				+ pathForm + "s | %n";
-
-		String tableInfo1 = ("+" + linesNumber + "+" + linesTitle + "+" + linesArtist + "+" + linesPath + "+%n");
-
-		int numberShowInfo = 100, numberShowInfoCount = 0;
-		for (int i = 0; i < musicVideoList.length; i++) {
-
-			if (i == numberShowInfoCount) {
-				System.out.format(tableInfo1);
-				System.out.format(tableInfoFormat, "#", "Title", "Artist", "Path");
-				System.out.format(tableInfo1);
-				numberShowInfoCount += numberShowInfo;
-			}
-
-			System.out.format(tableDataFormat, i + 1, musicVideoList[i].getTitle(), musicVideoList[i].getArtist(),
-					musicVideoList[i].getPath());
-		}
-		System.out.format(tableInfo1);
-
-	}
-
-	/**
-	 * Print the wrong formatted music video files to the console in a table
-	 */
-	public void printWrongFormattedFiles() {
-
-		System.out.println(">> Print wrong formatted files list:");
-
-		Path[] wrongFormattedFiles = getWrongFormattedFiles();
-
-		if (wrongFormattedFiles == null) {
-			System.err.println("<< There are no files!");
-			return;
-		}
-
-		if (wrongFormattedFiles.length == 0) {
-			System.err.println("<< There were no wrong formatted files found!");
-			return;
-		}
-
-		int numberOfLinesNumber = String.valueOf(wrongFormattedFiles.length).length();
-		int numberOfLinesPath = 80;
-
-		String linesNumber = String.join("", Collections.nCopies(numberOfLinesNumber + 2, "-"));
-		String linesPath = String.join("", Collections.nCopies(numberOfLinesPath + 2, "-"));
-		String pathForm = String.join(".", Collections.nCopies(2, String.valueOf(numberOfLinesPath)));
-
-		String tableDataFormat = "| %-" + numberOfLinesNumber + "d | %-" + pathForm + "s | %n";
-		String tableInfoFormat = "| %-" + numberOfLinesNumber + "s | %-" + pathForm + "s | %n";
-
-		String tableInfo1 = ("+" + linesNumber + "+" + linesPath + "+%n");
-
-		int numberShowInfo = 100, numberShowInfoCount = 0;
-		for (int i = 0; i < wrongFormattedFiles.length; i++) {
-
-			if (i == numberShowInfoCount) {
-				System.out.format(tableInfo1);
-				System.out.format(tableInfoFormat, "#", "Wrong formatted files (Paths)");
-				System.out.format(tableInfo1);
-				numberShowInfoCount += numberShowInfo;
-			}
-
-			System.out.format(tableDataFormat, i + 1, wrongFormattedFiles[i]);
-		}
-		System.out.format(tableInfo1);
-
 	}
 
 	/**
@@ -1004,18 +891,6 @@ public class MusicVideoHandler {
 	 *            (File | File that contains settingsData in JSON format)
 	 * @return theyAreTheSame (Boolean)
 	 */
-	public boolean compareSettings(File settingsFilePathNew) {
-		return this.programDataHandler.compareSettingsFileToCurrent(settingsFilePathNew);
-	}
-
-	/**
-	 * Returns FALSE if the new settings data from the file is different to the
-	 * current settings data. If they aren't the same TRUE will be returned.
-	 * 
-	 * @param settingsFilePathNew
-	 *            (File | File that contains settingsData in JSON format)
-	 * @return theyAreTheSame (Boolean)
-	 */
 	public boolean compareSettings() {
 
 		if (windowsSettingsFileExists()) {
@@ -1319,21 +1194,6 @@ public class MusicVideoHandler {
 			}
 		}
 
-	}
-
-	/**
-	 * Upload a edited playlist entry
-	 * 
-	 * @param element
-	 *            (MusicVideoPlaylistElement)
-	 */
-	public void uploadEditedPlaylistEntry(MusicVideoPlaylistElement element) {
-
-		// remove the old playlist entry
-		deletePlaylistEntrySftp(element);
-
-		// then upload the edited playlist entry
-		uploadPlaylistEntry(element);
 	}
 
 	/**

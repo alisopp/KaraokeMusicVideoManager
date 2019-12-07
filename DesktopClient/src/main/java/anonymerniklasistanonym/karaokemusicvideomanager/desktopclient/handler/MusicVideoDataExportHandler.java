@@ -44,29 +44,6 @@ public class MusicVideoDataExportHandler {
 	}
 
 	/**
-	 * Generate a HTML table string (for a different use than this program)
-	 * 
-	 * @return table (String)
-	 */
-	public static String generateHtmlTable(Object[][] data, String[] columnNames, String tableClass, String rowClass) {
-
-		StringBuilder sb = new StringBuilder("<table" + tableClass + ">");
-
-		sb.append("<thead><tr>");
-
-		for (int a = 0; a < columnNames.length; a++) {
-			sb.append("<th>" + columnNames[a] + "</th>");
-		}
-		sb.append("</tr></thead><tbody>");
-
-		sb.append(createHtmlTableRows(data, rowClass, false));
-
-		sb.append("</tbody></table>");
-
-		return sb.toString();
-	}
-
-	/**
 	 * Main method to create the html table
 	 * 
 	 * @param data
