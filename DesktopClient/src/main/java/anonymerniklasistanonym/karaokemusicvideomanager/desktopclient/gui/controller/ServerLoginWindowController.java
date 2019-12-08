@@ -87,9 +87,9 @@ public class ServerLoginWindowController {
 		this.serverStage = serverStage;
 
 		// get the currently available server data informations from the settings
-		final String address = this.mainClass.getMusicVideohandler().getSftpIpAddress();
-		final String directory = this.mainClass.getMusicVideohandler().getSftpDirectory();
-		final String username = this.mainClass.getMusicVideohandler().getSftpUsername();
+		final String address = this.mainClass.getProgramDataHandler().getIpAddressSftp();
+		final String directory = this.mainClass.getProgramDataHandler().getWorkingDirectorySftp();
+		final String username = this.mainClass.getProgramDataHandler().getUserNameSftp();
 
 		// check if any of them are null and if not set them as text to their specific
 		// text field
@@ -138,7 +138,7 @@ public class ServerLoginWindowController {
 				this.serverIpAddress.getText(), this.workingDirectory.getText())) {
 
 			// if everything worked (the login) save all login information to the settings
-			this.mainClass.getMusicVideohandler().saveSftpLogin(this.serverIpAddress.getText(),
+			this.mainClass.getProgramDataHandler().saveSftpLogin(this.serverIpAddress.getText(),
 					this.workingDirectory.getText(), this.userName.getText());
 
 			// then try to retrieve a existing playlist

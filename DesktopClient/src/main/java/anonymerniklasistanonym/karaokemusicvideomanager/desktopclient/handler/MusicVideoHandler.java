@@ -54,21 +54,6 @@ public class MusicVideoHandler {
 	private MusicVideo[] musicVideoList;
 
 	/**
-	 * The default file for the settings file
-	 */
-	private final File settingsFile;
-
-	/**
-	 * The default directory for the settings file when installed on windows
-	 */
-	private final File windowsSettingsFileDirectory;
-
-	/**
-	 * The default file for the settings file when installed on windows
-	 */
-	private final File windowsSettingsFile;
-
-	/**
 	 * The default name for the servers file to save the IP addresses
 	 */
 	private final String ipAddressFileName;
@@ -98,15 +83,11 @@ public class MusicVideoHandler {
 	/**
 	 * Constructor that creates an empty/default program data object
 	 */
-	public MusicVideoHandler() {
+	public MusicVideoHandler(ProgramDataHandler dataHandler) {
 
 		System.out.println(">> MusicVideoHandler constructor");
 
-		this.programDataHandler = new ProgramDataHandler();
-		this.settingsFile = new File("settings.json");
-		this.windowsSettingsFileDirectory = new File(System.getProperty("user.home") + "/KaraokeMusicVideoManager");
-		this.windowsSettingsFile = new File(
-				System.getProperty("user.home") + "/KaraokeMusicVideoManager/" + this.settingsFile);
+		this.programDataHandler = dataHandler;
 		this.columnNames = new String[] { "#", Internationalization.translate("Artist"),
 				Internationalization.translate("Title") };
 		this.playlistHandler = new MusicVideoPlaylistHandler();
@@ -151,190 +132,12 @@ public class MusicVideoHandler {
 	}
 
 	/**
-	 * Set the current settings (ProgramData)
-	 * 
-	 * @param settingsData
-	 *            (ProgramData)
-	 * @return true if new settings were applied
-	 */
-	public boolean setSettingsData(ProgramDataHandler settingsData) {
-
-		if (settingsData != null) {
-			this.programDataHandler = settingsData;
-			System.out.println(">> New settings applied");
-			return true;
-		} else {
-			System.out.println(">> New settings were not applied - Settings were null");
-			return false;
-		}
-	}
-
-	/**
 	 * Get the current music video list
 	 * 
 	 * @return musicVideoList (MusicVideo[])
 	 */
 	public MusicVideo[] getMusicVideoList() {
 		return musicVideoList;
-	}
-
-	/**
-	 * Get if a settings file exists or not
-	 */
-	public boolean settingsFileExist() {
-		return this.settingsFile.exists();
-	}
-
-	/**
-	 * Get if a settings file exists in the users home directory if he installed it
-	 * on windows
-	 */
-	public boolean windowsSettingsFileExists() {
-
-		// check if the program is installed on Windows
-		if (isInstalledOnWindows()) {
-
-			// and then check if the windows settings file exists
-			if (this.windowsSettingsFile.exists()) {
-				return true;
-			}
-
-		}
-		return false;
-	}
-
-	/**
-	 * Get if a settings file exists in the users home directory if he installed it
-	 * on windows
-	 */
-	public boolean isInstalledOnWindows() {
-
-		// check if the system is windows
-		if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-
-			// check if this is executed in the install directory
-			if (Paths.get(".").toAbsolutePath().toString().contains("(x86)")
-					|| Paths.get(".").toAbsolutePath().toString().contains("(x64)")) {
-
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Load settings from "settings.json" file if there is one
-	 */
-	public void loadSettingsFromFile() {
-
-		System.out.println(">> Search for a settings file (\"" + settingsFile.toString() + "\")");
-
-		if (settingsFileExist()) {
-
-			System.out.println("<< Settings file found");
-			loadSettings(this.settingsFile);
-			return;
-
-		} else if (windowsSettingsFileExists()) {
-
-			System.out.println("<< Windows settings file found");
-
-			loadSettings(this.windowsSettingsFile);
-			return;
-
-		}
-		System.out.println("<< Settings file not found");
-	}
-
-	/**
-	 * Save settings in the default settings file
-	 */
-	public boolean saveSettingsToFile() {
-
-		if (isInstalledOnWindows()) {
-			FileReadWriteModule.createDirectory(this.windowsSettingsFileDirectory);
-			return saveSettings(this.windowsSettingsFile);
-		} else {
-			return saveSettings(this.settingsFile);
-		}
-
-	}
-
-	/**
-	 * Add a directory path to the pathList
-	 * 
-	 * @param directoryPath
-	 *            (Path)
-	 * @return true if everything worked else false (Boolean)
-	 */
-	public boolean addPathToPathList(Path directoryPath) {
-
-		// check if there is a settings file
-		if (this.programDataHandler == null) {
-			System.err.println("No settings found!");
-			return false;
-		}
-
-		// check if the path is not null
-		if (directoryPath == null) {
-			System.err.println("Path can't be null!");
-			return false;
-		}
-
-		System.out.print(">> Add path " + directoryPath + " to path list.");
-
-		// check if the path exists
-		if (!directoryPath.toFile().exists()) {
-			System.err.println(" << Path doesn't exist!");
-			return false;
-		}
-
-		// check if the path is a directory
-		if (directoryPath.toFile().isFile()) {
-			System.err.println(" << Path is no directory!");
-			return false;
-		}
-
-		// the rest does the settings class with the absolute path of the given path
-		return this.programDataHandler.addPathToPathList(directoryPath.toAbsolutePath().normalize());
-
-	}
-
-	/**
-	 * Add a path to the ignored files list
-	 * 
-	 * @param directoryPath
-	 *            (Path)
-	 * @return true if everything worked else false (Boolean)
-	 */
-	public boolean addIgnoredFileToIgnoredFilesList(Path directoryPath) {
-
-		if (programDataHandler == null) {
-			System.err.println("No settings found!");
-			return false;
-		}
-
-		if (directoryPath == null) {
-			System.err.println("Path can't be null!");
-			return false;
-		}
-
-		System.out.print(">> Add path " + directoryPath.toAbsolutePath() + " to ignored files list.");
-
-		// check if the path exists
-		if (!directoryPath.toFile().exists()) {
-			System.err.println(" << Path doesn't exist!");
-			return false;
-		}
-
-		// check if the path is a directory
-		if (directoryPath.toFile().isDirectory()) {
-			System.err.println(" << Path is no file!");
-			return false;
-		}
-
-		// the rest does the settings class with the absolute path of the given path
-		return this.programDataHandler.addFileToIgnoredFilesList(directoryPath.toAbsolutePath().toFile());
 	}
 
 	/**
@@ -349,7 +152,7 @@ public class MusicVideoHandler {
 
 		System.out.println(">> Finding MusicVideo files");
 
-		final Path[] filesInDirectory = scanDirectoryForFiles(path);
+		final Path[] filesInDirectory = this.programDataHandler.scanDirectoryForFiles(path);
 
 		for (int i = 0; i < filesInDirectory.length; i++) {
 
@@ -362,69 +165,6 @@ public class MusicVideoHandler {
 
 		// return ArrayList with music video files
 		return musicvideosinFolder;
-
-	}
-
-	/**
-	 * Scan a directory for files (paths)
-	 * 
-	 * @param path
-	 *            (Path | Path of directory)
-	 * @return list of files in this directory or null (ArrayList<Path>)
-	 */
-	private Path[] scanDirectoryForFiles(Path path) {
-
-		// check if path is a real existing directory
-		if (path == null || path.toFile().isFile()) {
-			System.err.println("Path is null or no directory!");
-			return null;
-		}
-
-		// get all files in the directory by saving it in this list
-		final ArrayList<Path> filesInDirectory = new ArrayList<Path>();
-
-		// and collecting it from this stream
-		try (final DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
-
-			System.out.print(">> Scan " + path + " for files");
-			for (Path child : ds) {
-				// if the file is a "regular" file -> no directory/link/etc.
-				if (Files.isRegularFile(child)) {
-					filesInDirectory.add(child);
-				}
-			}
-			System.out.println(" << Scan finished.");
-
-			return filesInDirectory.toArray(new Path[0]);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println(" << Problem while searching for Files!");
-			return null;
-		}
-	}
-
-	/**
-	 * Scan a directory after specific video files and map all music videos
-	 * 
-	 * @param path
-	 *            (Path | path of the directory)
-	 */
-	public ArrayList<Path> scanDirectoryForWrongFiles(Path path) {
-
-		final ArrayList<Path> wrongFormattedFiles = new ArrayList<Path>();
-
-		System.out.println(">> Finding wrong formatted files");
-
-		final Path[] filesInDirectory = scanDirectoryForFiles(path);
-
-		for (int i = 0; i < filesInDirectory.length; i++) {
-			if (isFileMusicVideoButWrong(filesInDirectory[i])) {
-				wrongFormattedFiles.add(filesInDirectory[i]);
-			}
-		}
-
-		// return ArrayList with wrong files
-		return wrongFormattedFiles;
 
 	}
 
@@ -462,38 +202,6 @@ public class MusicVideoHandler {
 
 		// and return it
 		return this.musicVideoList;
-	}
-
-	/**
-	 * Rescan and get all wrong formatted files
-	 * 
-	 * @return
-	 */
-	public Path[] getWrongFormattedFiles() {
-
-		// check if there even is a path list
-		if (this.programDataHandler.getPathList() == null) {
-			System.err.println("There are no paths!");
-			return null;
-		}
-
-		final ArrayList<Path> newMusicVideoList = new ArrayList<Path>();
-
-		final Path[] filesInDirectory = this.programDataHandler.getPathList();
-
-		for (int i = 0; i < filesInDirectory.length; i++) {
-			newMusicVideoList.addAll(scanDirectoryForWrongFiles(filesInDirectory[i]));
-		}
-
-		// convert ArrayList to a normal Array
-		final Path[] newList = newMusicVideoList.toArray(new Path[0]);
-
-		// sort all paths
-		Arrays.sort(newList);
-
-		// return sorted array with all paths to wrong files
-		return newList;
-
 	}
 
 	/**
@@ -593,58 +301,6 @@ public class MusicVideoHandler {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Check if a file is not correct formatted and so *no* music video file
-	 * 
-	 * @param filePath
-	 *            (Path | Path of file)
-	 * @return true if it is not a music video file (boolean)
-	 */
-	private boolean isFileMusicVideoButWrong(Path filePath) {
-
-		if (this.programDataHandler.getIgnoredFiles() != null) {
-			final File musicVideoFile = filePath.toFile();
-			for (File ignoredFilePath : this.programDataHandler.getIgnoredFiles()) {
-				try {
-					if (ignoredFilePath.getCanonicalPath().equals(musicVideoFile.getCanonicalPath())) {
-						System.err.println("File is a ignored File! (" + filePath + ")");
-						return false;
-					}
-				} catch (IOException e) {
-					System.err.println("Error");
-					e.printStackTrace();
-				}
-			}
-		}
-
-		if (filePath != null) {
-
-			final Path pathOfFile = filePath.getFileName();
-
-			if (pathOfFile != null) {
-
-				final String pathOfFileString = pathOfFile.toString();
-
-				final int lastIndexOfPoint = pathOfFileString.lastIndexOf('.');
-				final boolean containsArtistAndTitle = pathOfFileString.contains(" - ");
-
-				if (lastIndexOfPoint > 0) {
-					final String fileType = pathOfFileString.substring(lastIndexOfPoint + 1);
-
-					for (int i = 0; i < this.programDataHandler.getAcceptedFileTypes().length; i++) {
-						if (this.programDataHandler.getAcceptedFileTypes()[i].equalsIgnoreCase(fileType)) {
-							if (!containsArtistAndTitle) {
-								return true;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return false;
 	}
 
 	/**
@@ -862,124 +518,12 @@ public class MusicVideoHandler {
 	}
 
 	/**
-	 * Load the current Settings from a file and set them as new settings
-	 * 
-	 * @param settingsFilePath
-	 *            (File | File with the settingsData)
-	 * @return saveOperationSuccsessful (Boolean)
-	 */
-	public boolean loadSettings(File settingsFilePath) {
-		return setSettingsData(this.programDataHandler.readSettings(settingsFilePath));
-	}
-
-	/**
-	 * Save the current Settings to a file
-	 * 
-	 * @param settingsFilePath
-	 *            (File | File for the settingsData)
-	 * @return saveOperationSuccsessful (Boolean)
-	 */
-	public boolean saveSettings(File settingsFilePath) {
-		return this.programDataHandler.writeSettings(settingsFilePath);
-	}
-
-	/**
-	 * Returns FALSE if the new settings data from the file is different to the
-	 * current settings data. If they aren't the same TRUE will be returned.
-	 * 
-	 * @param settingsFilePathNew
-	 *            (File | File that contains settingsData in JSON format)
-	 * @return theyAreTheSame (Boolean)
-	 */
-	public boolean compareSettings() {
-
-		if (windowsSettingsFileExists()) {
-			return this.programDataHandler.compareSettingsFileToCurrent(this.windowsSettingsFile);
-		} else {
-			return this.programDataHandler.compareSettingsFileToCurrent(this.settingsFile);
-		}
-
-	}
-
-	/**
-	 * Set always save option
-	 * 
-	 * @param newValue
-	 *            (boolean)
-	 * @return new value (boolean)
-	 */
-	public boolean setAlwaysSave(boolean newValue) {
-		return this.programDataHandler.setAlwaysSaveSettings(newValue);
-	}
-
-	/**
-	 * Get always save option
-	 * 
-	 * @return value (boolean)
-	 */
-	public boolean getAlwaysSave() {
-		return this.programDataHandler.getAlwaysSaveSettings();
-	}
-
-	/**
-	 * Get the current path list
-	 * 
-	 * @return path list (Path[])
-	 */
-	public Path[] getPathList() {
-		return this.programDataHandler.getPathList();
-	}
-
-	/**
-	 * Remove a path from the path list
-	 * 
-	 * @param filePathToRemove
-	 */
-	public void removeFromPathList(Path filePathToRemove) {
-
-		// try to remove the path
-		if (this.programDataHandler.removeFromPathList(filePathToRemove)) {
-
-			// update the music video list if path list now different
-			updateMusicVideoList();
-		}
-
-	}
-
-	/**
 	 * Reset everything
 	 */
 	public void reset() {
-		this.programDataHandler = new ProgramDataHandler();
 		this.playlistHandler = new MusicVideoPlaylistHandler();
 		this.sftpController = new SftpHandler();
 		updateMusicVideoList();
-	}
-
-	/**
-	 * Get the ignored files in a list
-	 * 
-	 * @return ignored files list
-	 */
-	public File[] getIgnoredFiles() {
-		return this.programDataHandler.getIgnoredFiles();
-	}
-
-	/**
-	 * Remove a file from the ignored Files list
-	 * 
-	 * @param selectedFile
-	 *            (Path)
-	 */
-	public void removeFromIgnoredFilesList(Path selectedFile) {
-
-		// try to remove the file
-		if (this.programDataHandler.removeFromIgnoredFilesList(selectedFile)) {
-
-			// update the music video list if the new ignored files list is different
-			updateMusicVideoList();
-		}
-
 	}
 
 	/**
@@ -987,6 +531,10 @@ public class MusicVideoHandler {
 	 */
 	public MusicVideoPlaylistHandler getPlaylistHandler() {
 		return this.playlistHandler;
+	}
+	
+	public void setProgramDataHandler(ProgramDataHandler dataHandler) {
+		this.programDataHandler = dataHandler;
 	}
 
 	/**
@@ -1119,24 +667,6 @@ public class MusicVideoHandler {
 		}
 	}
 
-	public void saveSftpLogin(String ipAddressSftp, String workingDirectorySftp, String usernameSftp) {
-		this.programDataHandler.setIpAddressSftp(ipAddressSftp);
-		this.programDataHandler.setUserNameSftp(usernameSftp);
-		this.programDataHandler.setWorkingDirectorySftp(workingDirectorySftp);
-	}
-
-	public String getSftpIpAddress() {
-		return this.programDataHandler.getIpAddressSftp();
-	}
-
-	public String getSftpUsername() {
-		return this.programDataHandler.getUserNameSftp();
-	}
-
-	public String getSftpDirectory() {
-		return this.programDataHandler.getWorkingDirectorySftp();
-	}
-
 	/**
 	 * Upload a playlist entry to SFTP server
 	 * 
@@ -1221,7 +751,7 @@ public class MusicVideoHandler {
 		if (this.sftpController != null && this.sftpController.isConnectionEstablished()) {
 
 			// change the directory to the one with all the playlist JSON files
-			this.sftpController.changeDirectory(this.getSftpDirectory());
+			this.sftpController.changeDirectory(this.programDataHandler.getWorkingDirectorySftp());
 			this.sftpController.changeDirectory(this.phpDirectoryName);
 
 			// get all JSON files and remove the ones that are playlist files
@@ -1253,7 +783,6 @@ public class MusicVideoHandler {
 	 */
 	public boolean loadPlaylist(File file) {
 		return loadPlaylistString(FileReadWriteModule.readTextFile(file)[0]);
-
 	}
 
 	private boolean loadPlaylistString(String stringWithPlaylistData) {
@@ -1369,29 +898,12 @@ public class MusicVideoHandler {
 		return null;
 	}
 
-	/**
-	 * Remove all ignored files from the ignored files list
-	 */
-	public void clearIgnoredFilesList() {
-
-		// if the list is not already empty
-		if (this.programDataHandler.getIgnoredFiles() != null) {
-
-			// clear the ignored files list
-			this.programDataHandler.setIgnoredFiles(null);
-
-			updateMusicVideoList();
-		}
-	}
-
 	public void resetSftp() {
 		if (sftpConnectionEstablished()) {
 			this.sftpController.disconnectSFTP();
 		}
-		this.programDataHandler.setIpAddressSftp(null);
-		this.programDataHandler.setUserNameSftp(null);
-		this.programDataHandler.setWorkingDirectorySftp(null);
-
+		
+		this.programDataHandler.resetSftpSettings();
 	}
 
 	/**
@@ -1513,7 +1025,6 @@ public class MusicVideoHandler {
 
 			}
 		}
-
 	}
 
 	public void setVotes(int index, int voteNumber) {
@@ -1528,13 +1039,4 @@ public class MusicVideoHandler {
 			uploadPlaylistEntry(editedPlaylistEntry);
 		}
 	}
-
-	public boolean getPlaylistRemoveStartedVideo() {
-		return this.programDataHandler.getRemoveStartedVideoFromPlayist();
-	}
-
-	public boolean setPlaylistRemoveStartedVideo(boolean newValue) {
-		return this.programDataHandler.setRemoveStartedVideoFromPlayist(newValue);
-	}
-
 }

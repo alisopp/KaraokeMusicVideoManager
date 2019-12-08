@@ -32,7 +32,7 @@ public class DialogHandler {
 	 *            (WindowEvent - needed to let the window alive if 'Cancel' get's
 	 *            pressed)
 	 */
-	public static void mainStageClose(WindowEvent mainWindowEvent, MusicVideoHandler saveTheSettings) {
+	public static void mainStageClose(WindowEvent mainWindowEvent, MusicVideoHandler musicVideoHandler, ProgramDataHandler dataHandler) {
 
 		// create a JavaFX Alert pop-up window
 		Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -65,17 +65,17 @@ public class DialogHandler {
 			// quit the program and do also:
 			if (result == ButtonType.YES) {
 				// save changes in file
-				saveTheSettings.saveSettingsToFile();
+				dataHandler.saveSettingsToFile();
 
 			} else if (result == buttonAlways) {
 				// add to config that always the changes should be saved on exit
 				// save changes in file
-				saveTheSettings.setAlwaysSave(true);
-				saveTheSettings.saveSettingsToFile();
+				dataHandler.setAlwaysSaveSettings(true);
+				dataHandler.saveSettingsToFile();
 			}
 
 			// disconnect from server if connected
-			saveTheSettings.sftpDisconnect();
+			musicVideoHandler.sftpDisconnect();
 
 			// close the program without exceptions else
 			Platform.exit();

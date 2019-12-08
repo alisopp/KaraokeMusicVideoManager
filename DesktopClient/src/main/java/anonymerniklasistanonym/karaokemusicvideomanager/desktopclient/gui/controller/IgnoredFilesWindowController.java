@@ -232,7 +232,7 @@ public class IgnoredFilesWindowController {
 	private void refreshIgnoredFileTable() {
 
 		// get the current wrong formatted files list
-		final File[] ignoredFiles = this.mainClass.getMusicVideohandler().getIgnoredFiles();
+		final File[] ignoredFiles = this.mainClass.getProgramDataHandler().getIgnoredFiles();
 
 		// clear the whole table
 		this.wrongFormattedFilesTableData.clear();
@@ -339,10 +339,15 @@ public class IgnoredFilesWindowController {
 					if (FileReadWriteModule.rename(selectedFile, newFile)) {
 
 						// then remove the file from the ignored files list
-						this.mainClass.getMusicVideohandler().removeFromIgnoredFilesList(selectedFile.toPath());
+						boolean removeSuccessful = this.mainClass.getProgramDataHandler()
+								.removeFromIgnoredFilesList(selectedFile.toPath());
+						
+						if (removeSuccessful) {
+							this.mainClass.getMusicVideohandler().updateMusicVideoList();
+						}
 
 						// and add the renamed file to the ignored files list
-						this.mainClass.getMusicVideohandler().addIgnoredFileToIgnoredFilesList(newFile.toPath());
+						this.mainClass.getProgramDataHandler().addFileToIgnoredFilesList(newFile.toPath());
 
 						// and last update the table
 						updateIgnoredFileTable();
@@ -388,8 +393,12 @@ public class IgnoredFilesWindowController {
 			if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
 
 				// remove the element with the ignored files index from the ignored files list
-				this.mainClass.getMusicVideohandler()
+				boolean removeSuccessful = this.mainClass.getProgramDataHandler()
 						.removeFromIgnoredFilesList(Paths.get(selectedEntry.getFilePath()));
+				
+				if (removeSuccessful) {
+					this.mainClass.getMusicVideohandler().updateMusicVideoList();
+				}
 
 				// then update the ignored files table
 				updateIgnoredFileTable();
@@ -407,7 +416,8 @@ public class IgnoredFilesWindowController {
 		if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
 
 			// clear the ignored files list
-			this.mainClass.getMusicVideohandler().clearIgnoredFilesList();
+			this.mainClass.getProgramDataHandler().clearIgnoredFilesList();
+			this.mainClass.getMusicVideohandler().updateMusicVideoList();
 
 			// then update the ignored files table
 			updateIgnoredFileTable();

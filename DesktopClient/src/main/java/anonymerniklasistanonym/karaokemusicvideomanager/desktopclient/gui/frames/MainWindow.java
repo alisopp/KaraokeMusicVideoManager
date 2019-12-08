@@ -153,20 +153,20 @@ public class MainWindow {
 	private void onCloseDialog(WindowEvent e) {
 
 		// check if there is no existing settings file
-		if (this.mainClass.getMusicVideohandler().getAlwaysSave()
-				|| (!this.mainClass.getMusicVideohandler().settingsFileExist()
-						&& !this.mainClass.getMusicVideohandler().windowsSettingsFileExists())) {
+		if (this.mainClass.getProgramDataHandler().getAlwaysSaveSettings()
+				|| (!this.mainClass.getProgramDataHandler().settingsFileExist()
+						&& !this.mainClass.getProgramDataHandler().windowsSettingsFileExists())) {
 
 			// if there is no one save the settings to the default file
-			this.mainClass.getMusicVideohandler().saveSettingsToFile();
+			this.mainClass.getProgramDataHandler().saveSettingsToFile();
 
 		} else {
 
 			// if there is an existing settings file compare the settings
-			if (!this.mainClass.getMusicVideohandler().compareSettings()) {
+			if (!this.mainClass.getProgramDataHandler().compareSettings()) {
 
 				// if they are different open a special dialog
-				DialogHandler.mainStageClose(e, this.mainClass.getMusicVideohandler());
+				DialogHandler.mainStageClose(e, this.mainClass.getMusicVideohandler(), this.mainClass.getProgramDataHandler());
 				return;
 			}
 		}

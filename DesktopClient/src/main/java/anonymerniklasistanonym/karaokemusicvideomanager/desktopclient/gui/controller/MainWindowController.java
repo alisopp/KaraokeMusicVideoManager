@@ -791,9 +791,9 @@ public class MainWindowController {
 		refreshMusicVideoDirectoryTable();
 		refreshMusicVideoPlaylistTable();
 
-		this.menuButtonAlwaysSave.setSelected(this.mainClass.getMusicVideohandler().getAlwaysSave());
+		this.menuButtonAlwaysSave.setSelected(this.mainClass.getProgramDataHandler().getAlwaysSaveSettings());
 		this.menuButtonPlaylistRemove
-				.setSelected(this.mainClass.getMusicVideohandler().getPlaylistRemoveStartedVideo());
+				.setSelected(this.mainClass.getProgramDataHandler().getRemoveStartedVideoFromPlayist());
 
 		// select source path tab if there are no music videos
 		if (this.mainClass.getMusicVideohandler().getMusicVideoList() == null) {
@@ -1030,7 +1030,7 @@ public class MainWindowController {
 			if (directory != null) {
 
 				// add it to the path list
-				this.mainClass.getMusicVideohandler().addPathToPathList(directory.toPath());
+				this.mainClass.getProgramDataHandler().addPathToPathList(directory.toPath());
 
 				// update the music video table list
 				this.mainClass.getMusicVideohandler().updateMusicVideoList();
@@ -1302,7 +1302,11 @@ public class MainWindowController {
 			if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
 
 				// remove this entry from the path list
-				this.mainClass.getMusicVideohandler().removeFromPathList(Paths.get(selectedEntry.getFilePath()));
+				boolean removeSuccessful = this.mainClass.getProgramDataHandler().removeFromPathList(Paths.get(selectedEntry.getFilePath()));
+				
+				if (removeSuccessful) {
+					this.mainClass.getMusicVideohandler().updateMusicVideoList();
+				}
 
 				// update now both tables
 				refreshMusicVideoDirectoryTable();
@@ -1427,7 +1431,7 @@ public class MainWindowController {
 	public void refreshMusicVideoDirectoryTable() {
 
 		// get music video data
-		final Path[] listOfPaths = this.mainClass.getMusicVideohandler().getPathList();
+		final Path[] listOfPaths = this.mainClass.getProgramDataHandler().getPathList();
 
 		// clear table
 		this.tableDataDirectory.clear();
@@ -1525,7 +1529,7 @@ public class MainWindowController {
 			if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
 				final MusicVideo selectedFile = this.mainClass.getMusicVideohandler()
 						.getMusicVideoList()[selectedEntry.getIndex() - 1];
-				this.mainClass.getMusicVideohandler().addIgnoredFileToIgnoredFilesList(selectedFile.getPath());
+				this.mainClass.getProgramDataHandler().addFileToIgnoredFilesList(selectedFile.getPath());
 
 				// update the music video list after this
 				refreshMusicVideoTable();
@@ -1646,7 +1650,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void saveConfiguartion() {
-		this.mainClass.getMusicVideohandler().saveSettingsToFile();
+		this.mainClass.getProgramDataHandler().saveSettingsToFile();
 	}
 
 	/**
@@ -1654,7 +1658,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void loadConfiguartion() {
-		this.mainClass.getMusicVideohandler().loadSettingsFromFile();
+		this.mainClass.getProgramDataHandler().loadSettingsFromFile();
 		refreshMusicVideoTable();
 		refreshMusicVideoDirectoryTable();
 	}
@@ -1671,7 +1675,7 @@ public class MainWindowController {
 				DialogModule.CHOOSE_ACTION.SAVE);
 		if (jsonFile != null && jsonFile[0] != null) {
 			final File saveToThis = Paths.get(jsonFile[0].getAbsolutePath() + ".json").toFile();
-			this.mainClass.getMusicVideohandler().saveSettings(saveToThis);
+			this.mainClass.getProgramDataHandler().saveSettings(saveToThis);
 		}
 
 	}
@@ -1687,7 +1691,7 @@ public class MainWindowController {
 				Internationalization.translate("Load configuration"), null, new ExtensionFilter[] { jsonFilter },
 				DialogModule.CHOOSE_ACTION.NORMAL);
 		if (jsonFile != null && jsonFile[0] != null) {
-			this.mainClass.getMusicVideohandler().loadSettings(jsonFile[0]);
+			this.mainClass.getProgramDataHandler().loadSettings(jsonFile[0]);
 		}
 		refreshMusicVideoTable();
 		refreshMusicVideoDirectoryTable();
@@ -1705,6 +1709,7 @@ public class MainWindowController {
 				Internationalization.translate("Reset Everything"),
 				Internationalization.translate("Do you really want to reset EVERYTHING") + "!?")) {
 			this.mainClass.getMusicVideohandler().reset();
+			this.mainClass.resetProgramDataHandler();
 
 			// update tables so that the tables are empty
 			refreshMusicVideoTable();
@@ -1777,7 +1782,7 @@ public class MainWindowController {
 		// if something is selected
 		if (selectedEntry != null) {
 			this.mainClass.getMusicVideohandler().openMusicVideo(selectedEntry.getMusicVideoIndex() - 1);
-			if (this.mainClass.getMusicVideohandler().getPlaylistRemoveStartedVideo()) {
+			if (this.mainClass.getProgramDataHandler().getRemoveStartedVideoFromPlayist()) {
 				this.mainClass.getMusicVideohandler().getPlaylistHandler().setLatestElementIndex(selectedEntry.getIndex());
 				this.contextPlaylistUndo.setVisible(true);
 				this.mainClass.getMusicVideohandler().removeEntryFromPlaylist(selectedEntry.getIndex());
@@ -1945,8 +1950,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	public void toggleAlwaysSave() {
-		this.menuButtonAlwaysSave.setSelected(this.mainClass.getMusicVideohandler()
-				.setAlwaysSave(!this.mainClass.getMusicVideohandler().getAlwaysSave()));
+		boolean value = this.mainClass.getProgramDataHandler().getAlwaysSaveSettings();
+		this.menuButtonAlwaysSave.setSelected(this.mainClass.getProgramDataHandler().setAlwaysSaveSettings(!value));
 	}
 
 	/**
@@ -1954,8 +1959,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	public void togglePlaylistRemoveStartedVideo() {
-		this.menuButtonPlaylistRemove.setSelected(this.mainClass.getMusicVideohandler()
-				.setPlaylistRemoveStartedVideo(!this.mainClass.getMusicVideohandler().getPlaylistRemoveStartedVideo()));
+		this.menuButtonPlaylistRemove.setSelected(this.mainClass.getProgramDataHandler()
+				.setRemoveStartedVideoFromPlayist(!this.mainClass.getProgramDataHandler().getRemoveStartedVideoFromPlayist()));
 	}
 
 	/**
@@ -2077,7 +2082,7 @@ public class MainWindowController {
 	private void openWebsite() {
 
 		// open the new URL
-		ExternalApplicationModule.openUrl("http://" + this.mainClass.getMusicVideohandler().getSftpIpAddress());
+		ExternalApplicationModule.openUrl("http://" + this.mainClass.getProgramDataHandler().getIpAddressSftp());
 
 	}
 
@@ -2089,7 +2094,7 @@ public class MainWindowController {
 
 		// open the new URL
 		ExternalApplicationModule
-				.openUrl("http://" + this.mainClass.getMusicVideohandler().getSftpIpAddress() + "/index2.php");
+				.openUrl("http://" + this.mainClass.getProgramDataHandler().getIpAddressSftp() + "/index2.php");
 
 	}
 

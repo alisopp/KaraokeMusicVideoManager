@@ -7,6 +7,7 @@ import com.sun.javafx.application.LauncherImpl;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.CustomPreloader;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.frames.MainWindow;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.MusicVideoHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.ProgramDataHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.translations.Internationalization;
 import javafx.application.Application;
 import javafx.application.Preloader;
@@ -31,6 +32,8 @@ public class Main extends Application {
 	 * Music Video Handler (manages the videos/paths/everything)
 	 */
 	private MusicVideoHandler musicVideoHandler;
+	
+	private ProgramDataHandler dataHandler;
 
 	/**
 	 * Creates the main window
@@ -47,12 +50,13 @@ public class Main extends Application {
 		// set the language in relation to the current Java Runtime
 		Internationalization.setBundle(Locale.getDefault());
 
-		// create a MusicVideoHandler
-		this.musicVideoHandler = new MusicVideoHandler();
-		setPreloaderProgress(10);
-
 		// try to load settings from a "settings.json" file
-		this.musicVideoHandler.loadSettingsFromFile();
+		this.dataHandler = new ProgramDataHandler();
+		this.dataHandler.loadSettingsFromFile();
+		setPreloaderProgress(10);
+		
+		// create a MusicVideoHandler
+		this.musicVideoHandler = new MusicVideoHandler(dataHandler);
 		setPreloaderProgress(35);
 
 		// create a music video list
@@ -121,6 +125,15 @@ public class Main extends Application {
 	 */
 	public MusicVideoHandler getMusicVideohandler() {
 		return this.musicVideoHandler;
+	}
+	
+	public ProgramDataHandler getProgramDataHandler() {
+		return this.dataHandler;
+	}
+	
+	public void resetProgramDataHandler() {
+		this.dataHandler = new ProgramDataHandler();
+		musicVideoHandler.setProgramDataHandler(dataHandler);
 	}
 
 }

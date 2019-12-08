@@ -202,16 +202,16 @@ public class WrongFormattedFilesWindowController {
 	private void updateWrongFileTable() {
 
 		// get the current wrong formatted files list
-		final Path[] wrongFormattedFiles = this.mainClass.getMusicVideohandler().getWrongFormattedFiles();
+		final Path[] wrongFormattedFiles = this.mainClass.getProgramDataHandler().getWrongFormattedFiles();
 
 		// overwrite the table with the new list
-		if (this.mainClass.getMusicVideohandler().getWrongFormattedFiles() != null) {
+		if (this.mainClass.getProgramDataHandler().getWrongFormattedFiles() != null) {
 
 			// clear the whole table
 			this.wrongFormattedFilesTableData.clear();
 
 			// add an entry for every path in the list
-			for (int i = 0; i < this.mainClass.getMusicVideohandler().getWrongFormattedFiles().length; i++) {
+			for (int i = 0; i < this.mainClass.getProgramDataHandler().getWrongFormattedFiles().length; i++) {
 				this.wrongFormattedFilesTableData
 						.add(new WrongFormattedFilesTableView(wrongFormattedFiles[i].toString()));
 			}
@@ -375,8 +375,8 @@ public class WrongFormattedFilesWindowController {
 			if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
 
 				// add the selected entry to the ignored files list
-				this.mainClass.getMusicVideohandler()
-						.addIgnoredFileToIgnoredFilesList(Paths.get(selectedEntry.getFilePath()));
+				this.mainClass.getProgramDataHandler()
+						.addFileToIgnoredFilesList(Paths.get(selectedEntry.getFilePath()));
 
 				// update the music video list after this
 				updateWrongFileTable();
