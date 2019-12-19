@@ -15,6 +15,8 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoSourceDirectoriesTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.MusicVideoTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.DialogHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.MusicVideoHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.MusicVideoPlaylistHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.DialogModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
@@ -1908,7 +1910,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void sftpReset() {
-		this.mainClass.getMusicVideohandler().resetSftp();
+		this.mainClass.getMusicVideohandler().sftpReset();
 		checkNetwork();
 		refreshMusicVideoPlaylistTable();
 	}
@@ -1969,8 +1971,10 @@ public class MainWindowController {
 	@FXML
 	public void addRemovedPlaylistEntry() {
 
-		MusicVideoPlaylistElement element = this.mainClass.getMusicVideohandler().getPlaylistHandler().loadMusicVideoToPlaylist(null);
-		
+		MusicVideoHandler musicVideoHandler = this.mainClass.getMusicVideohandler();
+		MusicVideoPlaylistHandler playlistHandler = musicVideoHandler.getPlaylistHandler();
+		MusicVideoPlaylistElement element = playlistHandler.loadMusicVideoToPlaylist(null);
+	
 		// if connected to server upload playlist entry
 		if (this.mainClass.getMusicVideohandler().sftpConnectionEstablished()) {
 			this.mainClass.getMusicVideohandler().uploadPlaylistEntry(element);

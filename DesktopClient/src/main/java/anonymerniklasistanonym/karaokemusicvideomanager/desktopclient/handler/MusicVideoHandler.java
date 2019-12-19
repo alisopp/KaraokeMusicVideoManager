@@ -34,7 +34,7 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.translatio
  * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
  *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  */
-public class MusicVideoHandler {
+public class MusicVideoHandler implements IMusicVideoPlaylist {
 
 	/**
 	 * All the important data about music video files and more is in here
@@ -136,6 +136,7 @@ public class MusicVideoHandler {
 	 * 
 	 * @return musicVideoList (MusicVideo[])
 	 */
+	@Override
 	public MusicVideo[] getMusicVideoList() {
 		return musicVideoList;
 	}
@@ -547,6 +548,7 @@ public class MusicVideoHandler {
 	 * @param comment
 	 *            (String | Comment of author)
 	 */
+	@Override
 	public void addMusicVideoToPlaylist(int index, String author, String comment) {
 
 		System.out.println(">> Playlist: Add " + this.musicVideoList[index - 1].getTitle() + " from " + author);
@@ -898,7 +900,7 @@ public class MusicVideoHandler {
 		return null;
 	}
 
-	public void resetSftp() {
+	public void sftpReset() {
 		if (sftpConnectionEstablished()) {
 			this.sftpController.disconnectSFTP();
 		}
@@ -1038,5 +1040,9 @@ public class MusicVideoHandler {
 			// then upload the edited playlist entry
 			uploadPlaylistEntry(editedPlaylistEntry);
 		}
+	}
+	
+	public String[] getColumnNames() {
+		return this.columnNames;
 	}
 }

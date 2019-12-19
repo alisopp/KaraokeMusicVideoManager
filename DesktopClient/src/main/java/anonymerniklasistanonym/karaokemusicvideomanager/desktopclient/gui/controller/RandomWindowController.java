@@ -5,6 +5,7 @@ import java.util.Random;
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.DialogHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.IMusicVideoPlaylist;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.objects.MusicVideoRandomElement;
@@ -132,6 +133,8 @@ public class RandomWindowController {
 	 * The main window controller class to update the playlist table
 	 */
 	private MainWindowController mainWindowController;
+	
+	private IMusicVideoPlaylist musicVideoPlaylist;
 
 	/**
 	 * Setup for the window [controller] RandomWindow[Controller]
@@ -146,6 +149,7 @@ public class RandomWindowController {
 		// set the main class and main window controller
 		this.mainClass = mainClass;
 		this.mainWindowController = mainWindowController;
+		this.musicVideoPlaylist = mainClass.getMusicVideohandler();
 
 		// add all labels to an array
 		this.allLabels = new Label[] { this.randomLable1, this.randomLable2, this.randomLable3, this.randomLable4,
@@ -237,14 +241,14 @@ public class RandomWindowController {
 				for (int i = 0; i < this.labelContent.length; i++) {
 
 					// and add each element
-					this.mainClass.getMusicVideohandler().addMusicVideoToPlaylist(this.labelContent[i].getIndex(),
+					musicVideoPlaylist.addMusicVideoToPlaylist(this.labelContent[i].getIndex(),
 							authorComment[0], authorComment[1]);
 				}
 
 			} else {
 
 				// else only add the one at the given position
-				this.mainClass.getMusicVideohandler().addMusicVideoToPlaylist(this.labelContent[position].getIndex(),
+				musicVideoPlaylist.addMusicVideoToPlaylist(this.labelContent[position].getIndex(),
 						authorComment[0], authorComment[1]);
 			}
 
@@ -400,14 +404,14 @@ public class RandomWindowController {
 	private void refreshRandom() {
 
 		Integer[] randomNumbers = arrayWithRandomNumbersNoDuplicates(0,
-				this.mainClass.getMusicVideohandler().getMusicVideoList().length - 1, this.labelContent.length);
+				musicVideoPlaylist.getMusicVideoList().length - 1, this.labelContent.length);
 
 		// do for every label
 		for (int i = 0; i < this.labelContent.length; i++) {
 
 			// create a random music video element with this number and save it
 			this.labelContent[i] = new MusicVideoRandomElement(
-					this.mainClass.getMusicVideohandler().getMusicVideoList()[randomNumbers[i]], randomNumbers[i]);
+					musicVideoPlaylist.getMusicVideoList()[randomNumbers[i]], randomNumbers[i]);
 
 			// set the text to each label of this entry
 			this.allLabels[i].setText(this.labelContent[i].getMusicVideo().getTitle() + " "

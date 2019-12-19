@@ -2,7 +2,7 @@ package anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.generator
 
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 
-public class HtmlGenerator {
+public abstract class HtmlGenerator {
 	
 	protected String generateHeadName() {
 
