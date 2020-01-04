@@ -103,10 +103,4 @@ public class HtmlContentPartyGenerator extends HtmlContentGenerator {
 
 		return htmlStatic.toString();
 	}
-
-	@Override
-	public boolean isTypeParty() {
-		return true;
-	}
-
 }

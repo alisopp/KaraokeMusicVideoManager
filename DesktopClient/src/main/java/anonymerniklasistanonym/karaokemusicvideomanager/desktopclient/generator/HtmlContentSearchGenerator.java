@@ -77,10 +77,4 @@ public class HtmlContentSearchGenerator extends HtmlContentGenerator {
 
 		return htmlStatic.toString();
 	}
-
-	@Override
-	public boolean isTypeParty() {
-		return false;
-	}
-
 }

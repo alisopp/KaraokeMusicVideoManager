@@ -1920,7 +1920,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void sftpParty() {
-		this.mainClass.getMusicVideohandler().transferHtml(new HtmlContentPartyGenerator(true));
+		this.mainClass.getMusicVideohandler().transferHtmlParty(new HtmlContentPartyGenerator(true));
 	}
 
 	/**
@@ -1928,7 +1928,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void sftpPartyWithoutVotes() {
-		this.mainClass.getMusicVideohandler().transferHtml(new HtmlContentPartyGenerator(false));
+		this.mainClass.getMusicVideohandler().transferHtmlParty(new HtmlContentPartyGenerator(false));
 	}
 
 	/**
@@ -1936,7 +1936,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void sftpStatic() {
-		this.mainClass.getMusicVideohandler().transferHtml(new HtmlContentStaticGenerator());
+		this.mainClass.getMusicVideohandler().transferHtmlStandard(new HtmlContentStaticGenerator());
 	}
 
 	/**
@@ -1944,7 +1944,7 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void sftpSearch() {
-		this.mainClass.getMusicVideohandler().transferHtml(new HtmlContentSearchGenerator());
+		this.mainClass.getMusicVideohandler().transferHtmlStandard(new HtmlContentSearchGenerator());
 	}
 
 	/**

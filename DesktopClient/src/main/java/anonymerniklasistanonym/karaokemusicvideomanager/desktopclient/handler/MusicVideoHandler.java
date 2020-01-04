@@ -657,7 +657,7 @@ public class MusicVideoHandler implements IMusicVideoPlaylist {
 												"The server list seems to be another one than your local list. Setup the server again and clear the playlist to continue."))) {
 									
 									HtmlContentGenerator generator = new HtmlContentPartyGenerator();
-									transferHtml(generator);
+									transferHtmlParty(generator);
 									clearPlaylist();
 
 								}
@@ -915,8 +915,55 @@ public class MusicVideoHandler implements IMusicVideoPlaylist {
 	 * @param type
 	 *            (HtmlGenerator | which kind of html content should be transfered)
 	 */
-	public void transferHtml(HtmlContentGenerator generator) {
-
+	public void transferHtmlStandard(HtmlContentGenerator generator) {
+		if (transferHtml()) {
+			Object[][] musicVideoTable = musicVideoListToTable();
+			
+			String htmlContent = generator.generateHtml(this.phpDirectoryName, musicVideoTable, columnNames);
+			
+			this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(htmlContent),	"index.html");
+		}
+	}
+	
+	public void transferHtmlParty(HtmlContentGenerator generator) {
+		if (transferHtml()) {
+			Object[][] musicVideoTable = musicVideoListToTable();
+			
+			String htmlContent = generator.generateHtml(this.phpDirectoryName, musicVideoTable, columnNames);
+		
+			this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(htmlContent),	"list.html");
+			
+			boolean withVotes = ((HtmlContentPartyGenerator)generator).getWithVotes();
+			
+			HtmlPartyGenerator partyGenerator = new HtmlPartyGenerator();
+			String indexContent = partyGenerator.generateHtmlPartyPlaylist(null, true, withVotes);
+			String index2Content = partyGenerator.generateHtmlPartyPlaylist(phpDirectoryName, false, withVotes);
+			// playlist view PHP list
+			this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(indexContent),	"index.php");
+			this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(index2Content), "index2.php");
+	
+			// create a directory for the PHP documents and change into it
+			this.sftpController.makeDirectory(this.phpDirectoryName);
+			this.sftpController.changeDirectory(this.phpDirectoryName);
+	
+			// PHP music video submit form
+			String partyForm = partyGenerator.generateHtmlPartyForm();
+			this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(partyForm), "form.php");
+	
+			// PHP process document to add a submit to the playlist
+			String partyProcess = partyGenerator.generateHtmlPartyProcess();
+			this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(partyProcess),	"process.php");
+	
+			String partyView = partyGenerator.generateHtmlPartyView(withVotes);
+			this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(partyView), "live.php");
+			
+			String partyVote = partyGenerator.generateHtmlPartyVote();
+			// PHP process document to add a submit to the playlist
+			this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(partyVote), "vote.php");
+		}
+	}
+		
+	private boolean transferHtml() {
 		// check if there even is a connection
 		if (sftpConnectionEstablished()) {
 
@@ -950,44 +997,10 @@ public class MusicVideoHandler implements IMusicVideoPlaylist {
 			// change into default directory from login
 			this.sftpController.changeDirectory("..");
 			
-			Object[][] musicVideoTable = musicVideoListToTable();
-			
-			String htmlContent = generator.generateHtml(this.phpDirectoryName, musicVideoTable, columnNames);
-			
-			if (!generator.isTypeParty()) {
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(htmlContent),	"index.html");
-			} else {
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(htmlContent),	"list.html");
-				
-				boolean withVotes = ((HtmlContentPartyGenerator)generator).getWithVotes();
-				
-				HtmlPartyGenerator partyGenerator = new HtmlPartyGenerator();
-				String indexContent = partyGenerator.generateHtmlPartyPlaylist(null, true, withVotes);
-				String index2Content = partyGenerator.generateHtmlPartyPlaylist(phpDirectoryName, false, withVotes);
-				// playlist view PHP list
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(indexContent),	"index.php");
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(index2Content), "index2.php");
-
-				// create a directory for the PHP documents and change into it
-				this.sftpController.makeDirectory(this.phpDirectoryName);
-				this.sftpController.changeDirectory(this.phpDirectoryName);
-
-				// PHP music video submit form
-				String partyForm = partyGenerator.generateHtmlPartyForm();
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(partyForm), "form.php");
-
-				// PHP process document to add a submit to the playlist
-				String partyProcess = partyGenerator.generateHtmlPartyProcess();
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(partyProcess),	"process.php");
-
-				String partyView = partyGenerator.generateHtmlPartyView(withVotes);
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(partyView), "live.php");
-				
-				String partyVote = partyGenerator.generateHtmlPartyVote();
-				// PHP process document to add a submit to the playlist
-				this.sftpController.transferFile(FileReadWriteModule.stringToInputStream(partyVote), "vote.php");
-			}
+			return true;
 		}
+		
+		return false;
 	}
 
 	/**

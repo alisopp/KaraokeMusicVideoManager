@@ -132,7 +132,7 @@ public class HtmlPartyGenerator extends HtmlGenerator {
 
 		// JSON data HTML file
 		JsonObject htmlJsonContent = JsonModule
-				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/html.json")[0]);
+				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/html.json")[0]);		
 		JsonObject phpJsonContent = JsonModule
 				.loadJsonFromString(ClassResourceReaderModule.getTextContent("websiteData/php.json")[0]);
 		JsonObject cssJsonContent = JsonModule
