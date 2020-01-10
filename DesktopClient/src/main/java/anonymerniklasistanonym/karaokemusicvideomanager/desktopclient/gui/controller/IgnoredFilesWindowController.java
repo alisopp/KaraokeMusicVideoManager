@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.Main;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.gui.tables.WrongFormattedFilesTableView;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.DialogHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.MusicVideoHandler;
+import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.handler.ProgramDataHandler;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.ExternalApplicationModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.FileReadWriteModule;
 import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.WindowModule;
@@ -215,7 +217,7 @@ public class IgnoredFilesWindowController {
 	 * Update the wrong formatted files path table
 	 */
 	@FXML
-	private void updateIgnoredFileTable() {
+	public void updateIgnoredFileTable() {
 
 		// refresh the table with the ignored files
 		refreshIgnoredFileTable();
@@ -312,50 +314,63 @@ public class IgnoredFilesWindowController {
 	 * Open dialog to rename the file
 	 */
 	@FXML
-	private void renameFile() {
+	public boolean renameFile() {
 
-		// get the currently selected entry in the table
-		final WrongFormattedFilesTableView selectedEntry = wrongFormattedFilesTable.getSelectionModel()
-				.getSelectedItem();
+		final WrongFormattedFilesTableView selectedEntry = getWrongFormattedFilesTableView();
 
-		// if something is selected
 		if (selectedEntry != null) {
-
-			if (!this.mainClass.getMusicVideohandler().sftpConnectionEstablished() || DialogHandler.confirmDialog()) {
-
-				// get the file of the selected entry
+			boolean dialogResult = getConfirmDialogResult();
+			MusicVideoHandler musicVideoHandler = getMusicVideoHandler();
+			if (!musicVideoHandler.sftpConnectionEstablished() || dialogResult) {
 				final File selectedFile = new File(selectedEntry.getFilePath());
+				final String newFileName = getRenamedFile(selectedFile);
 
-				// show dialog to rename the file
-				final String newFileName = DialogHandler.renameFile(selectedFile.getName());
-
-				// if the dialogs output isn't null or empty
 				if (newFileName != null && !newFileName.isEmpty()) {
 
-					// calculate the new file name
 					final File newFile = new File(selectedFile.getParentFile(), newFileName);
 
-					// then rename the file to this new name and check if everything worked fine
 					if (FileReadWriteModule.rename(selectedFile, newFile)) {
-
+						ProgramDataHandler dataHandler = getDataHandler();
+						
 						// then remove the file from the ignored files list
-						boolean removeSuccessful = this.mainClass.getProgramDataHandler()
-								.removeFromIgnoredFilesList(selectedFile.toPath());
+						boolean removeSuccessful = dataHandler.removeFromIgnoredFilesList(selectedFile.toPath());
 						
 						if (removeSuccessful) {
-							this.mainClass.getMusicVideohandler().updateMusicVideoList();
+							musicVideoHandler.updateMusicVideoList();
 						}
 
 						// and add the renamed file to the ignored files list
-						this.mainClass.getProgramDataHandler().addFileToIgnoredFilesList(newFile.toPath());
+						dataHandler.addFileToIgnoredFilesList(newFile.toPath());
 
 						// and last update the table
 						updateIgnoredFileTable();
+						
+						return true;
 					}
 				}
 			}
 		}
-
+		return false;
+	}
+	
+	protected WrongFormattedFilesTableView getWrongFormattedFilesTableView() {
+		return wrongFormattedFilesTable.getSelectionModel().getSelectedItem();
+	}
+	
+	protected MusicVideoHandler getMusicVideoHandler() {
+		return this.mainClass.getMusicVideohandler();
+	}
+	
+	protected ProgramDataHandler getDataHandler() {
+		return this.mainClass.getProgramDataHandler();
+	}
+	
+	protected boolean getConfirmDialogResult() {
+		return DialogHandler.confirmDialog();
+	}
+	
+	protected String getRenamedFile(File selectedFile) {
+		return DialogHandler.renameFile(selectedFile.getName());
 	}
 
 	/**

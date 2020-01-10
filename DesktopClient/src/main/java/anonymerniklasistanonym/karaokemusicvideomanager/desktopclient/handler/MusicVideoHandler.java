@@ -34,6 +34,7 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.translatio
  * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
  *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  */
+
 public class MusicVideoHandler implements IMusicVideoPlaylist {
 
 	/**
@@ -435,7 +436,7 @@ public class MusicVideoHandler implements IMusicVideoPlaylist {
 				new String[] { partyPlaylist });
 	}
 
-	private void createPhpDirectoryWithFiles(Path outputFolder) {
+	public void createPhpDirectoryWithFiles(Path outputFolder) {
 
 		if (outputFolder == null) {
 			System.err.println("Path is null!");
@@ -577,13 +578,15 @@ public class MusicVideoHandler implements IMusicVideoPlaylist {
 
 	}
 
-	public void removeEntryFromPlaylist(int index) {
+	public MusicVideoPlaylistElement removeEntryFromPlaylist(int index) {
 
 		MusicVideoPlaylistElement newElement = this.playlistHandler.remove(index);
 
 		if (sftpConnectionEstablished()) {
 			deletePlaylistEntrySftp(newElement);
 		}
+		
+		return newElement;
 
 	}
 

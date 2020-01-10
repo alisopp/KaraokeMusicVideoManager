@@ -1971,17 +1971,25 @@ public class MainWindowController {
 	@FXML
 	public void addRemovedPlaylistEntry() {
 
-		MusicVideoHandler musicVideoHandler = this.mainClass.getMusicVideohandler();
+		MusicVideoHandler musicVideoHandler = getMusicVideoHandler();
 		MusicVideoPlaylistHandler playlistHandler = musicVideoHandler.getPlaylistHandler();
 		MusicVideoPlaylistElement element = playlistHandler.loadMusicVideoToPlaylist(null);
 	
 		// if connected to server upload playlist entry
-		if (this.mainClass.getMusicVideohandler().sftpConnectionEstablished()) {
-			this.mainClass.getMusicVideohandler().uploadPlaylistEntry(element);
+		if (musicVideoHandler.sftpConnectionEstablished()) {
+			musicVideoHandler.uploadPlaylistEntry(element);
 		}
 		
-		this.contextPlaylistUndo.setVisible(false);
+		setContextPlaylistUndoVisibility(false);
 		refreshMusicVideoPlaylistTable();
+	}
+	
+	protected MusicVideoHandler getMusicVideoHandler() {
+		return this.mainClass.getMusicVideohandler();
+	}
+	
+	protected void setContextPlaylistUndoVisibility(boolean value) {
+		this.contextPlaylistUndo.setVisible(value);
 	}
 
 	/**

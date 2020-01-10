@@ -183,6 +183,8 @@ public class MusicVideoPlaylistHandler {
 				setPlaylistElements(newPlaylist);
 			}
 		}
+		
+		this.latestStartedMusicVideoPlaylistEntry = 0;
 
 		return newEntry;
 	}
@@ -396,9 +398,18 @@ public class MusicVideoPlaylistHandler {
 			element = getPlaylistElements()[this.latestStartedMusicVideoPlaylistEntry];
 		
 		load(element);
+		
+		this.latestStartedMusicVideoPlaylistEntry = -1;
 	
 		return element;
 	
+	}
+	
+	public MusicVideoPlaylistElement getLatestStartedMusicVideoPlaylistEntry() {
+		if (this.latestStartedMusicVideoPlaylistEntry == -1)
+			return null;
+		
+		return playlistElements[this.latestStartedMusicVideoPlaylistEntry];
 	}
 
 }

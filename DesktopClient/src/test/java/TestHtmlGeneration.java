@@ -39,9 +39,6 @@ public class TestHtmlGeneration {
 		File directory = new File(DAT_DIR);
 		File out_dir = new File(OUT_DIR);
 		
-		if (!out_dir.exists())
-			out_dir.mkdirs();
-		
 		ProgramDataHandler dataHandler = new ProgramDataHandler();
 		dataHandler.addPathToPathList(directory.toPath());
 		

@@ -26,7 +26,7 @@ import anonymerniklasistanonym.karaokemusicvideomanager.desktopclient.libaries.J
  * @author AnonymerNiklasistanonym <niklas.mikeler@gmail.com> | <a href=
  *         "https://github.com/AnonymerNiklasistanonym">https://github.com/AnonymerNiklasistanonym</a>
  */
-public final class ProgramDataHandler {
+public class ProgramDataHandler {
 
 	/**
 	 * All the paths to music video files
